@@ -1,0 +1,11 @@
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+/build/**
+!/build/.gitkeep
+/dist/**
+.DS_Store

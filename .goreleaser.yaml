@@ -1,0 +1,45 @@
+# .goreleaser.yaml
+version: 2
+builds:
+  -
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w -X github.com/mrusme/hyperuplink/runtime.Version={{.Version}} -X github.com/mrusme/hyperuplink/runtime.Commit={{.Commit}} -X github.com/mrusme/hyperuplink/runtime.Date={{.Date}}
+    goos:
+      - darwin
+      - dragonfly
+      - freebsd
+      - linux
+      - netbsd
+      - openbsd
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+      - riscv64
+    goarm:
+      - "6"
+      - "7"
+    ignore:
+      - goos: darwin
+        goarch: 386
+      - goos: darwin
+        goarch: arm
+      - goos: darwin
+        goarch: riscv64
+      - goos: netbsd
+        goarch: arm64
+      - goos: netbsd
+        goarch: riscv64
+      - goos: freebsd
+        goarch: arm64
+changelog:
+  disable: false
+  use: github
+  format: "{{.SHA}}: {{.Message}} (@{{.AuthorUsername}})"
+  sort: asc
+  abbrev: -1
+release:
+  footer: ""
