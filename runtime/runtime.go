@@ -27,7 +27,7 @@ type Build struct {
 
 type Runtime struct {
 	Build        Build
-	Embeds       map[string]embed.FS
+	Embeds       map[string]*embed.FS
 	Config       *config.Config
 	Logger       *slog.Logger
 	LoggerLevel  slog.Level
@@ -44,7 +44,7 @@ func New(cfgstr string) (*Runtime, error) {
 	rt.Build.Commit = Commit
 	rt.Build.Date = Date
 
-	rt.Embeds = make(map[string]embed.FS)
+	rt.Embeds = make(map[string]*embed.FS)
 
 	if rt.Config, err = config.New(cfgstr); err != nil {
 		return nil, err
@@ -63,8 +63,10 @@ func New(cfgstr string) (*Runtime, error) {
 
 	rt.Debug("status", "exec")
 
-	if rt.Database, err = database.New(rt.Logger,
-		rt.Config.DatabaseConnection()); err != nil {
+	if rt.Database, err = database.New(
+		rt.Logger,
+		rt.Config.DatabaseConnection(),
+	); err != nil {
 		rt.Error("status", "error", "error", err)
 		return nil, err
 	}

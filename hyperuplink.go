@@ -11,6 +11,9 @@ import (
 	"github.com/mrusme/hyperuplink/runtime"
 )
 
+//go:embed migrations/*.sql
+var embedMigrations embed.FS
+
 //go:embed static/*
 var embedStaticFiles embed.FS
 
@@ -50,8 +53,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	rt.Embeds["static"] = embedStaticFiles
-	rt.Embeds["views"] = embedViews
+	rt.Embeds["migrations"] = &embedMigrations
+	rt.Embeds["static"] = &embedStaticFiles
+	rt.Embeds["views"] = &embedViews
+
+	rt.Database.SetMigrations(rt.Embeds["migrations"])
 
 	err = rt.Startup()
 	rt.NilOrDie(err)
