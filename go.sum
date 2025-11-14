@@ -1,6 +1,10 @@
 github.com/andybalholm/brotli v1.2.0 h1:ukwgCxwYrmACq68yiUqwIWnGY0cTPox/M94sVwToPjQ=
 github.com/andybalholm/brotli v1.2.0/go.mod h1:rzTDkvFWvIrjDXZHkuS16NPggd91W3kUSvPlQ1pLaKY=
+github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
+github.com/cespare/xxhash/v2 v2.3.0/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f h1:lO4WD4F/rVNCu3HqELle0jiPLLBs70cWOduZpkS1E78=
+github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f/go.mod h1:cuUVRXasLTGF7a8hSLbxyZXjz+1KgoB3wDUb6vlszIc=
 github.com/fsnotify/fsnotify v1.9.0 h1:2Ml+OJNzbYCTzsxtv8vKSFD9PbJjmhYF14k/jKC7S9k=
 github.com/fsnotify/fsnotify v1.9.0/go.mod h1:8jBTzvmWwFyi3Pb8djgCCO5IBqzKJ/Jwo8TRcHyHii0=
 github.com/gabriel-vasile/mimetype v1.4.11 h1:AQvxbp830wPhHTqc1u7nzoLT+ZFxGY7emj5DR5DYFik=
@@ -17,6 +21,8 @@ github.com/gofiber/fiber/v3 v3.0.0-rc.2 h1:5I3RQ7XygDBfWRlMhkATjyJKupMmfMAVmnsrg
 github.com/gofiber/fiber/v3 v3.0.0-rc.2/go.mod h1:EHKwhVCONMruJTOmvSPSy0CdACJ3uqCY8vGaBXft8yg=
 github.com/gofiber/schema v1.6.0 h1:rAgVDFwhndtC+hgV7Vu5ItQCn7eC2mBA4Eu1/ZTiEYY=
 github.com/gofiber/schema v1.6.0/go.mod h1:WNZWpQx8LlPSK7ZaX0OqOh+nQo/eW2OevsXs1VZfs/s=
+github.com/gofiber/storage/redis/v3 v3.4.1 h1:feZc1xv1UuW+a1qnpISPaak7r/r0SkNVFHmg9R7PJ/c=
+github.com/gofiber/storage/redis/v3 v3.4.1/go.mod h1:rbycYIeewyFZ1uMf9I6t/C3RHZWIOmSRortjvyErhyA=
 github.com/gofiber/utils/v2 v2.0.0-rc.2 h1:NvJTf7yMafTq16lUOJv70nr+HIOLNQcvGme/X+ftbW8=
 github.com/gofiber/utils/v2 v2.0.0-rc.2/go.mod h1:gXins5o7up+BQFiubmO8aUJc/+Mhd7EKXIiAK5GBomI=
 github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
@@ -54,6 +60,8 @@ github.com/pelletier/go-toml/v2 v2.2.4/go.mod h1:2gIqNv+qfxSVS7cM2xJQKtLSTLUE9V8
 github.com/philhofer/fwd v1.2.0 h1:e6DnBTl7vGY+Gz322/ASL4Gyp1FspeMvx1RNDoToZuM=
 github.com/philhofer/fwd v1.2.0/go.mod h1:RqIHx9QI14HlwKwm98g9Re5prTQ6LdeRQn+gXJFxsJM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+github.com/redis/go-redis/v9 v9.16.0 h1:OotgqgLSRCmzfqChbQyG1PHC3tLNR89DG4jdOERSEP4=
+github.com/redis/go-redis/v9 v9.16.0/go.mod h1:u410H11HMLoB+TP67dz8rL9s6QW2j76l0//kSOd3370=
 github.com/samber/slog-fiber v0.0.0-20250726111353-b6d9ffd9be28 h1:SiteqE8ZjH6aZDDDi2prdhHgmnw3E0s8Lqt/3soU6WA=
 github.com/samber/slog-fiber v0.0.0-20250726111353-b6d9ffd9be28/go.mod h1:I9eDrT34KAspeJcVvEjB7TD5ynu1ilv4szZcxaQgVC8=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=

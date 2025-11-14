@@ -28,6 +28,7 @@ type Runtime struct {
 	Build        Build
 	Config       *config.Config
 	Logger       *slog.Logger
+	LoggerLevel  slog.Level
 	Database     database.IDatabase
 	Repositories *repositories.Repositories
 }
@@ -42,18 +43,17 @@ func New(cfgstr string) (*Runtime, error) {
 	rt.Build.Date = Date
 
 	if rt.Config, err = config.New(cfgstr); err != nil {
-		fmt.Printf("config.New: %s", err)
 		return nil, err
 	}
 
-	lvl := slog.Level(0)
-	if err = lvl.UnmarshalText(rt.Config.LoggingLevel()); err != nil {
+	rt.LoggerLevel = slog.Level(0)
+	if err = rt.LoggerLevel.UnmarshalText(rt.Config.LoggingLevel()); err != nil {
 		return nil, err
 	}
 
 	rt.Logger = slog.New(
 		slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-			Level: lvl,
+			Level: rt.LoggerLevel,
 		}),
 	)
 

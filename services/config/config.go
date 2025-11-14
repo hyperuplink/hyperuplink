@@ -84,6 +84,34 @@ func (cfg *Config) DatabaseConnection() string {
 	return cfg.k.String("Database.Connection")
 }
 
+func (cfg *Config) RedisAddresses() []string {
+	return cfg.k.Strings("Redis.Addresses")
+}
+
+func (cfg *Config) RedisMasterName() string {
+	return cfg.k.String("Redis.MasterName")
+}
+
+func (cfg *Config) RedisUsername() string {
+	return cfg.k.String("Redis.Username")
+}
+
+func (cfg *Config) RedisPassword() string {
+	return cfg.k.String("Redis.Password")
+}
+
+func (cfg *Config) RedisDatabase() int {
+	return cfg.k.Int("Redis.Database")
+}
+
+func (cfg *Config) RedisReset() bool {
+	return cfg.k.Bool("Redis.Reset")
+}
+
+func (cfg *Config) RedisPoolsize() int {
+	return cfg.k.Int("Redis.Poolsize")
+}
+
 func (cfg *Config) ServerBindIP() string {
 	return cfg.k.String("Server.BindIP")
 }

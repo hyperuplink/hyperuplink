@@ -38,7 +38,10 @@ func main() {
 	}
 
 	rt, err := runtime.New(flagCfgstr)
-	rt.NilOrDie(err)
+	if err != nil {
+		fmt.Printf("%s\n", err)
+		os.Exit(1)
+	}
 
 	err = rt.Startup()
 	rt.NilOrDie(err)
