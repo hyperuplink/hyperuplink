@@ -1,6 +1,9 @@
 [Logging]
 Level = "debug"
 
+[Redis]
+Addresses = ["127.0.0.1:6379"]
+
 [Database]
 Connection = "postgres://postgres:postgres@localhost:5432/hyperuplink_dev?sslmode=disable"
 

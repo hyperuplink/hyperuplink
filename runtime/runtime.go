@@ -1,6 +1,7 @@
 package runtime
 
 import (
+	"embed"
 	"fmt"
 	"log/slog"
 	"os"
@@ -26,6 +27,7 @@ type Build struct {
 
 type Runtime struct {
 	Build        Build
+	Embeds       map[string]embed.FS
 	Config       *config.Config
 	Logger       *slog.Logger
 	LoggerLevel  slog.Level
@@ -41,6 +43,8 @@ func New(cfgstr string) (*Runtime, error) {
 	rt.Build.Version = Version
 	rt.Build.Commit = Commit
 	rt.Build.Date = Date
+
+	rt.Embeds = make(map[string]embed.FS)
 
 	if rt.Config, err = config.New(cfgstr); err != nil {
 		return nil, err

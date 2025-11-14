@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"flag"
 	"fmt"
 	"os"
@@ -9,6 +10,12 @@ import (
 	"github.com/mrusme/hyperuplink/http"
 	"github.com/mrusme/hyperuplink/runtime"
 )
+
+//go:embed static/*
+var embedStaticFiles embed.FS
+
+//go:embed views/*
+var embedViews embed.FS
 
 var (
 	flagCfgstr  string
@@ -42,6 +49,9 @@ func main() {
 		fmt.Printf("%s\n", err)
 		os.Exit(1)
 	}
+
+	rt.Embeds["static"] = embedStaticFiles
+	rt.Embeds["views"] = embedViews
 
 	err = rt.Startup()
 	rt.NilOrDie(err)

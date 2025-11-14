@@ -16,6 +16,8 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/recover"
 	"github.com/gofiber/fiber/v3/middleware/requestid"
 	"github.com/gofiber/fiber/v3/middleware/session"
+	"github.com/gofiber/fiber/v3/middleware/static"
+	// html "github.com/gofiber/template/html/v3"
 	"github.com/gofiber/storage/redis/v3"
 	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/runtime"
@@ -33,6 +35,12 @@ func New(
 	srv := new(Web)
 
 	srv.rt = rt
+
+	// engine, err := srv.getViewsEngine()
+	// if err != nil {
+	// 	return nil, err
+	// }
+
 	srv.app = fiber.New(fiber.Config{
 		StrictRouting:      false,
 		CaseSensitive:      false,
@@ -55,12 +63,13 @@ func New(
 		// 		"request": requestid.FromContext(c),
 		// 	})
 		// },
+		//Views: engine,
 	})
 
 	return srv, nil
 }
 
-func (srv *Web) LoadMiddlewares() error {
+func (srv *Web) loadMiddlewares() error {
 	srv.app.Use(slogfiber.NewWithConfig(srv.rt.Logger, slogfiber.Config{
 		DefaultLevel:       srv.rt.LoggerLevel,
 		WithRequestID:      true,
@@ -84,7 +93,7 @@ func (srv *Web) LoadMiddlewares() error {
 
 	// ---------------------------------------------------------------------------
 
-	storage, err := srv.LoadSessionStorage()
+	storage, err := srv.getSessionStorage()
 	if err != nil {
 		return err
 	}
@@ -115,7 +124,7 @@ func (srv *Web) LoadMiddlewares() error {
 	return nil
 }
 
-func (srv *Web) LoadSessionStorage() (fiber.Storage, error) {
+func (srv *Web) getSessionStorage() (fiber.Storage, error) {
 	var err error
 
 	redisConfig := redis.Config{
@@ -154,12 +163,33 @@ func (srv *Web) LoadSessionStorage() (fiber.Storage, error) {
 	return storage, nil
 }
 
+// func (srv *Web) getViewsEngine() error {
+// 	// TODO
+// 	engine := html.NewFileSystem(http.FS(srv.rt.Embeds["views"]), ".html")
+//
+// 	return engine
+// }
+
+func (srv *Web) loadRoutes() error {
+	srv.app.Get("/static*", static.New("./static", static.Config{
+		FS:     srv.rt.Embeds["static"],
+		Browse: true,
+	}))
+
+	return nil
+}
+
 func (srv *Web) Startup() error {
 	var err error
 
 	srv.rt.Debug("status", "exec")
 
-	if err = srv.LoadMiddlewares(); err != nil {
+	if err = srv.loadMiddlewares(); err != nil {
+		srv.rt.Error("status", "error", "error", err)
+		return err
+	}
+
+	if err = srv.loadRoutes(); err != nil {
 		srv.rt.Error("status", "error", "error", err)
 		return err
 	}
