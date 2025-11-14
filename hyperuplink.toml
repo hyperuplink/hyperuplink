@@ -1,0 +1,19 @@
+[Logging]
+Level = "debug"
+
+[Database]
+Connection = "postgres://postgres:postgres@localhost:5432/hyperuplink_dev?sslmode=disable"
+
+[Server]
+BindIP             = "0.0.0.0"
+Port               = 3000
+BodyLimit          = 67108864
+Concurrency        = 262144
+ProxyHeader        = "" # "X-Forwarded-For"
+EnableIPValidation = false
+TrustProxy         = false
+TrustLoopback      = true
+TrustProxies       = []
+ReduceMemoryUsage  = false
+ServerHeader       = ""
+
