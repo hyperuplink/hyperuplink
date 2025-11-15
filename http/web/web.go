@@ -17,9 +17,12 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/requestid"
 	"github.com/gofiber/fiber/v3/middleware/session"
 	"github.com/gofiber/fiber/v3/middleware/static"
+
 	// html "github.com/gofiber/template/html/v3"
 	"github.com/gofiber/storage/redis/v3"
 	"github.com/mrusme/hyperuplink/errs"
+	"github.com/mrusme/hyperuplink/http/route"
+	"github.com/mrusme/hyperuplink/http/web/root"
 	"github.com/mrusme/hyperuplink/runtime"
 	slogfiber "github.com/samber/slog-fiber"
 )
@@ -27,11 +30,14 @@ import (
 type Web struct {
 	rt  *runtime.Runtime
 	app *fiber.App
+	r   route.IRoute
 }
 
 func New(
 	rt *runtime.Runtime,
 ) (*Web, error) {
+	var err error
+
 	srv := new(Web)
 
 	srv.rt = rt
@@ -63,8 +69,12 @@ func New(
 		// 		"request": requestid.FromContext(c),
 		// 	})
 		// },
-		//Views: engine,
+		// Views: engine,
 	})
+
+	if srv.r, err = root.New(srv.rt, srv.app); err != nil {
+		return nil, err
+	}
 
 	return srv, nil
 }

@@ -99,7 +99,7 @@ func (db *Database) Startup() error {
 		return err
 	}
 
-	if err = m.Up(); err != nil {
+	if err = m.Up(); err != nil && err != migrate.ErrNoChange {
 		psql.Close()
 		sqldb.Close()
 		db.Shutdown()
