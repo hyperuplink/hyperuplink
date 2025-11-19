@@ -2,6 +2,7 @@ package config
 
 import (
 	"net/url"
+	"strings"
 
 	"github.com/knadh/koanf/parsers/toml/v2"
 	"github.com/knadh/koanf/providers/file"
@@ -74,6 +75,10 @@ func (cfg *Config) parseCfgstr() (*url.URL, error) {
 	}
 
 	return u, nil
+}
+
+func (cfg *Config) GeneralMode() string {
+	return strings.ToLower(cfg.k.String("General.Mode"))
 }
 
 func (cfg *Config) LoggingLevel() []byte {
