@@ -1,0 +1,112 @@
+.banner {
+  font-size: 24px;
+  color: #000;
+  background-color: #ddd;
+  padding: 4px 8px;
+}
+
+.button.highlight {
+  background-color: var(--highlight);
+}
+
+.button.danger {
+  background-color: var(--danger);
+}
+
+.detailed .big > img {
+  width: 48px;
+  height: 48px;
+  margin-left: 0px;
+}
+
+a {
+  color: #000;
+}
+
+a.button {
+  text-decoration: none;
+}
+
+.detailed a.icon {
+  display: flex;
+}
+
+.detailed .icon {
+  width: 100%;
+  text-decoration: none;
+}
+
+.detailed .icon > .icon-label {
+  text-align: left;
+}
+
+.icon-sublabel {
+  font-size: 13px;
+  color: #555;
+}
+
+.post {
+}
+
+.post > .profile {
+  flex: 1;
+  max-width: 164px;
+}
+
+.post > .profile > .picture {
+}
+
+.post > .profile > .username {
+  font-size: 18px;
+}
+
+.post > .profile > .status {
+  font-size: 14px;
+}
+
+.post > .profile > .postnum {
+  font-size: 14px;
+}
+
+.post > .profile > .joined {
+  font-size: 12px;
+}
+
+
+.post > .content {
+  flex: 4;
+}
+
+.post > .content > .text {
+  margin: 4px 8px;
+}
+
+.post > .content > .actions {
+  margin-top: auto;
+}
+
+.post > .content > .actions > .button {
+}
+
+.post > .content > .actions > .button > img {
+  width: 18px;
+  height: 18px;
+  margin: 4px auto;
+}
+
+.post > .pagination {
+}
+
+.pagination {
+  margin-top: 16px;
+}
+
+.reply > form > textarea {
+  resize: vertical;
+  padding: 8px;
+}
+
+.reply > form > .actions > .button {
+  padding: 4px 14px;
+}
+
