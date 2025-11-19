@@ -1,3 +1,6 @@
+[General]
+Mode = "development"
+
 [Logging]
 Level = "debug"
 
@@ -19,4 +22,3 @@ TrustLoopback      = true
 TrustProxies       = []
 ReduceMemoryUsage  = false
 ServerHeader       = ""
-
