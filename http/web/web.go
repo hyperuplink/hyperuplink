@@ -3,6 +3,7 @@ package web
 import (
 	"fmt"
 	"net/http"
+	"os"
 	runt "runtime"
 	"strconv"
 	"strings"
@@ -10,6 +11,7 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/extractors"
+	"github.com/gofiber/fiber/v3/middleware/cache"
 	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/gofiber/fiber/v3/middleware/csrf"
 	"github.com/gofiber/fiber/v3/middleware/healthcheck"
@@ -18,8 +20,8 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/session"
 	"github.com/gofiber/fiber/v3/middleware/static"
 
-	// html "github.com/gofiber/template/html/v3"
 	"github.com/gofiber/storage/redis/v3"
+	html "github.com/gofiber/template/html/v2"
 	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/root"
@@ -28,9 +30,11 @@ import (
 )
 
 type Web struct {
-	rt  *runtime.Runtime
-	app *fiber.App
-	r   route.IRoute
+	rt     *runtime.Runtime
+	app    *fiber.App
+	r      route.IRoute
+	engine *html.Engine
+	hash   string
 }
 
 func New(
@@ -42,10 +46,9 @@ func New(
 
 	srv.rt = rt
 
-	// engine, err := srv.getViewsEngine()
-	// if err != nil {
-	// 	return nil, err
-	// }
+	if srv.engine, err = srv.getViewsEngine(); err != nil {
+		return nil, err
+	}
 
 	srv.app = fiber.New(fiber.Config{
 		StrictRouting:      false,
@@ -62,19 +65,8 @@ func New(
 		ReduceMemoryUsage: srv.rt.Config.ServerReduceMemoryUsage(),
 		ServerHeader:      srv.rt.Config.ServerServerHeader(),
 		AppName:           "hyperuplink",
-		// ErrorHandler: func(c fiber.Ctx, err error) error {
-		// 	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-		// 		"errors":  []string{err.Error()},
-		// 		"status":  0,
-		// 		"request": requestid.FromContext(c),
-		// 	})
-		// },
-		// Views: engine,
+		Views:             srv.engine,
 	})
-
-	if srv.r, err = root.New(srv.rt, srv.app); err != nil {
-		return nil, err
-	}
 
 	return srv, nil
 }
@@ -102,6 +94,11 @@ func (srv *Web) loadMiddlewares() error {
 		healthcheck.New())
 
 	// ---------------------------------------------------------------------------
+
+	if srv.rt.IsDevelopmentMode() == false {
+		// TODO: Adjust config
+		srv.app.Use(cache.New(cache.ConfigDefault))
+	}
 
 	storage, err := srv.getSessionStorage()
 	if err != nil {
@@ -173,18 +170,52 @@ func (srv *Web) getSessionStorage() (fiber.Storage, error) {
 	return storage, nil
 }
 
-// func (srv *Web) getViewsEngine() error {
-// 	// TODO
-// 	engine := html.NewFileSystem(http.FS(srv.rt.Embeds["views"]), ".html")
-//
-// 	return engine
-// }
+func (srv *Web) getViewsEngine() (*html.Engine, error) {
+	var engine *html.Engine
+
+	if srv.rt.IsDevelopmentMode() {
+		cwd, err := os.Getwd()
+		if err != nil {
+			return nil, err
+		}
+		engine = html.New(cwd, ".html")
+	} else {
+		engine = html.NewFileSystem(http.FS(srv.rt.Embeds["views"]), ".html")
+	}
+	engine.AddFunc(
+		"bla", func(s string) string {
+			return s
+		},
+	)
+
+	return engine, nil
+}
 
 func (srv *Web) loadRoutes() error {
-	srv.app.Get("/static*", static.New("./static", static.Config{
-		FS:     srv.rt.Embeds["static"],
-		Browse: true,
-	}))
+	var stic fiber.Handler
+	var err error
+
+	if srv.rt.IsDevelopmentMode() {
+		cwd, err := os.Getwd()
+		if err != nil {
+			return err
+		}
+		stic = static.New(cwd+"/static", static.Config{
+			Browse:        true,
+			CacheDuration: -1,
+		})
+	} else {
+		stic = static.New("./static", static.Config{
+			FS:            srv.rt.Embeds["static"],
+			Browse:        false,
+			CacheDuration: 10 * time.Second, // TODO: Make configurable
+		})
+	}
+	srv.app.Get("/static*", stic)
+
+	if srv.r, err = root.New(srv.rt, srv.app); err != nil {
+		return err
+	}
 
 	return nil
 }
