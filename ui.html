@@ -82,6 +82,162 @@
             </ul>
           </div>
         </div>
+        <div class="margin window authentication active">
+          <div class="title-bar">
+            <div class="title-bar-text">Sign up</div>
+          </div>
+          <div class="window-body">
+            <form onsubmit="return false">
+              <div class="tabs margin">
+                <div role="tabpanel" id="tab1" class="padding">
+                  <div class="margin">
+                    <div class="fieldrow flex-row gap">
+                      <div class="field flex-column grow">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username">
+                      </div>
+                      <div class="field flex-column grow">
+                        <label for="username">E-mail</label>
+                        <input type="text" id="email" name="email">
+                      </div>
+                    </div>
+                    <div class="fieldrow flex-row gap">
+                      <div class="field flex-column grow">
+                        <label for="password">Password</label>
+                        <input type="text" id="password" name="password">
+                      </div>
+                      <div class="field flex-column grow">
+                        <label for="password">Repeat</label>
+                        <input type="text" id="password_repeat" name="password_repeat">
+                      </div>
+                    </div>
+                    <div class="actions flex-row gap justify-end">
+                      <button type="submit">Sign up</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <div class="margin">Or sign up via:</div>
+            <div class="social margin">
+              <div class="actions flex-column gap">
+                <a class="button"
+                   style="background: linear-gradient(to left, #888888, #ddd)"
+                   href=""
+                   title="">Apple</a>
+                <a class="button"
+                   style="background: linear-gradient(to left, #55AEF7, #ddd)"
+                   href=""
+                   title="">Bluesky</a>
+                <a class="button"
+                   style="background: linear-gradient(to left, #395498, #ddd"
+                   href=""
+                   title="">Facebook</a>
+                <a class="button"
+                   style="background: linear-gradient(to left, #1A1E22, #ddd"
+                   href=""
+                   title="">GitHub</a>
+                <a class="button"
+                   style="background: linear-gradient(to left, #EA4335 0%, #FBBC05 20%, #2B9D4D 30%, #4285F4 40%, #ddd 100%"
+                   href=""
+                   title="">Google</a>
+                <a class="button"
+                   style="background: linear-gradient(to left, #F74300, #ddd"
+                   href=""
+                   title="">Reddit</a>
+                <a class="button"
+                   style="background: linear-gradient(to left, #000000, #ddd"
+                   href=""
+                   title="">X</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="margin window authentication active">
+          <div class="title-bar">
+            <div class="title-bar-text">Sign in</div>
+          </div>
+          <div class="window-body">
+            <form onsubmit="return false">
+              <div class="tabs margin">
+                <div role="tabpanel" id="tab1" class="padding">
+                  <div class="margin">
+                    <div class="fieldrow flex-row gap">
+                      <div class="field flex-column grow">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username">
+                      </div>
+                      <div class="field flex-column grow">
+                        <label for="password">Password</label>
+                        <input type="text" id="password" name="password">
+                      </div>
+                    </div>
+                    <div class="actions flex-row gap justify-end">
+                      <button type="submit">Sign in</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <div class="margin">Or sign in via:</div>
+            <div class="social margin">
+              <div class="actions flex-column gap">
+                <a class="button"
+                   style="background: linear-gradient(to left, #888888, #ddd)"
+                   href=""
+                   title="">Apple</a>
+                <a class="button"
+                   style="background: linear-gradient(to left, #55AEF7, #ddd)"
+                   href=""
+                   title="">Bluesky</a>
+                <a class="button"
+                   style="background: linear-gradient(to left, #395498, #ddd"
+                   href=""
+                   title="">Facebook</a>
+                <a class="button"
+                   style="background: linear-gradient(to left, #1A1E22, #ddd"
+                   href=""
+                   title="">GitHub</a>
+                <a class="button"
+                   style="background: linear-gradient(to left, #EA4335 0%, #FBBC05 20%, #2B9D4D 30%, #4285F4 40%, #ddd 100%"
+                   href=""
+                   title="">Google</a>
+                <a class="button"
+                   style="background: linear-gradient(to left, #F74300, #ddd"
+                   href=""
+                   title="">Reddit</a>
+                <a class="button"
+                   style="background: linear-gradient(to left, #000000, #ddd"
+                   href=""
+                   title="">X</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="margin window authentication active">
+          <div class="title-bar">
+            <div class="title-bar-text">Sign in</div>
+          </div>
+          <div class="window-body">
+            <form onsubmit="return false">
+              <div class="tabs margin">
+                <div role="tabpanel" id="tab1" class="padding">
+                  <div class="margin">
+                    <div class="fieldrow flex-row gap">
+                      <div class="field flex-column grow">
+                        <label for="otp">One time pin</label>
+                        <input type="text" id="otp" name="otp">
+                      </div>
+                    </div>
+                    <div class="actions flex-row gap justify-end">
+                      <button type="submit">Sign in</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
         <div class="margin window active">
           <div class="title-bar">
             <div class="title-bar-text">Latest posts</div>
@@ -93,8 +249,13 @@
                   <tr>
                     <th scope="col" role="button">Name</th>
                     <th class="no-mobile" scope="col" role="button" style="width: 160px;">Board</th>
-                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Replies</th>
-                    <th class="no-mobile" scope="col"
+                    <th class="no-mobile"
+                        scope="col"
+                        role="button"
+                        style="text-align: right;
+                               width: 60px">Replies</th>
+                    <th class="no-mobile"
+                        scope="col"
                         role="button"
                         aria-sort="descending"
                         style="text-align: right;
@@ -139,9 +300,18 @@
                 <thead>
                   <tr>
                     <th scope="col" role="button">Name</th>
-                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Topics</th>
-                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Posts</th>
-                    <th class="no-mobile" scope="col"
+                    <th class="no-mobile"
+                        scope="col"
+                        role="button"
+                        style="text-align: right;
+                               width: 60px">Topics</th>
+                    <th class="no-mobile"
+                        scope="col"
+                        role="button"
+                        style="text-align: right;
+                               width: 60px">Posts</th>
+                    <th class="no-mobile"
+                        scope="col"
                         role="button"
                         aria-sort="descending"
                         style="text-align: right;
@@ -178,9 +348,18 @@
                 <thead>
                   <tr>
                     <th scope="col" role="button">Name</th>
-                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Topics</th>
-                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Posts</th>
-                    <th class="no-mobile" scope="col"
+                    <th class="no-mobile"
+                        scope="col"
+                        role="button"
+                        style="text-align: right;
+                               width: 60px">Topics</th>
+                    <th class="no-mobile"
+                        scope="col"
+                        role="button"
+                        style="text-align: right;
+                               width: 60px">Posts</th>
+                    <th class="no-mobile"
+                        scope="col"
                         role="button"
                         aria-sort="descending"
                         style="text-align: right;
@@ -231,9 +410,18 @@
                 <thead>
                   <tr>
                     <th scope="col" role="button">Name</th>
-                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Topics</th>
-                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Posts</th>
-                    <th class="no-mobile" scope="col"
+                    <th class="no-mobile"
+                        scope="col"
+                        role="button"
+                        style="text-align: right;
+                               width: 60px">Topics</th>
+                    <th class="no-mobile"
+                        scope="col"
+                        role="button"
+                        style="text-align: right;
+                               width: 60px">Posts</th>
+                    <th class="no-mobile"
+                        scope="col"
                         role="button"
                         aria-sort="descending"
                         style="text-align: right;
@@ -306,9 +494,18 @@
                 <thead>
                   <tr>
                     <th scope="col" role="button">Name</th>
-                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Replies</th>
-                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Views</th>
-                    <th class="no-mobile" scope="col"
+                    <th class="no-mobile"
+                        scope="col"
+                        role="button"
+                        style="text-align: right;
+                               width: 60px">Replies</th>
+                    <th class="no-mobile"
+                        scope="col"
+                        role="button"
+                        style="text-align: right;
+                               width: 60px">Views</th>
+                    <th class="no-mobile"
+                        scope="col"
                         role="button"
                         aria-sort="descending"
                         style="text-align: right;

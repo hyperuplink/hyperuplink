@@ -82,6 +82,23 @@ a.button {
   color: #555;
 }
 
+.window.authentication {
+  max-width: 380px;
+  margin: var(--margin) auto;
+}
+
+.authentication > .window-body > form .actions {
+  margin: 8px 2px;
+}
+
+.authentication > .window-body > .social .actions > .button {
+  text-align: left;
+}
+
+.authentication > .window-body .fieldrow {
+  margin: 8px 0;
+}
+
 .post {
 }
 
@@ -149,3 +166,4 @@ a.button {
     display: none;
   }
 }
+
