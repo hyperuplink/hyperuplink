@@ -4,12 +4,21 @@
 }
 
 .header {
-  color: #000;
-  background-color: #ddd;
+  color: var(--window-fg);
+  background-color: var(--surface-13);
 }
 
 .header > .banner {
   font-size: 24px;
+}
+
+.header > .banner > a {
+  display: block;
+  text-decoration: none;
+}
+
+.header > .banner > a > .text {
+  margin: 8px;
 }
 
 .header > .breadcrumbs {
@@ -30,8 +39,8 @@
 }
 
 .footer {
-  color: #000;
-  background-color: #ddd;
+  color: var(--window-fg);
+  background-color: var(--surface-13);
 }
 
 .footer > .bar {
@@ -57,7 +66,7 @@
 }
 
 a {
-  color: #000;
+  color: var(--window-fg);
 }
 
 a.button {
@@ -79,7 +88,12 @@ a.button {
 
 .icon-sublabel {
   font-size: 13px;
-  color: #555;
+  color: var(--surface-05);
+}
+
+.dialog {
+  max-width: 380px;
+  margin: var(--margin) auto;
 }
 
 .window.authentication {
@@ -167,3 +181,6 @@ a.button {
   }
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+}

@@ -17,6 +17,7 @@
           <div class="banner">
             <a href="" title="">
               <img src="static/images/banner.jpg">
+              <!-- <div class="text">VT100 Community</div> -->
             </a>
           </div>
           <ul role="menubar">
@@ -82,6 +83,20 @@
             </ul>
           </div>
         </div>
+        <div class="dialog active">
+          <div class="title-bar">
+            <div class="title-bar-text">Delete?</div>
+          </div>
+          <div class="dialog-body">
+            <form onsubmit="return false">
+              <div class="padding">Are you sure?</div>
+              <div class="flex-row gap padding justify-end">
+                <button type="submit">Yes</button>
+                <a class="button" href="" title="">No</a>
+              </div>
+            </form>
+          </div>
+        </div>
         <div class="margin window authentication active">
           <div class="title-bar">
             <div class="title-bar-text">Sign up</div>
@@ -91,7 +106,7 @@
               <div class="tabs margin">
                 <div role="tabpanel" id="tab1" class="padding">
                   <div class="margin">
-                    <div class="fieldrow flex-row gap">
+                    <div class="fieldrow flex-row flex-wrap gap">
                       <div class="field flex-column grow">
                         <label for="username">Username</label>
                         <input type="text" id="username" name="username">
@@ -101,7 +116,7 @@
                         <input type="text" id="email" name="email">
                       </div>
                     </div>
-                    <div class="fieldrow flex-row gap">
+                    <div class="fieldrow flex-row flex-wrap gap">
                       <div class="field flex-column grow">
                         <label for="password">Password</label>
                         <input type="text" id="password" name="password">
@@ -162,7 +177,7 @@
               <div class="tabs margin">
                 <div role="tabpanel" id="tab1" class="padding">
                   <div class="margin">
-                    <div class="fieldrow flex-row gap">
+                    <div class="fieldrow flex-row flex-wrap gap">
                       <div class="field flex-column grow">
                         <label for="username">Username</label>
                         <input type="text" id="username" name="username">

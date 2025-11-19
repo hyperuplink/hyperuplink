@@ -1,9 +1,40 @@
 :root {
   --preferred-font: "Charcoal";
-  --desktop-bg: #9999CC;
-  --window-bg: #DDDDDD;
+  --desktop-bg: #9999cc;
   --window-fg: #000000;
-  --window-frame-bg: #CCCCCC;
+  --field-bg: #fff;
+  --field-fg: #000;
+  --disabled-fg: #808080;
+
+  --surface-15: #fff;
+  --surface-14: #eee;
+  --surface-13: #ddd; /* window bg */
+  --surface-12: #ccc;
+  --surface-11: #bbb;
+  --surface-10: #aaa;
+  --surface-09: #999;
+  --surface-07: #777;
+  --surface-06: #666;
+  --surface-05: #555;
+  --surface-04: #444;
+
+  --border-brightness-15: #fff;
+  --border-brightness-14: #eee;
+  --border-brightness-13: #ddd;
+  --border-brightness-12: #ccc;
+  --border-brightness-11: #bbb;
+  --border-brightness-10-1: #adadad;
+  --border-brightness-10: #aaa;
+  --border-brightness-09: #999;
+  --border-brightness-08: #888;
+  --border-brightness-07: #777;
+  --border-brightness-06: #666;
+  --border-brightness-05: #555;
+  --border-brightness-04: #444;
+  --border-brightness-03: #333;
+  --border-brightness-02: #222;
+  --border-brightness-00: #000;
+
   --primary-0: #000;
   --primary-1: #005;
   --primary-2: #339;
@@ -13,10 +44,12 @@
   --primary-6: #eee;
   --selection-bg: var(--primary-5);
   --selection-fg: #000;
+  --highlight: #efc71d;
+  --danger: #ffa2a2;
 }
 
 body {
-  background-color: #000;
+  background-color: var(--primary-0);
   color: var(--window-fg);
 }
 
@@ -42,38 +75,38 @@ code {
 }
 
 .top-panel, .right-panel, .buttom-panel, .left-panel {
-  background: var(--window-bg);
+  background: var(--surface-13);
 }
 
 .top-panel {
-  border-bottom: 1px solid #000000;
-  box-shadow: inset 1px 0 0 #fff, inset 0 1px 0 #fff, inset -1px 0 0 #999, inset 0 -1px 0 #999;
+  border-bottom: 1px solid var(--border-brightness-00);
+  box-shadow: inset 1px 0 0 var(--border-brightness-15), inset 0 1px 0 var(--border-brightness-15), inset -1px 0 0 var(--border-brightness-09), inset 0 -1px 0 var(--border-brightness-09);
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
 
 .lowered {
-  border: 1px solid #888;
-  border-right-color: #fff;
-  border-bottom-color: #fff;
+  border: 1px solid var(--border-brightness-08);
+  border-right-color: var(--border-brightness-15);
+  border-bottom-color: var(--border-brightness-15);
 }
 
 .raised {
-  border: 1px solid #fff;
-  border-right-color: #888;
-  border-bottom-color: #888;
+  border: 1px solid var(--border-brightness-15);
+  border-right-color: var(--border-brightness-08);
+  border-bottom-color: var(--border-brightness-08);
 }
 
 fieldset {
-  border: 1px solid #888;
-  box-shadow: inset 1px 1px 0 #fff, 1px 1px 0 #fff;
+  border: 1px solid var(--border-brightness-08);
+  box-shadow: inset 1px 1px 0 var(--border-brightness-15), 1px 1px 0 var(--border-brightness-15);
   position: relative;
 }
 
 legend {
   text-align: left;
   padding: 0 4px 0.65em;
-  background-color: #ddd;
+  background-color: var(--surface-13);
   display: block;
 }
 
@@ -89,8 +122,8 @@ legend {
   height: 16px;
   min-width: 0;
   padding: 0;
-  background: #ddd;
-  box-shadow: inset 1px 1px #fff, inset -1px -1px #bbb;
+  background: var(--surface-13);
+  box-shadow: inset 1px 1px var(--border-brightness-15), inset -1px -1px var(--border-brightness-11);
   border-radius: 0;
 }
 .horizontal-scrollbar > button::after,
@@ -103,25 +136,25 @@ legend {
 .horizontal-scrollbar > button:not(:disabled):active,
 .vertical-scrollbar > button:not(:disabled):active {
   padding: 0;
-  background: #777;
-  box-shadow: inset 1px 1px #555, inset -1px -1px #999;
+  background: var(--surface-07);
+  box-shadow: inset 1px 1px var(--border-brightness-05), inset -1px -1px var(--border-brightness-09);
   box-shadow: none;
   outline: none;
 }
 .horizontal-scrollbar > .scrollbar-track,
 .vertical-scrollbar > .scrollbar-track {
   flex-grow: 1;
-  background: #aaa;
+  background: var(--surface-10);
   position: relative;
-  box-shadow: inset 1px 1px #777, inset 2px 2px #888, inset -1px -1px #ccc, inset -2px -2px #bbb;
+  box-shadow: inset 1px 1px var(--border-brightness-07), inset 2px 2px var(--border-brightness-08), inset -1px -1px var(--border-brightness-12), inset -2px -2px var(--border-brightness-11);
   overflow: hidden;
-  border: 1px solid #000;
+  border: 1px solid var(--border-brightness-00);
 }
 .horizontal-scrollbar > .scrollbar-track > .scrollbar-thumb,
 .vertical-scrollbar > .scrollbar-track > .scrollbar-thumb {
   position: absolute;
   background: var(--primary-4);
-  box-shadow: inset 1px 1px var(--primary-5), inset -1px -1px var(--primary-3), 1px 1px #777, 2px 2px #888;
+  box-shadow: inset 1px 1px var(--primary-5), inset -1px -1px var(--primary-3), 1px 1px var(--border-brightness-07), 2px 2px var(--border-brightness-08);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -129,7 +162,7 @@ legend {
 .horizontal-scrollbar > .scrollbar-track > .scrollbar-thumb:active,
 .vertical-scrollbar > .scrollbar-track > .scrollbar-thumb:active {
   background: var(--primary-3);
-  box-shadow: inset 1px 1px var(--primary-4), inset -1px -1px var(--primary-2), 1px 1px #777, 2px 2px #888;
+  box-shadow: inset 1px 1px var(--primary-4), inset -1px -1px var(--primary-2), 1px 1px var(--border-brightness-07), 2px 2px var(--border-brightness-08);
 }
 
 .horizontal-scrollbar {
@@ -141,7 +174,7 @@ legend {
   grid-column: 2;
 }
 .horizontal-scrollbar > button:first-child::after {
-  border-right: 4px solid #000;
+  border-right: 4px solid var(--border-brightness-00);
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
   margin: 3px 0 0 5px;
@@ -150,7 +183,7 @@ legend {
   grid-column: 3;
 }
 .horizontal-scrollbar > button:last-child::after {
-  border-left: 4px solid #000;
+  border-left: 4px solid var(--border-brightness-00);
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
   margin: 3px 0 0 5px;
@@ -162,8 +195,8 @@ legend {
 .horizontal-scrollbar > .scrollbar-track > .scrollbar-thumb {
   top: 0;
   bottom: 0;
-  border-left: 1px solid #000;
-  border-right: 1px solid #000;
+  border-left: 1px solid var(--border-brightness-00);
+  border-right: 1px solid var(--border-brightness-00);
 }
 .horizontal-scrollbar > .scrollbar-track > .scrollbar-thumb::after {
   display: block;
@@ -190,7 +223,7 @@ legend {
   grid-row: 2;
 }
 .vertical-scrollbar > button:first-child::after {
-  border-bottom: 4px solid #000;
+  border-bottom: 4px solid var(--border-brightness-00);
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
   margin: 5px 0 0 3px;
@@ -199,7 +232,7 @@ legend {
   grid-row: 3;
 }
 .vertical-scrollbar > button:last-child::after {
-  border-top: 4px solid #000;
+  border-top: 4px solid var(--border-brightness-00);
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
   margin: 5px 0 0 3px;
@@ -210,8 +243,8 @@ legend {
 .vertical-scrollbar > .scrollbar-track > .scrollbar-thumb {
   left: 0;
   right: 0;
-  border-top: 1px solid #000;
-  border-bottom: 1px solid #000;
+  border-top: 1px solid var(--border-brightness-00);
+  border-bottom: 1px solid var(--border-brightness-00);
 }
 .vertical-scrollbar > .scrollbar-track > .scrollbar-thumb::after {
   display: block;
@@ -229,22 +262,22 @@ legend {
 }
 
 ::-webkit-scrollbar {
-  background: #aaa;
-  box-shadow: inset 1px 1px #777, inset 2px 2px #888, inset -1px -1px #ccc, inset -2px -2px #bbb;
-  border: 1px solid #000;
+  background: var(--surface-10);
+  box-shadow: inset 1px 1px var(--border-brightness-07), inset 2px 2px var(--border-brightness-08), inset -1px -1px var(--border-brightness-12), inset -2px -2px var(--border-brightness-11);
+  border: 1px solid var(--border-brightness-00);
   width: 16px;
   height: 16px;
 }
 
 ::-webkit-scrollbar-corner {
-  background: #aaa;
+  background: var(--surface-10);
 }
 
 ::-webkit-scrollbar-button,
 ::-webkit-scrollbar-thumb {
-  background: #ddd;
-  box-shadow: inset 1px 1px #fff, inset -1px -1px #bbb;
-  border: 1px solid #000;
+  background: var(--surface-13);
+  box-shadow: inset 1px 1px var(--border-brightness-15), inset -1px -1px var(--border-brightness-11);
+  border: 1px solid var(--border-brightness-00);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -257,24 +290,24 @@ legend {
   background-image: repeating-linear-gradient(180deg, var(--primary-6), var(--primary-6) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(180deg, var(--primary-5), var(--primary-5) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(180deg, transparent, transparent 1px, var(--primary-2) 1px, var(--primary-2) 2px);
   background-position-x: calc(50% - 4px), calc(50% - 1px), 50%;
   background-size: 1px 8px, 7px 8px, 7px 8px;
-  box-shadow: inset 1px 1px var(--primary-5), inset -1px -1px var(--primary-3), 0 1px #777, 0 2px #888;
+  box-shadow: inset 1px 1px var(--primary-5), inset -1px -1px var(--primary-3), 0 1px var(--border-brightness-07), 0 2px var(--border-brightness-08);
 }
 ::-webkit-scrollbar-thumb:horizontal {
   background-image: repeating-linear-gradient(90deg, var(--primary-6), var(--primary-6) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(90deg, var(--primary-5), var(--primary-5) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(90deg, transparent, transparent 1px, var(--primary-2) 1px, var(--primary-2) 2px);
   background-position-y: calc(50% - 4px), calc(50% - 1px), 50%;
   background-size: 8px 1px, 8px 7px, 8px 7px;
-  box-shadow: inset 1px 1px var(--primary-5), inset -1px -1px var(--primary-3), 1px 0 #777, 2px 0 #888;
+  box-shadow: inset 1px 1px var(--primary-5), inset -1px -1px var(--primary-3), 1px 0 var(--border-brightness-07), 2px 0 var(--border-brightness-08);
 }
 ::-webkit-scrollbar-thumb:active {
   background-color: var(--primary-3);
 }
 ::-webkit-scrollbar-thumb:active:vertical {
   background-image: repeating-linear-gradient(180deg, var(--primary-5), var(--primary-5) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(180deg, var(--primary-4), var(--primary-4) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(180deg, transparent, transparent 1px, var(--primary-1) 1px, var(--primary-1) 2px);
-  box-shadow: inset 1px 1px var(--primary-4), inset -1px -1px var(--primary-2), 0 1px #777, 0 2px #888;
+  box-shadow: inset 1px 1px var(--primary-4), inset -1px -1px var(--primary-2), 0 1px var(--border-brightness-07), 0 2px var(--border-brightness-08);
 }
 ::-webkit-scrollbar-thumb:active:horizontal {
   background-image: repeating-linear-gradient(90deg, var(--primary-5), var(--primary-5) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(90deg, var(--primary-4), var(--primary-4) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(90deg, transparent, transparent 1px, var(--primary-1) 1px, var(--primary-1) 2px);
-  box-shadow: inset 1px 1px var(--primary-4), inset -1px -1px var(--primary-2), 1px 0 #777, 2px 0 #888;
+  box-shadow: inset 1px 1px var(--primary-4), inset -1px -1px var(--primary-2), 1px 0 var(--border-brightness-07), 2px 0 var(--border-brightness-08);
 }
 
 ::-webkit-scrollbar-button {
@@ -283,8 +316,8 @@ legend {
   display: none;
 }
 ::-webkit-scrollbar-button:active {
-  background: #777;
-  box-shadow: inset 1px 1px #555, inset -1px -1px #999;
+  background: var(--surface-07);
+  box-shadow: inset 1px 1px var(--border-brightness-05), inset -1px -1px var(--border-brightness-09);
   box-shadow: none;
 }
 
@@ -325,11 +358,11 @@ legend {
 
 button, input[type=button], input[type=submit], input[type=reset], .button,
 select:not([size], [multiple]), select[size="1"] {
-  background-color: #DDDDDD;
-  color: #000000;
-  border: 1px solid #000;
+  background-color: var(--surface-13);
+  color: var(--window-fg);
+  border: 1px solid var(--border-brightness-00);
   border-radius: 3px;
-  box-shadow: inset 1px 1px 0 #DDDDDD, inset 2px 2px 0 #fff, inset -1px -1px 1px #555;
+  box-shadow: inset 1px 1px 0 var(--border-brightness-13), inset 2px 2px 0 var(--border-brightness-15), inset -1px -1px 1px var(--border-brightness-05);
   padding: 2px 10px;
   min-width: 58px;
   text-align: center;
@@ -340,16 +373,16 @@ select:not([size], [multiple]), select[size="1"] {
 button:disabled, button.disabled, input[type=button]:disabled, input[type=button].disabled, input[type=submit]:disabled, input[type=submit].disabled, input[type=reset]:disabled, input[type=reset].disabled, .button:disabled, .button.disabled,
 select:not([size], [multiple]):disabled,
 select:not([size], [multiple]).disabled, select[size="1"]:disabled, select[size="1"].disabled {
-  color: #777;
-  border-color: #888;
+  color: var(--surface-07);
+  border-color: var(--border-brightness-08);
   box-shadow: none;
 }
 button:not(:disabled, .disabled):active, button.active, input[type=button]:not(:disabled, .disabled):active, input[type=button].active, input[type=submit]:not(:disabled, .disabled):active, input[type=submit].active, input[type=reset]:not(:disabled, .disabled):active, input[type=reset].active, .button:not(:disabled, .disabled):active, .button.active,
 select:not([size], [multiple]):not(:disabled, .disabled):active,
 select:not([size], [multiple]).active, select[size="1"]:not(:disabled, .disabled):active, select[size="1"].active {
-  background-color: #666666;
-  color: #fff;
-  box-shadow: inset 1px 1px 1px #333, inset -1px -1px 1px #999;
+  background-color: var(--surface-06);
+  color: var(--surface-15);
+  box-shadow: inset 1px 1px 1px var(--border-brightness-03), inset -1px -1px 1px var(--border-brightness-09);
 }
 button:focus-visible, input[type=button]:focus-visible, input[type=submit]:focus-visible, input[type=reset]:focus-visible, .button:focus-visible,
 select:not([size], [multiple]):focus-visible, select[size="1"]:focus-visible {
@@ -366,7 +399,7 @@ form:focus-within:not(:has(button:focus, input[type=button]:focus, input[type=su
   inset: -3px;
   border-radius: 4px;
   box-sizing: border-box;
-  box-shadow: 0px 0px 0px 1px black, inset 1px 1px 0 #DDDDDD, inset -1px -1px 0 #737373, inset 0 0 0 2px #ADADAD;
+  box-shadow: 0px 0px 0px 1px var(--border-brightness-00), inset 1px 1px 0 var(--border-brightness-13), inset -1px -1px 0 #737373, inset 0 0 0 2px var(--border-brightness-10-1);
 }
 
 button.primary, input[type=button].primary, input[type=submit].primary, input[type=reset].primary, .button.primary {
@@ -378,15 +411,15 @@ button.primary::before, input[type=button].primary::before, input[type=submit].p
   inset: -3px;
   border-radius: 4px;
   box-sizing: border-box;
-  box-shadow: 0px 0px 0px 1px black, inset 1px 1px 0 #DDDDDD, inset -1px -1px 0 #737373, inset 0 0 0 2px #ADADAD;
+  box-shadow: 0px 0px 0px 1px var(--border-brightness-00), inset 1px 1px 0 var(--border-brightness-13), inset -1px -1px 0 #737373, inset 0 0 0 2px var(--border-brightness-10-1);
 }
 
 input:not([type=button], [type=submit], [type=reset], [type=checkbox], [type=radio], [type=range]), textarea, .input,
 select[multiple], select[size]:not([size="1"]) {
-  background: #fff;
-  color: #000;
-  border: 1px solid #000;
-  box-shadow: -1px -1px #888;
+  background: var(--field-bg);
+  color: var(--field-fg);
+  border: 1px solid var(--border-brightness-00);
+  box-shadow: -1px -1px var(--border-brightness-08);
   margin: 2px;
   padding: 2px;
 }
@@ -398,9 +431,9 @@ select[multiple]::selection, select[size]:not([size="1"])::selection {
 input:not([type=button], [type=submit], [type=reset], [type=checkbox], [type=radio], [type=range]):disabled, input:not([type=button], [type=submit], [type=reset], [type=checkbox], [type=radio], [type=range]).disabled, textarea:disabled, textarea.disabled, .input:disabled, .input.disabled,
 select[multiple]:disabled,
 select[multiple].disabled, select[size]:not([size="1"]):disabled, select[size]:not([size="1"]).disabled {
-  color: #808080;
-  border-color: #555;
-  box-shadow: 0 0 0 1px #ddd;
+  color: var(--disabled-fg);
+  border-color: var(--border-brightness-05);
+  box-shadow: 0 0 0 1px var(--surface-13);
 }
 input:not([type=button], [type=submit], [type=reset], [type=checkbox], [type=radio], [type=range]):focus, input:not([type=button], [type=submit], [type=reset], [type=checkbox], [type=radio], [type=range]).focus, textarea:focus, textarea.focus, .input:focus, .input.focus,
 select[multiple]:focus,
@@ -437,15 +470,15 @@ select[multiple]:focus > option:checked, select[size]:not([size="1"]):focus > op
   grid-area: s;
   padding-right: 27px;
   text-align: left;
-  box-shadow: inset 1px 1px #fff, inset -1px -1px #aaa;
+  box-shadow: inset 1px 1px var(--border-brightness-15), inset -1px -1px var(--border-brightness-10);
 }
 .dropdown > select:disabled + .dropdown-button {
-  color: #888;
-  box-shadow: -1px 0 #aaa;
+  color: var(--border-brightness-08);
+  box-shadow: -1px 0 var(--border-brightness-10);
 }
 .dropdown > select:not(:disabled):active + .dropdown-button {
-  color: #fff;
-  box-shadow: inset 1px 1px #444, inset 2px 2px #555, inset -1px -1px #888, inset -2px -2px #777, -1px 0 #222;
+  color: var(--surface-15);
+  box-shadow: inset 1px 1px var(--border-brightness-04), inset 2px 2px var(--border-brightness-05), inset -1px -1px var(--border-brightness-08), inset -2px -2px var(--border-brightness-07), -1px 0 var(--border-brightness-02);
 }
 .dropdown > .dropdown-button {
   justify-self: end;
@@ -453,10 +486,10 @@ select[multiple]:focus > option:checked, select[size]:not([size="1"]):focus > op
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #000000;
+  color: var(--window-fg);
   width: 20px;
   pointer-events: none;
-  box-shadow: inset 1px 1px #ddd, inset 2px 2px #fff, inset -1px -1px #777, inset -2px -2px #aaa, -1px 0 #aaa;
+  box-shadow: inset 1px 1px var(--surface-13), inset 2px 2px var(--border-brightness-15), inset -1px -1px var(--border-brightness-07), inset -2px -2px var(--border-brightness-10), -1px 0 var(--border-brightness-10);
   margin: 1px;
 }
 .dropdown > .dropdown-button::after {
@@ -475,56 +508,56 @@ input[type=checkbox] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background: #ddd;
-  border: 1px solid #000;
-  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #888;
+  background: var(--surface-13);
+  border: 1px solid var(--border-brightness-00);
+  box-shadow: inset 1px 1px 0 var(--border-brightness-15), inset -1px -1px 0 var(--border-brightness-08);
   width: 12px;
   height: 12px;
   border-radius: 0;
 }
 input[type=checkbox]:not(:disabled):active {
-  background: #777;
-  box-shadow: inset 1px 1px 0 #555, inset -1px -1px 0 #999;
+  background: var(--surface-07);
+  box-shadow: inset 1px 1px 0 var(--border-brightness-05), inset -1px -1px 0 var(--border-brightness-09);
 }
 input[type=checkbox]:checked::after {
   content: "";
   display: block;
   width: 10px;
   height: 5px;
-  border-bottom: 1.5px solid #000;
-  border-left: 1.5px solid #000;
+  border-bottom: 1.5px solid var(--border-brightness-00);
+  border-left: 1.5px solid var(--border-brightness-00);
   margin-left: 1.5px;
   transform: rotate(-45deg);
   box-shadow: -1px 1px 0 rgba(0, 0, 0, 0.3);
 }
 input[type=checkbox]:disabled {
-  border-color: #888;
+  border-color: var(--border-brightness-08);
   box-shadow: none;
 }
 input[type=checkbox]:disabled::after {
   box-shadow: none;
-  border-color: #888;
+  border-color: var(--border-brightness-08);
 }
 
 input[type=checkbox]:disabled + label,
 input[type=radio]:disabled + label {
-  color: #777;
+  color: var(--surface-07);
 }
 
 input[type=radio] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background: linear-gradient(to bottom right, #fff, #888);
-  box-shadow: inset 1px 1px 0 #ddd, inset -1px -1px 0 #888;
-  border: 1px solid #000;
+  background: linear-gradient(to bottom right, var(--surface-15), var(--border-brightness-08));
+  box-shadow: inset 1px 1px 0 var(--surface-13), inset -1px -1px 0 var(--border-brightness-08);
+  border: 1px solid var(--border-brightness-00);
   width: 12px;
   height: 12px;
   border-radius: 50%;
 }
 input[type=radio]:checked {
-  background: linear-gradient(to bottom right, #555, #fff);
-  box-shadow: inset 1px 1px 0 #555;
+  background: linear-gradient(to bottom right, var(--surface-05), var(--surface-15));
+  box-shadow: inset 1px 1px 0 var(--border-brightness-05);
 }
 input[type=radio]:checked::after {
   content: "";
@@ -532,21 +565,21 @@ input[type=radio]:checked::after {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #000;
+  background-color: var(--window-fg);
   margin-top: 2px;
   margin-left: 2px;
 }
 input[type=radio]:not(:disabled):active {
-  background: linear-gradient(to bottom right, #444, #bbb);
-  box-shadow: inset 1px 1px 0 #444;
+  background: linear-gradient(to bottom right, var(--surface-04), var(--surface-11));
+  box-shadow: inset 1px 1px 0 var(--border-brightness-04);
 }
 input[type=radio]:disabled {
-  background: #ddd;
-  border-color: #888;
+  background: var(--surface-13);
+  border-color: var(--border-brightness-08);
   box-shadow: none;
 }
 input[type=radio]:disabled::after {
-  background-color: #888;
+  background-color: var(--border-brightness-08);
 }
 
 input[type=radio]:focus-visible + label,
@@ -591,10 +624,10 @@ input[type=range]:focus-visible {
 }
 input[type=range]::-moz-range-track {
   height: 3px;
-  background: #AAA;
-  border: 1px solid #222;
+  background: var(--surface-10);
+  border: 1px solid var(--border-brightness-02);
   border-radius: 2px;
-  box-shadow: -1px -1px #AAA, 1px 1px #FFF;
+  box-shadow: -1px -1px var(--border-brightness-10), 1px 1px var(--border-brightness-15);
   margin: 0 5px;
 }
 input[type=range]::-moz-range-thumb {
@@ -606,7 +639,7 @@ input[type=range]::-moz-range-thumb {
   background-position-y: 3px, 3px, 4px;
   background-size: 6px 1px, 6px 4px, 6px 4px;
   background-repeat: no-repeat;
-  border: 1px solid #000;
+  border: 1px solid var(--border-brightness-00);
   width: 14px;
   height: 13px;
   border-radius: 2px;
@@ -619,10 +652,10 @@ input[type=range]::-moz-range-thumb:active {
 }
 input[type=range]::-webkit-slider-runnable-track {
   height: 3px;
-  background: #AAA;
-  border: 1px solid #222;
+  background: var(--surface-10);
+  border: 1px solid var(--border-brightness-02);
   border-radius: 2px;
-  box-shadow: -1px -1px #AAA, 1px 1px #FFF;
+  box-shadow: -1px -1px var(--border-brightness-10), 1px 1px var(--border-brightness-15);
   margin: 0 5px;
   margin: 10px 5px;
 }
@@ -637,7 +670,7 @@ input[type=range]::-webkit-slider-thumb {
   background-position-y: 3px, 3px, 4px;
   background-size: 6px 1px, 6px 4px, 6px 4px;
   background-repeat: no-repeat;
-  border: 1px solid #000;
+  border: 1px solid var(--border-brightness-00);
   width: 14px;
   height: 13px;
   border-radius: 2px;
@@ -654,9 +687,9 @@ progress,
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background: #BBBBBB;
-  border: 1px solid #000;
-  box-shadow: 1px 1px #fff, -1px -1px #AAAAAA, inset 1px 1px #888888, inset -1px -1px #DDDDDD;
+  background: var(--surface-11);
+  border: 1px solid var(--border-brightness-00);
+  box-shadow: 1px 1px var(--border-brightness-15), -1px -1px var(--border-brightness-10), inset 1px 1px var(--border-brightness-08), inset -1px -1px var(--border-brightness-13);
   height: 12px;
 }
 
@@ -672,41 +705,41 @@ progress,
   bottom: 0;
   left: 0;
   background: linear-gradient(to bottom, var(--primary-2), var(--primary-3), var(--primary-4), var(--primary-5), var(--primary-6), var(--primary-5), var(--primary-4), var(--primary-3), var(--primary-2), var(--primary-1));
-  border-right: 1px solid #000;
-  box-shadow: inset 1px 0 var(--primary-3), inset 2px 0 rgba(255, 255, 255, 0.2), inset -1px 0 var(--primary-1), inset -2px 0 var(--primary-2), 1px 0 #555555, 2px 0 #888888;
+  border-right: 1px solid var(--border-brightness-00);
+  box-shadow: inset 1px 0 var(--primary-3), inset 2px 0 rgba(255, 255, 255, 0.2), inset -1px 0 var(--primary-1), inset -2px 0 var(--primary-2), 1px 0 var(--border-brightness-05), 2px 0 var(--border-brightness-08);
 }
 .progress-bar:not([aria-valuenow])::after {
   width: 50%;
-  border-left: 1px solid #000;
+  border-left: 1px solid var(--border-brightness-00);
   animation: 1s infinite linear indeterminate;
 }
 
 progress::-webkit-progress-bar {
-  background: #BBBBBB;
-  box-shadow: inset 1px 1px #888888, inset -1px -1px #DDDDDD;
+  background: var(--surface-11);
+  box-shadow: inset 1px 1px var(--border-brightness-08), inset -1px -1px var(--border-brightness-13);
 }
 
 progress::-webkit-progress-value {
   background: linear-gradient(to bottom, var(--primary-2), var(--primary-3), var(--primary-4), var(--primary-5), var(--primary-6), var(--primary-5), var(--primary-4), var(--primary-3), var(--primary-2), var(--primary-1));
-  border-right: 1px solid #000;
-  box-shadow: inset 1px 0 var(--primary-3), inset 2px 0 rgba(255, 255, 255, 0.2), inset -1px 0 var(--primary-1), inset -2px 0 var(--primary-2), 1px 0 #555555, 2px 0 #888888;
+  border-right: 1px solid var(--border-brightness-00);
+  box-shadow: inset 1px 0 var(--primary-3), inset 2px 0 rgba(255, 255, 255, 0.2), inset -1px 0 var(--primary-1), inset -2px 0 var(--primary-2), 1px 0 var(--border-brightness-05), 2px 0 var(--border-brightness-08);
 }
 
 progress::-moz-progress-bar {
   background: linear-gradient(to bottom, var(--primary-2), var(--primary-3), var(--primary-4), var(--primary-5), var(--primary-6), var(--primary-5), var(--primary-4), var(--primary-3), var(--primary-2), var(--primary-1));
-  border-right: 1px solid #000;
-  box-shadow: inset 1px 0 var(--primary-3), inset 2px 0 rgba(255, 255, 255, 0.2), inset -1px 0 var(--primary-1), inset -2px 0 var(--primary-2), 1px 0 #555555, 2px 0 #888888;
+  border-right: 1px solid var(--border-brightness-00);
+  box-shadow: inset 1px 0 var(--primary-3), inset 2px 0 rgba(255, 255, 255, 0.2), inset -1px 0 var(--primary-1), inset -2px 0 var(--primary-2), 1px 0 var(--border-brightness-05), 2px 0 var(--border-brightness-08);
 }
 
 progress:indeterminate::-moz-progress-bar {
   width: 50%;
-  border-left: 1px solid #000;
+  border-left: 1px solid var(--border-brightness-00);
   animation: 1s infinite linear indeterminate;
 }
 
 progress:not([value])::-webkit-progress-value {
   width: 50%;
-  border-left: 1px solid #000;
+  border-left: 1px solid var(--border-brightness-00);
   animation: 1s infinite linear indeterminate;
 }
 
@@ -719,8 +752,8 @@ progress:not([value])::-webkit-progress-value {
   }
 }
 .title-bar {
-  background: #ddd;
-  color: #777;
+  background: var(--surface-13);
+  color: var(--surface-07);
   display: flex;
   gap: 4px;
 }
@@ -745,8 +778,8 @@ progress:not([value])::-webkit-progress-value {
 .window,
 .dialog {
   padding: 2px 4px 4px;
-  border: 1px solid #555;
-  background: #ddd;
+  border: 1px solid var(--border-brightness-05);
+  background: var(--surface-13);
 }
 
 .window.active,
@@ -754,9 +787,9 @@ progress:not([value])::-webkit-progress-value {
 .dialog.active,
 .dialog:focus-within,
 .menu {
-  background: var(--window-frame-bg);
-  border: 1px solid #000000;
-  box-shadow: 1px 1px 0 #000000, inset 1px 0 0 #fff, inset 0 1px 0 #fff, inset -1px 0 0 #999, inset 0 -1px 0 #999;
+  background: var(--surface-12);
+  border: 1px solid var(--border-brightness-00);
+  box-shadow: 1px 1px 0 var(--border-brightness-00), inset 1px 0 0 var(--border-brightness-15), inset 0 1px 0 var(--border-brightness-15), inset -1px 0 0 var(--border-brightness-09), inset 0 -1px 0 var(--border-brightness-09);
 }
 
 .window.active > .title-bar,
@@ -765,8 +798,8 @@ progress:not([value])::-webkit-progress-value {
 .dialog:focus-within > .title-bar,
 .menu > .title-bar,
 .title-bar.active {
-  background: var(--window-frame-bg);
-  color: #000;
+  background: var(--surface-12);
+  color: var(--window-fg);
 }
 .window.active > .title-bar > .title-bar-text::before, .window.active > .title-bar > .title-bar-text::after,
 .window:focus-within > .title-bar > .title-bar-text::before,
@@ -779,7 +812,7 @@ progress:not([value])::-webkit-progress-value {
 .menu > .title-bar > .title-bar-text::after,
 .title-bar.active > .title-bar-text::before,
 .title-bar.active > .title-bar-text::after {
-  background-image: linear-gradient(0deg, #fff, #fff 1px, transparent 1px, transparent 1px), linear-gradient(0deg, transparent, transparent 1px, #777 1px, #777 1px);
+  background-image: linear-gradient(0deg, var(--surface-15), var(--surface-15) 1px, transparent 1px, transparent 1px), linear-gradient(0deg, transparent, transparent 1px, var(--border-brightness-07) 1px, var(--border-brightness-07) 1px);
   background-repeat: repeat-y;
   background-position-x: -1px, 1px;
   background-position-y: -1px, -1px;
@@ -817,35 +850,35 @@ progress:not([value])::-webkit-progress-value {
   height: 11px;
   min-width: 0;
   border-radius: 0;
-  border: 1px solid #222;
+  border: 1px solid var(--border-brightness-02);
   margin: 2px 1px 5px;
   padding: 0;
-  background: linear-gradient(to bottom right, #999, #fff);
-  box-shadow: -1px -1px 0 #888, -1px 0 0 #888, 0 -1px #888, 1px 1px 0 #fff, 1px 0 0 #fff, 0 1px 0 #fff, inset 1px 1px 0 #ccc, inset -1px -1px 0 #888;
+  background: linear-gradient(to bottom right, var(--surface-09), var(--surface-15));
+  box-shadow: -1px -1px 0 var(--border-brightness-08), -1px 0 0 var(--border-brightness-08), 0 -1px var(--border-brightness-08), 1px 1px 0 var(--border-brightness-15), 1px 0 0 var(--border-brightness-15), 0 1px 0 var(--border-brightness-15), inset 1px 1px 0 var(--border-brightness-12), inset -1px -1px 0 var(--border-brightness-08);
 }
 
 .title-bar-buttons button:active {
-  background: linear-gradient(to bottom right, #444, #bbb);
-  box-shadow: -1px -1px 0 #888, 1px 1px 0 #fff, inset -1px -1px 0 #999;
+  background: linear-gradient(to bottom right, var(--surface-04), var(--surface-11));
+  box-shadow: -1px -1px 0 var(--border-brightness-08), 1px 1px 0 var(--border-brightness-15), inset -1px -1px 0 var(--border-brightness-09);
 }
 
 .window-body {
-  color: #555;
-  border: 1px solid #555;
-  background: #eee;
+  color: var(--surface-05);
+  border: 1px solid var(--border-brightness-05);
+  background: var(--surface-14);
 }
 
 .window.active > .window-body,
 .window:focus-within > .window-body {
-  color: #000;
-  background: var(--window-bg);
-  border: 1px solid #000;
-  box-shadow: 1px 1px 0 #fff, 1px 0 0 #fff, 0 1px 0 #fff, -1px -1px 0 #999, -1px 0 0 #999, 0 -1px 0 #999;
+  color: var(--window-fg);
+  background: var(--surface-13);
+  border: 1px solid var(--border-brightness-00);
+  box-shadow: 1px 1px 0 var(--border-brightness-15), 1px 0 0 var(--border-brightness-15), 0 1px 0 var(--border-brightness-15), -1px -1px 0 var(--border-brightness-09), -1px 0 0 var(--border-brightness-09), 0 -1px 0 var(--border-brightness-09);
 }
 
 [role=menubar] {
-  color: #000;
-  background-color: #ddd;
+  color: var(--window-fg);
+  background-color: var(--surface-13);
 }
 [role=menubar] > li > ul, [role=menubar] > li > .menu {
   left: 0;
@@ -854,10 +887,10 @@ progress:not([value])::-webkit-progress-value {
 }
 
 [role=menu] {
-  color: #000;
-  background-color: #ddd;
-  border: 1px solid #000;
-  box-shadow: inset 1px 1px #fff, inset -1px -1px #888, 1px 1px #000;
+  color: var(--window-fg);
+  background-color: var(--surface-13);
+  border: 1px solid var(--border-brightness-00);
+  box-shadow: inset 1px 1px var(--border-brightness-15), inset -1px -1px var(--border-brightness-08), 1px 1px var(--border-brightness-00);
 }
 [role=menu] li {
   padding: 1px 3px 1px 21px;
@@ -875,8 +908,8 @@ progress:not([value])::-webkit-progress-value {
   min-width: 200px;
 }
 [role=menu] li[role=separator] {
-  border-top: 1px solid #888;
-  border-bottom: 1px solid #fff;
+  border-top: 1px solid var(--border-brightness-08);
+  border-bottom: 1px solid var(--border-brightness-15);
   height: 0;
   padding: 0;
   margin: 2px 0;
@@ -919,7 +952,7 @@ progress:not([value])::-webkit-progress-value {
 
 .menu > [role=menu] {
   border: 0;
-  border-top: 1px solid #555;
+  border-top: 1px solid var(--border-brightness-05);
 }
 
 [role=menu] li:focus,
@@ -934,13 +967,13 @@ progress:not([value])::-webkit-progress-value {
 [role=menu] li:focus-within,
 [role=menubar] li:focus-within {
   background: var(--primary-2);
-  box-shadow: inset 1px 0 var(--primary-3), inset -1px 0 #008;
-  color: #fff;
+  box-shadow: inset 1px 0 var(--primary-3), inset -1px 0 var(--primary-2);
+  color: var(--field-bg);
 }
 
 [role=menu] li[aria-disabled],
 [role=menubar] li[aria-disabled] {
-  color: #777;
+  color: var(--surface-07);
 }
 
 .tabs > menu {
@@ -959,9 +992,9 @@ progress:not([value])::-webkit-progress-value {
   min-width: 0;
   height: 23px;
   position: relative;
-  background: #CCCCCC;
+  background: var(--surface-12);
   height: 23px;
-  box-shadow: inset 0 1px #000, inset 0 2px #ccc, inset 0 3px #ddd;
+  box-shadow: inset 0 1px var(--border-brightness-00), inset 0 2px var(--border-brightness-12), inset 0 3px var(--border-brightness-00);
 }
 .tabs > menu > button:focus {
   outline: none;
@@ -993,8 +1026,8 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .tabs > menu > button:not([aria-selected=true]):active {
-  background: #666;
-  box-shadow: inset 0 1px #000, inset 0 2px #444, inset 0 3px #555;
+  background: var(--surface-06);
+  box-shadow: inset 0 1px var(--border-brightness-00), inset 0 2px var(--border-brightness-04), inset 0 3px var(--border-brightness-05);
 }
 
 .tabs > menu > button:not([aria-selected=true]):active::before,
@@ -1003,9 +1036,9 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .tabs > menu > button[aria-selected=true] {
-  color: #000;
-  background: #eee;
-  box-shadow: inset 0 1px #000, inset 0 2px #ccc, inset 0 3px #fff;
+  color: var(--window-fg);
+  background: var(--surface-14);
+  box-shadow: inset 0 1px var(--border-brightness-00), inset 0 2px var(--border-brightness-12), inset 0 3px var(--border-brightness-15);
   z-index: 2;
   height: 25px;
 }
@@ -1018,17 +1051,16 @@ progress:not([value])::-webkit-progress-value {
   position: relative;
   z-index: 1;
   margin-top: -4px;
-  background: #eee;
-  border: 1px solid #000;
-  box-shadow: inset 1px 1px 0 #ccc, inset 2px 2px 0 #fff, inset -1px -1px 0 #999, inset -2px -2px 0 #bbb;
-  /*box-shadow: inset 1px 0 0 #ccc, inset 2px 0 0 #fff, inset -1px -1px 0 #999, inset -2px -2px 0 #bbb;*/
+  background: var(--surface-14);
+  border: 1px solid var(--border-brightness-00);
+  box-shadow: inset 1px 1px 0 var(--border-brightness-12), inset 2px 2px 0 var(--border-brightness-15), inset -1px -1px 0 var(--border-brightness-09), inset -2px -2px 0 var(--border-brightness-11);
 }
 
 .list {
-  background: #fff;
-  color: #000;
-  border: 1px solid #000;
-  box-shadow: -1px -1px #888, 1px 1px #fff;
+  background: var(--field-bg);
+  color: var(--field-fg);
+  border: 1px solid var(--border-brightness-00);
+  box-shadow: -1px -1px var(--border-brightness-08), 1px 1px var(--border-brightness-15);
   overflow: auto;
   cursor: default;
 }
@@ -1074,12 +1106,12 @@ progress:not([value])::-webkit-progress-value {
   filter: brightness(0.5);
 }
 .icon-grid > .icon[aria-selected=true] > .icon-label {
-  background-color: #000;
-  color: #fff;
+  background-color: var(--field-fg);
+  color: var(--field-bg);
 }
 .icon-grid:focus-within > .icon[aria-selected=true] > .icon-label {
-  background-color: #000;
-  color: #fff;
+  background-color: var(--field-fg);
+  color: var(--field-bg);
 }
 
 .detailed {
@@ -1089,18 +1121,18 @@ progress:not([value])::-webkit-progress-value {
 .detailed th {
   text-align: left;
   font-weight: normal;
-  background-color: #ccc;
-  color: #000;
-  border: 1px solid #333;
-  border-top-color: #666;
-  border-left-color: #666;
-  box-shadow: inset 1px 1px #fff, inset -1px -1px #888;
+  background-color: var(--surface-12);
+  color: var(--window-fg);
+  border: 1px solid var(--border-brightness-03);
+  border-top-color: var(--border-brightness-06);
+  border-left-color: var(--border-brightness-06);
+  box-shadow: inset 1px 1px var(--border-brightness-15), inset -1px -1px var(--border-brightness-08);
   padding: 2px 6px 2px 6px;
   white-space: nowrap;
 }
 .detailed tr {
   outline: none;
-  background: #eee;
+  background: var(--surface-14);
 }
 .detailed tr:focus {
   outline: none;
@@ -1110,13 +1142,13 @@ progress:not([value])::-webkit-progress-value {
   color: var(--selection-fg);
 }
 .detailed .icon[aria-selected=true] .icon-label {
-  background-color: #000;
-  color: #fff;
+  background-color: var(--field-fg);
+  color: var(--field-bg);
 }
 .detailed td {
   padding: 2px 6px 2px 6px;
   white-space: nowrap;
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid var(--border-brightness-15);
 }
 .detailed td.icon {
   display: flex;
@@ -1144,8 +1176,8 @@ progress:not([value])::-webkit-progress-value {
   filter: brightness(0.5);
 }
 .detailed .icon[aria-selected=true] > .icon-label {
-  background-color: #000;
-  color: #fff;
+  background-color: var(--field-fg);
+  color: var(--field-bg);
 }
 .detailed thead {
   position: sticky;
@@ -1161,7 +1193,7 @@ progress:not([value])::-webkit-progress-value {
 }
 .list ul[role=tree] li {
   list-style-type: none;
-  background: #eee;
+  background: var(--surface-14);
 }
 .list ul[role=tree] li > details {
   margin: 0;
@@ -1198,7 +1230,7 @@ progress:not([value])::-webkit-progress-value {
   position: absolute;
   left: 0;
   right: 0;
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid var(--border-brightness-15);
 }
 .list ul[role=tree] .icon {
   display: inline-flex;
@@ -1222,16 +1254,16 @@ progress:not([value])::-webkit-progress-value {
   filter: brightness(0.5);
 }
 .list ul[role=tree] .icon[aria-selected=true] > .icon-label {
-  background-color: #000;
-  color: #fff;
+  background-color: var(--field-fg);
+  color: var(--field-bg);
 }
 .list ul[role=tree] [role=treeitem]:not(.icon) {
   display: inline-flex;
   outline: none;
 }
 .list ul[role=tree] [role=treeitem]:not(.icon)[aria-selected=true] {
-  background-color: #000;
-  color: #fff;
+  background-color: var(--field-fg);
+  color: var(--field-bg);
 }
 .list ul[role=tree] ul {
   margin-left: 8px;

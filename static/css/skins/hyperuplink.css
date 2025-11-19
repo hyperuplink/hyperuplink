@@ -1,9 +1,41 @@
 :root {
   font-family: "ChiKareGo2";
-  --desktop-bg: url('../images/background.gif') top left repeat;
-  --window-bg: #dddddd;
+
+  --desktop-bg: url("../images/background.gif") top left repeat;
   --window-fg: #000000;
-  --window-frame-bg: #cccccc;
+  --field-bg: #fff;
+  --field-fg: #000;
+  --disabled-fg: #808080;
+
+  --surface-15: #00ffff;
+  --surface-14: #00eeee;
+  --surface-13: #00dddd; /* window bg */
+  --surface-12: #00cccc;
+  --surface-11: #00bbbb;
+  --surface-10: #009aaa;
+  --surface-09: #008999;
+  --surface-07: #007777;
+  --surface-06: #006666;
+  --surface-05: #005555;
+  --surface-04: #004444;
+
+  --border-brightness-15: #00ffff;
+  --border-brightness-14: #00eeee;
+  --border-brightness-13: #00dddd;
+  --border-brightness-12: #00cccc;
+  --border-brightness-11: #00bbbb;
+  --border-brightness-10-1: #adadad;
+  --border-brightness-10: #00aaaa;
+  --border-brightness-09: #009999;
+  --border-brightness-08: #008888;
+  --border-brightness-07: #007777;
+  --border-brightness-06: #006666;
+  --border-brightness-05: #005555;
+  --border-brightness-04: #004444;
+  --border-brightness-03: #003333;
+  --border-brightness-02: #002222;
+  --border-brightness-00: #000;
+
   --primary-0: #000;
   --primary-1: #005;
   --primary-2: #339;
@@ -19,7 +51,8 @@
 .title-bar .title-bar-text {
   font-size: inherit;
 }
-.title-bar .title-bar-text::before, .title-bar .title-bar-text::after {
+.title-bar .title-bar-text::before,
+.title-bar .title-bar-text::after {
   height: 20px;
 }
 .title-bar-buttons button {
