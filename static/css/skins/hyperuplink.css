@@ -5,44 +5,45 @@
   --window-fg: #000000;
   --field-bg: #fff;
   --field-fg: #000;
-  --disabled-fg: #808080;
+  --disabled-fg: #97c3d2;
 
-  --surface-15: #00ffff;
-  --surface-14: #00eeee;
-  --surface-13: #00dddd; /* window bg */
-  --surface-12: #00cccc;
-  --surface-11: #00bbbb;
-  --surface-10: #009aaa;
-  --surface-09: #008999;
-  --surface-07: #007777;
-  --surface-06: #006666;
-  --surface-05: #005555;
-  --surface-04: #004444;
+  --surface-15: #FFFFFF;
+  --surface-14: #F0F5F8;
+  --surface-13: #E1ECEF; /* window bg */
+  --surface-12: #C4D9E0;
+  --surface-11: #A7C5D0;
+  --surface-10: #8AB2C0;
+  --surface-09: #6D9FB0;
+  --surface-07: #337990;
+  --surface-06: #2C687C;
+  --surface-05: #245767;
+  --surface-04: #1D4552;
 
-  --border-brightness-15: #00ffff;
-  --border-brightness-14: #00eeee;
-  --border-brightness-13: #00dddd;
-  --border-brightness-12: #00cccc;
-  --border-brightness-11: #00bbbb;
-  --border-brightness-10-1: #adadad;
-  --border-brightness-10: #00aaaa;
-  --border-brightness-09: #009999;
-  --border-brightness-08: #008888;
-  --border-brightness-07: #007777;
-  --border-brightness-06: #006666;
-  --border-brightness-05: #005555;
-  --border-brightness-04: #004444;
-  --border-brightness-03: #003333;
-  --border-brightness-02: #002222;
-  --border-brightness-00: #000;
+  --border-brightness-15: #FFFFFF;
+  --border-brightness-14: #F0F5F8;
+  --border-brightness-13: #E1ECEF;
+  --border-brightness-12: #C4D9E0;
+  --border-brightness-11: #A7C5D0;
+  --border-brightness-10-1: #97c3d2; /* adadad */
+  --border-brightness-10: #8AB2C0;
+  --border-brightness-09: #6D9FB0;
+  --border-brightness-08: #508CA0;
+  --border-brightness-07: #337990;
+  --border-brightness-06: #2C687C;
+  --border-brightness-05: #245767;
+  --border-brightness-04: #1D4552;
+  --border-brightness-03: #16343E;
+  --border-brightness-02: #0F2329;
+  --border-brightness-00: #000000;
 
-  --primary-0: #000;
-  --primary-1: #005;
-  --primary-2: #339;
-  --primary-3: #66c;
-  --primary-4: #99f;
-  --primary-5: #ccf;
-  --primary-6: #eee;
+  --primary-0: #000000;
+  --primary-1: #33001A;
+  --primary-2: #80204D;
+  --primary-3: #B34D73;
+  --primary-4: #E680A6;
+  --primary-5: #F2BFD1;
+  --primary-6: #F9E6EF;
+
   --selection-bg: var(--primary-5);
   --selection-fg: #000;
   --highlight: #efc71d;
