@@ -12,453 +12,489 @@
   </head>
   <body class="flex-column use-preferred-font">
     <div class="desktop grow">
-      <div>
-        <div class="banner">VT100 Forum</div>
-        <ul role="menubar">
-          <li tabindex="0" aria-haspopup="true">
-            <u>A</u>ccount
-            <ul role="menu">
-              <li tabindex="0">Save</li>
-              <li tabindex="0">Save As…</li>
-              <li role="separator"></li>
-              <li tabindex="0" aria-haspopup="true">
-                Another Submenu
-                <ul role="menu">
-                  <li tabindex="0">Foo</li>
-                  <li tabindex="0">Baz</li>
-                </ul>
-              </li>
-              <li role="separator"></li>
-              <li tabindex="0">Quit</li>
-            </ul>
-          </li>
-          <li tabindex="0" aria-haspopup="true">
-            <u>V</u>iew
-            <ul role="menu">
-              <li tabindex="0" role="checkbox" aria-checked="true">
-                Status <u>B</u>ar
-              </li>
-              <li role="separator"></li>
-              <li tabindex="0" role="radio" aria-checked="false">
-                Ico<u>n</u>s
-              </li>
-              <li tabindex="0" role="radio" aria-checked="true">
-                <u>L</u>ist
-              </li>
-              <li tabindex="0" role="radio" aria-checked="false">
-                <u>D</u>etails
-              </li>
-              <li role="separator"></li>
-              <li tabindex="0">
-                <u>R</u>efresh
-              </li>
-            </ul>
-          </li>
-          <li tabindex="0" class="help-menu" aria-haspopup="true">
-            Help
-            <ul role="menu">
-              <li tabindex="0">Overview</li>
-              <li role="separator"></li>
-              <li tabindex="0">About</li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-      <div class="margin window active">
-        <div class="title-bar">
-          <div class="title-bar-text">Latest posts</div>
-        </div>
-        <div class="window-body">
-          <div class="list" role="listbox" aria-multiselectable="true">
-            <table class="detailed">
-              <thead>
-                <tr>
-                  <th scope="col" role="button">Name</th>
-                  <th scope="col" role="button" style="width: 160px;">Board</th>
-                  <th scope="col" role="button" style="text-align: right; width: 60px;">Replies</th>
-                  <th scope="col"
-                      role="button"
-                      aria-sort="descending"
-                      style="text-align: right;
-                             width: 140px">Updated</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <div class="icon" role="option">
-                      <img src="static/icons/post.png">
-                      <div class="icon-label">Opinions on Clouvider?</div>
-                    </div>
-                  </td>
-                  <td>Hosting</td>
-                  <td style="text-align: right;">12</td>
-                  <td style="text-align: right;">2025-11-18 20:28</td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="icon" role="option">
-                      <img src="static/icons/post.png">
-                      <div class="icon-label">Alternatives to ProtonMail</div>
-                    </div>
-                  </td>
-                  <td>E-Mail</td>
-                  <td style="text-align: right;">87</td>
-                  <td style="text-align: right;">2025-11-17 12:42</td>
-                </tr>
-              </tbody>
-            </table>
+      <div class="container">
+        <div class="margin header raised">
+          <div class="banner">
+            <a href="" title="">
+              <img src="static/images/banner.jpg">
+            </a>
           </div>
-        </div>
-      </div>
-      <div class="margin window active">
-        <div class="title-bar">
-          <div class="title-bar-text">Announcements</div>
-        </div>
-        <div class="window-body">
-          <div class="list" role="listbox">
-            <table class="detailed">
-              <thead>
-                <tr>
-                  <th scope="col" role="button">Name</th>
-                  <th scope="col" role="button" style="text-align: right; width: 60px;">Topics</th>
-                  <th scope="col" role="button" style="text-align: right; width: 60px;">Posts</th>
-                  <th scope="col"
-                      role="button"
-                      aria-sort="descending"
-                      style="text-align: right;
-                             width: 140px">Updated</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr role="option">
-                  <td>
-                    <a href="#" title="" class="icon big">
-                      <img src="static/icons/category.png">
-                      <div class="icon-label">
-                        <div>News</div>
-                        <div class="icon-sublabel">All the latest forum news</div>
-                      </div>
-                    </a>
-                  </td>
-                  <td style="text-align: right;">12</td>
-                  <td style="text-align: right;">89</td>
-                  <td style="text-align: right;">2025-07-14 20:28</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="margin window active">
-        <div class="title-bar">
-          <div class="title-bar-text">Communication</div>
-        </div>
-        <div class="window-body">
-          <div class="list" role="listbox">
-            <table class="detailed">
-              <thead>
-                <tr>
-                  <th scope="col" role="button">Name</th>
-                  <th scope="col" role="button" style="text-align: right; width: 60px;">Topics</th>
-                  <th scope="col" role="button" style="text-align: right; width: 60px;">Posts</th>
-                  <th scope="col"
-                      role="button"
-                      aria-sort="descending"
-                      style="text-align: right;
-                             width: 140px">Updated</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr role="option">
-                  <td>
-                    <a href="#" title="" class="icon big">
-                      <img src="static/icons/category.png">
-                      <div class="icon-label">
-                        <div>E-Mail</div>
-                        <div class="icon-sublabel">Information on e-mail providers</div>
-                      </div>
-                    </a>
-                  </td>
-                  <td style="text-align: right;">118</td>
-                  <td style="text-align: right;">479</td>
-                  <td style="text-align: right;">2025-11-18 22:11</td>
-                </tr>
-                <tr role="option">
-                  <td>
-                    <a href="#" title="" class="icon big">
-                      <img src="static/icons/category.png">
-                      <div class="icon-label">
-                        <div>Instant Messaging</div>
-                        <div class="icon-sublabel">Information on IM/Chat apps</div>
-                      </div>
-                    </a>
-                  </td>
-                  <td style="text-align: right;">171</td>
-                  <td style="text-align: right;">969</td>
-                  <td style="text-align: right;">2025-11-18 16:48</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="margin window active">
-        <div class="title-bar">
-          <div class="title-bar-text">Cloud</div>
-        </div>
-        <div class="window-body">
-          <div class="list" role="listbox">
-            <table class="detailed">
-              <thead>
-                <tr>
-                  <th scope="col" role="button">Name</th>
-                  <th scope="col" role="button" style="text-align: right; width: 60px;">Topics</th>
-                  <th scope="col" role="button" style="text-align: right; width: 60px;">Posts</th>
-                  <th scope="col"
-                      role="button"
-                      aria-sort="descending"
-                      style="text-align: right;
-                             width: 140px">Updated</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr role="option">
-                  <td class="icon big">
-                    <img src="static/icons/category.png">
-                    <div class="icon-label">
-                      <div>Domains</div>
-                      <div class="icon-sublabel">Information on domain registrars</div>
-                    </div>
-                  </td>
-                  <td style="text-align: right;">118</td>
-                  <td style="text-align: right;">479</td>
-                  <td style="text-align: right;">2025-11-18 22:11</td>
-                </tr>
-                <tr role="option">
-                  <td class="icon big">
-                    <img src="static/icons/category.png">
-                    <div class="icon-label">
-                      <div>Hosting</div>
-                      <div class="icon-sublabel">Information on hosting providers</div>
-                    </div>
-                  </td>
-                  <td style="text-align: right;">171</td>
-                  <td style="text-align: right;">969</td>
-                  <td style="text-align: right;">2025-11-18 16:48</td>
-                </tr>
-                <tr role="option">
-                  <td class="icon big">
-                    <img src="static/icons/category.png">
-                    <div class="icon-label">
-                      <div>Automation</div>
-                      <div class="icon-sublabel">Information on tools like Terraform, Ansible, etc.</div>
-                    </div>
-                  </td>
-                  <td style="text-align: right;">171</td>
-                  <td style="text-align: right;">969</td>
-                  <td style="text-align: right;">2025-11-18 16:48</td>
-                </tr>
-                <tr role="option">
-                  <td>
-                    <a href="#" title="" class="icon big">
-                      <img src="static/icons/category.png">
-                      <div class="icon-label">
-                        <div>Monitoring</div>
-                        <div class="icon-sublabel">Information on infrastructure monitoring systems</div>
-                      </div>
-                    </a>
-                  </td>
-                  <td style="text-align: right;">171</td>
-                  <td style="text-align: right;">969</td>
-                  <td style="text-align: right;">2025-11-18 16:48</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="margin window active">
-        <div class="title-bar">
-          <div class="title-bar-text">Hosting</div>
-        </div>
-        <div class="window-body">
-          <div class="list" role="listbox">
-            <table class="detailed">
-              <thead>
-                <tr>
-                  <th scope="col" role="button">Name</th>
-                  <th scope="col" role="button" style="text-align: right; width: 60px;">Replies</th>
-                  <th scope="col" role="button" style="text-align: right; width: 60px;">Views</th>
-                  <th scope="col"
-                      role="button"
-                      aria-sort="descending"
-                      style="text-align: right;
-                             width: 140px">Updated</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr role="option">
-                  <td>
-                    <a href="#" title="" class="icon big">
-                      <img src="static/icons/post.png">
-                      <div class="icon-label">
-                        <div>Opinions on Clouvider?</div>
-                        <div class="icon-sublabel">by TomAto on Tue Nov 04, 2025 1:06 pm</div>
-                      </div>
-                    </a>
-                  </td>
-                  <td style="text-align: right;">12</td>
-                  <td style="text-align: right;">89</td>
-                  <td style="text-align: right;">2025-07-14 20:28</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="margin window active">
-        <div class="title-bar">
-          <div class="title-bar-text">Opinions on Clouvider?</div>
-        </div>
-        <div class="window-body">
-          <!-- POST -->
-          <div class="raised padding margin post flex-row">
-            <fieldset class="profile padding">
-              <img class="picture lowered" src="static/images/avatar.jpg">
-              <div class="username">TomAto</div>
-              <div class="status">Elite Member</div>
-              <div class="postnum">Posts: 381</div>
-              <div class="joined">Joined: 2025-04-21</div>
-            </fieldset>
-            <div class="content flex-column">
-              <div class="text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In sit amet congue ante. Praesent non eros odio. Cras nec ante purus. Integer libero dui, ornare eu arcu eget, rhoncus ultricies ligula. Suspendisse congue tortor at nibh blandit, ut molestie lacus aliquam. Aenean eget augue non turpis ornare pellentesque. Etiam in turpis mauris. Phasellus vel enim eu justo vehicula porttitor at vel quam. Phasellus a lorem id erat pretium viverra. Duis fringilla sapien ut laoreet dignissim. Pellentesque tincidunt feugiat rhoncus. Maecenas vitae consequat est, a fringilla nibh. Duis auctor lectus lorem, ac feugiat eros tempus eu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
-              </div>
-              <div class="actions flex-row justify-end gap">
-                <a class="button danger" href="" title="Report post to admins">!</a>
-                <a class="button" href="#reply" title="Reply to this post in thread">@</a>
-              </div>
-            </div>
-          </div>
-          <!-- POST -->
-          <div class="raised padding margin post flex-row">
-            <fieldset class="profile padding">
-              <img class="picture lowered" src="static/images/avatar2.jpg">
-              <div class="username">BerryCran</div>
-              <div class="status">New here</div>
-              <div class="postnum">Posts: 69</div>
-              <div class="joined">Joined: 2024-01-19</div>
-            </fieldset>
-            <div class="content flex-column">
-              <div class="text">
-                <em style="color: green;">
-                  > Be Lorem
-                  <br />
-                  > Say ipsum
-                  <br />
-                  > Experience dolor
-                  <br />
-                </em>
-                <br />
-                Maecenas vitae consequat est, a fringilla nibh. Duis auctor lectus lorem, ac feugiat eros tempus eu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
-              </div>
-              <div class="actions flex-row justify-end gap">
-                <a class="button danger" href="" title="Report post to admins">!</a>
-                <a class="button" href="#reply" title="Reply to this post in thread">@</a>
-              </div>
-            </div>
-          </div>
-          <!-- POST -->
-          <div class="raised padding margin post flex-row">
-            <fieldset class="profile padding">
-              <img class="picture lowered" src="static/images/avatar3.jpg">
-              <div class="username">PamGranade</div>
-              <div class="status">Regular</div>
-              <div class="postnum">Posts: 128</div>
-              <div class="joined">Joined: 2024-09-17</div>
-            </fieldset>
-            <div class="content flex-column">
-              <div class="text">
-                Haha, ipsum dolor sit amet, consectetur adipiscing elit. In sit amet congue ante. Praesent non eros odio. Cras nec ante purus:
-                <br />
-                <br />
-                <pre>
-:(){ :|:& };:
-                </pre>
-                Suspendisse congue tortor at nibh blandit, ut molestie lacus aliquam. Aenean eget augue non turpis ornare pellentesque. Etiam in turpis mauris. Phasellus vel enim eu justo vehicula porttitor at vel quam. Phasellus a lorem id erat pretium viverra.
-              </div>
-              <div class="actions flex-row justify-end gap">
-                <a class="button danger" href="" title="Report post to admins">!</a>
-                <a class="button" href="#reply" title="Reply to this post in thread">@</a>
-              </div>
-            </div>
-          </div>
-          <div class="pagination flex-row justify-center gap margin">
-            <div class="button disabled">|&lt;</div>
-            <div class="button disabled">&lt;-</div>
-            <div class="button active">1</div>
-            <div class="button">2</div>
-            <div class="button">3</div>
-            <div class="button">-&gt;</div>
-            <div class="button">&gt;|</div>
-          </div>
-        </div>
-      </div>
-      <div class="margin window active">
-        <div class="title-bar">
-          <div class="title-bar-text">Reply to thread</div>
-        </div>
-        <div class="window-body">
           <ul role="menubar">
             <li tabindex="0" aria-haspopup="true">
-              <u>F</u>ile
+              <u>A</u>ccount
               <ul role="menu">
-                <li tabindex="0" data-shortcut="Ctrl+S">Save Draft</li>
+                <li tabindex="0">Save</li>
+                <li tabindex="0">Save As…</li>
                 <li role="separator"></li>
-                <li tabindex="0">Discard</li>
+                <li tabindex="0" aria-haspopup="true">
+                  Another Submenu
+                  <ul role="menu">
+                    <li tabindex="0">Foo</li>
+                    <li tabindex="0">Baz</li>
+                  </ul>
+                </li>
+                <li role="separator"></li>
+                <li tabindex="0">Quit</li>
               </ul>
             </li>
             <li tabindex="0" aria-haspopup="true">
-              <u>E</u>dit
+              <u>V</u>iew
               <ul role="menu">
-                <li data-shortcut="Ctrl+Z" aria-disabled="true">Undo</li>
+                <li tabindex="0" role="checkbox" aria-checked="true">
+                  Status <u>B</u>ar
+                </li>
                 <li role="separator"></li>
-                <li data-shortcut="Ctrl+X" aria-disabled="true">Cut</li>
-                <li tabindex="0" data-shortcut="Ctrl+C" aria-disabled="true">Copy</li>
-                <li tabindex="0" data-shortcut="Ctrl+V">Paste</li>
-              </ul>
-            </li>
-            <li tabindex="0" aria-haspopup="true">
-              For<u>m</u>at
-              <ul role="menu">
-                <li tabindex="0" data-shortcut="Ctrl+B">Bold</li>
-                <li tabindex="0" data-shortcut="Ctrl+I">Italic</li>
-                <li tabindex="0" data-shortcut="Ctrl+U">Underline</li>
+                <li tabindex="0" role="radio" aria-checked="false">
+                  Ico<u>n</u>s
+                </li>
+                <li tabindex="0" role="radio" aria-checked="true">
+                  <u>L</u>ist
+                </li>
+                <li tabindex="0" role="radio" aria-checked="false">
+                  <u>D</u>etails
+                </li>
                 <li role="separator"></li>
-                <li tabindex="0" data-shortcut="Ctrl+O">Quote</li>
-                <li tabindex="0" data-shortcut="Ctrl+M">Image</li>
+                <li tabindex="0">
+                  <u>R</u>efresh
+                </li>
               </ul>
             </li>
             <li tabindex="0" class="help-menu" aria-haspopup="true">
-              <u>H</u>elp
+              Help
               <ul role="menu">
-                <li tabindex="0">Formatting</li>
+                <li tabindex="0">Overview</li>
+                <li role="separator"></li>
+                <li tabindex="0">About</li>
               </ul>
             </li>
           </ul>
-          <div id="reply" class="reply">
-            <form class="flex-column gap" onsubmit="return false">
-              <textarea name="reply"
-                        cols="72"
-                        rows="12"
-                        wrap="soft"
-                        placeholder="Reply here, Markdown supported."></textarea>
-              <div class="actions flex-row justify-end gap padding">
-                <input type="reset" class="button danger" value="Clear">
-                <button type="submit" class="button primary">Reply</button>
+          <div class="breadcrumbs raised">
+            <ul class="lowered flex-row gap">
+              <li>
+                <a href="" title="">Cloud</a>
+              </li>
+              <li>
+                <a href="" title="">Hosting</a>
+              </li>
+              <li class="active">
+                <a href="" title="">Opinions on Clouvider?</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="margin window active">
+          <div class="title-bar">
+            <div class="title-bar-text">Latest posts</div>
+          </div>
+          <div class="window-body">
+            <div class="list" role="listbox" aria-multiselectable="true">
+              <table class="detailed">
+                <thead>
+                  <tr>
+                    <th scope="col" role="button">Name</th>
+                    <th class="no-mobile" scope="col" role="button" style="width: 160px;">Board</th>
+                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Replies</th>
+                    <th class="no-mobile" scope="col"
+                        role="button"
+                        aria-sort="descending"
+                        style="text-align: right;
+                               width: 140px">Updated</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="icon" role="option">
+                        <img src="static/icons/post.png">
+                        <div class="icon-label">Opinions on Clouvider?</div>
+                      </div>
+                    </td>
+                    <td class="no-mobile">Hosting</td>
+                    <td class="no-mobile" style="text-align: right;">12</td>
+                    <td class="no-mobile" style="text-align: right;">2025-11-18 20:28</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="icon" role="option">
+                        <img src="static/icons/post.png">
+                        <div class="icon-label">Alternatives to ProtonMail</div>
+                      </div>
+                    </td>
+                    <td class="no-mobile">E-Mail</td>
+                    <td class="no-mobile" style="text-align: right;">87</td>
+                    <td class="no-mobile" style="text-align: right;">2025-11-17 12:42</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="margin window active">
+          <div class="title-bar">
+            <div class="title-bar-text">Announcements</div>
+          </div>
+          <div class="window-body">
+            <div class="list" role="listbox">
+              <table class="detailed">
+                <thead>
+                  <tr>
+                    <th scope="col" role="button">Name</th>
+                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Topics</th>
+                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Posts</th>
+                    <th class="no-mobile" scope="col"
+                        role="button"
+                        aria-sort="descending"
+                        style="text-align: right;
+                               width: 140px">Updated</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr role="option">
+                    <td>
+                      <a href="#" title="" class="icon big">
+                        <img src="static/icons/category.png">
+                        <div class="icon-label">
+                          <div>News</div>
+                          <div class="icon-sublabel">All the latest forum news</div>
+                        </div>
+                      </a>
+                    </td>
+                    <td class="no-mobile" style="text-align: right;">12</td>
+                    <td class="no-mobile" style="text-align: right;">89</td>
+                    <td class="no-mobile" style="text-align: right;">2025-07-14 20:28</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="margin window active">
+          <div class="title-bar">
+            <div class="title-bar-text">Communication</div>
+          </div>
+          <div class="window-body">
+            <div class="list" role="listbox">
+              <table class="detailed">
+                <thead>
+                  <tr>
+                    <th scope="col" role="button">Name</th>
+                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Topics</th>
+                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Posts</th>
+                    <th class="no-mobile" scope="col"
+                        role="button"
+                        aria-sort="descending"
+                        style="text-align: right;
+                               width: 140px">Updated</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr role="option">
+                    <td>
+                      <a href="#" title="" class="icon big">
+                        <img src="static/icons/category.png">
+                        <div class="icon-label">
+                          <div>E-Mail</div>
+                          <div class="icon-sublabel">Information on e-mail providers</div>
+                        </div>
+                      </a>
+                    </td>
+                    <td class="no-mobile" style="text-align: right;">118</td>
+                    <td class="no-mobile" style="text-align: right;">479</td>
+                    <td class="no-mobile" style="text-align: right;">2025-11-18 22:11</td>
+                  </tr>
+                  <tr role="option">
+                    <td>
+                      <a href="#" title="" class="icon big">
+                        <img src="static/icons/category.png">
+                        <div class="icon-label">
+                          <div>Instant Messaging</div>
+                          <div class="icon-sublabel">Information on IM/Chat apps</div>
+                        </div>
+                      </a>
+                    </td>
+                    <td class="no-mobile" style="text-align: right;">171</td>
+                    <td class="no-mobile" style="text-align: right;">969</td>
+                    <td class="no-mobile" style="text-align: right;">2025-11-18 16:48</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="margin window active">
+          <div class="title-bar">
+            <div class="title-bar-text">Cloud</div>
+          </div>
+          <div class="window-body">
+            <div class="list" role="listbox">
+              <table class="detailed">
+                <thead>
+                  <tr>
+                    <th scope="col" role="button">Name</th>
+                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Topics</th>
+                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Posts</th>
+                    <th class="no-mobile" scope="col"
+                        role="button"
+                        aria-sort="descending"
+                        style="text-align: right;
+                               width: 140px">Updated</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr role="option">
+                    <td class="icon big">
+                      <img src="static/icons/category.png">
+                      <div class="icon-label">
+                        <div>Domains</div>
+                        <div class="icon-sublabel">Information on domain registrars</div>
+                      </div>
+                    </td>
+                    <td class="no-mobile" style="text-align: right;">118</td>
+                    <td class="no-mobile" style="text-align: right;">479</td>
+                    <td class="no-mobile" style="text-align: right;">2025-11-18 22:11</td>
+                  </tr>
+                  <tr role="option">
+                    <td class="icon big">
+                      <img src="static/icons/category.png">
+                      <div class="icon-label">
+                        <div>Hosting</div>
+                        <div class="icon-sublabel">Information on hosting providers</div>
+                      </div>
+                    </td>
+                    <td class="no-mobile" style="text-align: right;">171</td>
+                    <td class="no-mobile" style="text-align: right;">969</td>
+                    <td class="no-mobile" style="text-align: right;">2025-11-18 16:48</td>
+                  </tr>
+                  <tr role="option">
+                    <td class="icon big">
+                      <img src="static/icons/category.png">
+                      <div class="icon-label">
+                        <div>Automation</div>
+                        <div class="icon-sublabel">Information on tools like Terraform, Ansible, etc.</div>
+                      </div>
+                    </td>
+                    <td class="no-mobile" style="text-align: right;">171</td>
+                    <td class="no-mobile" style="text-align: right;">969</td>
+                    <td class="no-mobile" style="text-align: right;">2025-11-18 16:48</td>
+                  </tr>
+                  <tr role="option">
+                    <td>
+                      <a href="#" title="" class="icon big">
+                        <img src="static/icons/category.png">
+                        <div class="icon-label">
+                          <div>Monitoring</div>
+                          <div class="icon-sublabel">Information on infrastructure monitoring systems</div>
+                        </div>
+                      </a>
+                    </td>
+                    <td class="no-mobile" style="text-align: right;">171</td>
+                    <td class="no-mobile" style="text-align: right;">969</td>
+                    <td class="no-mobile" style="text-align: right;">2025-11-18 16:48</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="margin window active">
+          <div class="title-bar">
+            <div class="title-bar-text">Hosting</div>
+          </div>
+          <div class="window-body">
+            <div class="list" role="listbox">
+              <table class="detailed">
+                <thead>
+                  <tr>
+                    <th scope="col" role="button">Name</th>
+                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Replies</th>
+                    <th class="no-mobile" scope="col" role="button" style="text-align: right; width: 60px;">Views</th>
+                    <th class="no-mobile" scope="col"
+                        role="button"
+                        aria-sort="descending"
+                        style="text-align: right;
+                               width: 140px">Updated</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr role="option">
+                    <td>
+                      <a href="#" title="" class="icon big">
+                        <img src="static/icons/post.png">
+                        <div class="icon-label">
+                          <div>Opinions on Clouvider?</div>
+                          <div class="icon-sublabel">by TomAto on Tue Nov 04, 2025 1:06 pm</div>
+                        </div>
+                      </a>
+                    </td>
+                    <td class="no-mobile" style="text-align: right;">12</td>
+                    <td class="no-mobile" style="text-align: right;">89</td>
+                    <td class="no-mobile" style="text-align: right;">2025-07-14 20:28</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="margin window active">
+          <div class="title-bar">
+            <div class="title-bar-text">Opinions on Clouvider?</div>
+          </div>
+          <div class="window-body">
+            <!-- POST -->
+            <div class="raised padding margin post flex-row">
+              <fieldset class="profile padding">
+                <img class="picture lowered" src="static/images/avatar.jpg">
+                <div class="username">TomAto</div>
+                <div class="status">Elite Member</div>
+                <div class="postnum">Posts: 381</div>
+                <div class="joined">Joined: 2025-04-21</div>
+              </fieldset>
+              <div class="content flex-column">
+                <div class="text">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. In sit amet congue ante. Praesent non eros odio. Cras nec ante purus. Integer libero dui, ornare eu arcu eget, rhoncus ultricies ligula. Suspendisse congue tortor at nibh blandit, ut molestie lacus aliquam. Aenean eget augue non turpis ornare pellentesque. Etiam in turpis mauris. Phasellus vel enim eu justo vehicula porttitor at vel quam. Phasellus a lorem id erat pretium viverra. Duis fringilla sapien ut laoreet dignissim. Pellentesque tincidunt feugiat rhoncus. Maecenas vitae consequat est, a fringilla nibh. Duis auctor lectus lorem, ac feugiat eros tempus eu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+                </div>
+                <div class="actions flex-row justify-end gap">
+                  <a class="button danger" href="" title="Report post to admins">!</a>
+                  <a class="button" href="#reply" title="Reply to this post in thread">@</a>
+                </div>
               </div>
-            </form>
+            </div>
+            <!-- POST -->
+            <div class="raised padding margin post flex-row">
+              <fieldset class="profile padding">
+                <img class="picture lowered" src="static/images/avatar2.jpg">
+                <div class="username">BerryCran</div>
+                <div class="status">New here</div>
+                <div class="postnum">Posts: 69</div>
+                <div class="joined">Joined: 2024-01-19</div>
+              </fieldset>
+              <div class="content flex-column">
+                <div class="text">
+                  <em style="color: green;">
+                    > Be Lorem
+                    <br />
+                    > Say ipsum
+                    <br />
+                    > Experience dolor
+                    <br />
+                  </em>
+                  <br />
+                  Maecenas vitae consequat est, a fringilla nibh. Duis auctor lectus lorem, ac feugiat eros tempus eu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+                </div>
+                <div class="actions flex-row justify-end gap">
+                  <a class="button danger" href="" title="Report post to admins">!</a>
+                  <a class="button" href="#reply" title="Reply to this post in thread">@</a>
+                </div>
+              </div>
+            </div>
+            <!-- POST -->
+            <div class="raised padding margin post flex-row">
+              <fieldset class="profile padding">
+                <img class="picture lowered" src="static/images/avatar3.jpg">
+                <div class="username">PamGranade</div>
+                <div class="status">Regular</div>
+                <div class="postnum">Posts: 128</div>
+                <div class="joined">Joined: 2024-09-17</div>
+              </fieldset>
+              <div class="content flex-column">
+                <div class="text">
+                  Haha, ipsum dolor sit amet, consectetur adipiscing elit. In sit amet congue ante. Praesent non eros odio. Cras nec ante purus:
+                  <br />
+                  <br />
+                  <pre>
+:(){ :|:& };:
+                </pre>
+                  Suspendisse congue tortor at nibh blandit, ut molestie lacus aliquam. Aenean eget augue non turpis ornare pellentesque. Etiam in turpis mauris. Phasellus vel enim eu justo vehicula porttitor at vel quam. Phasellus a lorem id erat pretium viverra.
+                </div>
+                <div class="actions flex-row justify-end gap">
+                  <a class="button danger" href="" title="Report post to admins">!</a>
+                  <a class="button" href="#reply" title="Reply to this post in thread">@</a>
+                </div>
+              </div>
+            </div>
+            <div class="pagination flex-row justify-center gap margin">
+              <div class="button disabled">|&lt;</div>
+              <div class="button disabled">&lt;-</div>
+              <div class="button active">1</div>
+              <div class="button">2</div>
+              <div class="button">3</div>
+              <div class="button">-&gt;</div>
+              <div class="button">&gt;|</div>
+            </div>
+          </div>
+        </div>
+        <div class="margin window active">
+          <div class="title-bar">
+            <div class="title-bar-text">Reply to thread</div>
+          </div>
+          <div class="window-body">
+            <ul role="menubar">
+              <li tabindex="0" aria-haspopup="true">
+                <u>F</u>ile
+                <ul role="menu">
+                  <li tabindex="0" data-shortcut="Ctrl+S">Save Draft</li>
+                  <li role="separator"></li>
+                  <li tabindex="0">Discard</li>
+                </ul>
+              </li>
+              <li tabindex="0" aria-haspopup="true">
+                <u>E</u>dit
+                <ul role="menu">
+                  <li data-shortcut="Ctrl+Z" aria-disabled="true">Undo</li>
+                  <li role="separator"></li>
+                  <li data-shortcut="Ctrl+X" aria-disabled="true">Cut</li>
+                  <li tabindex="0" data-shortcut="Ctrl+C" aria-disabled="true">Copy</li>
+                  <li tabindex="0" data-shortcut="Ctrl+V">Paste</li>
+                </ul>
+              </li>
+              <li tabindex="0" aria-haspopup="true">
+                For<u>m</u>at
+                <ul role="menu">
+                  <li tabindex="0" data-shortcut="Ctrl+B">Bold</li>
+                  <li tabindex="0" data-shortcut="Ctrl+I">Italic</li>
+                  <li tabindex="0" data-shortcut="Ctrl+U">Underline</li>
+                  <li role="separator"></li>
+                  <li tabindex="0" data-shortcut="Ctrl+O">Quote</li>
+                  <li tabindex="0" data-shortcut="Ctrl+M">Image</li>
+                </ul>
+              </li>
+              <li tabindex="0" class="help-menu" aria-haspopup="true">
+                <u>H</u>elp
+                <ul role="menu">
+                  <li tabindex="0">Formatting</li>
+                </ul>
+              </li>
+            </ul>
+            <div id="reply" class="reply">
+              <form class="flex-column gap" onsubmit="return false">
+                <textarea name="reply"
+                          cols="72"
+                          rows="12"
+                          wrap="soft"
+                          placeholder="Reply here, Markdown supported."></textarea>
+                <div class="actions flex-row justify-end gap padding">
+                  <input type="reset" class="button danger" value="Clear">
+                  <button type="submit" class="button primary">Reply</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="margin footer">
+          <div class="bar raised flex-row">
+            <div class="segment lowered padding">
+              Powered by <a href="" title="">Hyperuplink</a> v1.0.0
+            </div>
+            <div class="segment lowered padding grow">
+              <a href="" title="">Terms of Service</a> |
+              <a href="" title="">Privacy Policy</a> |
+              <a href="" title="">Contact</a>
+            </div>
+            <div class="segment lowered padding" style="text-align: right;">
+              <a href="" title="">
+                <img style="margin: 2px;" src="static/images/rss.gif">
+              </a>
+            </div>
           </div>
         </div>
       </div>
