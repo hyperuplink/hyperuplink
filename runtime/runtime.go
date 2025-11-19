@@ -1,7 +1,9 @@
 package runtime
 
 import (
+	"crypto/sha256"
 	"embed"
+	"encoding/hex"
 	"fmt"
 	"log/slog"
 	"os"
@@ -23,6 +25,7 @@ type Build struct {
 	Version string
 	Commit  string
 	Date    string
+	Hash    string
 }
 
 type Runtime struct {
@@ -35,6 +38,11 @@ type Runtime struct {
 	Repositories *repositories.Repositories
 }
 
+const (
+	ModeDevelopment string = "development"
+	ModeProduction  string = "production"
+)
+
 func New(cfgstr string) (*Runtime, error) {
 	var err error
 
@@ -43,6 +51,7 @@ func New(cfgstr string) (*Runtime, error) {
 	rt.Build.Version = Version
 	rt.Build.Commit = Commit
 	rt.Build.Date = Date
+	rt.Build.Hash = rt.computeBuildHash(rt.Build.Commit, rt.Build.Date)
 
 	rt.Embeds = make(map[string]*embed.FS)
 
@@ -179,4 +188,19 @@ func (rt *Runtime) Warn(args ...any) {
 func (rt *Runtime) Error(args ...any) {
 	fn := rt.getLogFnName()
 	rt.Logger.Error(fn, args...)
+}
+
+func (rt *Runtime) computeBuildHash(args ...string) string {
+	h := sha256.New()
+	h.Write([]byte(strings.Join(args, "")))
+	hashBytes := h.Sum(nil)
+	return hex.EncodeToString(hashBytes)
+}
+
+func (rt *Runtime) IsDevelopmentMode() bool {
+	if rt.Config.GeneralMode() == ModeDevelopment {
+		return true
+	}
+
+	return false
 }
