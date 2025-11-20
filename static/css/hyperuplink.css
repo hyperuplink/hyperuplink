@@ -51,6 +51,18 @@
   margin: 0px 2px;
 }
 
+.title-bar .title-bar-text {
+  font-size: inherit;
+}
+.title-bar .title-bar-text::before,
+.title-bar .title-bar-text::after {
+  height: 20px;
+}
+.title-bar-buttons button {
+  width: 18px;
+  height: 18px;
+}
+
 .button.highlight {
   background-color: var(--highlight);
 }
@@ -87,7 +99,7 @@ a.button {
 }
 
 .icon-sublabel {
-  font-size: 13px;
+  font-size: 0.9rem;
   color: var(--surface-05);
 }
 
@@ -125,19 +137,19 @@ a.button {
 }
 
 .post > .profile > .username {
-  font-size: 18px;
+  font-size: 1.1rem;
 }
 
 .post > .profile > .status {
-  font-size: 14px;
+  font-size: 1.0rem;
 }
 
 .post > .profile > .postnum {
-  font-size: 14px;
+  font-size: 0.9rem;
 }
 
 .post > .profile > .joined {
-  font-size: 12px;
+  font-size: 0.9rem;
 }
 
 .post > .content {

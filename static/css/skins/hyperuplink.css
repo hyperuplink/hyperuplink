@@ -1,5 +1,6 @@
 :root {
   font-family: "ChiKareGo2";
+  font-size: 16px;
 
   --desktop-bg: url("../images/background.gif") top left repeat;
   --window-fg: #000000;
@@ -47,16 +48,5 @@
   --selection-bg: var(--primary-5);
   --selection-fg: #000;
   --highlight: #efc71d;
-  --danger: #ffa2a2;
-}
-.title-bar .title-bar-text {
-  font-size: inherit;
-}
-.title-bar .title-bar-text::before,
-.title-bar .title-bar-text::after {
-  height: 20px;
-}
-.title-bar-buttons button {
-  width: 18px;
-  height: 18px;
+  --danger: #F2BFD1;
 }
