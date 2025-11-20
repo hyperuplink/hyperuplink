@@ -366,7 +366,7 @@ select:not([size], [multiple]), select[size="1"] {
   padding: 2px 10px;
   min-width: 58px;
   text-align: center;
-  font-weight: bold;
+  /* font-weight: bold; */
   cursor: default;
   user-select: none;
 }
@@ -762,7 +762,7 @@ progress:not([value])::-webkit-progress-value {
   flex-grow: 1;
   align-items: flex-start;
   gap: 4px;
-  font-weight: bold;
+  /* font-weight: bold; */
   font-size: 12px;
   cursor: default;
 }
@@ -1120,7 +1120,7 @@ progress:not([value])::-webkit-progress-value {
 }
 .detailed th {
   text-align: left;
-  font-weight: normal;
+  /* font-weight: normal; */
   background-color: var(--surface-12);
   color: var(--window-fg);
   border: 1px solid var(--border-brightness-03);
