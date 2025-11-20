@@ -56,3 +56,4 @@ func (p *Site) CSS(name string) string {
 func (p *Site) Title() string {
 	return p.title
 }
+
