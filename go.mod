@@ -12,7 +12,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.28.0 // indirect
 	github.com/go-viper/mapstructure/v2 v2.4.0 // indirect
-	github.com/gofiber/fiber/v3 v3.0.0-rc.2 // indirect
+	github.com/gofiber/fiber/v3 v3.0.0-rc.3 // indirect
 	github.com/gofiber/schema v1.6.0 // indirect
 	github.com/gofiber/storage/redis/v3 v3.4.1 // indirect
 	github.com/gofiber/template v1.8.4-0.20250828051051-9105dc5c8241 // indirect
@@ -48,7 +48,7 @@ require (
 	github.com/vgarvardt/pgx-google-uuid/v5 v5.6.0 // indirect
 	go.opentelemetry.io/otel v1.38.0 // indirect
 	go.opentelemetry.io/otel/trace v1.38.0 // indirect
-	golang.org/x/crypto v0.44.0 // indirect
+	golang.org/x/crypto v0.45.0 // indirect
 	golang.org/x/net v0.47.0 // indirect
 	golang.org/x/sync v0.18.0 // indirect
 	golang.org/x/sys v0.38.0 // indirect
