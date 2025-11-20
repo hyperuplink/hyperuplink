@@ -1,4 +1,4 @@
-package page
+package site
 
 import (
 	"fmt"
@@ -10,14 +10,14 @@ import (
 	"github.com/mrusme/hyperuplink/runtime"
 )
 
-type Page struct {
+type Site struct {
 	rt      *runtime.Runtime
 	relRoot string
 	title   string
 }
 
-func New(rt *runtime.Runtime, c fiber.Ctx, title string) *Page {
-	p := new(Page)
+func New(rt *runtime.Runtime, c fiber.Ctx, title string) *Site {
+	p := new(Site)
 
 	p.rt = rt
 
@@ -35,7 +35,7 @@ func New(rt *runtime.Runtime, c fiber.Ctx, title string) *Page {
 	return p
 }
 
-func (p *Page) StaticFile(filename string) string {
+func (p *Site) StaticFile(filename string) string {
 	hash := p.rt.Build.Hash
 
 	if p.rt.IsDevelopmentMode() {
@@ -49,10 +49,10 @@ func (p *Page) StaticFile(filename string) string {
 	)
 }
 
-func (p *Page) CSS(name string) string {
+func (p *Site) CSS(name string) string {
 	return p.StaticFile("css/" + name)
 }
 
-func (p *Page) Title() string {
+func (p *Site) Title() string {
 	return p.title
 }
