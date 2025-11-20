@@ -2,6 +2,7 @@ package web
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
 	"os"
 	runt "runtime"
@@ -194,8 +195,8 @@ func (srv *Web) getViewsEngine() (*html.Engine, error) {
 		engine = html.NewFileSystem(http.FS(srv.rt.Embeds["views"]), ".html")
 	}
 	engine.AddFunc(
-		"bla", func(s string) string {
-			return s
+		"safeHTML", func(s string) template.HTML {
+			return template.HTML(s)
 		},
 	)
 
