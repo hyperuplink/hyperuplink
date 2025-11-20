@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/fsnotify/fsnotify"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/extractors"
 	"github.com/gofiber/fiber/v3/middleware/cache"
@@ -30,11 +31,12 @@ import (
 )
 
 type Web struct {
-	rt     *runtime.Runtime
-	app    *fiber.App
-	r      route.IRoute
-	engine *html.Engine
-	hash   string
+	rt      *runtime.Runtime
+	app     *fiber.App
+	r       route.IRoute
+	engine  *html.Engine
+	watcher *fsnotify.Watcher
+	hash    string
 }
 
 func New(
@@ -179,6 +181,15 @@ func (srv *Web) getViewsEngine() (*html.Engine, error) {
 			return nil, err
 		}
 		engine = html.New(cwd, ".html")
+
+		srv.rt.Debug("cwd", cwd)
+		srv.watcher, err = srv.getWatcher(cwd+"/views", func(f string) {
+			srv.rt.Debug("change", f)
+			err := srv.app.ReloadViews()
+			if err != nil {
+				srv.rt.Error("error", err)
+			}
+		})
 	} else {
 		engine = html.NewFileSystem(http.FS(srv.rt.Embeds["views"]), ".html")
 	}
@@ -189,6 +200,39 @@ func (srv *Web) getViewsEngine() (*html.Engine, error) {
 	)
 
 	return engine, nil
+}
+
+func (srv *Web) getWatcher(path string, callback func(f string)) (*fsnotify.Watcher, error) {
+	watcher, err := fsnotify.NewWatcher()
+	if err != nil {
+		return nil, err
+	}
+
+	go func() {
+		for {
+			select {
+			case ev, ok := <-watcher.Events:
+				if !ok {
+					return
+				}
+				if ev.Has(fsnotify.Write) {
+					callback(ev.Name)
+				}
+			case err, ok := <-watcher.Errors:
+				if !ok {
+					return
+				}
+				srv.rt.Error("error", err)
+			}
+		}
+	}()
+
+	if err = watcher.Add(path); err != nil {
+		watcher.Close()
+		return nil, err
+	}
+
+	return watcher, nil
 }
 
 func (srv *Web) loadRoutes() error {
