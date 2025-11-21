@@ -10,13 +10,6 @@ import (
 	"github.com/mrusme/hyperuplink/http/route"
 )
 
-const (
-	AccountRoute string = "account"
-	SessionRoute string = "session"
-	AdminRoute   string = "admin"
-	SystemRoute  string = "system"
-)
-
 type Site struct {
 	r       route.IRoute
 	relRoot string

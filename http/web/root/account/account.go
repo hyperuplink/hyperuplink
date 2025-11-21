@@ -19,7 +19,7 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = "account"
+	r.Path = route.GetPathOf(route.AccountRoute)
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {

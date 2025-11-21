@@ -18,7 +18,7 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = "topics"
+	r.Path = route.GetPathOf(route.CategoriesForumsTopicsRoute)
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/:slug", func(base fiber.Router) {
