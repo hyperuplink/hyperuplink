@@ -18,7 +18,7 @@ func (p *Site) Menu() []MenuItem {
 				{
 					Label: "Settings",
 					Title: "Settings",
-					Href:  "account/settings", // TODO: Method for retrieving the relUrl
+					Href:  p.HrefTo("account/settings"), // TODO: Method for retrieving the relUrl
 				},
 				{
 					IsSeparator: true,

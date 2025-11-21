@@ -35,6 +35,14 @@ func New(rt *runtime.Runtime, c fiber.Ctx, title string) *Site {
 	return p
 }
 
+func (p *Site) GetRelRoot() string {
+	return p.relRoot
+}
+
+func (p *Site) HrefTo(path string) string {
+	return fmt.Sprintf("%s%s", p.GetRelRoot(), path)
+}
+
 func (p *Site) StaticFile(filename string) string {
 	hash := p.rt.Build.Hash
 
@@ -43,7 +51,7 @@ func (p *Site) StaticFile(filename string) string {
 	}
 
 	return fmt.Sprintf("%sstatic/%s?v=%s",
-		p.relRoot,
+		p.GetRelRoot(),
 		filename,
 		hash,
 	)
@@ -56,4 +64,3 @@ func (p *Site) CSS(name string) string {
 func (p *Site) Title() string {
 	return p.title
 }
-
