@@ -11,7 +11,7 @@ var (
 	AccountRoute                []string = []string{"account"}
 	AccountSettingsRoute        []string = []string{"account", "settings"}
 	AccountProfileRoute         []string = []string{"account", "profile"}
-	SessionRoute                []string = []string{"session"}
+	SessionsRoute               []string = []string{"sessions"}
 	AdminRoute                  []string = []string{"admin"}
 	CategoriesRoute             []string = []string{"categories"}
 	CategoriesForumsRoute       []string = []string{"categories", "forums"}

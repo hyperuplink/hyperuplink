@@ -7,11 +7,15 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/csrf"
 	"github.com/mrusme/hyperuplink/http/route"
 )
 
 type Site struct {
 	r       route.IRoute
+	c       fiber.Ctx
+	csrf    string
+	absPath string
 	relRoot string
 	title   string
 }
@@ -20,9 +24,12 @@ func New(r route.IRoute, c fiber.Ctx) *Site {
 	s := new(Site)
 
 	s.r = r
+	s.c = c
+	s.csrf = csrf.TokenFromContext(s.c)
 
-	cR := c.Route()
-	parts := strings.Count(cR.Path, "/")
+	cR := s.c.Route()
+	s.absPath = cR.Path
+	parts := strings.Count(s.absPath, "/")
 
 	relRoot := ""
 	for i := 1; i < parts; i++ {
@@ -35,6 +42,14 @@ func New(r route.IRoute, c fiber.Ctx) *Site {
 
 func (s *Site) GetRelRoot() string {
 	return s.relRoot
+}
+
+func (s *Site) GetAbsPath() string {
+	return s.absPath
+}
+
+func (s *Site) GetCSRFToken() string {
+	return s.csrf
 }
 
 func (s *Site) HrefTo(path string) string {

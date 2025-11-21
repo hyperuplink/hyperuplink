@@ -19,7 +19,8 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/healthcheck"
 	"github.com/gofiber/fiber/v3/middleware/recover"
 	"github.com/gofiber/fiber/v3/middleware/requestid"
-	"github.com/gofiber/fiber/v3/middleware/session"
+
+	// "github.com/gofiber/fiber/v3/middleware/session"
 	"github.com/gofiber/fiber/v3/middleware/static"
 
 	"github.com/gofiber/storage/redis/v3"
@@ -103,22 +104,22 @@ func (srv *Web) loadMiddlewares() error {
 		srv.app.Use(cache.New(cache.ConfigDefault))
 	}
 
-	storage, err := srv.getSessionStorage()
-	if err != nil {
-		return err
-	}
+	// storage, err := srv.getSessionStorage()
+	// if err != nil {
+	// 	return err
+	// }
 
-	sessConfig := session.Config{
-		Storage:         storage,
-		CookieSecure:    true,             // HTTPS only
-		CookieHTTPOnly:  true,             // Prevent XSS
-		CookieSameSite:  "Lax",            // CSRF protection
-		IdleTimeout:     30 * time.Minute, // Session timeout
-		AbsoluteTimeout: 24 * time.Hour,   // Maximum session life
-		Extractor:       extractors.FromCookie("__Host-session_id"),
-	}
-
-	srv.app.Use(session.New(sessConfig))
+	// sessConfig := session.Config{
+	// 	Storage:         storage,
+	// 	CookieSecure:    true,             // HTTPS only
+	// 	CookieHTTPOnly:  true,             // Prevent XSS
+	// 	CookieSameSite:  "Lax",            // CSRF protection
+	// 	IdleTimeout:     30 * time.Minute, // Session timeout
+	// 	AbsoluteTimeout: 24 * time.Hour,   // Maximum session life
+	// 	Extractor:       extractors.FromCookie("__Host-session_id"),
+	// }
+	//
+	// srv.app.Use(session.New(sessConfig))
 
 	srv.app.Use(csrf.New(csrf.Config{
 		CookieName:        "__Host-csrf_",
@@ -126,10 +127,9 @@ func (srv *Web) loadMiddlewares() error {
 		CookieHTTPOnly:    true, // Needs to be 'false' to allow JS to access tokens
 		CookieSameSite:    "Lax",
 		CookieSessionOnly: true,
-		Extractor:         extractors.FromHeader("X-Csrf-Token"),
-		// Storage:           storage,
-		Session: session.NewStore(sessConfig),
-		// DisableValueRedaction: true,
+		Extractor:         extractors.FromForm("_csrf"),
+		// Session: session.NewStore(sessConfig),
+		DisableValueRedaction: true,
 	}))
 	return nil
 }
