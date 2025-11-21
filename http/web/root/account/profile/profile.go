@@ -1,9 +1,8 @@
-package categories
+package profile
 
 import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/root/categories/forums"
 	"github.com/mrusme/hyperuplink/runtime"
 )
 
@@ -19,15 +18,15 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = "categories"
+	r.Path = "profile"
 	r.Env = route.NewEnv()
 
-	r.Router.Route("/:slug", func(base fiber.Router) {
+	r.Router.Route("/"+r.Path, func(base fiber.Router) {
 		base.Get("/", r.Show).Name("show")
-
-		categoriesForumsRoute, err := forums.New(r.Runtime, base)
-		r.Runtime.NilOrDie(err)
-		r.Routes = append(r.Routes, categoriesForumsRoute)
+		base.Post("/", r.Create).Name("create")
+		base.Put("/:id", r.Update).Name("update")
+		base.Patch("/:id", r.Update).Name("update")
+		base.Delete("/:id", r.Destroy).Name("destroy")
 	}, r.Path+".")
 
 	return r, nil

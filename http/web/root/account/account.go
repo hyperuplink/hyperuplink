@@ -1,9 +1,9 @@
-package categories
+package account
 
 import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/root/categories/forums"
+	"github.com/mrusme/hyperuplink/http/web/root/account/profile"
 	"github.com/mrusme/hyperuplink/runtime"
 )
 
@@ -19,15 +19,19 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = "categories"
+	r.Path = "account"
 	r.Env = route.NewEnv()
 
-	r.Router.Route("/:slug", func(base fiber.Router) {
+	r.Router.Route("/"+r.Path, func(base fiber.Router) {
 		base.Get("/", r.Show).Name("show")
+		base.Post("/", r.Create).Name("create")
+		base.Put("/:id", r.Update).Name("update")
+		base.Patch("/:id", r.Update).Name("update")
+		base.Delete("/:id", r.Destroy).Name("destroy")
 
-		categoriesForumsRoute, err := forums.New(r.Runtime, base)
+		accountProfileRoute, err := profile.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
-		r.Routes = append(r.Routes, categoriesForumsRoute)
+		r.Routes = append(r.Routes, accountProfileRoute)
 	}, r.Path+".")
 
 	return r, nil

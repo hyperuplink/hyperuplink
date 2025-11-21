@@ -3,6 +3,7 @@ package root
 import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
+	"github.com/mrusme/hyperuplink/http/web/root/account"
 	"github.com/mrusme/hyperuplink/http/web/root/categories"
 	"github.com/mrusme/hyperuplink/http/web/site"
 	"github.com/mrusme/hyperuplink/runtime"
@@ -20,9 +21,15 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
+	r.Path = ""
+	r.Env = route.NewEnv()
 
-	r.Router.Route("", func(base fiber.Router) {
-		base.Get("/", r.Index).Name("index")
+	r.Router.Route("/", func(base fiber.Router) {
+		base.Get("", r.Index).Name("index")
+
+		accountRoute, err := account.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, accountRoute)
 
 		categoriesRoute, err := categories.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
@@ -32,11 +39,23 @@ func New(
 	return r, nil
 }
 
+func (r *Route) GetRuntime() *runtime.Runtime {
+	return r.Runtime
+}
+
+func (r *Route) GetPath() string {
+	return r.Path
+}
+
+func (r *Route) GetEnv() *route.Environment {
+	return r.Env
+}
+
 func (r *Route) Index(c fiber.Ctx) error {
 	err := c.App().ReloadViews()
 	r.Runtime.Error("error", err)
 	return c.Render("views/root", fiber.Map{
-		"Site": site.New(r.Runtime, c, "Root"),
+		"Site": site.New(r, c),
 	}, "views/layouts/base")
 }
 

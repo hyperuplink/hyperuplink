@@ -7,19 +7,26 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/mrusme/hyperuplink/runtime"
+	"github.com/mrusme/hyperuplink/http/route"
+)
+
+const (
+	AccountRoute string = "account"
+	SessionRoute string = "session"
+	AdminRoute   string = "admin"
+	SystemRoute  string = "system"
 )
 
 type Site struct {
-	rt      *runtime.Runtime
+	r       route.IRoute
 	relRoot string
 	title   string
 }
 
-func New(rt *runtime.Runtime, c fiber.Ctx, title string) *Site {
+func New(r route.IRoute, c fiber.Ctx) *Site {
 	s := new(Site)
 
-	s.rt = rt
+	s.r = r
 
 	cR := c.Route()
 	parts := strings.Count(cR.Path, "/")
@@ -29,8 +36,6 @@ func New(rt *runtime.Runtime, c fiber.Ctx, title string) *Site {
 		relRoot += "../"
 	}
 	s.relRoot = relRoot
-
-	s.title = title
 
 	return s
 }
@@ -43,10 +48,14 @@ func (s *Site) HrefTo(path string) string {
 	return fmt.Sprintf("%s%s", s.GetRelRoot(), path)
 }
 
-func (s *Site) StaticFile(filename string) string {
-	hash := s.rt.Build.Hash
+func (s *Site) HrefRoute(routes ...string) string {
+	return s.HrefTo(strings.Join(routes, "/"))
+}
 
-	if s.rt.IsDevelopmentMode() {
+func (s *Site) StaticFile(filename string) string {
+	hash := s.r.GetRuntime().Build.Hash
+
+	if s.r.GetRuntime().IsDevelopmentMode() {
 		hash = strconv.FormatInt(time.Now().UnixMilli(), 10)
 	}
 
@@ -62,5 +71,5 @@ func (s *Site) CSS(name string) string {
 }
 
 func (s *Site) Title() string {
-	return s.title
+	return s.r.GetEnv().Title
 }
