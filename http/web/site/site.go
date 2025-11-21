@@ -17,9 +17,9 @@ type Site struct {
 }
 
 func New(rt *runtime.Runtime, c fiber.Ctx, title string) *Site {
-	p := new(Site)
+	s := new(Site)
 
-	p.rt = rt
+	s.rt = rt
 
 	cR := c.Route()
 	parts := strings.Count(cR.Path, "/")
@@ -28,39 +28,39 @@ func New(rt *runtime.Runtime, c fiber.Ctx, title string) *Site {
 	for i := 1; i < parts; i++ {
 		relRoot += "../"
 	}
-	p.relRoot = relRoot
+	s.relRoot = relRoot
 
-	p.title = title
+	s.title = title
 
-	return p
+	return s
 }
 
-func (p *Site) GetRelRoot() string {
-	return p.relRoot
+func (s *Site) GetRelRoot() string {
+	return s.relRoot
 }
 
-func (p *Site) HrefTo(path string) string {
-	return fmt.Sprintf("%s%s", p.GetRelRoot(), path)
+func (s *Site) HrefTo(path string) string {
+	return fmt.Sprintf("%s%s", s.GetRelRoot(), path)
 }
 
-func (p *Site) StaticFile(filename string) string {
-	hash := p.rt.Build.Hash
+func (s *Site) StaticFile(filename string) string {
+	hash := s.rt.Build.Hash
 
-	if p.rt.IsDevelopmentMode() {
+	if s.rt.IsDevelopmentMode() {
 		hash = strconv.FormatInt(time.Now().UnixMilli(), 10)
 	}
 
 	return fmt.Sprintf("%sstatic/%s?v=%s",
-		p.GetRelRoot(),
+		s.GetRelRoot(),
 		filename,
 		hash,
 	)
 }
 
-func (p *Site) CSS(name string) string {
-	return p.StaticFile("css/" + name)
+func (s *Site) CSS(name string) string {
+	return s.StaticFile("css/" + name)
 }
 
-func (p *Site) Title() string {
-	return p.title
+func (s *Site) Title() string {
+	return s.title
 }

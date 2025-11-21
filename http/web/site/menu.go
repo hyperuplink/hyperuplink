@@ -10,7 +10,7 @@ type MenuItem struct {
 	SubItems    []MenuItem
 }
 
-func (p *Site) Menu() []MenuItem {
+func (s *Site) Menu() []MenuItem {
 	return []MenuItem{
 		{
 			Label: "<u>A</u>ccount",
@@ -18,7 +18,7 @@ func (p *Site) Menu() []MenuItem {
 				{
 					Label: "Settings",
 					Title: "Settings",
-					Href:  p.HrefTo("account/settings"), // TODO: Method for retrieving the relUrl
+					Href:  s.HrefTo("account/settings"), // TODO: Method for retrieving the relUrl
 				},
 				{
 					IsSeparator: true,

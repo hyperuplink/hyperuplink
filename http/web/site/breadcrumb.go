@@ -7,7 +7,7 @@ type Breadcrumb struct {
 	Href     string
 }
 
-func (p *Site) Breadcrumbs() []Breadcrumb {
+func (s *Site) Breadcrumbs() []Breadcrumb {
 	return []Breadcrumb{
 		{
 			Label: "Cloud",
