@@ -29,12 +29,12 @@ func (s *Site) Menu() []MenuItem {
 						{
 							Label: "Password",
 							Title: "Password",
-							Href:  "account/password", // TODO: ...
+							Href:  s.HrefTo("account/password"), // TODO: ...
 						},
 						{
 							Label: "2-Factor Authentication",
 							Title: "2-Factor Authentication",
-							Href:  "account/2fa", // TODO: ...
+							Href:  s.HrefTo("account/2fa"), // TODO: ...
 						},
 					},
 				},
@@ -44,7 +44,7 @@ func (s *Site) Menu() []MenuItem {
 				{
 					Label: "Sign out",
 					Title: "Sign out",
-					Href:  "session/signout", // TODO: ...
+					Href:  s.HrefTo("session/signout"), // TODO: ...
 				},
 			},
 		},
@@ -54,12 +54,12 @@ func (s *Site) Menu() []MenuItem {
 				{
 					Label: "General",
 					Title: "General",
-					Href:  "admin/general", // TODO: ...
+					Href:  s.HrefTo("admin/general"), // TODO: ...
 				},
 				{
 					Label: "Authentication",
 					Title: "Authentication",
-					Href:  "admin/auth", // TODO: ...
+					Href:  s.HrefTo("admin/auth"), // TODO: ...
 				},
 				{
 					Label: "Communication",
@@ -67,12 +67,12 @@ func (s *Site) Menu() []MenuItem {
 						{
 							Label: "E-Mail",
 							Title: "E-Mail",
-							Href:  "admin/comms/email", // TODO: ...
+							Href:  s.HrefTo("admin/comms/email"), // TODO: ...
 						},
 						{
 							Label: "XMPP",
 							Title: "XMPP",
-							Href:  "admin/comms/xmpp", // TODO: ...
+							Href:  s.HrefTo("admin/comms/xmpp"), // TODO: ...
 						},
 					},
 				},
@@ -85,12 +85,12 @@ func (s *Site) Menu() []MenuItem {
 						{
 							Label: "Categories",
 							Title: "Categories",
-							Href:  "admin/board/categories", // TODO: ...
+							Href:  s.HrefTo("admin/board/categories"), // TODO: ...
 						},
 						{
 							Label: "Forums",
 							Title: "Forums",
-							Href:  "admin/board/forums", // TODO: ...
+							Href:  s.HrefTo("admin/board/forums"), // TODO: ...
 						},
 						{
 							IsSeparator: true,
@@ -98,22 +98,22 @@ func (s *Site) Menu() []MenuItem {
 						{
 							Label: "Posts",
 							Title: "Posts",
-							Href:  "admin/board/posts", // TODO: ...
+							Href:  s.HrefTo("admin/board/posts"), // TODO: ...
 						},
 						{
 							Label: "Attachments",
 							Title: "Attachments",
-							Href:  "admin/board/attachments", // TODO: ...
+							Href:  s.HrefTo("admin/board/attachments"), // TODO: ...
 						},
 						{
 							Label: "Profiles",
 							Title: "Profiles",
-							Href:  "admin/board/profiles", // TODO: ...
+							Href:  s.HrefTo("admin/board/profiles"), // TODO: ...
 						},
 						{
 							Label: "Signatures",
 							Title: "Signatures",
-							Href:  "admin/board/signatures", // TODO: ...
+							Href:  s.HrefTo("admin/board/signatures"), // TODO: ...
 						},
 						{
 							IsSeparator: true,
@@ -121,7 +121,7 @@ func (s *Site) Menu() []MenuItem {
 						{
 							Label: "Look &amp; Feel",
 							Title: "Look & Feel",
-							Href:  "admin/board/theme", // TODO: ...
+							Href:  s.HrefTo("admin/board/theme"), // TODO: ...
 						},
 					},
 				},
@@ -131,7 +131,7 @@ func (s *Site) Menu() []MenuItem {
 				{
 					Label: "Users",
 					Title: "Users",
-					Href:  "admin/users", // TODO: ...
+					Href:  s.HrefTo("admin/users"), // TODO: ...
 				},
 				{
 					IsSeparator: true,
@@ -139,7 +139,7 @@ func (s *Site) Menu() []MenuItem {
 				{
 					Label: "Adminlog",
 					Title: "Adminlog",
-					Href:  "admin/log", // TODO: ...
+					Href:  s.HrefTo("admin/log"), // TODO: ...
 				},
 			},
 		},
@@ -154,14 +154,14 @@ func (s *Site) Menu() []MenuItem {
 							Checked:    true,
 							Label:      "Light",
 							Title:      "Light",
-							Href:       "account/settings?mode=light", // TODO: ...
+							Href:       s.HrefTo("account/settings?mode=light"), // TODO: ...
 						},
 						{
 							IsCheckbox: true,
 							Checked:    false,
 							Label:      "Dark",
 							Title:      "Dark",
-							Href:       "account/settings?mode=dark", // TODO: ...
+							Href:       s.HrefTo("account/settings?mode=dark"), // TODO: ...
 						},
 					},
 				},
@@ -173,21 +173,21 @@ func (s *Site) Menu() []MenuItem {
 					Checked:    true,
 					Label:      "Banner",
 					Title:      "Banner",
-					Href:       "account/settings?banner=false", // TODO: ...
+					Href:       s.HrefTo("account/settings?banner=false"), // TODO: ...
 				},
 				{
 					IsCheckbox: true,
 					Checked:    true,
 					Label:      "Footer",
 					Title:      "Footer",
-					Href:       "account/settings?footer=false", // TODO: ...
+					Href:       s.HrefTo("account/settings?footer=false"), // TODO: ...
 				},
 				{
 					IsCheckbox: true,
 					Checked:    true,
 					Label:      "Profile Pictures",
 					Title:      "Profile Pictures",
-					Href:       "account/settings?profile_pictures=false", // TODO: ...
+					Href:       s.HrefTo("account/settings?profile_pictures=false"), // TODO: ...
 				},
 			},
 		},
@@ -197,7 +197,7 @@ func (s *Site) Menu() []MenuItem {
 				{
 					Label: "User Manual",
 					Title: "User Manual",
-					Href:  "", // TODO: ...
+					Href:  s.HrefTo(""), // TODO: ...
 				},
 				{
 					IsSeparator: true,
@@ -205,17 +205,17 @@ func (s *Site) Menu() []MenuItem {
 				{
 					Label: "Terms of Service",
 					Title: "Terms of Service",
-					Href:  "", // TODO: ...
+					Href:  s.HrefTo(""), // TODO: ...
 				},
 				{
 					Label: "Privacy Policy",
 					Title: "Privacy Policy",
-					Href:  "", // TODO: ...
+					Href:  s.HrefTo(""), // TODO: ...
 				},
 				{
 					Label: "Contact",
 					Title: "Contact",
-					Href:  "", // TODO: ...
+					Href:  s.HrefTo(""), // TODO: ...
 				},
 				{
 					IsSeparator: true,
@@ -223,7 +223,7 @@ func (s *Site) Menu() []MenuItem {
 				{
 					Label: "About",
 					Title: "About",
-					Href:  "version", // TODO: ...
+					Href:  s.HrefTo("version"), // TODO: ...
 				},
 			},
 		},
