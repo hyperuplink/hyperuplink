@@ -18,3 +18,7 @@ func New(db database.IDatabase) (*Repository, error) {
 func (repo *Repository) Startup() error {
 	return nil
 }
+
+func (repo *Repository) Shutdown() error {
+	return nil
+}

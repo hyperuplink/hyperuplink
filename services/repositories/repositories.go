@@ -8,8 +8,6 @@ import (
 type Repositories struct {
 	db   database.IDatabase
 	User *user.Repository
-	// Application *application.Repository
-	// Target      *target.Repository
 }
 
 func New(
@@ -24,20 +22,8 @@ func New(
 	if userRepo, err = user.New(repos.db); err != nil {
 		return nil, err
 	}
-	//
-	// var appRepo *application.Repository
-	// if appRepo, err = application.New(cfg, db); err != nil {
-	// 	return nil, err
-	// }
-	//
-	// var targetRepo *target.Repository
-	// if targetRepo, err = target.New(cfg, db); err != nil {
-	// 	return nil, err
-	// }
 
 	repos.User = userRepo
-	// repos.Application = appRepo
-	// repos.Target = targetRepo
 
 	return repos, nil
 }
@@ -53,5 +39,11 @@ func (repos *Repositories) Startup() error {
 }
 
 func (repos *Repositories) Shutdown() error {
+	var err error
+
+	if err = repos.User.Shutdown(); err != nil {
+		return err
+	}
+
 	return nil
 }
