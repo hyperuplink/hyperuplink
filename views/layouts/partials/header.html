@@ -31,15 +31,12 @@
           </ul>
           <div class="breadcrumbs raised">
             <ul class="lowered flex-row gap">
-              <li>
-                <a href="" title="">Cloud</a>
-              </li>
-              <li>
-                <a href="" title="">Hosting</a>
-              </li>
-              <li class="active">
-                <a href="" title="">Opinions on Clouvider?</a>
-              </li>
+              {{$breadcrumbs := .Site.Breadcrumbs}}
+              {{range $breadcrumbs}}
+                <li class="{{if .IsActive}}active{{end}}">
+                  <a href="{{.Href}}" title="{{.Title}}">{{safeHTML .Label}}</a>
+                </li>
+              {{end}}
             </ul>
           </div>
         </div>
