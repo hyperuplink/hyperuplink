@@ -14,19 +14,18 @@
   font-display: swap;
 }
 
-[role=menu] a {
+[role="menu"] a {
   display: block;
   width: 100%;
   text-decoration: none;
 }
 
-[role=menu] a:active,
-[role=menu] a:focus
-{
+[role="menu"] a:active,
+[role="menu"] a:focus {
   background-color: var(--primary-2);
 }
 
-.tabs > [role=tabpanel] {
+.tabs > [role="tabpanel"] {
   position: relative;
   z-index: 0;
 }
@@ -229,4 +228,43 @@ a.button {
 
 .flex-wrap {
   flex-wrap: wrap;
+}
+
+.social .button.apple {
+  background: linear-gradient(to left, #888888, #ddd);
+}
+
+.social .button.bsky {
+  background: linear-gradient(to left, #55aef7, #ddd);
+}
+
+.social .button.facebook {
+  background: linear-gradient(to left, #395498, #ddd);
+}
+
+.social .button.github {
+  background: linear-gradient(to left, #1a1e22, #ddd);
+}
+
+.social .button.google {
+  background: linear-gradient(
+    to left,
+    #ea4335 0%,
+    #fbbc05 20%,
+    #2b9d4d 30%,
+    #4285f4 40%,
+    #ddd 100%
+  );
+}
+
+.social .button.reddit {
+  background: linear-gradient(to left, #f74300, #ddd);
+}
+
+.social .button.slack {
+  background: linear-gradient(to left, #481449, #ddd);
+}
+
+.social .button.x {
+  background: linear-gradient(to left, #000000, #ddd);
 }

@@ -1,63 +1,38 @@
-        <div class="margin window authentication active">
-          <div class="title-bar">
-            <div class="title-bar-text">Sign in</div>
-          </div>
-          <div class="window-body">
-            <form method="post">
-<input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
-              <div class="tabs margin">
-                <div role="tabpanel" id="tab1" class="padding">
-                  <div class="margin">
-                    <div class="fieldrow flex-row flex-wrap gap">
-                      <div class="field flex-column grow">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username">
-                      </div>
-                      <div class="field flex-column grow">
-                        <label for="password">Password</label>
-                        <input type="text" id="password" name="password">
-                      </div>
-                    </div>
-                    <div class="actions flex-row gap justify-end">
-                      <button type="submit">Sign in</button>
-                    </div>
-                  </div>
-                </div>
+<div class="margin window authentication active">
+  <div class="title-bar">
+    <div class="title-bar-text">Sign in</div>
+  </div>
+  <div class="window-body">
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
+      <div class="tabs margin">
+        <div role="tabpanel" id="tab1" class="padding">
+          <div class="margin">
+            <div class="fieldrow flex-row flex-wrap gap">
+              <div class="field flex-column grow">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username">
               </div>
-            </form>
-            <div class="margin">Or sign in via:</div>
-            <div class="social margin">
-              <div class="actions flex-column gap">
-                <a class="button"
-                   style="background: linear-gradient(to left, #888888, #ddd)"
-                   href=""
-                   title="">Apple</a>
-                <a class="button"
-                   style="background: linear-gradient(to left, #55AEF7, #ddd)"
-                   href=""
-                   title="">Bluesky</a>
-                <a class="button"
-                   style="background: linear-gradient(to left, #395498, #ddd"
-                   href=""
-                   title="">Facebook</a>
-                <a class="button"
-                   style="background: linear-gradient(to left, #1A1E22, #ddd"
-                   href=""
-                   title="">GitHub</a>
-                <a class="button"
-                   style="background: linear-gradient(to left, #EA4335 0%, #FBBC05 20%, #2B9D4D 30%, #4285F4 40%, #ddd 100%"
-                   href=""
-                   title="">Google</a>
-                <a class="button"
-                   style="background: linear-gradient(to left, #F74300, #ddd"
-                   href=""
-                   title="">Reddit</a>
-                <a class="button"
-                   style="background: linear-gradient(to left, #000000, #ddd"
-                   href=""
-                   title="">X</a>
+              <div class="field flex-column grow">
+                <label for="password">Password</label>
+                <input type="text" id="password" name="password">
               </div>
+            </div>
+            <div class="actions flex-row gap justify-end">
+              <button type="submit">Sign in</button>
             </div>
           </div>
         </div>
-
+      </div>
+    </form>
+    <div class="margin">Or sign in via:</div>
+    <div class="social margin">
+      <div class="actions flex-column gap">
+              {{$oaps := .Site.OauthProviders}}
+              {{range $oaps}}
+                <a class="button {{.Class}}" href="{{.Href}}" title="{{.Title}}">{{safeHTML .Label}}</a>
+              {{end}}
+      </div>
+    </div>
+  </div>
+</div>
