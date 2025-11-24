@@ -47,16 +47,16 @@ require (
 	github.com/philhofer/fwd v1.2.0 // indirect
 	github.com/redis/go-redis/v9 v9.16.0 // indirect
 	github.com/samber/slog-fiber v0.0.0-20250726111353-b6d9ffd9be28 // indirect
+	github.com/shareed2k/goth_fiber/v2 v2.0.1 // indirect
 	github.com/tinylib/msgp v1.5.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.68.0 // indirect
 	github.com/vgarvardt/pgx-google-uuid/v5 v5.6.0 // indirect
-	github.com/wakatara/goth_fiber v0.0.0-20251120122929-9a62962d89f4 // indirect
 	go.opentelemetry.io/otel v1.38.0 // indirect
 	go.opentelemetry.io/otel/trace v1.38.0 // indirect
 	golang.org/x/crypto v0.45.0 // indirect
 	golang.org/x/net v0.47.0 // indirect
-	golang.org/x/oauth2 v0.30.0 // indirect
+	golang.org/x/oauth2 v0.33.0 // indirect
 	golang.org/x/sync v0.18.0 // indirect
 	golang.org/x/sys v0.38.0 // indirect
 	golang.org/x/text v0.31.0 // indirect

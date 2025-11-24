@@ -4,11 +4,10 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/markbates/goth"
 	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/site"
 	"github.com/mrusme/hyperuplink/runtime"
 
 	"github.com/markbates/goth/providers/github"
-	goth_fiber "github.com/wakatara/goth_fiber"
+	goth_fiber "github.com/shareed2k/goth_fiber/v2"
 )
 
 type Route struct {
