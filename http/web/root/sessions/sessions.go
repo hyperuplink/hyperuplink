@@ -68,18 +68,6 @@ func (r *Route) GetEnv() *route.Environment {
 	return r.Env
 }
 
-func (r *Route) SignInShow(c fiber.Ctx) error {
-	return c.Render("views/session/signin", fiber.Map{
-		"Site": site.New(r, c),
-	}, "views/layouts/base")
-}
-
-func (r *Route) SignInCreate(c fiber.Ctx) error {
-	return c.Render("views/session/signin", fiber.Map{
-		"Site": site.New(r, c),
-	}, "views/layouts/base")
-}
-
 func (r *Route) Index(c fiber.Ctx) error {
 	return c.SendString("I'm a INDEX request!")
 }
