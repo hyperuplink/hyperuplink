@@ -24,3 +24,10 @@ CREATE TABLE users (
   banned_at TIMESTAMP,
   deleted_at TIMESTAMP
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON users (
+  email, deleted_at
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username ON users (
+  username, deleted_at
+);

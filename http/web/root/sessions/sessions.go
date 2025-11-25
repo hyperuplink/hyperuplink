@@ -37,14 +37,12 @@ func New(
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
 		base.Get("/signin", r.SignInShow).Name("signin.show")
 		base.Post("/signin", r.SignInCreate).Name("signin.create")
+
+		base.Get("/signup", r.SignUpShow).Name("signup.show")
+		base.Post("/signup", r.SignUpCreate).Name("signup.create")
+
 		base.Get("/:provider", goth_fiber.BeginAuthHandler).Name("provider.show")
-		base.Get("/:provider/callback", func(ctx fiber.Ctx) error {
-			user, err := goth_fiber.CompleteUserAuth(ctx)
-			if err != nil {
-				return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
-			}
-			return ctx.SendString(user.Email)
-		}).Name("provider.callback.show")
+		base.Get("/:provider/callback", r.ProviderCallbackShow).Name("provider.callback.show")
 		base.Get("/signout", r.SignOutShow).Name("signout.show")
 	}, r.Path+".")
 
