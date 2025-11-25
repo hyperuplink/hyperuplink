@@ -20,6 +20,9 @@ var embedStaticFiles embed.FS
 //go:embed views/*
 var embedViews embed.FS
 
+//go:embed locales/*
+var embedLocales embed.FS
+
 var (
 	flagCfgstr  string
 	flagVersion bool
@@ -56,8 +59,10 @@ func main() {
 	rt.Embeds["migrations"] = &embedMigrations
 	rt.Embeds["static"] = &embedStaticFiles
 	rt.Embeds["views"] = &embedViews
+	rt.Embeds["locales"] = &embedLocales
 
 	rt.Database.SetMigrations(rt.Embeds["migrations"])
+	rt.Intnat.SetLocales(rt.Embeds["locales"])
 
 	err = rt.Startup()
 	rt.NilOrDie(err)

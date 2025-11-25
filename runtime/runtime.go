@@ -12,6 +12,7 @@ import (
 
 	"github.com/mrusme/hyperuplink/services/config"
 	"github.com/mrusme/hyperuplink/services/database"
+	"github.com/mrusme/hyperuplink/services/intnat"
 	"github.com/mrusme/hyperuplink/services/repositories"
 )
 
@@ -36,6 +37,7 @@ type Runtime struct {
 	LoggerLevel  slog.Level
 	Database     database.IDatabase
 	Repositories *repositories.Repositories
+	Intnat       *intnat.Intnat
 }
 
 const (
@@ -85,6 +87,11 @@ func New(cfgstr string) (*Runtime, error) {
 		return nil, err
 	}
 
+	if rt.Intnat, err = intnat.New(); err != nil {
+		rt.Error("status", "error", "error", err)
+		return nil, err
+	}
+
 	rt.Info("status", "ok")
 	return rt, err
 }
@@ -104,6 +111,11 @@ func (rt *Runtime) Startup() error {
 		return err
 	}
 
+	if err = rt.Intnat.Startup(); err != nil {
+		rt.Error("status", "error", "error", err)
+		return err
+	}
+
 	rt.Info("status", "ok")
 
 	return nil
@@ -114,7 +126,17 @@ func (rt *Runtime) Shutdown() error {
 
 	rt.Debug("status", "exec")
 
+	if err = rt.Intnat.Shutdown(); err != nil {
+		rt.Error("status", "error", "error", err)
+		return err
+	}
+
 	if err = rt.Database.Shutdown(); err != nil {
+		rt.Error("status", "error", "error", err)
+		return err
+	}
+
+	if err = rt.Config.Shutdown(); err != nil {
 		rt.Error("status", "error", "error", err)
 		return err
 	}

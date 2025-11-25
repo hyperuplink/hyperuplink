@@ -8,6 +8,7 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/csrf"
+	"github.com/kaptinlin/go-i18n"
 	"github.com/mrusme/hyperuplink/http/route"
 )
 
@@ -18,6 +19,8 @@ type Site struct {
 	absPath string
 	relRoot string
 	title   string
+
+	I18n *i18n.Localizer
 }
 
 func New(r route.IRoute, c fiber.Ctx) *Site {
@@ -36,6 +39,10 @@ func New(r route.IRoute, c fiber.Ctx) *Site {
 		relRoot += "../"
 	}
 	s.relRoot = relRoot
+
+	acceptLang := c.Get("Accept-Language", "en")
+	fmt.Printf("\n\nLAAAAAAAAAAAAAAAAAANNNNNNNNNNNGGGG %s\n\n", acceptLang)
+	s.I18n = r.GetRuntime().Intnat.NewLocalizer(acceptLang)
 
 	return s
 }
