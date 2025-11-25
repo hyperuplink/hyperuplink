@@ -2,7 +2,7 @@ CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   username VARCHAR(32),
   role VARCHAR(16),
-  password VARCHAR(64),
+  password VARCHAR(32),
   password_reset_token VARCHAR(32),
   password_reset_sent_at TIMESTAMP,
   email VARCHAR(254),
