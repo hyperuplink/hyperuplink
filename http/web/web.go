@@ -130,11 +130,11 @@ func (srv *Web) loadMiddlewares() error {
 		Extractor:       extractors.FromCookie("__hyperuplink_session"),
 	}
 
-	sess := session.New(sessConfig)
-	sessStore := session.NewStore(sessConfig)
+	sess, sessStore := session.NewWithStore(sessConfig)
 
 	srv.app.Use(sess)
-	goth_fiber.SessionStore = sessStore
+
+	goth_fiber.SessionManager = goth_fiber.NewSessionManager(sessStore)
 
 	srv.app.Use(csrf.New(csrf.Config{
 		CookieName:            "__hyperuplink_csrf",
