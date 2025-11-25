@@ -7,8 +7,9 @@ import (
 )
 
 type SignInForm struct {
-	Username string `form:"username"`
-	Password string `form:"password"`
+	// TODO: https://github.com/go-playground/validator/issues/807
+	Username string `form:"username" validate:"required,min=2,max=32"`
+	Password string `form:"password" validate:"required,min=8,max=64"`
 }
 
 func (r *Route) SignInShow(c fiber.Ctx) error {

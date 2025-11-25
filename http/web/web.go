@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/extractors"
 	"github.com/gofiber/fiber/v3/middleware/cache"
@@ -42,6 +43,14 @@ type Web struct {
 	hash    string
 }
 
+type structValidator struct {
+	validate *validator.Validate
+}
+
+func (v *structValidator) Validate(out any) error {
+	return v.validate.Struct(out)
+}
+
 func New(
 	rt *runtime.Runtime,
 ) (*Web, error) {
@@ -71,6 +80,7 @@ func New(
 		ServerHeader:      srv.rt.Config.ServerServerHeader(),
 		AppName:           "hyperuplink",
 		Views:             srv.engine,
+		StructValidator:   &structValidator{validate: validator.New()},
 	})
 
 	return srv, nil
@@ -136,6 +146,7 @@ func (srv *Web) loadMiddlewares() error {
 		Session:               sessStore,
 		DisableValueRedaction: true,
 	}))
+
 	return nil
 }
 
