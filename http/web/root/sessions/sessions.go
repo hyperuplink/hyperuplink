@@ -45,12 +45,7 @@ func New(
 			}
 			return ctx.SendString(user.Email)
 		}).Name("provider.callback.show")
-		base.Get("/signout", func(ctx fiber.Ctx) error {
-			if err := goth_fiber.Logout(ctx); err != nil {
-				return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
-			}
-			return ctx.SendString("logged out")
-		}).Name("signout.show")
+		base.Get("/signout", r.SignOutShow).Name("signout.show")
 	}, r.Path+".")
 
 	return r, nil
