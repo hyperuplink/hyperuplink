@@ -141,6 +141,10 @@ a.button {
   margin: var(--margin) auto;
 }
 
+.error {
+  background-color: var(--danger) !important;
+}
+
 .window.authentication {
   max-width: 380px;
   margin: var(--margin) auto;

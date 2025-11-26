@@ -5,8 +5,8 @@
   <div class="window-body">
 
     <div class="errors">
-      {{ range .Errors }}
-      <div class="error raised margin padding">{{.Error}}</div>
+      {{ range $field, $err := .Errors }}
+      <div class="error raised margin padding">{{$err}}</div>
       {{ end }}
     </div>
 
@@ -18,21 +18,21 @@
             <div class="fieldrow flex-row flex-wrap gap">
               <div class="field flex-column grow">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username">
+                <input type="text" id="username" name="username" class="{{if index .Errors "username"}}error{{end}}">
               </div>
               <div class="field flex-column grow">
                 <label for="username">E-mail</label>
-                <input type="text" id="email" name="email">
+                <input type="text" id="email" name="email" class="{{if index .Errors "email"}}error{{end}}">
               </div>
             </div>
             <div class="fieldrow flex-row flex-wrap gap">
               <div class="field flex-column grow">
                 <label for="password">Password</label>
-                <input type="text" id="password" name="password">
+                <input type="text" id="password" name="password" class="{{if index .Errors "password"}}error{{end}}">
               </div>
               <div class="field flex-column grow">
                 <label for="password">Repeat</label>
-                <input type="text" id="password_repeat" name="password_repeat">
+                <input type="text" id="password_repeat" name="password_repeat" class="{{if index .Errors "password_repeat"}}error{{end}}">
               </div>
             </div>
             <div class="actions flex-row gap justify-end">

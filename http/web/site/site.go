@@ -41,10 +41,13 @@ func New(r route.IRoute, c fiber.Ctx) *Site {
 	s.relRoot = relRoot
 
 	acceptLang := c.Get("Accept-Language", "en")
-	fmt.Printf("\n\nLAAAAAAAAAAAAAAAAAANNNNNNNNNNNGGGG %s\n\n", acceptLang)
 	s.I18n = r.GetRuntime().Intnat.NewLocalizer(acceptLang)
 
 	return s
+}
+
+func (s *Site) T(msg string) string {
+	return s.I18n.Get(msg)
 }
 
 func (s *Site) GetRelRoot() string {

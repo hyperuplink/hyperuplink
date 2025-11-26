@@ -3,6 +3,8 @@ package sessions
 import (
 	"errors"
 	"fmt"
+	"reflect"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
@@ -33,18 +35,33 @@ func (r *Route) SignUpCreate(c fiber.Ctx) error {
 	f := new(SignUpForm)
 
 	if err := c.Bind().Form(f); err != nil {
-		var errs []error
+		var errs map[string]error = make(map[string]error)
 
 		if valErrs, ok := err.(validator.ValidationErrors); ok {
 			for _, e := range valErrs {
-				errs = append(errs, errors.New(fmt.Sprintf(
-					"%s: %s",
-					e.Field(),
-					e.Translate(nil),
+				t := reflect.TypeOf(*f)
+				if t.Kind() != reflect.Struct {
+					// TODO: errrrrr.....?
+				}
+
+				field, ok := t.FieldByName(e.StructField())
+				if !ok {
+					// TODO: hmpf
+				}
+
+				formTag, ok := field.Tag.Lookup("form")
+				if !ok {
+					// TODO: hmpffff
+				}
+
+				errs[formTag] = errors.New(s.T(fmt.Sprintf(
+					"validation_%s_%s",
+					strings.ToLower(e.Field()),
+					e.Tag(),
 				)))
 			}
 		} else {
-			errs = append(errs, err)
+			errs["error"] = err
 		}
 
 		return c.Render("views/session/signup", fiber.Map{

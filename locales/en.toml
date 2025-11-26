@@ -1,1 +1,3 @@
 sign_up_noun = "Sign-up"
+
+validation_email_email = "E-mail field must containt a valid e-mail address"
