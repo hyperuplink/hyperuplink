@@ -1,0 +1,52 @@
+:root {
+  font-family: "ChiKareGo2";
+  font-size: 16px;
+
+  --desktop-bg: url("../images/background-light.gif") top left repeat;
+  --window-fg: #000000;
+  --field-bg: #fff;
+  --field-fg: #000;
+  --disabled-fg: #97c3d2;
+
+  --surface-15: #ffffff;
+  --surface-14: #f0f5f8;
+  --surface-13: #e1ecef; /* window bg */
+  --surface-12: #c4d9e0;
+  --surface-11: #a7c5d0;
+  --surface-10: #8ab2c0;
+  --surface-09: #6d9fb0;
+  --surface-07: #337990;
+  --surface-06: #2c687c;
+  --surface-05: #245767;
+  --surface-04: #1d4552;
+
+  --border-brightness-15: #ffffff;
+  --border-brightness-14: #f0f5f8;
+  --border-brightness-13: #e1ecef;
+  --border-brightness-12: #c4d9e0;
+  --border-brightness-11: #a7c5d0;
+  --border-brightness-10-1: #97c3d2; /* adadad */
+  --border-brightness-10: #8ab2c0;
+  --border-brightness-09: #6d9fb0;
+  --border-brightness-08: #508ca0;
+  --border-brightness-07: #337990;
+  --border-brightness-06: #2c687c;
+  --border-brightness-05: #245767;
+  --border-brightness-04: #1d4552;
+  --border-brightness-03: #16343e;
+  --border-brightness-02: #0f2329;
+  --border-brightness-00: #000000;
+
+  --primary-6: #000000;
+  --primary-5: #33001a;
+  --primary-4: #80204d;
+  --primary-3: #b34d73;
+  --primary-2: #e680a6;
+  --primary-1: #f2bfd1;
+  --primary-0: #f9e6ef;
+
+  --selection-bg: var(--primary-5);
+  --selection-fg: #000;
+  --highlight: #efc71d;
+  --danger: #f2bfd1;
+}
