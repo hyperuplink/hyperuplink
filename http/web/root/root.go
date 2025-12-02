@@ -6,7 +6,7 @@ import (
 	"github.com/mrusme/hyperuplink/http/web/root/account"
 	"github.com/mrusme/hyperuplink/http/web/root/categories"
 	"github.com/mrusme/hyperuplink/http/web/root/sessions"
-	"github.com/mrusme/hyperuplink/http/web/site"
+	"github.com/mrusme/hyperuplink/http/web/modules/site"
 	"github.com/mrusme/hyperuplink/runtime"
 )
 

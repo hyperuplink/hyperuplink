@@ -5,8 +5,8 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 
-	// "github.com/gofiber/fiber/v3/middleware/session"
-	"github.com/mrusme/hyperuplink/http/web/site"
+	"github.com/mrusme/hyperuplink/http/web/modules/errors"
+	"github.com/mrusme/hyperuplink/http/web/modules/site"
 )
 
 type SignUpForm struct {
@@ -18,33 +18,34 @@ type SignUpForm struct {
 }
 
 func (r *Route) SignUpShow(c fiber.Ctx) error {
-	s := site.New(r, c)
+	sit := site.New(r, c)
 
 	return c.Render("views/session/signup", fiber.Map{
-		"Site": s,
+		"Site": sit,
 	}, "views/layouts/base")
 }
 
 func (r *Route) SignUpCreate(c fiber.Ctx) error {
-	s := site.New(r, c)
-	// sess := session.FromContext(c)
-	f := new(SignUpForm)
+	sit := site.New(r, c)
+	ers := errors.New()
+	frm := new(SignUpForm)
 
-	if errmap, ok := s.ValidateForm(f, reflect.TypeOf(*f)); !ok {
-		s.SetErrors(errmap)
+	if errmap, ok := sit.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+		ers.SetMap(errmap)
 
 		return c.Render("views/session/signup", fiber.Map{
-			"Site":   s,
+			"Site":   sit,
+			"Errors": ers,
 		}, "views/layouts/base")
 	}
 
-	r.Runtime.Debug("form", f)
+	r.Runtime.Debug("form", frm)
 
 	// TODO: Validate form
 	// TODO: Sign up user
 	// TODO: Redirect to user profile settings
 
 	return c.Render("views/session/signup", fiber.Map{
-		"Site": s,
+		"Site": sit,
 	}, "views/layouts/base")
 }

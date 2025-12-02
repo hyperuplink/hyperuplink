@@ -4,7 +4,7 @@
   </div>
   <div class="window-body">
     <div class="errors">
-      {{ range $field, $err := .Site.GetErrors }}
+      {{ range $field, $err := .Errors.GetMap }}
       <div class="error raised margin padding">{{$err}}</div>
       {{ end }}
     </div>
@@ -19,14 +19,14 @@
                 <input type="text"
                        id="username"
                        name="username"
-                       class="{{.Site.GetErrorClassFor "password"}}">
+                       class="{{.Errors.ClassFor "password"}}">
               </div>
               <div class="field flex-column grow">
                 <label for="username">E-mail</label>
                 <input type="text"
                        id="email"
                        name="email"
-                       class="{{.Site.GetErrorClassFor "password"}}">
+                       class="{{.Errors.ClassFor "password"}}">
               </div>
             </div>
             <div class="fieldrow flex-row flex-wrap gap">
@@ -35,14 +35,14 @@
                 <input type="text"
                        id="password"
                        name="password"
-                       class="{{.Site.GetErrorClassFor "password"}}">
+                       class="{{.Errors.ClassFor "password"}}">
               </div>
               <div class="field flex-column grow">
                 <label for="password">Repeat</label>
                 <input type="text"
                        id="password_repeat"
                        name="password_repeat"
-                       class="{{.Site.GetErrorClassFor "password"}}">
+                       class="{{.Errors.ClassFor "password"}}">
               </div>
             </div>
             <div class="actions flex-row gap justify-end">

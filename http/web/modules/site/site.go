@@ -22,7 +22,6 @@ type Site struct {
 
 	I18n *i18n.Localizer
 
-	errsmap map[string]error
 }
 
 func New(r route.IRoute, c fiber.Ctx) *Site {
