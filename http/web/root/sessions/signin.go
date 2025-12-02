@@ -4,9 +4,7 @@ import (
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/mrusme/hyperuplink/http/web/modules/errors"
-	"github.com/mrusme/hyperuplink/http/web/modules/session"
-	"github.com/mrusme/hyperuplink/http/web/modules/site"
+	"github.com/mrusme/hyperuplink/http/web/request"
 )
 
 type SignInForm struct {
@@ -16,39 +14,28 @@ type SignInForm struct {
 }
 
 func (r *Route) SignInShow(c fiber.Ctx) error {
-	sit := site.New(r, c)
+	req := request.New(r, c)
 
-	return c.Render("views/session/signin", fiber.Map{
-		"Site": sit,
-	}, "views/layouts/base")
+	return req.Respond("base", "session/signin")
 }
 
 func (r *Route) SignInCreate(c fiber.Ctx) error {
-	sit := site.New(r, c)
-	ses := session.New(c)
-	ers := errors.New()
+	req := request.New(r, c)
 	frm := new(SignInForm)
 
-	if errmap, ok := sit.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
-		ers.SetMap(errmap)
-
-		return c.Render("views/session/signin", fiber.Map{
-			"Site":   sit,
-			"Errors": ers,
-		}, "views/layouts/base")
+	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+		return req.Respond("base", "session/signin")
 	}
 
 	r.Runtime.Debug("form", frm)
 
 	if frm.Username == "user" && frm.Password == "pass" {
-		if err := ses.Set("local", "2941476f-2ae0-4c3e-a459-1ef5d8dd6ca9"); err != nil {
-			ses.Reset()
+		if err := req.Session.Set("local", "2941476f-2ae0-4c3e-a459-1ef5d8dd6ca9"); err != nil {
+			req.Session.Reset()
 		}
 
-		return c.Redirect().To(sit.GetRelRoot())
+		return req.RedirectToRoot()
 	}
 
-	return c.Render("views/session/signin", fiber.Map{
-		"Site": sit,
-	}, "views/layouts/base")
+	return req.Respond("base", "session/signin")
 }

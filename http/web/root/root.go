@@ -3,10 +3,10 @@ package root
 import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
+	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/http/web/root/account"
 	"github.com/mrusme/hyperuplink/http/web/root/categories"
 	"github.com/mrusme/hyperuplink/http/web/root/sessions"
-	"github.com/mrusme/hyperuplink/http/web/modules/site"
 	"github.com/mrusme/hyperuplink/runtime"
 )
 
@@ -57,11 +57,11 @@ func (r *Route) GetEnv() *route.Environment {
 }
 
 func (r *Route) Index(c fiber.Ctx) error {
+	req := request.New(r, c)
+
 	err := c.App().ReloadViews()
 	r.Runtime.Error("error", err)
-	return c.Render("views/root", fiber.Map{
-		"Site": site.New(r, c),
-	}, "views/layouts/base")
+	return req.Respond("base", "root")
 }
 
 func (r *Route) Show(c fiber.Ctx) error {

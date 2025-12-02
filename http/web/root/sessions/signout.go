@@ -2,17 +2,15 @@ package sessions
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"github.com/mrusme/hyperuplink/http/web/modules/session"
-	"github.com/mrusme/hyperuplink/http/web/modules/site"
+	"github.com/mrusme/hyperuplink/http/web/request"
 	goth_fiber "github.com/shareed2k/goth_fiber/v2"
 )
 
 func (r *Route) SignOutShow(c fiber.Ctx) error {
-	sit := site.New(r, c)
-	ses := session.New(c)
+	req := request.New(r, c)
 
-	if ses.GetProvider() == "local" {
-		if err := ses.Reset(); err != nil {
+	if req.Session.GetProvider() == "local" {
+		if err := req.Session.Reset(); err != nil {
 			return err // TODO
 		}
 	} else {
@@ -21,5 +19,5 @@ func (r *Route) SignOutShow(c fiber.Ctx) error {
 		}
 	}
 
-	return c.Redirect().To(sit.GetRelRoot())
+	return req.RedirectToRoot()
 }
