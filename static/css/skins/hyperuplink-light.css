@@ -37,13 +37,13 @@
   --border-brightness-02: #0f2329;
   --border-brightness-00: #000000;
 
-  --primary-6: #000000;
-  --primary-5: #33001a;
-  --primary-4: #80204d;
+  --primary-6: #f9e6ef;
+  --primary-5: #f2bfd1;
+  --primary-4: #e680a6;
   --primary-3: #b34d73;
-  --primary-2: #e680a6;
-  --primary-1: #f2bfd1;
-  --primary-0: #f9e6ef;
+  --primary-2: #80204d;
+  --primary-1: #33001a;
+  --primary-0: #000000;
 
   --selection-bg: var(--primary-5);
   --selection-fg: #000;
