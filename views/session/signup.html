@@ -4,8 +4,11 @@
   </div>
   <div class="window-body">
     <div class="errors">
+      {{ with .Errors.Get }}
+      <div class="error raised margin padding">{{$.Site.T .Error}}</div>
+      {{ end }}
       {{ range $field, $err := .Errors.GetMap }}
-      <div class="error raised margin padding">{{$err}}</div>
+      <div class="error raised margin padding">{{$.Site.T $err.Error}}</div>
       {{ end }}
     </div>
     <form method="post">
@@ -19,30 +22,34 @@
                 <input type="text"
                        id="username"
                        name="username"
-                       class="{{.Errors.ClassFor "password"}}">
+                       value="{{.Form.StringValueFor "username"}}"
+                       class="{{.Errors.ClassFor "username"}}">
               </div>
               <div class="field flex-column grow">
                 <label for="username">E-mail</label>
                 <input type="text"
                        id="email"
                        name="email"
-                       class="{{.Errors.ClassFor "password"}}">
+                       value="{{.Form.StringValueFor "email"}}"
+                       class="{{.Errors.ClassFor "email"}}">
               </div>
             </div>
             <div class="fieldrow flex-row flex-wrap gap">
               <div class="field flex-column grow">
                 <label for="password">Password</label>
-                <input type="text"
+                <input type="password"
                        id="password"
                        name="password"
+                       value="{{.Form.StringValueFor "password"}}"
                        class="{{.Errors.ClassFor "password"}}">
               </div>
               <div class="field flex-column grow">
                 <label for="password">Repeat</label>
-                <input type="text"
+                <input type="password"
                        id="password_repeat"
                        name="password_repeat"
-                       class="{{.Errors.ClassFor "password"}}">
+                       value="{{.Form.StringValueFor "password_repeat"}}"
+                       class="{{.Errors.ClassFor "password_repeat"}}">
               </div>
             </div>
             <div class="actions flex-row gap justify-end">

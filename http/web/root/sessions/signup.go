@@ -2,10 +2,12 @@ package sessions
 
 import (
 	"reflect"
+	"time"
 
 	"github.com/gofiber/fiber/v3"
 
 	"github.com/mrusme/hyperuplink/http/web/request"
+	"github.com/mrusme/hyperuplink/models/user"
 )
 
 type SignUpForm struct {
@@ -23,6 +25,8 @@ func (r *Route) SignUpShow(c fiber.Ctx) error {
 }
 
 func (r *Route) SignUpCreate(c fiber.Ctx) error {
+	var err error
+
 	req := request.New(r, c)
 	frm := new(SignUpForm)
 
@@ -32,9 +36,27 @@ func (r *Route) SignUpCreate(c fiber.Ctx) error {
 
 	r.Runtime.Debug("form", frm)
 
-	// TODO: Validate form
 	// TODO: Sign up user
-	// TODO: Redirect to user profile settings
+	usr := new(user.User)
+	usr.Username = frm.Username
+	usr.Role = "user"
+	if ret, rerr := req.RespondOnError("base", "session/signup",
+		usr.SetPassword(frm.Password)); ret == true {
+		return rerr
+	}
+	usr.Email = frm.Email
+	usr.EmailUnconfirmed = frm.Email
+	usr.ResetEmailConfirmationToken()
+	usr.EmailConfirmationSentAt = time.Now()
 
+	usr.ID, err = r.Runtime.Repositories.User.Create(usr)
+	if ret, rerr := req.RespondOnError("base", "session/signup",
+		r.Runtime.Database.ConvertError(err)); ret == true {
+		return rerr
+	}
+
+	// TODO: Trigger confirmation mail
+
+	// TODO: Redirect to user profile settings
 	return req.Respond("base", "session/signup")
 }

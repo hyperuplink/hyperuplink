@@ -10,6 +10,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
 	rerrors "github.com/mrusme/hyperuplink/http/web/request/errors"
+	"github.com/mrusme/hyperuplink/http/web/request/form"
 	"github.com/mrusme/hyperuplink/http/web/request/session"
 	"github.com/mrusme/hyperuplink/http/web/request/site"
 )
@@ -20,6 +21,7 @@ type Request struct {
 	Site    *site.Site
 	Session *session.Session
 	Errors  *rerrors.Errors
+	Form    *form.Form
 }
 
 func New(r route.IRoute, c fiber.Ctx) *Request {
@@ -29,6 +31,7 @@ func New(r route.IRoute, c fiber.Ctx) *Request {
 	req.Site = site.New(req.r, req.c)
 	req.Session = session.New(req.c)
 	req.Errors = rerrors.New()
+	req.Form = form.New()
 
 	return req
 }
@@ -64,6 +67,7 @@ func (req *Request) ValidateForm(f any, t reflect.Type) bool {
 			}
 
 			req.Errors.SetMap(errmap)
+			req.Form.Set(f)
 		} else {
 			req.Errors.Set(err)
 		}
@@ -79,7 +83,17 @@ func (req *Request) Respond(layout string, view string) error {
 		"Site":    req.Site,
 		"Session": req.Session,
 		"Errors":  req.Errors,
+		"Form":    req.Form,
 	}, fmt.Sprintf("views/layouts/%s", layout))
+}
+
+func (req *Request) RespondOnError(layout string, view string, err error) (bool, error) {
+	if err == nil {
+		return false, nil
+	}
+
+	req.Errors.Set(err)
+	return true, req.Respond(layout, view)
 }
 
 func (req *Request) RedirectTo(path string) error {
