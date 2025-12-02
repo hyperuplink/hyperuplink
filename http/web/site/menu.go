@@ -11,52 +11,77 @@ type MenuItem struct {
 }
 
 func (s *Site) AccountMenu() []MenuItem {
-	return []MenuItem{
-		{
-			Label: "<u>A</u>ccount",
-			SubItems: []MenuItem{
-				{
-					Label: "Profile",
-					Title: "Profile",
-					Href:  s.HrefTo("account/profile"),
-				},
-				{
-					Label: "Settings",
-					Title: "Settings",
-					Href:  s.HrefTo("account/settings"),
-				},
-				{
-					IsSeparator: true,
-				},
-				{
-					Label: "Security",
-					SubItems: []MenuItem{
-						{
-							Label: "Password",
-							Title: "Password",
-							Href:  s.HrefTo("account/password"),
-						},
-						{
-							Label: "2-Factor Authentication",
-							Title: "2-Factor Authentication",
-							Href:  s.HrefTo("account/2fa"),
-						},
+	var subItems []MenuItem
+
+	if false { // TODO: Check for user role
+		subItems = []MenuItem{
+			{
+				Label: "Profile",
+				Title: "Profile",
+				Href:  s.HrefTo("account/profile"),
+			},
+			{
+				Label: "Settings",
+				Title: "Settings",
+				Href:  s.HrefTo("account/settings"),
+			},
+			{
+				IsSeparator: true,
+			},
+			{
+				Label: "Security",
+				SubItems: []MenuItem{
+					{
+						Label: "Password",
+						Title: "Password",
+						Href:  s.HrefTo("account/password"),
+					},
+					{
+						Label: "2-Factor Authentication",
+						Title: "2-Factor Authentication",
+						Href:  s.HrefTo("account/2fa"),
 					},
 				},
-				{
-					IsSeparator: true,
-				},
-				{
-					Label: "Sign out",
-					Title: "Sign out",
-					Href:  s.HrefTo("session/signout"),
-				},
 			},
+			{
+				IsSeparator: true,
+			},
+			{
+				Label: "Sign out",
+				Title: "Sign out",
+				Href:  s.HrefTo("session/signout"),
+			},
+		}
+	} else {
+		subItems = []MenuItem{
+			{
+				Label: "Sign in",
+				Title: "Sign in",
+				Href:  s.HrefTo("session/signin"),
+			},
+			{
+				IsSeparator: true,
+			},
+			{
+				Label: "Sign up",
+				Title: "Sign up",
+				Href:  s.HrefTo("session/signup"),
+			},
+		}
+	}
+
+	return []MenuItem{
+		{
+			Label:    "<u>A</u>ccount",
+			SubItems: subItems,
 		},
 	}
 }
 
 func (s *Site) AdminMenu() []MenuItem {
+	// TODO: Check user role
+	return []MenuItem{}
+
 	return []MenuItem{
 		{
 			Label: "Ad<u>m</u>inistration",
