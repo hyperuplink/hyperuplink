@@ -17,4 +17,16 @@ var (
 	ErrRedisAddrsMalformed error = errors.New(
 		"Redis.Addresses malformed, needs to be <host>:<port>",
 	)
+	ErrHashInvalid error = errors.New(
+		"Hash has incorrect format",
+	)
+	ErrHashVariantIncompatible error = errors.New(
+		"Hash is incompatible variant",
+	)
+	ErrHashVersionIncompatible error = errors.New(
+		"Hash is incompatible version",
+	)
+	ErrFormInvalid error = errors.New(
+		"Form must be a struct or a pointer to a struct",
+	)
 )
