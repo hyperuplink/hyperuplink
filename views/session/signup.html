@@ -3,13 +3,11 @@
     <div class="title-bar-text">{{.Site.I18n.Get "sign_up_noun"}}</div>
   </div>
   <div class="window-body">
-
     <div class="errors">
-      {{ range $field, $err := .Errors }}
+      {{ range $field, $err := .Site.GetErrors }}
       <div class="error raised margin padding">{{$err}}</div>
       {{ end }}
     </div>
-
     <form method="post">
       <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
       <div class="tabs margin">
@@ -18,21 +16,33 @@
             <div class="fieldrow flex-row flex-wrap gap">
               <div class="field flex-column grow">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" class="{{if index .Errors "username"}}error{{end}}">
+                <input type="text"
+                       id="username"
+                       name="username"
+                       class="{{.Site.GetErrorClassFor "password"}}">
               </div>
               <div class="field flex-column grow">
                 <label for="username">E-mail</label>
-                <input type="text" id="email" name="email" class="{{if index .Errors "email"}}error{{end}}">
+                <input type="text"
+                       id="email"
+                       name="email"
+                       class="{{.Site.GetErrorClassFor "password"}}">
               </div>
             </div>
             <div class="fieldrow flex-row flex-wrap gap">
               <div class="field flex-column grow">
                 <label for="password">Password</label>
-                <input type="text" id="password" name="password" class="{{if index .Errors "password"}}error{{end}}">
+                <input type="text"
+                       id="password"
+                       name="password"
+                       class="{{.Site.GetErrorClassFor "password"}}">
               </div>
               <div class="field flex-column grow">
                 <label for="password">Repeat</label>
-                <input type="text" id="password_repeat" name="password_repeat" class="{{if index .Errors "password_repeat"}}error{{end}}">
+                <input type="text"
+                       id="password_repeat"
+                       name="password_repeat"
+                       class="{{.Site.GetErrorClassFor "password"}}">
               </div>
             </div>
             <div class="actions flex-row gap justify-end">

@@ -31,9 +31,10 @@ func (r *Route) SignUpCreate(c fiber.Ctx) error {
 	f := new(SignUpForm)
 
 	if errmap, ok := s.ValidateForm(f, reflect.TypeOf(*f)); !ok {
+		s.SetErrors(errmap)
+
 		return c.Render("views/session/signup", fiber.Map{
 			"Site":   s,
-			"Errors": errmap,
 		}, "views/layouts/base")
 	}
 
