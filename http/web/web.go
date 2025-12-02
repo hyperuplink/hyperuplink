@@ -26,7 +26,7 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/static"
 
 	"github.com/gofiber/storage/redis/v3"
-	html "github.com/gofiber/template/html/v2"
+	html "github.com/gofiber/template/html/v3"
 	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/root"
