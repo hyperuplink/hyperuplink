@@ -35,7 +35,7 @@ type Runtime struct {
 	Config       *config.Config
 	Logger       *slog.Logger
 	LoggerLevel  slog.Level
-	Database     database.IDatabase
+	Database     *database.Database
 	Repositories *repositories.Repositories
 	Intnat       *intnat.Intnat
 }

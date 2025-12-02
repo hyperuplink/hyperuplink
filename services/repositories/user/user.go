@@ -5,10 +5,10 @@ import (
 )
 
 type Repository struct {
-	db database.IDatabase
+	db *database.Database
 }
 
-func New(db database.IDatabase) (*Repository, error) {
+func New(db *database.Database) (*Repository, error) {
 	repo := new(Repository)
 	repo.db = db
 

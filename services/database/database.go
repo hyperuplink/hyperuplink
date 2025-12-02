@@ -15,12 +15,6 @@ import (
 	pgxUUID "github.com/vgarvardt/pgx-google-uuid/v5"
 )
 
-type IDatabase interface {
-	SetMigrations(*embed.FS)
-	Startup() error
-	Shutdown() error
-}
-
 type Database struct {
 	log        *slog.Logger
 	connection string

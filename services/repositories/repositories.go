@@ -6,12 +6,12 @@ import (
 )
 
 type Repositories struct {
-	db   database.IDatabase
+	db   *database.Database
 	User *user.Repository
 }
 
 func New(
-	db database.IDatabase,
+	db *database.Database,
 ) (*Repositories, error) {
 	var repos *Repositories = new(Repositories)
 	var err error
