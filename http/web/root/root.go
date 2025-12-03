@@ -57,7 +57,7 @@ func (r *Route) GetEnv() *route.Environment {
 }
 
 func (r *Route) Index(c fiber.Ctx) error {
-	req := request.New(r, c, []string{"base"}, "root")
+	req := request.New(r, c, []string{"base"}, "root", "root_noun")
 
 	err := c.App().ReloadViews()
 	r.Runtime.Error("error", err)

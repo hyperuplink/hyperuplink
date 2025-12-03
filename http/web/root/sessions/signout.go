@@ -7,7 +7,7 @@ import (
 )
 
 func (r *Route) SignOutShow(c fiber.Ctx) (err error) {
-	req := request.New(r, c, []string{"base"}, "session/signout")
+	req := request.New(r, c, []string{"base"}, "session/signout", "sign_out_noun")
 
 	if req.Session.GetProvider() == "local" {
 		if err = req.Session.Reset(); err != nil {

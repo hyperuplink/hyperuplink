@@ -9,6 +9,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
+	"github.com/mrusme/hyperuplink/http/web/request/bcn"
 	rerrors "github.com/mrusme/hyperuplink/http/web/request/errors"
 	"github.com/mrusme/hyperuplink/http/web/request/form"
 	"github.com/mrusme/hyperuplink/http/web/request/session"
@@ -20,22 +21,33 @@ type Request struct {
 	c       fiber.Ctx
 	layouts []string
 	view    string
+	BCN     *bcn.BreadcrumbNavigation
 	Site    *site.Site
 	Session *session.Session
 	Errors  *rerrors.Errors
 	Form    *form.Form
 }
 
-func New(r route.IRoute, c fiber.Ctx, layouts []string, view string) *Request {
+func New(r route.IRoute, c fiber.Ctx, layouts []string, view string, title string) *Request {
 	req := new(Request)
 	req.r = r
 	req.c = c
 	req.layouts = layouts
 	req.view = view
+	req.BCN = bcn.New()
 	req.Site = site.New(req.r, req.c)
 	req.Session = session.New(req.c)
 	req.Errors = rerrors.New()
 	req.Form = form.New()
+
+	req.r.GetEnv().Title = req.Site.T(title)
+
+	req.BCN.Append(*bcn.NewBreadcrumb(
+		true,
+		req.Site.Title(),
+		req.Site.Title(),
+		"",
+	))
 
 	return req
 }
@@ -90,10 +102,11 @@ func (req *Request) RespondWithView(layouts []string, view string) error {
 	}
 
 	return req.c.Render(fmt.Sprintf("views/%s", view), fiber.Map{
-		"Site":    req.Site,
-		"Session": req.Session,
-		"Errors":  req.Errors,
-		"Form":    req.Form,
+		"Breadcrumbs": req.BCN,
+		"Site":        req.Site,
+		"Session":     req.Session,
+		"Errors":      req.Errors,
+		"Form":        req.Form,
 	}, layoutsFull...)
 }
 

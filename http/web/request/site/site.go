@@ -21,7 +21,6 @@ type Site struct {
 	title   string
 
 	I18n *i18n.Localizer
-
 }
 
 func New(r route.IRoute, c fiber.Ctx) *Site {

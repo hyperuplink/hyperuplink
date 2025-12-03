@@ -1,43 +1,49 @@
-        <div class="margin header raised">
-          <div class="banner">
-            <a href="" title="">
-              <img src="{{.Site.StaticFile "images/banner.jpg"}}">
-              <!-- <div class="text">VT100 Community</div> -->
-            </a>
-          </div>
-          <ul role="menubar">
-            {{$menu := .Site.Menu}}
-            {{template "MenuItems" $menu}}
-            {{define "MenuItems"}}
-              {{range .}}
-                {{if .IsSeparator}}
-                  <li role="separator"></li>
-                {{else}}
-                <li tabindex="0" {{if gt (len .SubItems) 0}}aria-haspopup="true"{{end}} {{if .IsCheckbox}}role="checkbox" aria-checked="{{.Checked}}"{{end}}>
-                  {{if .Href}}
-                    <a href="{{.Href}}" title="{{.Title}}">{{safeHTML .Label}}</a>
-                  {{else}}
-                    {{safeHTML .Label}}
-                  {{end}}
-                  {{if gt (len .SubItems) 0}}
-                    <ul role="menu">
-                      {{template "MenuItems" .SubItems}}
-                    </ul>
-                  {{end}}
-                  </li>
-                {{end}}
-              {{end}}
-            {{end}}
-          </ul>
-          <div class="breadcrumbs raised">
-            <ul class="lowered flex-row gap">
-              {{$breadcrumbs := .Site.Breadcrumbs}}
-              {{range $breadcrumbs}}
-                <li class="{{if .IsActive}}active{{end}}">
-                  <a href="{{.Href}}" title="{{.Title}}">{{safeHTML .Label}}</a>
-                </li>
-              {{end}}
-            </ul>
-          </div>
-        </div>
-
+<div class="margin header raised">
+  <div class="banner">
+    <a href="" title="">
+      <img src="{{.Site.StaticFile "images/banner.jpg"}}">
+      <!-- <div class="text">VT100 Community</div> -->
+    </a>
+  </div>
+  <ul role="menubar">
+    {{$menu := .Site.Menu}}
+    {{ template "MenuItems" $menu }}
+    {{ define "MenuItems" }}
+    {{ range . }}
+    {{ if .IsSeparator }}
+    <li role="separator"></li>
+  {{ else }}
+    <li tabindex="0"
+        {{ if gt (len .SubItems) 0 }}
+        aria-haspopup="true"
+        {{ end }}
+        {{ if .IsCheckbox }}
+        role="checkbox"
+        aria-checked="{{.Checked}}"
+        {{ end }}>
+      {{ if .Href }}
+      <a href="{{.Href}}" title="{{.Title}}">{{ safeHTML .Label }}</a>
+    {{ else }}
+      {{ safeHTML .Label }}
+      {{ end }}
+      {{ if gt (len .SubItems) 0 }}
+      <ul role="menu">
+        {{ template "MenuItems" .SubItems }}
+      </ul>
+      {{ end }}
+    </li>
+    {{ end }}
+    {{ end }}
+    {{ end }}
+  </ul>
+  <div class="breadcrumbs raised">
+    <ul class="lowered flex-row gap">
+      {{$breadcrumbs := .Breadcrumbs.Get}}
+      {{ range $breadcrumbs }}
+      <li class="{{ if .IsActive }}active{{ end }}">
+        <a href="{{.Href}}" title="{{.Title}}">{{ safeHTML .Label }}</a>
+      </li>
+      {{ end }}
+    </ul>
+  </div>
+</div>
