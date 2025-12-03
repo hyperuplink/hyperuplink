@@ -34,10 +34,27 @@ func (s *Session) Set(authProvider string, userId string) error {
 	return nil
 }
 
-func (s *Session) GetProvider() string {
+func (s *Session) GetProvider() (string, bool) {
 	sess := session.FromContext(s.c)
 
-	return sess.Get("auth_provider").(string)
+	authProvider := sess.Get("auth_provider")
+	if authProvider == nil || authProvider.(string) == "" {
+		return "", false
+	}
+
+	return authProvider.(string), true
+}
+
+func (s *Session) GetUserID() (string, bool) {
+	sess := session.FromContext(s.c)
+
+	userID := sess.Get("user_id")
+
+	if userID == nil || userID.(string) == "" {
+		return "", false
+	}
+
+	return userID.(string), true
 }
 
 func (s *Session) Reset() error {

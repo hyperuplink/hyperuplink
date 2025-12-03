@@ -43,6 +43,14 @@ func New(r route.IRoute, c fiber.Ctx, layouts []string, view string, title strin
 	req.Form = form.New()
 	req.In = in.New(req.r, req.c)
 
+	if userID, ok := req.Session.GetUserID(); ok {
+		usr, err := req.r.GetRuntime().Repositories.User.GetByID(userID)
+		if err != nil {
+			req.r.GetRuntime().Error("error", err)
+		} else {
+			req.Site.SetCurrentUser(usr)
+		}
+	}
 	req.Site.SetTitle(req.In.T(title))
 
 	req.BCN.Append(*bcn.NewBreadcrumb(

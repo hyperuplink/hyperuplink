@@ -9,6 +9,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/csrf"
 	"github.com/mrusme/hyperuplink/http/route"
+	"github.com/mrusme/hyperuplink/models/user"
 )
 
 type Site struct {
@@ -18,6 +19,8 @@ type Site struct {
 	absPath string
 	relRoot string
 	title   string
+
+	currentUser *user.User
 }
 
 func New(r route.IRoute, c fiber.Ctx) *Site {

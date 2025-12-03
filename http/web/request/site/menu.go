@@ -13,7 +13,23 @@ type MenuItem struct {
 func (s *Site) AccountMenu() []MenuItem {
 	var subItems []MenuItem
 
-	if false { // TODO: Check for user role
+	if s.CurrentUserHasGuestRole() {
+		subItems = []MenuItem{
+			{
+				Label: "Sign in",
+				Title: "Sign in",
+				Href:  s.HrefTo("sessions/signin"),
+			},
+			{
+				IsSeparator: true,
+			},
+			{
+				Label: "Sign up",
+				Title: "Sign up",
+				Href:  s.HrefTo("sessions/signup"),
+			},
+		}
+	} else {
 		subItems = []MenuItem{
 			{
 				Label: "Profile",
@@ -52,22 +68,6 @@ func (s *Site) AccountMenu() []MenuItem {
 				Href:  s.HrefTo("sessions/signout"),
 			},
 		}
-	} else {
-		subItems = []MenuItem{
-			{
-				Label: "Sign in",
-				Title: "Sign in",
-				Href:  s.HrefTo("sessions/signin"),
-			},
-			{
-				IsSeparator: true,
-			},
-			{
-				Label: "Sign up",
-				Title: "Sign up",
-				Href:  s.HrefTo("sessions/signup"),
-			},
-		}
 	}
 
 	return []MenuItem{
@@ -79,106 +79,107 @@ func (s *Site) AccountMenu() []MenuItem {
 }
 
 func (s *Site) AdminMenu() []MenuItem {
-	// TODO: Check user role
-	return []MenuItem{}
-
-	return []MenuItem{
-		{
-			Label: "Ad<u>m</u>inistration",
-			SubItems: []MenuItem{
-				{
-					Label: "General",
-					Title: "General",
-					Href:  s.HrefTo("admin/general"),
-				},
-				{
-					Label: "Authentication",
-					Title: "Authentication",
-					Href:  s.HrefTo("admin/auth"),
-				},
-				{
-					Label: "Communication",
-					SubItems: []MenuItem{
-						{
-							Label: "E-Mail",
-							Title: "E-Mail",
-							Href:  s.HrefTo("admin/comms/email"),
-						},
-						{
-							Label: "XMPP",
-							Title: "XMPP",
-							Href:  s.HrefTo("admin/comms/xmpp"),
+	if s.CurrentUserHasAdminRole() {
+		return []MenuItem{
+			{
+				Label: "Ad<u>m</u>inistration",
+				SubItems: []MenuItem{
+					{
+						Label: "General",
+						Title: "General",
+						Href:  s.HrefTo("admin/general"),
+					},
+					{
+						Label: "Authentication",
+						Title: "Authentication",
+						Href:  s.HrefTo("admin/auth"),
+					},
+					{
+						Label: "Communication",
+						SubItems: []MenuItem{
+							{
+								Label: "E-Mail",
+								Title: "E-Mail",
+								Href:  s.HrefTo("admin/comms/email"),
+							},
+							{
+								Label: "XMPP",
+								Title: "XMPP",
+								Href:  s.HrefTo("admin/comms/xmpp"),
+							},
 						},
 					},
-				},
-				{
-					IsSeparator: true,
-				},
-				{
-					Label: "Board Settings",
-					SubItems: []MenuItem{
-						{
-							Label: "Categories",
-							Title: "Categories",
-							Href:  s.HrefTo("admin/board/categories"),
-						},
-						{
-							Label: "Forums",
-							Title: "Forums",
-							Href:  s.HrefTo("admin/board/forums"),
-						},
-						{
-							IsSeparator: true,
-						},
-						{
-							Label: "Posts",
-							Title: "Posts",
-							Href:  s.HrefTo("admin/board/posts"),
-						},
-						{
-							Label: "Attachments",
-							Title: "Attachments",
-							Href:  s.HrefTo("admin/board/attachments"),
-						},
-						{
-							Label: "Profiles",
-							Title: "Profiles",
-							Href:  s.HrefTo("admin/board/profiles"),
-						},
-						{
-							Label: "Signatures",
-							Title: "Signatures",
-							Href:  s.HrefTo("admin/board/signatures"),
-						},
-						{
-							IsSeparator: true,
-						},
-						{
-							Label: "Look &amp; Feel",
-							Title: "Look & Feel",
-							Href:  s.HrefTo("admin/board/theme"),
+					{
+						IsSeparator: true,
+					},
+					{
+						Label: "Board Settings",
+						SubItems: []MenuItem{
+							{
+								Label: "Categories",
+								Title: "Categories",
+								Href:  s.HrefTo("admin/board/categories"),
+							},
+							{
+								Label: "Forums",
+								Title: "Forums",
+								Href:  s.HrefTo("admin/board/forums"),
+							},
+							{
+								IsSeparator: true,
+							},
+							{
+								Label: "Posts",
+								Title: "Posts",
+								Href:  s.HrefTo("admin/board/posts"),
+							},
+							{
+								Label: "Attachments",
+								Title: "Attachments",
+								Href:  s.HrefTo("admin/board/attachments"),
+							},
+							{
+								Label: "Profiles",
+								Title: "Profiles",
+								Href:  s.HrefTo("admin/board/profiles"),
+							},
+							{
+								Label: "Signatures",
+								Title: "Signatures",
+								Href:  s.HrefTo("admin/board/signatures"),
+							},
+							{
+								IsSeparator: true,
+							},
+							{
+								Label: "Look &amp; Feel",
+								Title: "Look & Feel",
+								Href:  s.HrefTo("admin/board/theme"),
+							},
 						},
 					},
-				},
-				{
-					IsSeparator: true,
-				},
-				{
-					Label: "Users",
-					Title: "Users",
-					Href:  s.HrefTo("admin/users"),
-				},
-				{
-					IsSeparator: true,
-				},
-				{
-					Label: "Adminlog",
-					Title: "Adminlog",
-					Href:  s.HrefTo("admin/log"),
+					{
+						IsSeparator: true,
+					},
+					{
+						Label: "Users",
+						Title: "Users",
+						Href:  s.HrefTo("admin/users"),
+					},
+					{
+						IsSeparator: true,
+					},
+					{
+						Label: "Adminlog",
+						Title: "Adminlog",
+						Href:  s.HrefTo("admin/log"),
+					},
 				},
 			},
-		},
+		}
 	}
+
+	return []MenuItem{}
 }
 
 func (s *Site) ViewMenu() []MenuItem {

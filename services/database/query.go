@@ -39,6 +39,10 @@ func (db *Database) ConvertError(err error) error {
 		return err
 	}
 
+	if errors.Is(err, pgx.ErrNoRows) {
+		return errors.New("no_rows")
+	}
+
 	if errors.As(err, &pgErr) {
 		switch pgErr.Code {
 		case pgerrcode.UniqueViolation:
