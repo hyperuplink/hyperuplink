@@ -10,7 +10,7 @@ func (s *Site) GetCurrentUserRole() string {
 	if s.currentUser != nil {
 		return s.currentUser.Role
 	}
-	return ""
+	return "guest"
 }
 
 func (s *Site) CurrentUserHasGuestRole() bool {

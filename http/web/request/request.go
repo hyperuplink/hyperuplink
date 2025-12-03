@@ -57,7 +57,13 @@ func New(
 	if userID, ok := req.Session.GetUserID(); ok {
 		usr, err := req.r.GetRuntime().Repositories.User.GetByID(userID)
 		if err != nil {
-			req.r.GetRuntime().Error("error", err)
+			// We seemingly have a session but we can't find a user for it in our
+			// database. This could be, because maybe the user got banned or deleted.
+			// In this case, we destroy the session.
+			req.r.GetRuntime().Warn("error", err)
+			if err = req.Session.Destroy(); err != nil {
+				req.r.GetRuntime().Error("error", err)
+			}
 		} else {
 			req.Site.SetCurrentUser(usr)
 		}

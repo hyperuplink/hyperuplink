@@ -8,6 +8,12 @@ import (
 
 func (r *Route) SignOutShow(c fiber.Ctx) (err error) {
 	req := request.New(r, c, []string{"base"}, "session/signout", "sign_out_noun")
+	if ret, rerr := req.AccessControl(
+		request.UserRole, request.ModRole, request.AdminRole,
+	); ret {
+		return rerr
+	}
+
 	provider, ok := req.Session.GetProvider()
 	if ok == false {
 		return req.RedirectToRoot()

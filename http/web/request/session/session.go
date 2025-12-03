@@ -62,3 +62,9 @@ func (s *Session) Reset() error {
 
 	return sess.Reset()
 }
+
+func (s *Session) Destroy() error {
+	sess := session.FromContext(s.c)
+
+	return sess.Destroy()
+}

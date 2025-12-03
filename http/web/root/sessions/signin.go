@@ -17,12 +17,19 @@ type SignInForm struct {
 
 func (r *Route) SignInShow(c fiber.Ctx) (err error) {
 	req := request.New(r, c, []string{"base"}, "session/signin", "sign_in_noun")
+	if ret, rerr := req.AccessControl(request.GuestRole); ret {
+		return rerr
+	}
 
 	return req.Respond()
 }
 
 func (r *Route) SignInCreate(c fiber.Ctx) (err error) {
 	req := request.New(r, c, []string{"base"}, "session/signin", "sign_in_noun")
+	if ret, rerr := req.AccessControl(request.GuestRole); ret {
+		return rerr
+	}
+
 	frm := new(SignInForm)
 
 	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {

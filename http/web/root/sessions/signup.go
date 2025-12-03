@@ -19,12 +19,19 @@ type SignUpForm struct {
 
 func (r *Route) SignUpShow(c fiber.Ctx) (err error) {
 	req := request.New(r, c, []string{"base"}, "session/signup", "sign_up_noun")
+	if ret, rerr := req.AccessControl(request.GuestRole); ret {
+		return rerr
+	}
 
 	return req.Respond()
 }
 
 func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 	req := request.New(r, c, []string{"base"}, "session/signup", "sign_up_noun")
+	if ret, rerr := req.AccessControl(request.GuestRole); ret {
+		return rerr
+	}
+
 	frm := new(SignUpForm)
 
 	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
