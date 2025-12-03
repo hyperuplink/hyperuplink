@@ -40,10 +40,12 @@ func New(
 
 		base.Get("/signup", r.SignUpShow).Name("signup.show")
 		base.Post("/signup", r.SignUpCreate).Name("signup.create")
+		base.Get("/signout", r.SignOutShow).Name("signout.show")
 
+		// Warning: Do not add routes below this point, as :provider will have
+		// preference over them. Add any fixed route before this line.
 		base.Get("/:provider", goth_fiber.BeginAuthHandler).Name("provider.show")
 		base.Get("/:provider/callback", r.ProviderCallbackShow).Name("provider.callback.show")
-		base.Get("/signout", r.SignOutShow).Name("signout.show")
 	}, r.Path+".")
 
 	return r, nil
