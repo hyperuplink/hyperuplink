@@ -1,10 +1,12 @@
 package sessions
 
 import (
+	"errors"
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/web/request"
+	"github.com/mrusme/hyperuplink/models/user"
 )
 
 type SignInForm struct {
@@ -29,13 +31,25 @@ func (r *Route) SignInCreate(c fiber.Ctx) (err error) {
 
 	r.Runtime.Debug("form", frm)
 
-	if frm.Username == "user" && frm.Password == "pass" {
-		if err := req.Session.Set("local", "2941476f-2ae0-4c3e-a459-1ef5d8dd6ca9"); err != nil {
-			req.Session.Reset()
-		}
-
-		return req.RedirectToRoot()
+	var usr *user.User
+	usr, err = r.Runtime.Repositories.User.GetByUsername(frm.Username)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
 	}
 
-	return req.Respond()
+	var match bool = false
+	if match, _, err = usr.CheckPassword(frm.Password); !match {
+		if err == nil {
+			err = errors.New("username_password_wrong")
+		}
+	}
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	if err := req.Session.Set("local", usr.ID.String()); err != nil {
+		req.Session.Reset()
+	}
+
+	return req.RedirectToRoot()
 }

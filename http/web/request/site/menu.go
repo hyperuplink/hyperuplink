@@ -49,7 +49,7 @@ func (s *Site) AccountMenu() []MenuItem {
 			{
 				Label: "Sign out",
 				Title: "Sign out",
-				Href:  s.HrefTo("session/signout"),
+				Href:  s.HrefTo("sessions/signout"),
 			},
 		}
 	} else {
@@ -57,7 +57,7 @@ func (s *Site) AccountMenu() []MenuItem {
 			{
 				Label: "Sign in",
 				Title: "Sign in",
-				Href:  s.HrefTo("session/signin"),
+				Href:  s.HrefTo("sessions/signin"),
 			},
 			{
 				IsSeparator: true,
@@ -65,7 +65,7 @@ func (s *Site) AccountMenu() []MenuItem {
 			{
 				Label: "Sign up",
 				Title: "Sign up",
-				Href:  s.HrefTo("session/signup"),
+				Href:  s.HrefTo("sessions/signup"),
 			},
 		}
 	}

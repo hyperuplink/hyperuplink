@@ -3,14 +3,7 @@
     <div class="title-bar-text">{{.Site.I18n.Get "sign_up_noun"}}</div>
   </div>
   <div class="window-body">
-    <div class="errors">
-      {{ with .Errors.Get }}
-      <div class="error raised margin padding">{{$.Site.T .Error}}</div>
-      {{ end }}
-      {{ range $field, $err := .Errors.GetMap }}
-      <div class="error raised margin padding">{{$.Site.T $err.Error}}</div>
-      {{ end }}
-    </div>
+    {{ template "views/layouts/partials/errors" . }}
     <form method="post">
       <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
       <div class="tabs margin">

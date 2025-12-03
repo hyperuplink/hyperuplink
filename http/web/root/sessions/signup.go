@@ -35,13 +35,14 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 	r.Runtime.Debug("form", frm)
 
 	// TODO: Sign up user
+	now := time.Now()
 	usr := new(user.User)
 	usr.Username = frm.Username
 	usr.Role = "user"
 	usr.Email = frm.Email
 	usr.EmailUnconfirmed = frm.Email
 	usr.ResetEmailConfirmationToken()
-	usr.EmailConfirmationSentAt = time.Now()
+	usr.SetEmailConfirmationSentAt(now)
 
 	err = usr.SetPassword(frm.Password)
 	if ret, rerr := req.RespondOnError(err); ret == true {
