@@ -12,6 +12,7 @@ import (
 	"github.com/mrusme/hyperuplink/http/web/request/bcn"
 	rerrors "github.com/mrusme/hyperuplink/http/web/request/errors"
 	"github.com/mrusme/hyperuplink/http/web/request/form"
+	"github.com/mrusme/hyperuplink/http/web/request/in"
 	"github.com/mrusme/hyperuplink/http/web/request/session"
 	"github.com/mrusme/hyperuplink/http/web/request/site"
 )
@@ -26,6 +27,7 @@ type Request struct {
 	Session *session.Session
 	Errors  *rerrors.Errors
 	Form    *form.Form
+	In      *in.Internationalization
 }
 
 func New(r route.IRoute, c fiber.Ctx, layouts []string, view string, title string) *Request {
@@ -39,8 +41,9 @@ func New(r route.IRoute, c fiber.Ctx, layouts []string, view string, title strin
 	req.Session = session.New(req.c)
 	req.Errors = rerrors.New()
 	req.Form = form.New()
+	req.In = in.New(req.r, req.c)
 
-	req.r.GetEnv().Title = req.Site.T(title)
+	req.Site.SetTitle(req.In.T(title))
 
 	req.BCN.Append(*bcn.NewBreadcrumb(
 		true,
@@ -104,6 +107,7 @@ func (req *Request) RespondWithView(layouts []string, view string) error {
 	return req.c.Render(fmt.Sprintf("views/%s", view), fiber.Map{
 		"Breadcrumbs": req.BCN,
 		"Site":        req.Site,
+		"_":           req.In,
 		"Session":     req.Session,
 		"Errors":      req.Errors,
 		"Form":        req.Form,

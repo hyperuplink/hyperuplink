@@ -8,7 +8,6 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/csrf"
-	"github.com/kaptinlin/go-i18n"
 	"github.com/mrusme/hyperuplink/http/route"
 )
 
@@ -19,8 +18,6 @@ type Site struct {
 	absPath string
 	relRoot string
 	title   string
-
-	I18n *i18n.Localizer
 }
 
 func New(r route.IRoute, c fiber.Ctx) *Site {
@@ -40,14 +37,7 @@ func New(r route.IRoute, c fiber.Ctx) *Site {
 	}
 	s.relRoot = relRoot
 
-	acceptLang := c.Get("Accept-Language", "en")
-	s.I18n = r.GetRuntime().Intnat.NewLocalizer(acceptLang)
-
 	return s
-}
-
-func (s *Site) T(msg string) string {
-	return s.I18n.Get(msg)
 }
 
 func (s *Site) GetRelRoot() string {
@@ -90,4 +80,15 @@ func (s *Site) CSS(name string) string {
 
 func (s *Site) Title() string {
 	return s.r.GetEnv().Title
+}
+
+func (s *Site) TitleFull() string {
+	return fmt.Sprintf("%s // %s",
+		s.r.GetEnv().Title,
+		"Hyperuplink", // TODO: Query title from database
+	)
+}
+
+func (s *Site) SetTitle(title string) {
+	s.r.GetEnv().Title = title
 }
