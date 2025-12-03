@@ -1,4 +1,7 @@
-{{ range . }}
+{{ $dict := . }}
+{{ $menu := get $dict "Menu"}}
+{{ $site := get $dict "Site"}}
+{{ range $menu }}
 {{ if .IsSeparator }}
 <li role="separator"></li>
 {{ else }}
@@ -11,13 +14,13 @@
     aria-checked="{{.Checked}}"
     {{ end }}>
   {{ if .Href }}
-  <a href="{{.Href}}" title="{{.Title}}">{{ safeHTML .Label }}</a>
+  <a href="{{$site.HrefTo .Href}}" title="{{.Title}}">{{ safeHTML .Label }}</a>
 {{ else }}
   {{ safeHTML .Label }}
   {{ end }}
   {{ if gt (len .SubItems) 0 }}
   <ul role="menu">
-    {{ template "views/layouts/partials/menu" .SubItems }}
+    {{ template "views/layouts/partials/menu" dict "Site" $site "Menu" .SubItems }}
   </ul>
   {{ end }}
 </li>

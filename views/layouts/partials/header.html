@@ -6,8 +6,7 @@
     </a>
   </div>
   <ul role="menubar">
-    {{$menu := .Site.Menu .Session.GetCurrentUserRole}}
-    {{ template "views/layouts/partials/menu" $menu }}
+    {{ template "views/layouts/partials/menu" dict "Site" .Site "Menu" .Menu.Get }}
   </ul>
   <div class="breadcrumbs raised">
     <ul class="lowered flex-row gap">

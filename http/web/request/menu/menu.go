@@ -1,6 +1,11 @@
-package site
+package menu
 
 import "github.com/mrusme/hyperuplink/models/user"
+
+type Menu struct {
+	menuItems []MenuItem
+	role      user.Role
+}
 
 type MenuItem struct {
 	IsSeparator bool
@@ -12,7 +17,27 @@ type MenuItem struct {
 	SubItems    []MenuItem
 }
 
-func (s *Site) AccountMenu(forRole user.Role) []MenuItem {
+func New() (m *Menu) {
+	m = new(Menu)
+
+	return m
+}
+
+func (m *Menu) SetRole(role user.Role) {
+	m.role = role
+	m.generate()
+}
+
+func (m *Menu) generate() {
+	m.menuItems = []MenuItem{}
+
+	m.menuItems = append(m.menuItems, m.AccountMenu(m.role)...)
+	m.menuItems = append(m.menuItems, m.AdminMenu(m.role)...)
+	m.menuItems = append(m.menuItems, m.ViewMenu(m.role)...)
+	m.menuItems = append(m.menuItems, m.HelpMenu(m.role)...)
+}
+
+func (m *Menu) AccountMenu(forRole user.Role) []MenuItem {
 	var subItems []MenuItem
 
 	if forRole == user.GuestRole {
@@ -20,7 +45,7 @@ func (s *Site) AccountMenu(forRole user.Role) []MenuItem {
 			{
 				Label: "Sign in",
 				Title: "Sign in",
-				Href:  s.HrefTo("sessions/signin"),
+				Href:  "sessions/signin",
 			},
 			{
 				IsSeparator: true,
@@ -28,7 +53,7 @@ func (s *Site) AccountMenu(forRole user.Role) []MenuItem {
 			{
 				Label: "Sign up",
 				Title: "Sign up",
-				Href:  s.HrefTo("sessions/signup"),
+				Href:  "sessions/signup",
 			},
 		}
 	} else {
@@ -36,12 +61,12 @@ func (s *Site) AccountMenu(forRole user.Role) []MenuItem {
 			{
 				Label: "Profile",
 				Title: "Profile",
-				Href:  s.HrefTo("account/profile"),
+				Href:  "account/profile",
 			},
 			{
 				Label: "Settings",
 				Title: "Settings",
-				Href:  s.HrefTo("account/settings"),
+				Href:  "account/settings",
 			},
 			{
 				IsSeparator: true,
@@ -52,12 +77,12 @@ func (s *Site) AccountMenu(forRole user.Role) []MenuItem {
 					{
 						Label: "Password",
 						Title: "Password",
-						Href:  s.HrefTo("account/password"),
+						Href:  "account/password",
 					},
 					{
 						Label: "2-Factor Authentication",
 						Title: "2-Factor Authentication",
-						Href:  s.HrefTo("account/2fa"),
+						Href:  "account/2fa",
 					},
 				},
 			},
@@ -67,7 +92,7 @@ func (s *Site) AccountMenu(forRole user.Role) []MenuItem {
 			{
 				Label: "Sign out",
 				Title: "Sign out",
-				Href:  s.HrefTo("sessions/signout"),
+				Href:  "sessions/signout",
 			},
 		}
 	}
@@ -80,7 +105,7 @@ func (s *Site) AccountMenu(forRole user.Role) []MenuItem {
 	}
 }
 
-func (s *Site) AdminMenu(forRole user.Role) []MenuItem {
+func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 	if forRole == user.AdminRole {
 		return []MenuItem{
 			{
@@ -89,12 +114,12 @@ func (s *Site) AdminMenu(forRole user.Role) []MenuItem {
 					{
 						Label: "General",
 						Title: "General",
-						Href:  s.HrefTo("admin/general"),
+						Href:  "admin/general",
 					},
 					{
 						Label: "Authentication",
 						Title: "Authentication",
-						Href:  s.HrefTo("admin/auth"),
+						Href:  "admin/auth",
 					},
 					{
 						Label: "Communication",
@@ -102,12 +127,12 @@ func (s *Site) AdminMenu(forRole user.Role) []MenuItem {
 							{
 								Label: "E-Mail",
 								Title: "E-Mail",
-								Href:  s.HrefTo("admin/comms/email"),
+								Href:  "admin/comms/email",
 							},
 							{
 								Label: "XMPP",
 								Title: "XMPP",
-								Href:  s.HrefTo("admin/comms/xmpp"),
+								Href:  "admin/comms/xmpp",
 							},
 						},
 					},
@@ -120,12 +145,12 @@ func (s *Site) AdminMenu(forRole user.Role) []MenuItem {
 							{
 								Label: "Categories",
 								Title: "Categories",
-								Href:  s.HrefTo("admin/board/categories"),
+								Href:  "admin/board/categories",
 							},
 							{
 								Label: "Forums",
 								Title: "Forums",
-								Href:  s.HrefTo("admin/board/forums"),
+								Href:  "admin/board/forums",
 							},
 							{
 								IsSeparator: true,
@@ -133,22 +158,22 @@ func (s *Site) AdminMenu(forRole user.Role) []MenuItem {
 							{
 								Label: "Posts",
 								Title: "Posts",
-								Href:  s.HrefTo("admin/board/posts"),
+								Href:  "admin/board/posts",
 							},
 							{
 								Label: "Attachments",
 								Title: "Attachments",
-								Href:  s.HrefTo("admin/board/attachments"),
+								Href:  "admin/board/attachments",
 							},
 							{
 								Label: "Profiles",
 								Title: "Profiles",
-								Href:  s.HrefTo("admin/board/profiles"),
+								Href:  "admin/board/profiles",
 							},
 							{
 								Label: "Signatures",
 								Title: "Signatures",
-								Href:  s.HrefTo("admin/board/signatures"),
+								Href:  "admin/board/signatures",
 							},
 							{
 								IsSeparator: true,
@@ -156,7 +181,7 @@ func (s *Site) AdminMenu(forRole user.Role) []MenuItem {
 							{
 								Label: "Look &amp; Feel",
 								Title: "Look & Feel",
-								Href:  s.HrefTo("admin/board/theme"),
+								Href:  "admin/board/theme",
 							},
 						},
 					},
@@ -166,7 +191,7 @@ func (s *Site) AdminMenu(forRole user.Role) []MenuItem {
 					{
 						Label: "Users",
 						Title: "Users",
-						Href:  s.HrefTo("admin/users"),
+						Href:  "admin/users",
 					},
 					{
 						IsSeparator: true,
@@ -174,7 +199,7 @@ func (s *Site) AdminMenu(forRole user.Role) []MenuItem {
 					{
 						Label: "Adminlog",
 						Title: "Adminlog",
-						Href:  s.HrefTo("admin/log"),
+						Href:  "admin/log",
 					},
 				},
 			},
@@ -184,7 +209,7 @@ func (s *Site) AdminMenu(forRole user.Role) []MenuItem {
 	return []MenuItem{}
 }
 
-func (s *Site) ViewMenu(forRole user.Role) []MenuItem {
+func (m *Menu) ViewMenu(forRole user.Role) []MenuItem {
 	return []MenuItem{
 		{
 			Label: "<u>V</u>iew",
@@ -197,14 +222,14 @@ func (s *Site) ViewMenu(forRole user.Role) []MenuItem {
 							Checked:    true,
 							Label:      "Light",
 							Title:      "Light",
-							Href:       s.HrefTo("account/settings?mode=light"),
+							Href:       "account/settings?mode=light",
 						},
 						{
 							IsCheckbox: true,
 							Checked:    false,
 							Label:      "Dark",
 							Title:      "Dark",
-							Href:       s.HrefTo("account/settings?mode=dark"),
+							Href:       "account/settings?mode=dark",
 						},
 					},
 				},
@@ -216,28 +241,28 @@ func (s *Site) ViewMenu(forRole user.Role) []MenuItem {
 					Checked:    true,
 					Label:      "Banner",
 					Title:      "Banner",
-					Href:       s.HrefTo("account/settings?banner=false"),
+					Href:       "account/settings?banner=false",
 				},
 				{
 					IsCheckbox: true,
 					Checked:    true,
 					Label:      "Footer",
 					Title:      "Footer",
-					Href:       s.HrefTo("account/settings?footer=false"),
+					Href:       "account/settings?footer=false",
 				},
 				{
 					IsCheckbox: true,
 					Checked:    true,
 					Label:      "Profile Pictures",
 					Title:      "Profile Pictures",
-					Href:       s.HrefTo("account/settings?profile_pictures=false"),
+					Href:       "account/settings?profile_pictures=false",
 				},
 			},
 		},
 	}
 }
 
-func (s *Site) HelpMenu(forRole user.Role) []MenuItem {
+func (m *Menu) HelpMenu(forRole user.Role) []MenuItem {
 	return []MenuItem{
 		{
 			Label: "<u>H</u>elp",
@@ -245,7 +270,7 @@ func (s *Site) HelpMenu(forRole user.Role) []MenuItem {
 				{
 					Label: "User Manual",
 					Title: "User Manual",
-					Href:  s.HrefTo(""),
+					Href:  "",
 				},
 				{
 					IsSeparator: true,
@@ -253,17 +278,17 @@ func (s *Site) HelpMenu(forRole user.Role) []MenuItem {
 				{
 					Label: "Terms of Service",
 					Title: "Terms of Service",
-					Href:  s.HrefTo(""),
+					Href:  "",
 				},
 				{
 					Label: "Privacy Policy",
 					Title: "Privacy Policy",
-					Href:  s.HrefTo(""),
+					Href:  "",
 				},
 				{
 					Label: "Contact",
 					Title: "Contact",
-					Href:  s.HrefTo(""),
+					Href:  "",
 				},
 				{
 					IsSeparator: true,
@@ -271,20 +296,13 @@ func (s *Site) HelpMenu(forRole user.Role) []MenuItem {
 				{
 					Label: "About",
 					Title: "About",
-					Href:  s.HrefTo("version"),
+					Href:  "version",
 				},
 			},
 		},
 	}
 }
 
-func (s *Site) Menu(forRole user.Role) []MenuItem {
-	var menu []MenuItem
-
-	menu = append(menu, s.AccountMenu(forRole)...)
-	menu = append(menu, s.AdminMenu(forRole)...)
-	menu = append(menu, s.ViewMenu(forRole)...)
-	menu = append(menu, s.HelpMenu(forRole)...)
-
-	return menu
+func (m *Menu) Get() []MenuItem {
+	return m.menuItems
 }

@@ -14,6 +14,7 @@ import (
 	rerrors "github.com/mrusme/hyperuplink/http/web/request/errors"
 	"github.com/mrusme/hyperuplink/http/web/request/form"
 	"github.com/mrusme/hyperuplink/http/web/request/in"
+	"github.com/mrusme/hyperuplink/http/web/request/menu"
 	"github.com/mrusme/hyperuplink/http/web/request/session"
 	"github.com/mrusme/hyperuplink/http/web/request/site"
 )
@@ -23,6 +24,7 @@ type Request struct {
 	c       fiber.Ctx
 	layouts []string
 	view    string
+	Menu    *menu.Menu
 	BCN     *bcn.BreadcrumbNavigation
 	Site    *site.Site
 	Session *session.Session
@@ -45,6 +47,7 @@ func New(
 	req.c = c
 	req.layouts = layouts
 	req.view = view
+	req.Menu = menu.New()
 	req.BCN = bcn.New()
 	req.Site = site.New(req.r, req.c)
 	req.Session = session.New(req.c)
@@ -68,6 +71,9 @@ func New(
 			req.Session.SetCurrentUser(usr)
 		}
 	}
+
+	req.Menu.SetRole(req.Session.GetCurrentUserRole())
+
 	req.Site.SetTitle(req.In.T(title))
 
 	req.BCN.Append(*bcn.NewBreadcrumb(
@@ -130,6 +136,7 @@ func (req *Request) RespondWithView(layouts []string, view string) error {
 	}
 
 	return req.c.Render(fmt.Sprintf("views/%s", view), fiber.Map{
+		"Menu":        req.Menu,
 		"Breadcrumbs": req.BCN,
 		"Site":        req.Site,
 		"_":           req.In,
