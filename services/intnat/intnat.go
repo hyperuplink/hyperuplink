@@ -33,25 +33,19 @@ func New() (*Intnat, error) {
 	return in, nil
 }
 
-func (in *Intnat) SetLocales(embedLocales *embed.FS) error {
-	// var err error
-
+func (in *Intnat) SetLocales(embedLocales *embed.FS) (err error) {
 	in.Locales = embedLocales
 
 	return nil
 }
 
-func (in *Intnat) Startup() error {
-	// var err error
-
+func (in *Intnat) Startup() (err error) {
 	in.Bundle.LoadFS(in.Locales, "locales/*.toml")
 
 	return nil
 }
 
-func (in *Intnat) Shutdown() error {
-	// var err error
-
+func (in *Intnat) Shutdown() (err error) {
 	return nil
 }
 

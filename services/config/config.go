@@ -19,9 +19,8 @@ type Config struct {
 
 func New(
 	cfgstr string,
-) (*Config, error) {
-	var cfg *Config = new(Config)
-	var err error
+) (cfg *Config, err error) {
+	cfg = new(Config)
 	var cfgurl *url.URL
 
 	cfg.cfgstr = cfgstr
@@ -45,9 +44,7 @@ func New(
 	return cfg, nil
 }
 
-func (cfg *Config) Startup() error {
-	// var err error
-
+func (cfg *Config) Startup() (err error) {
 	cfg.provider.(*file.File).Watch(func(event interface{}, werr error) {
 		if werr != nil {
 			// TODO: Handle error
@@ -66,10 +63,7 @@ func (cfg *Config) Shutdown() error {
 	return nil
 }
 
-func (cfg *Config) parseCfgstr() (*url.URL, error) {
-	var err error
-	var u *url.URL
-
+func (cfg *Config) parseCfgstr() (u *url.URL, err error) {
 	if u, err = url.Parse(cfg.cfgstr); err != nil {
 		return nil, err
 	}

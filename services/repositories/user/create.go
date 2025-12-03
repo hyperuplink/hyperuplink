@@ -5,10 +5,7 @@ import (
 	uuid "github.com/vgarvardt/pgx-google-uuid/v5"
 )
 
-func (repo *Repository) Create(model *user.User) (uuid.UUID, error) {
-	var rowID uuid.UUID
-	var err error
-
+func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
 	err = repo.db.QueryRow(`INSERT INTO users (
   username,
   role,
@@ -82,5 +79,5 @@ func (repo *Repository) Create(model *user.User) (uuid.UUID, error) {
 		model.BannedAt,
 		model.DeletedAt,
 	).Scan(&rowID)
-	return rowID, err
+	return rowID, repo.db.ConvertError(err)
 }

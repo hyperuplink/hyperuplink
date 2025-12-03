@@ -13,18 +13,18 @@ type SignInForm struct {
 	Password string `form:"password" validate:"required,min=8,max=64"`
 }
 
-func (r *Route) SignInShow(c fiber.Ctx) error {
-	req := request.New(r, c)
+func (r *Route) SignInShow(c fiber.Ctx) (err error) {
+	req := request.New(r, c, []string{"base"}, "session/signin")
 
-	return req.Respond("base", "session/signin")
+	return req.Respond()
 }
 
-func (r *Route) SignInCreate(c fiber.Ctx) error {
-	req := request.New(r, c)
+func (r *Route) SignInCreate(c fiber.Ctx) (err error) {
+	req := request.New(r, c, []string{"base"}, "session/signin")
 	frm := new(SignInForm)
 
 	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
-		return req.Respond("base", "session/signin")
+		return req.Respond()
 	}
 
 	r.Runtime.Debug("form", frm)
@@ -37,5 +37,5 @@ func (r *Route) SignInCreate(c fiber.Ctx) error {
 		return req.RedirectToRoot()
 	}
 
-	return req.Respond("base", "session/signin")
+	return req.Respond()
 }

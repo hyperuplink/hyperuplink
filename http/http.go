@@ -27,11 +27,8 @@ type HTTP struct {
 func New(
 	rt *runtime.Runtime,
 	ifType InterfaceType,
-) (*HTTP, error) {
-	var err error
-
-	srv := new(HTTP)
-
+) (srv *HTTP, err error) {
+	srv = new(HTTP)
 	srv.rt = rt
 
 	switch ifType {
@@ -48,9 +45,7 @@ func New(
 	return srv, nil
 }
 
-func (srv *HTTP) Startup() error {
-	var err error
-
+func (srv *HTTP) Startup() (err error) {
 	srv.rt.Debug("status", "exec")
 
 	if err = srv.iface.Startup(); err != nil {
@@ -63,9 +58,7 @@ func (srv *HTTP) Startup() error {
 	return nil
 }
 
-func (srv *HTTP) Run() error {
-	var err error
-
+func (srv *HTTP) Run() (err error) {
 	srv.rt.Debug("status", "exec")
 
 	if err = srv.iface.Run(); err != nil {
@@ -78,9 +71,7 @@ func (srv *HTTP) Run() error {
 	return nil
 }
 
-func (srv *HTTP) Shutdown() error {
-	var err error
-
+func (srv *HTTP) Shutdown() (err error) {
 	srv.rt.Debug("status", "exec")
 
 	if err = srv.iface.Shutdown(); err != nil {

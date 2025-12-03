@@ -18,20 +18,18 @@ type SignUpForm struct {
 	PasswordRepeat string `form:"password_repeat" validate:"required,eqcsfield=Password"`
 }
 
-func (r *Route) SignUpShow(c fiber.Ctx) error {
-	req := request.New(r, c)
+func (r *Route) SignUpShow(c fiber.Ctx) (err error) {
+	req := request.New(r, c, []string{"base"}, "session/signup")
 
-	return req.Respond("base", "session/signup")
+	return req.Respond()
 }
 
-func (r *Route) SignUpCreate(c fiber.Ctx) error {
-	var err error
-
-	req := request.New(r, c)
+func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
+	req := request.New(r, c, []string{"base"}, "session/signup")
 	frm := new(SignUpForm)
 
 	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
-		return req.Respond("base", "session/signup")
+		return req.Respond()
 	}
 
 	r.Runtime.Debug("form", frm)
@@ -40,23 +38,23 @@ func (r *Route) SignUpCreate(c fiber.Ctx) error {
 	usr := new(user.User)
 	usr.Username = frm.Username
 	usr.Role = "user"
-	if ret, rerr := req.RespondOnError("base", "session/signup",
-		usr.SetPassword(frm.Password)); ret == true {
-		return rerr
-	}
 	usr.Email = frm.Email
 	usr.EmailUnconfirmed = frm.Email
 	usr.ResetEmailConfirmationToken()
 	usr.EmailConfirmationSentAt = time.Now()
 
+	err = usr.SetPassword(frm.Password)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
 	usr.ID, err = r.Runtime.Repositories.User.Create(usr)
-	if ret, rerr := req.RespondOnError("base", "session/signup",
-		r.Runtime.Database.ConvertError(err)); ret == true {
+	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
 
 	// TODO: Trigger confirmation mail
 
 	// TODO: Redirect to user profile settings
-	return req.Respond("base", "session/signup")
+	return req.Respond()
 }

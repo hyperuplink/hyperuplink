@@ -34,6 +34,11 @@ func (db *Database) QueryRow(sql string, args ...any) pgx.Row {
 
 func (db *Database) ConvertError(err error) error {
 	var pgErr *pgconn.PgError
+
+	if err == nil {
+		return err
+	}
+
 	if errors.As(err, &pgErr) {
 		switch pgErr.Code {
 		case pgerrcode.UniqueViolation:

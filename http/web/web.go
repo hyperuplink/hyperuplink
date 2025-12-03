@@ -53,11 +53,8 @@ func (v *structValidator) Validate(out any) error {
 
 func New(
 	rt *runtime.Runtime,
-) (*Web, error) {
-	var err error
-
-	srv := new(Web)
-
+) (srv *Web, err error) {
+	srv = new(Web)
 	srv.rt = rt
 
 	if srv.engine, err = srv.getViewsEngine(); err != nil {
@@ -150,9 +147,7 @@ func (srv *Web) loadMiddlewares() error {
 	return nil
 }
 
-func (srv *Web) getSessionStorage() (fiber.Storage, error) {
-	var err error
-
+func (srv *Web) getSessionStorage() (storage fiber.Storage, err error) {
 	redisConfig := redis.Config{
 		MasterName: srv.rt.Config.RedisMasterName(),
 		Username:   srv.rt.Config.RedisUsername(),
@@ -184,7 +179,7 @@ func (srv *Web) getSessionStorage() (fiber.Storage, error) {
 	}
 	redisConfig.PoolSize = poolSize
 
-	storage := redis.New(redisConfig)
+	storage = redis.New(redisConfig)
 
 	return storage, nil
 }
@@ -252,9 +247,8 @@ func (srv *Web) getWatcher(path string, callback func(f string)) (*fsnotify.Watc
 	return watcher, nil
 }
 
-func (srv *Web) loadRoutes() error {
+func (srv *Web) loadRoutes() (err error) {
 	var stic fiber.Handler
-	var err error
 
 	if srv.rt.IsDevelopmentMode() {
 		cwd, err := os.Getwd()
@@ -281,9 +275,7 @@ func (srv *Web) loadRoutes() error {
 	return nil
 }
 
-func (srv *Web) Startup() error {
-	var err error
-
+func (srv *Web) Startup() (err error) {
 	srv.rt.Debug("status", "exec")
 
 	if err = srv.loadMiddlewares(); err != nil {
@@ -317,9 +309,7 @@ func (srv *Web) Run() error {
 	return nil
 }
 
-func (srv *Web) Shutdown() error {
-	var err error
-
+func (srv *Web) Shutdown() (err error) {
 	srv.rt.Debug("status", "exec")
 
 	if err = srv.app.ShutdownWithTimeout(time.Second * 5); err != nil {

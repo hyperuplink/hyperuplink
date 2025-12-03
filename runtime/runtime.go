@@ -45,10 +45,8 @@ const (
 	ModeProduction  string = "production"
 )
 
-func New(cfgstr string) (*Runtime, error) {
-	var err error
-
-	rt := new(Runtime)
+func New(cfgstr string) (rt *Runtime, err error) {
+	rt = new(Runtime)
 
 	rt.Build.Version = Version
 	rt.Build.Commit = Commit
@@ -96,9 +94,7 @@ func New(cfgstr string) (*Runtime, error) {
 	return rt, err
 }
 
-func (rt *Runtime) Startup() error {
-	var err error
-
+func (rt *Runtime) Startup() (err error) {
 	rt.Debug("status", "exec")
 
 	if err = rt.Config.Startup(); err != nil {
@@ -121,9 +117,7 @@ func (rt *Runtime) Startup() error {
 	return nil
 }
 
-func (rt *Runtime) Shutdown() error {
-	var err error
-
+func (rt *Runtime) Shutdown() (err error) {
 	rt.Debug("status", "exec")
 
 	if err = rt.Intnat.Shutdown(); err != nil {

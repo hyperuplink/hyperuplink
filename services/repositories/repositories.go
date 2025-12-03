@@ -12,10 +12,8 @@ type Repositories struct {
 
 func New(
 	db *database.Database,
-) (*Repositories, error) {
-	var repos *Repositories = new(Repositories)
-	var err error
-
+) (repos *Repositories, err error) {
+	repos = new(Repositories)
 	repos.db = db
 
 	var userRepo *user.Repository
@@ -28,9 +26,7 @@ func New(
 	return repos, nil
 }
 
-func (repos *Repositories) Startup() error {
-	var err error
-
+func (repos *Repositories) Startup() (err error) {
 	if err = repos.User.Startup(); err != nil {
 		return err
 	}
@@ -38,9 +34,7 @@ func (repos *Repositories) Startup() error {
 	return nil
 }
 
-func (repos *Repositories) Shutdown() error {
-	var err error
-
+func (repos *Repositories) Shutdown() (err error) {
 	if err = repos.User.Shutdown(); err != nil {
 		return err
 	}

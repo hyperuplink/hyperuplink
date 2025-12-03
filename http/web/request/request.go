@@ -18,16 +18,20 @@ import (
 type Request struct {
 	r       route.IRoute
 	c       fiber.Ctx
+	layouts []string
+	view    string
 	Site    *site.Site
 	Session *session.Session
 	Errors  *rerrors.Errors
 	Form    *form.Form
 }
 
-func New(r route.IRoute, c fiber.Ctx) *Request {
+func New(r route.IRoute, c fiber.Ctx, layouts []string, view string) *Request {
 	req := new(Request)
 	req.r = r
 	req.c = c
+	req.layouts = layouts
+	req.view = view
 	req.Site = site.New(req.r, req.c)
 	req.Session = session.New(req.c)
 	req.Errors = rerrors.New()
@@ -78,26 +82,40 @@ func (req *Request) ValidateForm(f any, t reflect.Type) bool {
 	return true
 }
 
-func (req *Request) Respond(layout string, view string) error {
+func (req *Request) RespondWithView(layouts []string, view string) error {
+	var layoutsFull []string
+
+	for _, layout := range layouts {
+		layoutsFull = append(layoutsFull, fmt.Sprintf("views/layouts/%s", layout))
+	}
+
 	return req.c.Render(fmt.Sprintf("views/%s", view), fiber.Map{
 		"Site":    req.Site,
 		"Session": req.Session,
 		"Errors":  req.Errors,
 		"Form":    req.Form,
-	}, fmt.Sprintf("views/layouts/%s", layout))
+	}, layoutsFull...)
 }
 
-func (req *Request) RespondOnError(layout string, view string, err error) (bool, error) {
+func (req *Request) Respond() error {
+	return req.RespondWithView(req.layouts, req.view)
+}
+
+func (req *Request) RespondWithViewOnError(layouts []string, view string, err error) (bool, error) {
 	if err == nil {
 		return false, nil
 	}
 
 	req.Errors.Set(err)
-	return true, req.Respond(layout, view)
+	return true, req.RespondWithView(layouts, view)
 }
 
 func (req *Request) RedirectTo(path string) error {
 	return req.c.Redirect().To(path)
+}
+
+func (req *Request) RespondOnError(err error) (bool, error) {
+	return req.RespondWithViewOnError(req.layouts, req.view, err)
 }
 
 func (req *Request) RedirectToRoot() error {

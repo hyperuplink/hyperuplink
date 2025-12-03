@@ -27,10 +27,8 @@ type Database struct {
 func New(
 	log *slog.Logger,
 	connection string,
-) (*Database, error) {
-	var err error
-
-	db := new(Database)
+) (db *Database, err error) {
+	db = new(Database)
 	db.log = log
 	db.connection = connection
 
@@ -50,9 +48,7 @@ func (db *Database) SetMigrations(migrations *embed.FS) {
 	db.migrations = migrations
 }
 
-func (db *Database) Startup() error {
-	var err error
-
+func (db *Database) Startup() (err error) {
 	if db.pool, err = pgxpool.NewWithConfig(
 		context.Background(),
 		db.poolcfg,
