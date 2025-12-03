@@ -3,10 +3,12 @@ package session
 import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/session"
+	"github.com/mrusme/hyperuplink/models/user"
 )
 
 type Session struct {
-	c fiber.Ctx
+	c           fiber.Ctx
+	currentUser *user.User
 }
 
 func New(c fiber.Ctx) *Session {

@@ -3,13 +3,14 @@ package sessions
 import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/web/request"
+	"github.com/mrusme/hyperuplink/models/user"
 	goth_fiber "github.com/shareed2k/goth_fiber/v2"
 )
 
 func (r *Route) SignOutShow(c fiber.Ctx) (err error) {
 	req := request.New(r, c, []string{"base"}, "session/signout", "sign_out_noun")
 	if ret, rerr := req.AccessControl(
-		request.UserRole, request.ModRole, request.AdminRole,
+		user.UserRole, user.ModRole, user.AdminRole,
 	); ret {
 		return rerr
 	}

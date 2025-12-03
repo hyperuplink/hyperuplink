@@ -15,7 +15,7 @@ const (
 type User struct {
 	ID       uuid.UUID `json:"id"`
 	Username string    `json:"username"`
-	Role     string    `json:"role"`
+	Role     Role      `json:"role"`
 
 	Password            string           `json:"password"`
 	PasswordResetToken  string           `json:"password_reset_token"`

@@ -1,5 +1,7 @@
 package site
 
+import "github.com/mrusme/hyperuplink/models/user"
+
 type MenuItem struct {
 	IsSeparator bool
 	IsCheckbox  bool
@@ -10,10 +12,10 @@ type MenuItem struct {
 	SubItems    []MenuItem
 }
 
-func (s *Site) AccountMenu() []MenuItem {
+func (s *Site) AccountMenu(forRole user.Role) []MenuItem {
 	var subItems []MenuItem
 
-	if s.CurrentUserHasGuestRole() {
+	if forRole == user.GuestRole {
 		subItems = []MenuItem{
 			{
 				Label: "Sign in",
@@ -78,8 +80,8 @@ func (s *Site) AccountMenu() []MenuItem {
 	}
 }
 
-func (s *Site) AdminMenu() []MenuItem {
-	if s.CurrentUserHasAdminRole() {
+func (s *Site) AdminMenu(forRole user.Role) []MenuItem {
+	if forRole == user.AdminRole {
 		return []MenuItem{
 			{
 				Label: "Ad<u>m</u>inistration",
@@ -182,7 +184,7 @@ func (s *Site) AdminMenu() []MenuItem {
 	return []MenuItem{}
 }
 
-func (s *Site) ViewMenu() []MenuItem {
+func (s *Site) ViewMenu(forRole user.Role) []MenuItem {
 	return []MenuItem{
 		{
 			Label: "<u>V</u>iew",
@@ -235,7 +237,7 @@ func (s *Site) ViewMenu() []MenuItem {
 	}
 }
 
-func (s *Site) HelpMenu() []MenuItem {
+func (s *Site) HelpMenu(forRole user.Role) []MenuItem {
 	return []MenuItem{
 		{
 			Label: "<u>H</u>elp",
@@ -276,13 +278,13 @@ func (s *Site) HelpMenu() []MenuItem {
 	}
 }
 
-func (s *Site) Menu() []MenuItem {
+func (s *Site) Menu(forRole user.Role) []MenuItem {
 	var menu []MenuItem
 
-	menu = append(menu, s.AccountMenu()...)
-	menu = append(menu, s.AdminMenu()...)
-	menu = append(menu, s.ViewMenu()...)
-	menu = append(menu, s.HelpMenu()...)
+	menu = append(menu, s.AccountMenu(forRole)...)
+	menu = append(menu, s.AdminMenu(forRole)...)
+	menu = append(menu, s.ViewMenu(forRole)...)
+	menu = append(menu, s.HelpMenu(forRole)...)
 
 	return menu
 }

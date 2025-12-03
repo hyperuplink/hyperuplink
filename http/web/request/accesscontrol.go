@@ -2,17 +2,12 @@ package request
 
 import (
 	"slices"
+
+	"github.com/mrusme/hyperuplink/models/user"
 )
 
-const (
-	GuestRole string = "guest"
-	UserRole  string = "user"
-	ModRole   string = "mod"
-	AdminRole string = "admin"
-)
-
-func (req *Request) AccessControl(roles ...string) (mustReturn bool, err error) {
-	if slices.Index(roles, req.Site.GetCurrentUserRole()) < 0 {
+func (req *Request) AccessControl(roles ...user.Role) (mustReturn bool, err error) {
+	if slices.Index(roles, req.Session.GetCurrentUserRole()) < 0 {
 		return true, req.RedirectToRoot()
 	}
 

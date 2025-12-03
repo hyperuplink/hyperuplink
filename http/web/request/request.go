@@ -65,7 +65,7 @@ func New(
 				req.r.GetRuntime().Error("error", err)
 			}
 		} else {
-			req.Site.SetCurrentUser(usr)
+			req.Session.SetCurrentUser(usr)
 		}
 	}
 	req.Site.SetTitle(req.In.T(title))

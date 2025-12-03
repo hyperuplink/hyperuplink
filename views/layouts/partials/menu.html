@@ -1,0 +1,25 @@
+{{ range . }}
+{{ if .IsSeparator }}
+<li role="separator"></li>
+{{ else }}
+<li tabindex="0"
+    {{ if gt (len .SubItems) 0 }}
+    aria-haspopup="true"
+    {{ end }}
+    {{ if .IsCheckbox }}
+    role="checkbox"
+    aria-checked="{{.Checked}}"
+    {{ end }}>
+  {{ if .Href }}
+  <a href="{{.Href}}" title="{{.Title}}">{{ safeHTML .Label }}</a>
+{{ else }}
+  {{ safeHTML .Label }}
+  {{ end }}
+  {{ if gt (len .SubItems) 0 }}
+  <ul role="menu">
+    {{ template "views/layouts/partials/menu" .SubItems }}
+  </ul>
+  {{ end }}
+</li>
+{{ end }}
+{{ end }}

@@ -6,35 +6,8 @@
     </a>
   </div>
   <ul role="menubar">
-    {{$menu := .Site.Menu}}
-    {{ template "MenuItems" $menu }}
-    {{ define "MenuItems" }}
-    {{ range . }}
-    {{ if .IsSeparator }}
-    <li role="separator"></li>
-  {{ else }}
-    <li tabindex="0"
-        {{ if gt (len .SubItems) 0 }}
-        aria-haspopup="true"
-        {{ end }}
-        {{ if .IsCheckbox }}
-        role="checkbox"
-        aria-checked="{{.Checked}}"
-        {{ end }}>
-      {{ if .Href }}
-      <a href="{{.Href}}" title="{{.Title}}">{{ safeHTML .Label }}</a>
-    {{ else }}
-      {{ safeHTML .Label }}
-      {{ end }}
-      {{ if gt (len .SubItems) 0 }}
-      <ul role="menu">
-        {{ template "MenuItems" .SubItems }}
-      </ul>
-      {{ end }}
-    </li>
-    {{ end }}
-    {{ end }}
-    {{ end }}
+    {{$menu := .Site.Menu .Session.GetCurrentUserRole}}
+    {{ template "views/layouts/partials/menu" $menu }}
   </ul>
   <div class="breadcrumbs raised">
     <ul class="lowered flex-row gap">

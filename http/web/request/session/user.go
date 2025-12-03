@@ -1,33 +1,33 @@
-package site
+package session
 
 import "github.com/mrusme/hyperuplink/models/user"
 
-func (s *Site) SetCurrentUser(u *user.User) {
+func (s *Session) SetCurrentUser(u *user.User) {
 	s.currentUser = u
 }
 
-func (s *Site) GetCurrentUserRole() string {
+func (s *Session) GetCurrentUserRole() user.Role {
 	if s.currentUser != nil {
 		return s.currentUser.Role
 	}
 	return "guest"
 }
 
-func (s *Site) CurrentUserHasGuestRole() bool {
+func (s *Session) CurrentUserHasGuestRole() bool {
 	if s.currentUser == nil {
 		return true
 	}
 	return false
 }
 
-func (s *Site) CurrentUserHasUserRole() bool {
+func (s *Session) CurrentUserHasUserRole() bool {
 	if s.currentUser != nil && s.currentUser.Role == "user" {
 		return true
 	}
 	return false
 }
 
-func (s *Site) CurrentUserHasAdminRole() bool {
+func (s *Session) CurrentUserHasAdminRole() bool {
 	if s.currentUser != nil && s.currentUser.Role == "admin" {
 		return true
 	}
