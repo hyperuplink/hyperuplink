@@ -1,0 +1,38 @@
+<div class="margin window authentication active">
+  <div class="title-bar">
+    <div class="title-bar-text">{{._.T "confirm_account"}}</div>
+  </div>
+  <div class="window-body">
+    {{ template "views/layouts/partials/errors" . }}
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
+      <div class="tabs margin">
+        <div role="tabpanel" id="tab1" class="padding">
+          <div class="margin">
+            <div class="fieldrow flex-row flex-wrap gap">
+              <div class="field flex-column grow">
+                <label for="username">Username</label>
+                <input type="text"
+                       id="username"
+                       name="username"
+                       value="{{.Form.StringValueFor "username"}}"
+                       class="{{.Errors.ClassFor "username"}}">
+              </div>
+              <div class="field flex-column grow">
+                <label for="token">Token</label>
+                <input type="text"
+                       id="token"
+                       name="token"
+                       value="{{.Form.StringValueFor "token"}}"
+                       class="{{.Errors.ClassFor "token"}}">
+              </div>
+            </div>
+            <div class="actions flex-row gap justify-end">
+              <button type="submit">Confirm</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

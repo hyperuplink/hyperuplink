@@ -1,6 +1,9 @@
 package user
 
-import "time"
+import (
+	"errors"
+	"time"
+)
 
 func (m *User) SetEmailConfirmationSentAt(t time.Time) {
 	m.EmailConfirmationSentAt.Time = t
@@ -10,6 +13,11 @@ func (m *User) SetEmailConfirmationSentAt(t time.Time) {
 func (m *User) SetEmailConfirmedAt(t time.Time) {
 	m.EmailConfirmedAt.Time = t
 	m.EmailConfirmedAt.Valid = !t.IsZero()
+}
+
+func (m *User) ClearEmailConfirmedAt() {
+	m.EmailConfirmedAt.Time = time.Time{}
+	m.EmailConfirmedAt.Valid = false
 }
 
 func (m *User) ResetEmailConfirmationToken() error {
@@ -28,6 +36,36 @@ func (m *User) ResetEmailConfirmationToken() error {
 	}
 
 	m.EmailConfirmationToken = string(b)
+
+	return nil
+}
+
+func (m *User) SetEmailForConfirmation(email string) (err error) {
+	m.EmailUnconfirmed = email
+	if err = m.ResetEmailConfirmationToken(); err != nil {
+		return err
+	}
+	m.ClearEmailConfirmedAt()
+	m.SetEmailConfirmationSentAt(time.Now())
+
+	return nil
+}
+
+func (m *User) ConfirmEmail(token string) error {
+	now := time.Now()
+
+	if m.EmailConfirmationToken != token {
+		return errors.New("email_confirmation_token_wrong")
+	}
+
+	m.Email = m.EmailUnconfirmed
+	m.EmailUnconfirmed = ""
+	m.EmailConfirmationToken = ""
+	m.SetEmailConfirmedAt(now)
+
+	if m.ConfirmedAt.Valid == false || m.ConfirmedAt.Time.IsZero() {
+		m.SetConfirmedAt(now)
+	}
 
 	return nil
 }

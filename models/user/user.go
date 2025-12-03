@@ -39,8 +39,9 @@ type User struct {
 	ProfilePicture string `json:"profile_picture"`
 	Signature      string `json:"signature"`
 
-	CreatedAt pgtype.Timestamp `json:"created_at"`
-	UpdatedAt pgtype.Timestamp `json:"updated_at"`
-	BannedAt  pgtype.Timestamp `json:"banned_at"`
-	DeletedAt pgtype.Timestamp `json:"deleted_at"`
+	CreatedAt   pgtype.Timestamp `json:"created_at"`
+	UpdatedAt   pgtype.Timestamp `json:"updated_at"`
+	ConfirmedAt pgtype.Timestamp `json:"confirmed_at"`
+	BannedAt    pgtype.Timestamp `json:"banned_at"`
+	DeletedAt   pgtype.Timestamp `json:"deleted_at"`
 }

@@ -21,6 +21,7 @@ CREATE TABLE users (
   signature VARCHAR(256) DEFAULT '',
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
+  confirmed_at TIMESTAMP DEFAULT NULL,
   banned_at TIMESTAMP DEFAULT NULL,
   deleted_at TIMESTAMP DEFAULT NULL
 );

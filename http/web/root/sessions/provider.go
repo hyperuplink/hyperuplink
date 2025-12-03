@@ -6,9 +6,11 @@ import (
 )
 
 func (r *Route) ProviderCallbackShow(c fiber.Ctx) error {
-	user, err := goth_fiber.CompleteUserAuth(c, goth_fiber.CompleteUserAuthOptions{
-		ShouldLogout: false,
-	})
+	user, err := goth_fiber.CompleteUserAuth(c,
+		goth_fiber.CompleteUserAuthOptions{
+			ShouldLogout: false,
+		},
+	)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}

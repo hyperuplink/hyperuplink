@@ -12,6 +12,11 @@ func (m *User) SetUpdatedAt(t time.Time) {
 	m.UpdatedAt.Valid = !t.IsZero()
 }
 
+func (m *User) SetConfirmedAt(t time.Time) {
+	m.ConfirmedAt.Time = t
+	m.ConfirmedAt.Valid = !t.IsZero()
+}
+
 func (m *User) SetBannedAt(t time.Time) {
 	m.BannedAt.Time = t
 	m.BannedAt.Valid = !t.IsZero()

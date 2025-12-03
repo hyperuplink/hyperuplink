@@ -2,7 +2,6 @@ package sessions
 
 import (
 	"reflect"
-	"time"
 
 	"github.com/gofiber/fiber/v3"
 
@@ -35,14 +34,11 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 	r.Runtime.Debug("form", frm)
 
 	// TODO: Sign up user
-	now := time.Now()
 	usr := new(user.User)
 	usr.Username = frm.Username
 	usr.Role = "user"
 	usr.Email = frm.Email
-	usr.EmailUnconfirmed = frm.Email
-	usr.ResetEmailConfirmationToken()
-	usr.SetEmailConfirmationSentAt(now)
+	usr.SetEmailForConfirmation(frm.Email)
 
 	err = usr.SetPassword(frm.Password)
 	if ret, rerr := req.RespondOnError(err); ret == true {
@@ -56,6 +52,5 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 
 	// TODO: Trigger confirmation mail
 
-	// TODO: Redirect to user profile settings
-	return req.Respond()
+	return req.RedirectTo("sessions/confirm")
 }

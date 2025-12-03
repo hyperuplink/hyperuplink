@@ -40,7 +40,17 @@ func New(
 
 		base.Get("/signup", r.SignUpShow).Name("signup.show")
 		base.Post("/signup", r.SignUpCreate).Name("signup.create")
+
 		base.Get("/signout", r.SignOutShow).Name("signout.show")
+
+		base.Get("/confirm", r.ConfirmShow).Name("confirm.show")
+		base.Post("/confirm", r.ConfirmCreate).Name("confirm.create")
+
+		// base.Get("/tfa", r.TfaShow).Name("tfa.show")
+		// base.Post("/tfa", r.TfaCreate).Name("tfa.create")
+
+		// base.Get("/forgot", r.ForgotShow).Name("forgot.show")
+		// base.Post("/forgot", r.ForgotCreate).Name("forgot.create")
 
 		// Warning: Do not add routes below this point, as :provider will have
 		// preference over them. Add any fixed route before this line.

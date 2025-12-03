@@ -28,6 +28,7 @@ func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
 		// ,signature
 		// ,created_at
 		// ,updated_at
+		// ,confirmed_at
 		// ,banned_at
 		// ,deleted_at
 		`) VALUES (
@@ -54,6 +55,7 @@ func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
 		// ,$21
 		// ,$22
 		// ,$23
+		// ,$24
 		`) RETURNING id`,
 		model.Username,
 		model.Role,
@@ -76,6 +78,7 @@ func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
 		// model.Signature,
 		// model.CreatedAt,
 		// model.UpdatedAt,
+		// model.ConfirmedAt,
 		// model.BannedAt,
 		// model.DeletedAt,
 	).Scan(&rowID)

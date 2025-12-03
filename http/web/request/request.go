@@ -9,6 +9,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
+	"github.com/mrusme/hyperuplink/http/web/helpers"
 	"github.com/mrusme/hyperuplink/http/web/request/bcn"
 	rerrors "github.com/mrusme/hyperuplink/http/web/request/errors"
 	"github.com/mrusme/hyperuplink/http/web/request/form"
@@ -28,9 +29,17 @@ type Request struct {
 	Errors  *rerrors.Errors
 	Form    *form.Form
 	In      *in.Internationalization
+	absPath string
+	relRoot string
 }
 
-func New(r route.IRoute, c fiber.Ctx, layouts []string, view string, title string) *Request {
+func New(
+	r route.IRoute,
+	c fiber.Ctx,
+	layouts []string,
+	view string,
+	title string,
+) *Request {
 	req := new(Request)
 	req.r = r
 	req.c = c
@@ -42,6 +51,8 @@ func New(r route.IRoute, c fiber.Ctx, layouts []string, view string, title strin
 	req.Errors = rerrors.New()
 	req.Form = form.New()
 	req.In = in.New(req.r, req.c)
+
+	req.absPath, req.relRoot = helpers.GetAbsPathAndRelRoot(req.c)
 
 	if userID, ok := req.Session.GetUserID(); ok {
 		usr, err := req.r.GetRuntime().Repositories.User.GetByID(userID)
@@ -126,7 +137,11 @@ func (req *Request) Respond() error {
 	return req.RespondWithView(req.layouts, req.view)
 }
 
-func (req *Request) RespondWithViewOnError(layouts []string, view string, err error) (bool, error) {
+func (req *Request) RespondWithViewOnError(
+	layouts []string,
+	view string,
+	err error,
+) (bool, error) {
 	if err == nil {
 		return false, nil
 	}
@@ -135,14 +150,19 @@ func (req *Request) RespondWithViewOnError(layouts []string, view string, err er
 	return true, req.RespondWithView(layouts, view)
 }
 
-func (req *Request) RedirectTo(path string) error {
-	return req.c.Redirect().To(path)
-}
-
 func (req *Request) RespondOnError(err error) (bool, error) {
 	return req.RespondWithViewOnError(req.layouts, req.view, err)
 }
 
+func (req *Request) RespondError(err error) (rerr error) {
+	_, rerr = req.RespondWithViewOnError(req.layouts, req.view, err)
+	return rerr
+}
+
+func (req *Request) RedirectTo(path string) error {
+	return req.c.Redirect().To(fmt.Sprintf("%s%s", req.relRoot, path))
+}
+
 func (req *Request) RedirectToRoot() error {
-	return req.RedirectTo(req.Site.GetRelRoot())
+	return req.RedirectTo("")
 }

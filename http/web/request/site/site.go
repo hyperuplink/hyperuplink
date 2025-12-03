@@ -9,6 +9,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/csrf"
 	"github.com/mrusme/hyperuplink/http/route"
+	"github.com/mrusme/hyperuplink/http/web/helpers"
 	"github.com/mrusme/hyperuplink/models/user"
 )
 
@@ -30,15 +31,7 @@ func New(r route.IRoute, c fiber.Ctx) *Site {
 	s.c = c
 	s.csrf = csrf.TokenFromContext(s.c)
 
-	cR := s.c.Route()
-	s.absPath = cR.Path
-	parts := strings.Count(s.absPath, "/")
-
-	relRoot := ""
-	for i := 1; i < parts; i++ {
-		relRoot += "../"
-	}
-	s.relRoot = relRoot
+	s.absPath, s.relRoot = helpers.GetAbsPathAndRelRoot(s.c)
 
 	return s
 }

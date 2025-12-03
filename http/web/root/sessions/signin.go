@@ -49,6 +49,7 @@ func (r *Route) SignInCreate(c fiber.Ctx) (err error) {
 
 	if err := req.Session.Set("local", usr.ID.String()); err != nil {
 		req.Session.Reset()
+		return req.RespondError(err)
 	}
 
 	return req.RedirectToRoot()
