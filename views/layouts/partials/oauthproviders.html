@@ -1,0 +1,8 @@
+<div class="social margin">
+  <div class="actions flex-column gap">
+    {{$oaps := .Site.OauthProviders}}
+    {{ range $oaps }}
+    <a class="button {{.Class}}" href="{{.Href}}" title="{{.Title}}">{{ safeHTML .Label }}</a>
+    {{ end }}
+  </div>
+</div>

@@ -53,13 +53,6 @@
       </div>
     </form>
     <div class="margin">Or sign up via:</div>
-    <div class="social margin">
-      <div class="actions flex-column gap">
-        {{$oaps := .Site.OauthProviders}}
-        {{ range $oaps }}
-        <a class="button {{.Class}}" href="{{.Href}}" title="{{.Title}}">{{ safeHTML .Label }}</a>
-        {{ end }}
-      </div>
-    </div>
+    {{ template "views/layouts/partials/oauthproviders" . }}
   </div>
 </div>
