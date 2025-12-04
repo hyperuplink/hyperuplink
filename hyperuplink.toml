@@ -24,8 +24,15 @@ ReduceMemoryUsage  = false
 ServerHeader       = ""
 
 [[Target]]
-ID = "primary"
+ID = "notifications"
 Type = "email"
+Config.SMTPServer = "smtp.example.org"
+Config.SMTPTLSPolicy = 0
+Config.SMTPAuthType = "AUTODISCOVER"
+Config.SMTPUsername = "user"
+Config.SMTPPassword = "pass"
+Config.From = "reply@example.org"
+Config.FromName = "Example.org"
 
 # [[Target]]
 # ID = "primary"

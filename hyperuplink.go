@@ -24,6 +24,9 @@ var embedViews embed.FS
 //go:embed locales/*
 var embedLocales embed.FS
 
+//go:embed templates/*
+var embedTemplates embed.FS
+
 var (
 	flagCfgstr  string
 	flagVersion bool
@@ -61,6 +64,7 @@ func main() {
 	rt.Embeds["static"] = &embedStaticFiles
 	rt.Embeds["views"] = &embedViews
 	rt.Embeds["locales"] = &embedLocales
+	rt.Embeds["templates"] = &embedTemplates
 
 	rt.Database.SetMigrations(rt.Embeds["migrations"])
 	rt.Intnat.SetLocales(rt.Embeds["locales"])

@@ -1,8 +1,9 @@
 package config
 
 type Target struct {
-	ID   string `koanf:"ID"`
-	Type string `koanf:"Type"`
+	ID     string                 `koanf:"ID"`
+	Type   string                 `koanf:"Type"`
+	Config map[string]interface{} `koanf:"Config"`
 }
 
 type Targets []Target
