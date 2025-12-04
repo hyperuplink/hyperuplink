@@ -6,7 +6,7 @@ import (
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/http/web/root/account"
 	"github.com/mrusme/hyperuplink/http/web/root/categories"
-	"github.com/mrusme/hyperuplink/http/web/root/sessions"
+	"github.com/mrusme/hyperuplink/http/web/root/session"
 	"github.com/mrusme/hyperuplink/runtime"
 )
 
@@ -28,9 +28,9 @@ func New(
 	r.Router.Route("/", func(base fiber.Router) {
 		base.Get("", r.Index).Name("index")
 
-		sessionsRoute, err := sessions.New(r.Runtime, base)
+		sessionRoute, err := session.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
-		r.Routes = append(r.Routes, sessionsRoute)
+		r.Routes = append(r.Routes, sessionRoute)
 
 		accountRoute, err := account.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)

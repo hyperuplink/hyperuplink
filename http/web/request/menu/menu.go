@@ -45,7 +45,7 @@ func (m *Menu) AccountMenu(forRole user.Role) []MenuItem {
 			{
 				Label: "Sign in",
 				Title: "Sign in",
-				Href:  "sessions/signin",
+				Href:  "session/signin",
 			},
 			{
 				IsSeparator: true,
@@ -53,7 +53,7 @@ func (m *Menu) AccountMenu(forRole user.Role) []MenuItem {
 			{
 				Label: "Sign up",
 				Title: "Sign up",
-				Href:  "sessions/signup",
+				Href:  "session/signup",
 			},
 		}
 	} else {
@@ -92,7 +92,7 @@ func (m *Menu) AccountMenu(forRole user.Role) []MenuItem {
 			{
 				Label: "Sign out",
 				Title: "Sign out",
-				Href:  "sessions/signout",
+				Href:  "session/signout",
 			},
 		}
 	}

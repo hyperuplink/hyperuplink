@@ -23,7 +23,7 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = route.For("SessionsConfirm").Pathname()
+	r.Path = route.For("SessionConfirm").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
@@ -32,9 +32,9 @@ func New(
 		base.Post("/",
 			r.ConfirmCreate).Name("confirm.create")
 
-		base.Get("/"+route.For("SessionsConfirmResend").Pathname(),
+		base.Get("/"+route.For("SessionConfirmResend").Pathname(),
 			r.ConfirmShow).Name("confirm.resend.show")
-		base.Post("/"+route.For("SessionsConfirmResend").Pathname(),
+		base.Post("/"+route.For("SessionConfirmResend").Pathname(),
 			r.ConfirmCreate).Name("confirm.resend.create")
 	}, r.Path+".")
 
@@ -60,7 +60,7 @@ type ConfirmForm struct {
 
 func (r *Route) ConfirmShow(c fiber.Ctx) (err error) {
 	req := request.New(r, c,
-		[]string{"base"}, route.For("SessionsConfirm").AsURL(),
+		[]string{"base"}, route.For("SessionConfirm").AsURL(),
 		"confirm_account")
 
 	return req.Respond()
@@ -68,7 +68,7 @@ func (r *Route) ConfirmShow(c fiber.Ctx) (err error) {
 
 func (r *Route) ConfirmCreate(c fiber.Ctx) (err error) {
 	req := request.New(r, c,
-		[]string{"base"}, route.For("SessionsConfirm").AsURL(),
+		[]string{"base"}, route.For("SessionConfirm").AsURL(),
 		"confirm_account")
 
 	frm := new(ConfirmForm)
@@ -114,5 +114,5 @@ func (r *Route) ConfirmCreate(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	return req.RedirectToRouteID("SessionsSignin")
+	return req.RedirectToRouteID("SessionSignin")
 }

@@ -1,4 +1,4 @@
-package sessions
+package session
 
 import (
 	"github.com/gofiber/fiber/v3"
@@ -10,7 +10,7 @@ import (
 
 func (r *Route) SignOutShow(c fiber.Ctx) (err error) {
 	req := request.New(r, c,
-		[]string{"base"}, route.For("SessionsSignout").AsURL(),
+		[]string{"base"}, route.For("SessionSignout").AsURL(),
 		"sign_out_noun")
 	if ret, rerr := req.AccessControl(
 		user.UserRole, user.ModRole, user.AdminRole,
