@@ -51,6 +51,10 @@ func (r Route) AsURL() string {
 	return strings.Join([]string(r), "/")
 }
 
+func (r Route) AsTitle() string {
+	return strings.Join([]string(r), "_") + "_title"
+}
+
 func (r Route) Pathname() string {
 	rl := len(r)
 	if rl == 0 {
@@ -58,6 +62,44 @@ func (r Route) Pathname() string {
 	}
 
 	return r[rl-1]
+}
+
+func (r Route) Parent() (id string) {
+	rl := len(r)
+	if rl < 2 {
+		return ""
+	}
+
+	parentRoute := r[:rl-1]
+	for key, rt := range Routes {
+		if rt.Equals(parentRoute) {
+			return key
+		}
+	}
+
+	return ""
+}
+
+func (r Route) Equals(cmp Route) (eq bool) {
+	if len(cmp) != len(r) {
+		return false
+	}
+	for idx := range r {
+		if cmp[idx] != r[idx] {
+			return false
+		}
+	}
+
+	return true
+}
+
+func (r Route) ParentRoute() (rt Route) {
+	id := r.Parent()
+	if id == "" {
+		return Route{}
+	}
+
+	return For(id)
 }
 
 func For(id string) (r Route) {

@@ -6,7 +6,9 @@ sign_in_verb = "Sign in"
 username = "Username"
 token = "Token"
 
-confirm_account = "Confirm Account"
+session_confirm_title = "Confirm Account"
+
+session_confirm_resend_title = "Resend Confirmation"
 confirm = "Confirm"
 resend_confirmation = "Resend confirmation"
 

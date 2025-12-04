@@ -6,7 +6,6 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
-	"github.com/mrusme/hyperuplink/http/web/request/bcn"
 	"github.com/mrusme/hyperuplink/models/user"
 )
 
@@ -15,18 +14,19 @@ type ConfirmResendForm struct {
 }
 
 func (r *Route) ConfirmResendShow(c fiber.Ctx) (err error) {
-	req := request.New(r, c,
-		[]string{"base"}, route.For("SessionConfirmResend").AsURL(),
-		"resend_confirmation")
-	req.BCN.Prepend(*bcn.NewBreadcrumb(false, req.In.T("confirm_account"), req.In.T("confirm_account"), req.HrefTo(route.For("SessionConfirm").AsURL())))
+	myRoute := route.For("SessionConfirmResend")
+	req := request.New(r, c, myRoute,
+		[]string{"base"}, myRoute.AsURL(),
+		myRoute.AsTitle())
 
 	return req.Respond()
 }
 
 func (r *Route) ConfirmResendCreate(c fiber.Ctx) (err error) {
-	req := request.New(r, c,
-		[]string{"base"}, route.For("SessionConfirmResend").AsURL(),
-		"resend_confirmation")
+	myRoute := route.For("SessionConfirmResend")
+	req := request.New(r, c, myRoute,
+		[]string{"base"}, myRoute.AsURL(),
+		myRoute.AsTitle())
 
 	frm := new(ConfirmResendForm)
 

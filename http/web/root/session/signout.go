@@ -9,9 +9,11 @@ import (
 )
 
 func (r *Route) SignOutShow(c fiber.Ctx) (err error) {
-	req := request.New(r, c,
-		[]string{"base"}, route.For("SessionSignout").AsURL(),
-		"sign_out_noun")
+	myRoute := route.For("SessionSignout")
+	req := request.New(r, c, myRoute,
+		[]string{"base"}, myRoute.AsURL(),
+		myRoute.AsTitle())
+
 	if ret, rerr := req.AccessControl(
 		user.UserRole, user.ModRole, user.AdminRole,
 	); ret {

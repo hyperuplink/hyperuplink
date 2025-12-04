@@ -17,9 +17,11 @@ type SignInForm struct {
 }
 
 func (r *Route) SignInShow(c fiber.Ctx) (err error) {
-	req := request.New(r, c,
-		[]string{"base"}, route.For("SessionSignin").AsURL(),
-		"sign_in_noun")
+	myRoute := route.For("SessionSignin")
+	req := request.New(r, c, myRoute,
+		[]string{"base"}, myRoute.AsURL(),
+		myRoute.AsTitle())
+
 	if ret, rerr := req.AccessControl(user.GuestRole); ret {
 		return rerr
 	}
@@ -28,9 +30,11 @@ func (r *Route) SignInShow(c fiber.Ctx) (err error) {
 }
 
 func (r *Route) SignInCreate(c fiber.Ctx) (err error) {
-	req := request.New(r, c,
-		[]string{"base"}, route.For("SessionSignin").AsURL(),
-		"sign_in_noun")
+	myRoute := route.For("SessionSignin")
+	req := request.New(r, c, myRoute,
+		[]string{"base"}, myRoute.AsURL(),
+		myRoute.AsTitle())
+
 	if ret, rerr := req.AccessControl(user.GuestRole); ret {
 		return rerr
 	}

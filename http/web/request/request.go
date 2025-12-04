@@ -22,6 +22,7 @@ import (
 type Request struct {
 	r       route.IRouteController
 	c       fiber.Ctx
+	rt      route.Route
 	layouts []string
 	view    string
 	Menu    *menu.Menu
@@ -38,6 +39,7 @@ type Request struct {
 func New(
 	r route.IRouteController,
 	c fiber.Ctx,
+	rt route.Route,
 	layouts []string,
 	view string,
 	title string,
@@ -45,6 +47,7 @@ func New(
 	req := new(Request)
 	req.r = r
 	req.c = c
+	req.rt = rt
 	req.layouts = layouts
 	req.view = view
 	req.Menu = menu.New()
@@ -75,6 +78,17 @@ func New(
 	req.Menu.SetRole(req.Session.GetCurrentUserRole())
 
 	req.Site.SetTitle(req.In.T(title))
+
+	var parentRoute route.Route = req.rt
+	for len(parentRoute) > 0 {
+		parentRoute = parentRoute.ParentRoute()
+		req.BCN.Prepend(*bcn.NewBreadcrumb(
+			false,
+			req.In.T(parentRoute.AsTitle()),
+			req.In.T(parentRoute.AsTitle()),
+			req.HrefTo(parentRoute.AsURL()),
+		))
+	}
 
 	req.BCN.Append(*bcn.NewBreadcrumb(
 		true,

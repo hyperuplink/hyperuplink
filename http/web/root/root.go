@@ -3,7 +3,6 @@ package root
 import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/http/web/root/account"
 	"github.com/mrusme/hyperuplink/http/web/root/categories"
 	"github.com/mrusme/hyperuplink/http/web/root/session"
@@ -26,7 +25,7 @@ func New(
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/", func(base fiber.Router) {
-		base.Get("", r.Index).Name("index")
+		// base.Get("", r.Index).Name("index")
 
 		sessionRoute, err := session.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
@@ -56,13 +55,16 @@ func (r *Route) GetEnv() *route.Environment {
 	return r.Env
 }
 
-func (r *Route) Index(c fiber.Ctx) error {
-	req := request.New(r, c, []string{"base"}, "root", "root_noun")
-
-	err := c.App().ReloadViews()
-	r.Runtime.Error("error", err)
-	return req.Respond()
-}
+// func (r *Route) Index(c fiber.Ctx) error {
+// 	myRoute := route.For("root")
+// 	req := request.New(r, c, myRoute,
+// 		[]string{"base"}, myRoute.AsURL(),
+// 		myRoute.AsTitle())
+//
+// 	err := c.App().ReloadViews()
+// 	r.Runtime.Error("error", err)
+// 	return req.Respond()
+// }
 
 func (r *Route) Show(c fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusNotFound)

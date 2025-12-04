@@ -19,9 +19,11 @@ type SignUpForm struct {
 }
 
 func (r *Route) SignUpShow(c fiber.Ctx) (err error) {
-	req := request.New(r, c,
-		[]string{"base"}, route.For("SessionSignup").AsURL(),
-		"sign_up_noun")
+	myRoute := route.For("SessionSignup")
+	req := request.New(r, c, myRoute,
+		[]string{"base"}, myRoute.AsURL(),
+		myRoute.AsTitle())
+
 	if ret, rerr := req.AccessControl(user.GuestRole); ret {
 		return rerr
 	}
@@ -30,9 +32,11 @@ func (r *Route) SignUpShow(c fiber.Ctx) (err error) {
 }
 
 func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
-	req := request.New(r, c,
-		[]string{"base"}, route.For("SessionSignup").AsURL(),
-		"sign_up_noun")
+	myRoute := route.For("SessionSignup")
+	req := request.New(r, c, myRoute,
+		[]string{"base"}, myRoute.AsURL(),
+		myRoute.AsTitle())
+
 	if ret, rerr := req.AccessControl(user.GuestRole); ret {
 		return rerr
 	}

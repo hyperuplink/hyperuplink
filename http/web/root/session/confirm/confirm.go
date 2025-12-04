@@ -59,17 +59,19 @@ type ConfirmForm struct {
 }
 
 func (r *Route) ConfirmShow(c fiber.Ctx) (err error) {
-	req := request.New(r, c,
-		[]string{"base"}, route.For("SessionConfirm").AsURL(),
-		"confirm_account")
+	myRoute := route.For("SessionConfirm")
+	req := request.New(r, c, myRoute,
+		[]string{"base"}, myRoute.AsURL(),
+		myRoute.AsTitle())
 
 	return req.Respond()
 }
 
 func (r *Route) ConfirmCreate(c fiber.Ctx) (err error) {
-	req := request.New(r, c,
-		[]string{"base"}, route.For("SessionConfirm").AsURL(),
-		"confirm_account")
+	myRoute := route.For("SessionConfirm")
+	req := request.New(r, c, myRoute,
+		[]string{"base"}, myRoute.AsURL(),
+		myRoute.AsTitle())
 
 	frm := new(ConfirmForm)
 
