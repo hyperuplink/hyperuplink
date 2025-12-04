@@ -5,10 +5,10 @@ import (
 	"github.com/markbates/goth"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/root/sessions/confirm"
+	"github.com/mrusme/hyperuplink/http/web/root/sessions/provider"
 	"github.com/mrusme/hyperuplink/runtime"
 
 	"github.com/markbates/goth/providers/github"
-	goth_fiber "github.com/shareed2k/goth_fiber/v2"
 )
 
 type Route struct {
@@ -60,8 +60,9 @@ func New(
 		r.Routes = append(r.Routes, sessionsConfirmRoute)
 		// Warning: Do not add routes below this point, as :provider will have
 		// preference over them. Add any fixed route before this line.
-		base.Get("/:provider", goth_fiber.BeginAuthHandler).Name("provider.show")
-		base.Get("/:provider/callback", r.ProviderCallbackShow).Name("provider.callback.show")
+		sessionsProviderRoute, err := provider.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, sessionsProviderRoute)
 	}, r.Path+".")
 
 	return r, nil

@@ -6,20 +6,22 @@ import (
 
 // TODO: Find a way to build this automatically
 var Routes map[string]Route = map[string]Route{
-	"Account":                {"account"},
-	"AccountSettings":        {"account", "settings"},
-	"AccountProfile":         {"account", "profile"},
-	"Sessions":               {"sessions"},
-	"SessionsConfirm":        {"sessions", "confirm"},
-	"SessionsConfirmResend":  {"sessions", "confirm", "resend"},
-	"SessionsSignup":         {"sessions", "signun"},
-	"SessionsSignin":         {"sessions", "signin"},
-	"SessionsSignout":        {"sessions", "signout"},
-	"Admin":                  {"admin"},
-	"Categories":             {"categories"},
-	"CategoriesForums":       {"categories", "forums"},
-	"CategoriesForumsTopics": {"categories", "forums", "topics"},
-	"System":                 {"system"},
+	"Account":                  {"account"},
+	"AccountSettings":          {"account", "settings"},
+	"AccountProfile":           {"account", "profile"},
+	"Sessions":                 {"sessions"},
+	"SessionsConfirm":          {"sessions", "confirm"},
+	"SessionsConfirmResend":    {"sessions", "confirm", "resend"},
+	"SessionsSignup":           {"sessions", "signun"},
+	"SessionsSignin":           {"sessions", "signin"},
+	"SessionsSignout":          {"sessions", "signout"},
+	"SessionsProvider":         {"sessions", ":provider"},
+	"SessionsProviderCallback": {"sessions", ":provider", "callback"},
+	"Admin":                    {"admin"},
+	"Categories":               {":categories"},
+	"CategoriesForums":         {":categories", ":forums"},
+	"CategoriesForumsTopics":   {":categories", ":forums", ":topics"},
+	"System":                   {"system"},
 }
 
 type Route []string
