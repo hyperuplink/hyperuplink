@@ -80,14 +80,16 @@ func New(
 	req.Site.SetTitle(req.In.T(title))
 
 	var parentRoute route.Route = req.rt
-	for len(parentRoute) > 0 {
+	for parentRoute.Len() > 1 {
 		parentRoute = parentRoute.ParentRoute()
-		req.BCN.Prepend(*bcn.NewBreadcrumb(
-			false,
-			req.In.T(parentRoute.AsTitle()),
-			req.In.T(parentRoute.AsTitle()),
-			req.HrefTo(parentRoute.AsURL()),
-		))
+		if parentRoute.HasBreadcrumb() {
+			req.BCN.Prepend(*bcn.NewBreadcrumb(
+				false,
+				req.In.T(parentRoute.AsTitle()),
+				req.In.T(parentRoute.AsTitle()),
+				req.HrefTo(parentRoute.AsURL()),
+			))
+		}
 	}
 
 	req.BCN.Append(*bcn.NewBreadcrumb(

@@ -35,6 +35,7 @@ type Runtime struct {
 	Config       *config.Config
 	Logger       *slog.Logger
 	LoggerLevel  slog.Level
+	ALogger      AsyncLogger
 	Database     *database.Database
 	Repositories *repositories.Repositories
 	Intnat       *intnat.Intnat
@@ -69,6 +70,8 @@ func New(cfgstr string) (rt *Runtime, err error) {
 			Level: rt.LoggerLevel,
 		}),
 	)
+
+	rt.ALogger = NewAsyncLogger(rt.Logger)
 
 	rt.Debug("status", "exec")
 

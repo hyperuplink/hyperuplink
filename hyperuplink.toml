@@ -22,3 +22,11 @@ TrustLoopback      = true
 TrustProxies       = []
 ReduceMemoryUsage  = false
 ServerHeader       = ""
+
+[[Target]]
+ID = "primary"
+Type = "email"
+
+# [[Target]]
+# ID = "primary"
+# Type = "xmpp"

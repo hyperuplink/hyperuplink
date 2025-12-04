@@ -46,6 +46,7 @@ require (
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
 	github.com/gorilla/sessions v1.4.0 // indirect
+	github.com/hibiken/asynq v0.25.2-0.20251110080853-ff887e1f8997 // indirect
 	github.com/huandu/xstrings v1.5.0 // indirect
 	github.com/jackc/pgerrcode v0.0.0-20250907135507-afb5586c32a6 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
@@ -63,8 +64,9 @@ require (
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/philhofer/fwd v1.2.0 // indirect
 	github.com/redis/go-redis/v9 v9.17.2 // indirect
+	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
-	github.com/spf13/cast v1.9.2 // indirect
+	github.com/spf13/cast v1.10.0 // indirect
 	github.com/tinylib/msgp v1.5.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.68.0 // indirect
@@ -76,4 +78,6 @@ require (
 	golang.org/x/sync v0.18.0 // indirect
 	golang.org/x/sys v0.38.0 // indirect
 	golang.org/x/text v0.31.0 // indirect
+	golang.org/x/time v0.14.0 // indirect
+	google.golang.org/protobuf v1.36.10 // indirect
 )

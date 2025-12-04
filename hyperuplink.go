@@ -9,6 +9,7 @@ import (
 
 	"github.com/mrusme/hyperuplink/http"
 	"github.com/mrusme/hyperuplink/runtime"
+	"github.com/mrusme/hyperuplink/worker"
 )
 
 //go:embed migrations/*.sql
@@ -67,6 +68,7 @@ func main() {
 	err = rt.Startup()
 	rt.NilOrDie(err)
 
+	// ---[ WEB ]-------------------------------------------------------------- //
 	web, err := http.New(rt, http.IfaceWeb)
 	rt.NilOrDie(err)
 
@@ -74,6 +76,15 @@ func main() {
 	rt.NilOrDie(err)
 
 	go web.Run()
+
+	// ---[ WORKER ]----------------------------------------------------------- //
+	wrk, err := worker.New(rt)
+	rt.NilOrDie(err)
+
+	err = wrk.Startup()
+	rt.NilOrDie(err)
+
+	go wrk.Run()
 
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
