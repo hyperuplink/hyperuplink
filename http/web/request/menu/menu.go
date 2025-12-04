@@ -1,6 +1,9 @@
 package menu
 
-import "github.com/mrusme/hyperuplink/models/user"
+import (
+	"github.com/mrusme/hyperuplink/http/route"
+	"github.com/mrusme/hyperuplink/models/user"
+)
 
 type Menu struct {
 	menuItems []MenuItem
@@ -45,7 +48,7 @@ func (m *Menu) AccountMenu(forRole user.Role) []MenuItem {
 			{
 				Label: "Sign in",
 				Title: "Sign in",
-				Href:  "session/signin",
+				Href:  route.For("SessionSignin").AsURL(),
 			},
 			{
 				IsSeparator: true,
@@ -53,7 +56,7 @@ func (m *Menu) AccountMenu(forRole user.Role) []MenuItem {
 			{
 				Label: "Sign up",
 				Title: "Sign up",
-				Href:  "session/signup",
+				Href:  route.For("SessionSignup").AsURL(),
 			},
 		}
 	} else {
@@ -61,12 +64,12 @@ func (m *Menu) AccountMenu(forRole user.Role) []MenuItem {
 			{
 				Label: "Profile",
 				Title: "Profile",
-				Href:  "account/profile",
+				Href:  route.For("AccountProfile").AsURL(),
 			},
 			{
 				Label: "Settings",
 				Title: "Settings",
-				Href:  "account/settings",
+				Href:  route.For("AccountSettings").AsURL(),
 			},
 			{
 				IsSeparator: true,
@@ -77,12 +80,12 @@ func (m *Menu) AccountMenu(forRole user.Role) []MenuItem {
 					{
 						Label: "Password",
 						Title: "Password",
-						Href:  "account/password",
+						Href:  route.For("AccountPassword").AsURL(),
 					},
 					{
 						Label: "2-Factor Authentication",
 						Title: "2-Factor Authentication",
-						Href:  "account/2fa",
+						Href:  route.For("AccountTwofactor").AsURL(),
 					},
 				},
 			},
@@ -92,7 +95,7 @@ func (m *Menu) AccountMenu(forRole user.Role) []MenuItem {
 			{
 				Label: "Sign out",
 				Title: "Sign out",
-				Href:  "session/signout",
+				Href:  route.For("SessionSignout").AsURL(),
 			},
 		}
 	}
@@ -114,12 +117,12 @@ func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 					{
 						Label: "General",
 						Title: "General",
-						Href:  "admin/general",
+						Href:  route.For("AdminGeneral").AsURL(),
 					},
 					{
 						Label: "Authentication",
 						Title: "Authentication",
-						Href:  "admin/auth",
+						Href:  route.For("AdminAuth").AsURL(),
 					},
 					{
 						Label: "Communication",
@@ -127,12 +130,12 @@ func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 							{
 								Label: "E-Mail",
 								Title: "E-Mail",
-								Href:  "admin/comms/email",
+								Href:  route.For("AdminCommsEmail").AsURL(),
 							},
 							{
 								Label: "XMPP",
 								Title: "XMPP",
-								Href:  "admin/comms/xmpp",
+								Href:  route.For("AdminCommsXmpp").AsURL(),
 							},
 						},
 					},
@@ -145,12 +148,12 @@ func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 							{
 								Label: "Categories",
 								Title: "Categories",
-								Href:  "admin/board/categories",
+								Href:  route.For("AdminBoardCategories").AsURL(),
 							},
 							{
 								Label: "Forums",
 								Title: "Forums",
-								Href:  "admin/board/forums",
+								Href:  route.For("AdminBoardForums").AsURL(),
 							},
 							{
 								IsSeparator: true,
@@ -158,22 +161,22 @@ func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 							{
 								Label: "Posts",
 								Title: "Posts",
-								Href:  "admin/board/posts",
+								Href:  route.For("AdminBoardPosts").AsURL(),
 							},
 							{
 								Label: "Attachments",
 								Title: "Attachments",
-								Href:  "admin/board/attachments",
+								Href:  route.For("AdminBoardAttachments").AsURL(),
 							},
 							{
 								Label: "Profiles",
 								Title: "Profiles",
-								Href:  "admin/board/profiles",
+								Href:  route.For("AdminBoardProfiles").AsURL(),
 							},
 							{
 								Label: "Signatures",
 								Title: "Signatures",
-								Href:  "admin/board/signatures",
+								Href:  route.For("AdminBoardSignatures").AsURL(),
 							},
 							{
 								IsSeparator: true,
@@ -181,7 +184,7 @@ func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 							{
 								Label: "Look &amp; Feel",
 								Title: "Look & Feel",
-								Href:  "admin/board/theme",
+								Href:  route.For("AdminBoardTheme").AsURL(),
 							},
 						},
 					},
@@ -191,7 +194,7 @@ func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 					{
 						Label: "Users",
 						Title: "Users",
-						Href:  "admin/users",
+						Href:  route.For("AdminUsers").AsURL(),
 					},
 					{
 						IsSeparator: true,
@@ -199,7 +202,7 @@ func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 					{
 						Label: "Adminlog",
 						Title: "Adminlog",
-						Href:  "admin/log",
+						Href:  route.For("AdminLog").AsURL(),
 					},
 				},
 			},
@@ -222,14 +225,14 @@ func (m *Menu) ViewMenu(forRole user.Role) []MenuItem {
 							Checked:    true,
 							Label:      "Light",
 							Title:      "Light",
-							Href:       "account/settings?mode=light",
+							Href:       route.For("SessionSettings").AsURL() + "?mode=light",
 						},
 						{
 							IsCheckbox: true,
 							Checked:    false,
 							Label:      "Dark",
 							Title:      "Dark",
-							Href:       "account/settings?mode=dark",
+							Href:       route.For("SessionSettings").AsURL() + "?mode=dark",
 						},
 					},
 				},
@@ -241,21 +244,21 @@ func (m *Menu) ViewMenu(forRole user.Role) []MenuItem {
 					Checked:    true,
 					Label:      "Banner",
 					Title:      "Banner",
-					Href:       "account/settings?banner=false",
+					Href:       route.For("SessionSettings").AsURL() + "?banner=false",
 				},
 				{
 					IsCheckbox: true,
 					Checked:    true,
 					Label:      "Footer",
 					Title:      "Footer",
-					Href:       "account/settings?footer=false",
+					Href:       route.For("SessionSettings").AsURL() + "?footer=false",
 				},
 				{
 					IsCheckbox: true,
 					Checked:    true,
 					Label:      "Profile Pictures",
 					Title:      "Profile Pictures",
-					Href:       "account/settings?profile_pictures=false",
+					Href:       route.For("SessionSettings").AsURL() + "?profile_pictures=false",
 				},
 			},
 		},
@@ -270,7 +273,7 @@ func (m *Menu) HelpMenu(forRole user.Role) []MenuItem {
 				{
 					Label: "User Manual",
 					Title: "User Manual",
-					Href:  "",
+					Href:  route.For("DocsManual").AsURL(),
 				},
 				{
 					IsSeparator: true,
@@ -278,17 +281,17 @@ func (m *Menu) HelpMenu(forRole user.Role) []MenuItem {
 				{
 					Label: "Terms of Service",
 					Title: "Terms of Service",
-					Href:  "",
+					Href:  route.For("DocsTerms").AsURL(),
 				},
 				{
 					Label: "Privacy Policy",
 					Title: "Privacy Policy",
-					Href:  "",
+					Href:  route.For("DocsPrivacy").AsURL(),
 				},
 				{
 					Label: "Contact",
 					Title: "Contact",
-					Href:  "",
+					Href:  route.For("DocsContact").AsURL(),
 				},
 				{
 					IsSeparator: true,
@@ -296,7 +299,7 @@ func (m *Menu) HelpMenu(forRole user.Role) []MenuItem {
 				{
 					Label: "About",
 					Title: "About",
-					Href:  "version",
+					Href:  route.For("DocsAbout").AsURL(),
 				},
 			},
 		},
