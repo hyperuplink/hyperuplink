@@ -22,7 +22,7 @@ func New(
 	r.Path = route.For("CategoriesForums").Pathname()
 	r.Env = route.NewEnv()
 
-	r.Router.Route("/:slug", func(base fiber.Router) {
+	r.Router.Route("/"+r.Path, func(base fiber.Router) {
 		base.Get("/", r.Show).Name("show")
 
 		categoriesForumsTopicsRoute, err := topics.New(r.Runtime, base)
