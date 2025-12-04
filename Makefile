@@ -29,3 +29,6 @@ build: ## build
 
 drop: ## drop (and recreate) development database
 	psql -h localhost -p 5432 -U postgres -c "DROP DATABASE hyperuplink_dev;" -c "CREATE DATABASE hyperuplink_dev;"
+
+run: build ## build and run
+	./build/hyperuplink -c "file://$(PWD)/hyperuplink.toml"
