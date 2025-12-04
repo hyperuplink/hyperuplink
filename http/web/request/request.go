@@ -86,6 +86,10 @@ func New(
 	return req
 }
 
+func (req *Request) HrefTo(path string) string {
+	return fmt.Sprintf("%s%s", req.relRoot, path)
+}
+
 func (req *Request) ValidateForm(f any, t reflect.Type) bool {
 	if err := req.c.Bind().Form(f); err != nil {
 		var errmap map[string]error = make(map[string]error)

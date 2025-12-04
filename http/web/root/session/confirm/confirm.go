@@ -33,9 +33,9 @@ func New(
 			r.ConfirmCreate).Name("confirm.create")
 
 		base.Get("/"+route.For("SessionConfirmResend").Pathname(),
-			r.ConfirmShow).Name("confirm.resend.show")
+			r.ConfirmResendShow).Name("confirm.resend.show")
 		base.Post("/"+route.For("SessionConfirmResend").Pathname(),
-			r.ConfirmCreate).Name("confirm.resend.create")
+			r.ConfirmResendCreate).Name("confirm.resend.create")
 	}, r.Path+".")
 
 	return r, nil

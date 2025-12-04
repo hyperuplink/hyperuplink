@@ -52,3 +52,24 @@ func (repo *Repository) GetByUsername(
 
 	return &usr, repo.db.ConvertError(err)
 }
+
+func (repo *Repository) GetByEmail(
+	email string,
+) (model *user.User, err error) {
+	var rows pgx.Rows
+	var usr user.User
+
+	rows, err = repo.db.Query(`SELECT * FROM users
+	WHERE email = $1
+	AND banned_at IS NULL
+	AND deleted_at IS NULL
+	LIMIT 1`,
+		email)
+	if err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+
+	usr, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[user.User])
+
+	return &usr, repo.db.ConvertError(err)
+}
