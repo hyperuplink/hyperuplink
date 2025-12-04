@@ -7,12 +7,12 @@ import (
 )
 
 type Internationalization struct {
-	r    route.IRoute
+	r    route.IRouteController
 	c    fiber.Ctx
 	I18n *i18n.Localizer
 }
 
-func New(r route.IRoute, c fiber.Ctx) *Internationalization {
+func New(r route.IRouteController, c fiber.Ctx) *Internationalization {
 	i := new(Internationalization)
 	i.r = r
 	i.c = c

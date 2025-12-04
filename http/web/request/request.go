@@ -20,7 +20,7 @@ import (
 )
 
 type Request struct {
-	r       route.IRoute
+	r       route.IRouteController
 	c       fiber.Ctx
 	layouts []string
 	view    string
@@ -36,7 +36,7 @@ type Request struct {
 }
 
 func New(
-	r route.IRoute,
+	r route.IRouteController,
 	c fiber.Ctx,
 	layouts []string,
 	view string,
@@ -172,8 +172,25 @@ func (req *Request) RespondError(err error) (rerr error) {
 	return rerr
 }
 
+func (req *Request) RedirectToRouteID(id string) error {
+	return req.c.Redirect().To(fmt.Sprintf("%s%s",
+		req.relRoot,
+		route.For(id).AsURL(),
+	))
+}
+
+func (req *Request) RedirectToRoute(r route.Route) error {
+	return req.c.Redirect().To(fmt.Sprintf("%s%s",
+		req.relRoot,
+		r.AsURL(),
+	))
+}
+
 func (req *Request) RedirectTo(path string) error {
-	return req.c.Redirect().To(fmt.Sprintf("%s%s", req.relRoot, path))
+	return req.c.Redirect().To(fmt.Sprintf("%s%s",
+		req.relRoot,
+		path,
+	))
 }
 
 func (req *Request) RedirectToRoot() error {

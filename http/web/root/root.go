@@ -11,7 +11,7 @@ import (
 )
 
 type Route struct {
-	route.Route
+	route.RouteController
 }
 
 func New(

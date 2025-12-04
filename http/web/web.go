@@ -38,7 +38,7 @@ import (
 type Web struct {
 	rt      *runtime.Runtime
 	app     *fiber.App
-	r       route.IRoute
+	r       route.IRouteController
 	engine  *html.Engine
 	watcher *fsnotify.Watcher
 	hash    string

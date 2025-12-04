@@ -14,7 +14,7 @@ import (
 )
 
 type Site struct {
-	r       route.IRoute
+	r       route.IRouteController
 	c       fiber.Ctx
 	csrf    string
 	absPath string
@@ -24,7 +24,7 @@ type Site struct {
 	currentUser *user.User
 }
 
-func New(r route.IRoute, c fiber.Ctx) *Site {
+func New(r route.IRouteController, c fiber.Ctx) *Site {
 	s := new(Site)
 
 	s.r = r

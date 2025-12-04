@@ -96,11 +96,18 @@
   height: 18px;
 }
 
-.button.highlight {
+.button.affirmative,
+button.affirmative {
+  background-color: var(--affirmative);
+}
+
+.button.highlight,
+button.highlight {
   background-color: var(--highlight);
 }
 
-.button.danger {
+.button.danger,
+button.danger {
   background-color: var(--danger);
 }
 

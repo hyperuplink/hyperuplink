@@ -11,7 +11,7 @@
           <div class="margin">
             <div class="fieldrow flex-row flex-wrap gap">
               <div class="field flex-column grow">
-                <label for="username">Username</label>
+                <label for="username">{{._.T "username"}}</label>
                 <input type="text"
                        id="username"
                        name="username"
@@ -19,7 +19,7 @@
                        class="{{.Errors.ClassFor "username"}}">
               </div>
               <div class="field flex-column grow">
-                <label for="token">Token</label>
+                <label for="token">{{._.T "token"}}</label>
                 <input type="text"
                        id="token"
                        name="token"
@@ -28,7 +28,8 @@
               </div>
             </div>
             <div class="actions flex-row gap justify-end">
-              <button type="submit">Confirm</button>
+              <button type="submit" class="affirmative">{{._.T "confirm"}}</button>
+              <a class="button" href="{{.Site.HrefTo "sessions/confirm/resend"}}" title="{{._.T "resend_confirmation"}}">{{._.T "resend_confirmation"}}</a>
             </div>
           </div>
         </div>

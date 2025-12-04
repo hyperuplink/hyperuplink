@@ -47,6 +47,7 @@
 
   --selection-bg: var(--primary-5);
   --selection-fg: #000;
+  --affirmative: #2e8b57;
   --highlight: #efc71d;
   --danger: #f2bfd1;
 }

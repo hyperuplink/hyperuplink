@@ -7,7 +7,7 @@ import (
 )
 
 type Route struct {
-	route.Route
+	route.RouteController
 }
 
 func New(
@@ -18,7 +18,7 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = route.GetPathOf(route.CategoriesForumsTopicsRoute)
+	r.Path = route.For("CategoriesForumsTopics").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/:slug", func(base fiber.Router) {

@@ -8,7 +8,7 @@ import (
 )
 
 type Route struct {
-	route.Route
+	route.RouteController
 }
 
 func New(
@@ -19,7 +19,7 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = route.GetPathOf(route.CategoriesRoute)
+	r.Path = route.For("Categories").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/~:slug", func(base fiber.Router) {

@@ -1,4 +1,13 @@
 sign_up_noun = "Sign-up"
 sign_in_noun = "Sign-in"
+sign_up_verb = "Sign up"
+sign_in_verb = "Sign in"
+
+username = "Username"
+token = "Token"
+
+confirm_account = "Confirm Account"
+confirm = "Confirm"
+resend_confirmation = "Resend confirmation"
 
 validation_email_email = "E-mail field must containt a valid e-mail address"

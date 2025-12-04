@@ -1,13 +1,57 @@
-package sessions
+package confirm
 
 import (
 	"errors"
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/user"
+	"github.com/mrusme/hyperuplink/runtime"
 )
+
+type Route struct {
+	route.RouteController
+}
+
+func New(
+	rt *runtime.Runtime,
+	router fiber.Router,
+) (*Route, error) {
+	r := new(Route)
+
+	r.Runtime = rt
+	r.Router = router
+	r.Path = route.For("SessionsConfirm").Pathname()
+	r.Env = route.NewEnv()
+
+	r.Router.Route("/"+r.Path, func(base fiber.Router) {
+		base.Get("/",
+			r.ConfirmShow).Name("confirm.show")
+		base.Post("/",
+			r.ConfirmCreate).Name("confirm.create")
+
+		base.Get("/"+route.For("SessionsConfirmResend").Pathname(),
+			r.ConfirmShow).Name("confirm.resend.show")
+		base.Post("/"+route.For("SessionsConfirmResend").Pathname(),
+			r.ConfirmCreate).Name("confirm.resend.create")
+	}, r.Path+".")
+
+	return r, nil
+}
+
+func (r *Route) GetRuntime() *runtime.Runtime {
+	return r.Runtime
+}
+
+func (r *Route) GetPath() string {
+	return r.Path
+}
+
+func (r *Route) GetEnv() *route.Environment {
+	return r.Env
+}
 
 type ConfirmForm struct {
 	Username string `form:"username" validate:"required,min=2,max=32"`
@@ -15,15 +59,18 @@ type ConfirmForm struct {
 }
 
 func (r *Route) ConfirmShow(c fiber.Ctx) (err error) {
-	req := request.New(r, c, []string{"base"}, "session/confirm",
+	req := request.New(r, c,
+		[]string{"base"}, route.For("SessionsConfirm").AsURL(),
 		"confirm_account")
 
 	return req.Respond()
 }
 
 func (r *Route) ConfirmCreate(c fiber.Ctx) (err error) {
-	req := request.New(r, c, []string{"base"}, "session/confirm",
+	req := request.New(r, c,
+		[]string{"base"}, route.For("SessionsConfirm").AsURL(),
 		"confirm_account")
+
 	frm := new(ConfirmForm)
 
 	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
@@ -67,5 +114,5 @@ func (r *Route) ConfirmCreate(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	return req.RedirectTo("sessions/signin")
+	return req.RedirectToRouteID("SessionsSignin")
 }

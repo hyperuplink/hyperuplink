@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/markbates/goth"
 	"github.com/mrusme/hyperuplink/http/route"
+	"github.com/mrusme/hyperuplink/http/web/root/sessions/confirm"
 	"github.com/mrusme/hyperuplink/runtime"
 
 	"github.com/markbates/goth/providers/github"
@@ -11,7 +12,7 @@ import (
 )
 
 type Route struct {
-	route.Route
+	route.RouteController
 }
 
 func New(
@@ -22,7 +23,7 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = route.GetPathOf(route.SessionsRoute)
+	r.Path = route.For("Sessions").Pathname()
 	r.Env = route.NewEnv()
 
 	goth.UseProviders(
@@ -35,16 +36,18 @@ func New(
 	)
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
-		base.Get("/signin", r.SignInShow).Name("signin.show")
-		base.Post("/signin", r.SignInCreate).Name("signin.create")
+		base.Get("/"+route.For("SessionsSignin").Pathname(),
+			r.SignInShow).Name("signin.show")
+		base.Post("/"+route.For("SessionsSignin").Pathname(),
+			r.SignInCreate).Name("signin.create")
 
-		base.Get("/signup", r.SignUpShow).Name("signup.show")
-		base.Post("/signup", r.SignUpCreate).Name("signup.create")
+		base.Get("/"+route.For("SessionsSignup").Pathname(),
+			r.SignUpShow).Name("signup.show")
+		base.Post("/"+route.For("SessionsSignup").Pathname(),
+			r.SignUpCreate).Name("signup.create")
 
-		base.Get("/signout", r.SignOutShow).Name("signout.show")
-
-		base.Get("/confirm", r.ConfirmShow).Name("confirm.show")
-		base.Post("/confirm", r.ConfirmCreate).Name("confirm.create")
+		base.Get("/"+route.For("SessionsSignout").Pathname(),
+			r.SignOutShow).Name("signout.show")
 
 		// base.Get("/tfa", r.TfaShow).Name("tfa.show")
 		// base.Post("/tfa", r.TfaCreate).Name("tfa.create")
@@ -52,6 +55,9 @@ func New(
 		// base.Get("/forgot", r.ForgotShow).Name("forgot.show")
 		// base.Post("/forgot", r.ForgotCreate).Name("forgot.create")
 
+		sessionsConfirmRoute, err := confirm.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, sessionsConfirmRoute)
 		// Warning: Do not add routes below this point, as :provider will have
 		// preference over them. Add any fixed route before this line.
 		base.Get("/:provider", goth_fiber.BeginAuthHandler).Name("provider.show")
@@ -71,24 +77,4 @@ func (r *Route) GetPath() string {
 
 func (r *Route) GetEnv() *route.Environment {
 	return r.Env
-}
-
-func (r *Route) Index(c fiber.Ctx) error {
-	return c.SendString("I'm a INDEX request!")
-}
-
-func (r *Route) Show(c fiber.Ctx) error {
-	return c.SendString("I'm a SHOW request!")
-}
-
-func (r *Route) Create(c fiber.Ctx) error {
-	return c.SendString("I'm a CREATE request!")
-}
-
-func (r *Route) Update(c fiber.Ctx) error {
-	return c.SendString("I'm a UPDATE request!")
-}
-
-func (r *Route) Destroy(c fiber.Ctx) error {
-	return c.SendString("I'm a DESTROY request!")
 }

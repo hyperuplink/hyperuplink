@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 
+	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/user"
 )
@@ -18,7 +19,9 @@ type SignUpForm struct {
 }
 
 func (r *Route) SignUpShow(c fiber.Ctx) (err error) {
-	req := request.New(r, c, []string{"base"}, "session/signup", "sign_up_noun")
+	req := request.New(r, c,
+		[]string{"base"}, route.For("SessionsSignup").AsURL(),
+		"sign_up_noun")
 	if ret, rerr := req.AccessControl(user.GuestRole); ret {
 		return rerr
 	}
@@ -27,7 +30,9 @@ func (r *Route) SignUpShow(c fiber.Ctx) (err error) {
 }
 
 func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
-	req := request.New(r, c, []string{"base"}, "session/signup", "sign_up_noun")
+	req := request.New(r, c,
+		[]string{"base"}, route.For("SessionsSignup").AsURL(),
+		"sign_up_noun")
 	if ret, rerr := req.AccessControl(user.GuestRole); ret {
 		return rerr
 	}
@@ -59,5 +64,5 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 
 	// TODO: Trigger confirmation mail
 
-	return req.RedirectTo("sessions/confirm")
+	return req.RedirectToRouteID("SessionsConfirm")
 }
