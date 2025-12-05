@@ -33,7 +33,7 @@ func (r *Route) SignInShow(c fiber.Ctx) (err error) {
 		Recipient: reply.Recipient{
 			Username: "John",
 			Address:  "john@doe.org",
-			Lang:     "en",
+			Lang:     req.In.Lang(), // TODO: Query lang from user's settings
 		},
 		Category: reply.Category{
 			Title: "Cloud",
@@ -49,7 +49,7 @@ func (r *Route) SignInShow(c fiber.Ctx) (err error) {
 		Recipient: reply.Recipient{
 			Username: "Tom",
 			Address:  "tom@ato.org",
-			Lang:     "en",
+			Lang:     req.In.Lang(), // TODO: Query lang from user's settings
 		},
 		Category: reply.Category{
 			Title: "Cloud",
