@@ -1,15 +1,18 @@
 package email
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/mrusme/hyperuplink/models/asyncjob"
-	"github.com/mrusme/hyperuplink/models/asyncjob/notification/reply"
+	"github.com/mrusme/hyperuplink/models/asyncjob/notification/replynotification"
 	"github.com/wneessen/go-mail"
 )
 
 func (t *Email) ExecuteNotificationReply(
 	job asyncjob.AsyncJob,
 	args *Args,
-	payloads []reply.Reply,
+	payloads []replynotification.ReplyNotification,
 ) (err error) {
 	t.rt.Info("execute target", "email",
 		"type", job.Type, "sub_type", job.SubType)
@@ -39,12 +42,19 @@ func (t *Email) ExecuteNotificationReply(
 func (t *Email) buildMessages(
 	job asyncjob.AsyncJob,
 	args *Args,
-	payloads []reply.Reply,
+	payloads []replynotification.ReplyNotification,
 ) (messages []*mail.Msg, err error) {
 	for _, payload := range payloads {
 		message := mail.NewMsg()
+
+		splitFrom := strings.Split(t.def.Email.From.Email, "@")
+		envFrom := fmt.Sprintf("%s+%s@%s",
+			splitFrom[0],
+			payload.Reply.ID.String(),
+			splitFrom[1],
+		)
 		if err = message.EnvelopeFrom(
-			t.def.Email.From.Email,
+			envFrom,
 		); err != nil {
 			return messages, err
 		}

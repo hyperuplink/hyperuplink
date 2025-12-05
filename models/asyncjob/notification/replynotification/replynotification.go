@@ -1,25 +1,29 @@
-package reply
+package replynotification
+
+import (
+	"github.com/google/uuid"
+	"github.com/mrusme/hyperuplink/models/asyncjob/common"
+)
+
+type ReplyNotification struct {
+	Recipient common.Recipient
+	Subject   string
+	Reply     Reply
+}
 
 type Reply struct {
-	Recipient  Recipient
-	Subject    string
+	ID         uuid.UUID
 	ByUsername string
 	Text       string
 	HTML       string
 	URL        string
-	ReplyTo    string
 	Category   Category
 	Forum      Forum
 	Topic      Topic
 }
 
-type Recipient struct {
-	Username string
-	Address  string
-	Lang     string
-}
-
 type Topic struct {
+	ID    uuid.UUID
 	Title string
 	URL   string
 }

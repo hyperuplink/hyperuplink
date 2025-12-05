@@ -5,7 +5,7 @@ import (
 
 	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/models/asyncjob"
-	"github.com/mrusme/hyperuplink/models/asyncjob/notification/reply"
+	"github.com/mrusme/hyperuplink/models/asyncjob/notification/replynotification"
 )
 
 func (t *Email) ExecuteNotification(
@@ -19,8 +19,8 @@ func (t *Email) ExecuteNotification(
 		// TODO
 		return errs.ErrNotImplemented
 	case asyncjob.Reply:
-		var payload reply.Reply
-		var payloads []reply.Reply
+		var payload replynotification.ReplyNotification
+		var payloads []replynotification.ReplyNotification
 		if job.Batch == true {
 			if err := json.Unmarshal(job.Payload, &payloads); err != nil {
 				return err

@@ -1,9 +1,0 @@
-Hello {{.Recipient.Username}},
-
-{{.ByUsername}} replied to "{{.Topic.Title}}" in
-{{.Category.Title}}/{{.Forum.Title}} with:
-
-{{.Text}}
-
-You can view the latest reply at {{.URL}} or you reply to this e-mail to
-respond.

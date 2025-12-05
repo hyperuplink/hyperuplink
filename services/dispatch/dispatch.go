@@ -6,7 +6,7 @@ import (
 
 	"github.com/hibiken/asynq"
 	"github.com/mrusme/hyperuplink/models/asyncjob"
-	"github.com/mrusme/hyperuplink/models/asyncjob/notification/reply"
+	"github.com/mrusme/hyperuplink/models/asyncjob/notification/replynotification"
 	"github.com/mrusme/hyperuplink/services/config"
 )
 
@@ -81,7 +81,7 @@ func (disp *Dispatch) Job(j *asyncjob.AsyncJob) (err error) {
 
 func (disp *Dispatch) ReplyNotifications(
 	targetID string,
-	payload []reply.Reply,
+	payload []replynotification.ReplyNotification,
 ) (err error) {
 	j := asyncjob.New(
 		targetID,
@@ -101,10 +101,10 @@ func (disp *Dispatch) ReplyNotifications(
 
 func (disp *Dispatch) ReplyNotification(
 	targetID string,
-	payload reply.Reply,
+	payload replynotification.ReplyNotification,
 ) (err error) {
 	return disp.ReplyNotifications(
 		targetID,
-		[]reply.Reply{payload},
+		[]replynotification.ReplyNotification{payload},
 	)
 }

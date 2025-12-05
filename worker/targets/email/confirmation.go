@@ -5,7 +5,7 @@ import (
 
 	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/models/asyncjob"
-	"github.com/mrusme/hyperuplink/models/asyncjob/confirmation/signup"
+	"github.com/mrusme/hyperuplink/models/asyncjob/confirmation/signupconfirmation"
 )
 
 func (t *Email) ExecuteConfirmation(
@@ -16,8 +16,8 @@ func (t *Email) ExecuteConfirmation(
 		"type", job.Type, "sub_type", job.SubType)
 	switch job.SubType {
 	case asyncjob.Signup:
-		var payload signup.Signup
-		var payloads []signup.Signup
+		var payload signupconfirmation.SignupConfirmation
+		var payloads []signupconfirmation.SignupConfirmation
 		if job.Batch == true {
 			if err := json.Unmarshal(job.Payload, &payloads); err != nil {
 				return err
