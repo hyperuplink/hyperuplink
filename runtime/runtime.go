@@ -77,6 +77,7 @@ func New(cfgstr string) (rt *Runtime, err error) {
 
 	rt.Debug("status", "exec")
 
+	rt.Debug("new", "database")
 	if rt.Database, err = database.New(
 		rt.Logger,
 		rt.Config.DatabaseConnection(),
@@ -85,20 +86,25 @@ func New(cfgstr string) (rt *Runtime, err error) {
 		return nil, err
 	}
 
+	rt.Debug("new", "repositories")
 	if rt.Repositories, err = repositories.New(rt.Database); err != nil {
 		rt.Error("status", "error", "error", err)
 		return nil, err
 	}
 
+	rt.Debug("new", "intnat")
 	if rt.Intnat, err = intnat.New(); err != nil {
 		rt.Error("status", "error", "error", err)
 		return nil, err
 	}
 
+	rt.Debug("new", "rediscfg")
 	redisCfg, err := rt.Config.Redis()
 	if err != nil {
+		rt.Error("status", "error", "error", err)
 		return nil, err
 	}
+	rt.Debug("new", "dispatch")
 	if rt.Dispatch, err = dispatch.New(redisCfg); err != nil {
 		rt.Error("status", "error", "error", err)
 		return nil, err
@@ -111,21 +117,25 @@ func New(cfgstr string) (rt *Runtime, err error) {
 func (rt *Runtime) Startup() (err error) {
 	rt.Debug("status", "exec")
 
+	rt.Debug("startup", "config")
 	if err = rt.Config.Startup(); err != nil {
 		rt.Error("status", "error", "error", err)
 		return err
 	}
 
+	rt.Debug("startup", "database")
 	if err = rt.Database.Startup(); err != nil {
 		rt.Error("status", "error", "error", err)
 		return err
 	}
 
+	rt.Debug("startup", "intnat")
 	if err = rt.Intnat.Startup(); err != nil {
 		rt.Error("status", "error", "error", err)
 		return err
 	}
 
+	rt.Debug("startup", "dispatch")
 	if err = rt.Dispatch.Startup(); err != nil {
 		rt.Error("status", "error", "error", err)
 		return err
@@ -139,21 +149,25 @@ func (rt *Runtime) Startup() (err error) {
 func (rt *Runtime) Shutdown() (err error) {
 	rt.Debug("status", "exec")
 
+	rt.Debug("shutdown", "dispatch")
 	if err = rt.Dispatch.Shutdown(); err != nil {
 		rt.Error("status", "error", "error", err)
 		return err
 	}
 
+	rt.Debug("shutdown", "intnat")
 	if err = rt.Intnat.Shutdown(); err != nil {
 		rt.Error("status", "error", "error", err)
 		return err
 	}
 
+	rt.Debug("shutdown", "database")
 	if err = rt.Database.Shutdown(); err != nil {
 		rt.Error("status", "error", "error", err)
 		return err
 	}
 
+	rt.Debug("shutdown", "config")
 	if err = rt.Config.Shutdown(); err != nil {
 		rt.Error("status", "error", "error", err)
 		return err
