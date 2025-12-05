@@ -1,35 +1,36 @@
 package email
 
 import (
-	texttemplate "text/template"
-	htmltemplate "html/template"
-
+	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/models/asyncjob"
 	"github.com/mrusme/hyperuplink/runtime"
 	"github.com/mrusme/hyperuplink/services/config"
-	"github.com/wneessen/go-mail"
 )
 
 type Email struct {
 	rt        *runtime.Runtime
-	targetCfg config.Target
+	def       config.Target
+	tmplCache TmplCache
 }
+
+type Args struct{}
 
 func New(
 	rt *runtime.Runtime,
-	targetCfg config.Target,
-) (*Email, error) {
-	t := new(Email)
+	def config.Target,
+) (t *Email, err error) {
+	t = new(Email)
 
 	t.rt = rt
-	t.targetCfg = targetCfg
+	t.def = def
+	t.tmplCache = make(TmplCache)
 
 	return t, nil
 }
 
 func (t *Email) Load() error {
 	t.rt.Info("load target", "email")
-	t.rt.Debug("config", t.targetCfg)
+	t.rt.Debug("config", t.def)
 	return nil
 }
 
@@ -38,62 +39,24 @@ func (t *Email) Run() error {
 	return nil
 }
 
-func (t *Email) Execute(
-	j asyncjob.AsyncJob,
-) (err error) {
-	t.rt.Info("execute target", "email")
-
-	recipients := j.TargetData["recipients"].([]string)
-	subject := j.TargetData["subject"].(string)
-
-	textTpl, err := texttemplate.ParseFS(t.rt.Embeds["templates"], "templates/email/"+string(j.Type)+".txt.tmpl")
-	htmlTpl, err := htmltemplate.ParseFS(t.rt.Embeds["templates"], "templates/email/"+string(j.Type)+".html.tmpl")
-
-	var messages []*mail.Msg
-	for _, recipient := range recipients {
-		message := mail.NewMsg()
-		if err = message.EnvelopeFrom(t.targetCfg.Config["From"].(string)); err != nil {
-			return err
-		}
-		if err = message.FromFormat(t.targetCfg.Config["FromName"].(string), t.targetCfg.Config["From"].(string)); err != nil {
-			return err
-		}
-		if err = message.AddToFormat(recipient, recipient); err != nil {
-			return err
-		}
-		message.SetMessageID()
-		message.SetDate()
-		message.SetBulk()
-		message.Subject(subject)
-		if err = message.SetBodyTextTemplate(textTpl, recipient); err != nil {
-			return err
-		}
-		if err = message.AddAlternativeHTMLTemplate(htmlTpl, recipient); err != nil {
-			return err
-		}
-
-		messages = append(messages, message)
-	}
-
-	client, err := mail.NewClient(
-		t.targetCfg.Config["SMTPServer"].(string),
-		mail.WithSMTPAuth(t.targetCfg.Config["SMTPAuthType"].(mail.SMTPAuthType)),
-		mail.WithTLSPolicy(t.targetCfg.Config["SMTPTLSPolicy"].(mail.TLSPolicy)),
-		mail.WithUsername(t.targetCfg.Config["SMTPUsername"].(string)),
-		mail.WithPassword(t.targetCfg.Config["SMTPPassword"].(string)),
-	)
-	if err != nil {
-		return err
-	}
-
-	if err = client.DialAndSend(messages...); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (t *Email) Shutdown() error {
 	t.rt.Info("shutdown target", "email")
 	return nil
+}
+
+func (t *Email) Execute(
+	job asyncjob.AsyncJob,
+) (err error) {
+	t.rt.Info("execute target", "email")
+
+	args := new(Args)
+
+	switch job.Type {
+	case asyncjob.Confirmation:
+		return t.ExecuteConfirmation(job, args)
+	case asyncjob.Notification:
+		return t.ExecuteNotification(job, args)
+	default:
+		return errs.ErrJobTypeInvalid
+	}
 }

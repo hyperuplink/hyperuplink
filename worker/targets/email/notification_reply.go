@@ -1,0 +1,103 @@
+package email
+
+import (
+	"github.com/mrusme/hyperuplink/models/asyncjob"
+	"github.com/mrusme/hyperuplink/models/asyncjob/notification/reply"
+	"github.com/wneessen/go-mail"
+)
+
+func (t *Email) ExecuteNotificationReply(
+	job asyncjob.AsyncJob,
+	args *Args,
+	payloads []reply.Reply,
+) (err error) {
+	t.rt.Info("execute target", "email",
+		"type", job.Type, "sub_type", job.SubType)
+
+	var messages []*mail.Msg
+	messages, err = t.buildMessages(job, args, payloads)
+
+	if t.rt.IsDevelopmentMode() {
+		t.rt.Debug(
+			"pretend", "send",
+			"messages", messages,
+		)
+	} else {
+
+		client, err := mail.NewClient(
+			t.def.Email.SMTPServer,
+			mail.WithSMTPAuth(mail.SMTPAuthType(t.def.Email.SMTPAuthType)),
+			mail.WithTLSPolicy(mail.TLSPolicy(t.def.Email.SMTPTLSPolicy)),
+			mail.WithUsername(t.def.Email.SMTPUsername),
+			mail.WithPassword(t.def.Email.SMTPPassword),
+		)
+		if err != nil {
+			return err
+		}
+
+		if err = client.DialAndSend(messages...); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (t *Email) buildMessages(
+	job asyncjob.AsyncJob,
+	args *Args,
+	payloads []reply.Reply,
+) (messages []*mail.Msg, err error) {
+	for _, payload := range payloads {
+		message := mail.NewMsg()
+		if err = message.EnvelopeFrom(
+			t.def.Email.From.Email,
+		); err != nil {
+			return messages, err
+		}
+		if err = message.FromFormat(
+			t.def.Email.From.Name,
+			t.def.Email.From.Email,
+		); err != nil {
+			return messages, err
+		}
+		if err = message.AddToFormat(
+			payload.Recipient.Username,
+			payload.Recipient.Address,
+		); err != nil {
+			return messages, err
+		}
+		message.SetMessageID()
+		message.SetDate()
+		message.SetBulk()
+		message.Subject(payload.Subject)
+
+		// Get templates
+		textTmpl, htmlTmpl, err := t.TemplatesFor(
+			job.Type,
+			job.SubType,
+			payload.Recipient.Lang,
+		)
+		if err != nil {
+			return messages, err
+		}
+		// Set text template
+		if err = message.SetBodyTextTemplate(
+			textTmpl,
+			payload,
+		); err != nil {
+			return messages, err
+		}
+		// Set html template
+		if err = message.AddAlternativeHTMLTemplate(
+			htmlTmpl,
+			payload,
+		); err != nil {
+			return messages, err
+		}
+
+		messages = append(messages, message)
+	}
+
+	return messages, nil
+}

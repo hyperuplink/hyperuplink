@@ -25,20 +25,20 @@ type (
 type Targets struct {
 	rt         *runtime.Runtime
 	targets    ITargets
-	targetCfgs config.Targets
+	defs config.Targets
 }
 
 func NewTarget(
 	rt *runtime.Runtime,
-	targetCfg config.Target,
+	def config.Target,
 ) (t ITarget, err error) {
-	switch targetCfg.Type {
+	switch def.Type {
 	case "email":
-		t, err = email.New(rt, targetCfg)
+		t, err = email.New(rt, def)
 	// case "xmpp":
-	// 	t, err = xmpp.New(rt, targetCfg)
+	// 	t, err = xmpp.New(rt, def)
 	default:
-		return nil, errors.New("No such target type: " + targetCfg.Type)
+		return nil, errors.New("No such target type: " + def.Type)
 	}
 	if err != nil {
 		return nil, err
@@ -56,12 +56,12 @@ func New(
 
 	ts.rt = rt
 	ts.targets = make(ITargets)
-	ts.targetCfgs, err = ts.rt.Config.Targets()
+	ts.defs, err = ts.rt.Config.Targets()
 	if err != nil {
 		return nil, err
 	}
 
-	for _, tcfg := range ts.targetCfgs {
+	for _, tcfg := range ts.defs {
 		if ts.targets[tcfg.ID], err = NewTarget(rt, tcfg); err != nil {
 			return nil, err
 		}
@@ -71,7 +71,7 @@ func New(
 }
 
 func (ts *Targets) LoadAll() error {
-	for _, tcfg := range ts.targetCfgs {
+	for _, tcfg := range ts.defs {
 		if err := ts.targets[tcfg.ID].Load(); err != nil {
 			return err
 		}
@@ -83,7 +83,7 @@ func (ts *Targets) LoadAll() error {
 func (ts *Targets) RunAll() error {
 	var running []string
 
-	for _, tcfg := range ts.targetCfgs {
+	for _, tcfg := range ts.defs {
 		if err := ts.targets[tcfg.ID].Run(); err != nil {
 			for _, tnamerunning := range running {
 				ts.targets[tnamerunning].Shutdown()
@@ -109,7 +109,7 @@ func (ts *Targets) ExecuteAll(
 	var errs map[string]error = make(map[string]error)
 	var ok bool = true
 
-	for _, tcfg := range ts.targetCfgs {
+	for _, tcfg := range ts.defs {
 		if err := ts.targets[tcfg.ID].Execute(j); err != nil {
 			errs[tcfg.ID] = err
 			ok = false
@@ -123,7 +123,7 @@ func (ts *Targets) ShutdownAll() (bool, map[string]error) {
 	var errs map[string]error = make(map[string]error)
 	var ok bool = true
 
-	for _, tcfg := range ts.targetCfgs {
+	for _, tcfg := range ts.defs {
 		if err := ts.targets[tcfg.ID].Shutdown(); err != nil {
 			errs[tcfg.ID] = err
 			ok = false

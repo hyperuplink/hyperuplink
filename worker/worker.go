@@ -100,12 +100,20 @@ func asynqHandler(wrk *Worker) func(context.Context, *asynq.Task) error {
 }
 
 func (wrk *Worker) HandleJob(ctx context.Context, t *asynq.Task) error {
-	var m asyncjob.AsyncJob
-	if err := json.Unmarshal(t.Payload(), &m); err != nil {
+	var job asyncjob.AsyncJob
+	if err := json.Unmarshal(t.Payload(), &job); err != nil {
 		return err
 	}
 
 	wrk.rt.Debug("status", "working", "payload", t.Payload())
+
+	if err := wrk.ts.Execute(
+		job.TargetID,
+		job,
+	); err != nil {
+		wrk.rt.Error("error", err)
+		return err
+	}
 
 	return nil
 }

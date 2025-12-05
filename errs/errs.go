@@ -3,6 +3,9 @@ package errs
 import "errors"
 
 var (
+	ErrNotImplemented error = errors.New(
+		"Not implemented",
+	)
 	ErrConfigTypeUnsupported error = errors.New(
 		"Config type unsupported",
 	)
@@ -28,5 +31,14 @@ var (
 	)
 	ErrFormInvalid error = errors.New(
 		"Form must be a struct or a pointer to a struct",
+	)
+	ErrJobTypeInvalid error = errors.New(
+		"Job type is invalid",
+	)
+	ErrJobSubTypeInvalid error = errors.New(
+		"Job sub type is invalid",
+	)
+	ErrJobPayloadInvalid error = errors.New(
+		"Job payload is invalid",
 	)
 )

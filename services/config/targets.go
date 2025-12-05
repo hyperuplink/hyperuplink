@@ -1,9 +1,21 @@
 package config
 
 type Target struct {
-	ID     string                 `koanf:"ID"`
-	Type   string                 `koanf:"Type"`
-	Config map[string]interface{} `koanf:"Config"`
+	ID    string      `koanf:"ID"`
+	Type  string      `koanf:"Type"`
+	Email TargetEmail `koanf:"Email,omitempty"`
+}
+
+type TargetEmail struct {
+	SMTPServer    string
+	SMTPAuthType  string
+	SMTPTLSPolicy int
+	SMTPUsername  string
+	SMTPPassword  string
+	From          struct {
+		Email string
+		Name  string
+	}
 }
 
 type Targets []Target

@@ -26,13 +26,13 @@ ServerHeader       = ""
 [[Target]]
 ID = "notifications"
 Type = "email"
-Config.SMTPServer = "smtp.example.org"
-Config.SMTPTLSPolicy = 0
-Config.SMTPAuthType = "AUTODISCOVER"
-Config.SMTPUsername = "user"
-Config.SMTPPassword = "pass"
-Config.From = "reply@example.org"
-Config.FromName = "Example.org"
+Email.SMTPServer = "smtp.example.org"
+Email.SMTPTLSPolicy = 0
+Email.SMTPAuthType = "AUTODISCOVER"
+Email.SMTPUsername = "user"
+Email.SMTPPassword = "pass"
+Email.FromEmail = "reply@example.org"
+Email.FromName = "Example.org"
 
 # [[Target]]
 # ID = "primary"
