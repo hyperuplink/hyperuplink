@@ -7,14 +7,16 @@ import (
 	"github.com/hibiken/asynq"
 	"github.com/mrusme/hyperuplink/models/asyncjob"
 	"github.com/mrusme/hyperuplink/runtime"
+	"github.com/mrusme/hyperuplink/services/config"
 	"github.com/mrusme/hyperuplink/worker/targets"
 )
 
 type Worker struct {
 	rt       *runtime.Runtime
 	ts       *targets.Targets
-	redis    *asynq.Server
-	redisMux *asynq.ServeMux
+	redisCfg config.Redis
+	as       *asynq.Server
+	asMux    *asynq.ServeMux
 }
 
 func New(
@@ -41,57 +43,63 @@ func (wrk *Worker) Run() (err error) {
 	err = wrk.ts.RunAll()
 	wrk.rt.NilOrDie(err)
 
-	addrs := wrk.rt.Config.RedisAddresses()
-	addrsl := len(addrs)
+	if wrk.redisCfg, err = wrk.rt.Config.Redis(); err != nil {
+		return err
+	}
+	addrsl := len(wrk.redisCfg.Addrs)
 
 	asyncConfig := asynq.Config{
-		Logger:      wrk.rt.ALogger,
-		Concurrency: wrk.rt.Config.RedisPoolsize(),
+		Logger: wrk.rt.ALogger,
+		// Concurrency: wrk.redisCfg.Poolsize,
 	}
 
 	if addrsl == 1 {
 		if wrk.rt.Config.RedisMasterName() == "" {
-			wrk.redis = asynq.NewServer(
+			wrk.as = asynq.NewServer(
 				asynq.RedisClientOpt{
-					Addr:     addrs[0],
-					Username: wrk.rt.Config.RedisUsername(),
-					Password: wrk.rt.Config.RedisPassword(),
+					Addr:     wrk.redisCfg.Addrs[0],
+					DB:       wrk.redisCfg.Database,
+					Username: wrk.redisCfg.Username,
+					Password: wrk.redisCfg.Password,
+					PoolSize: wrk.redisCfg.Poolsize,
 				},
 				asyncConfig,
 			)
 		} else {
-			wrk.redis = asynq.NewServer(
+			wrk.as = asynq.NewServer(
 				asynq.RedisFailoverClientOpt{
-					MasterName:    wrk.rt.Config.RedisMasterName(),
-					SentinelAddrs: addrs,
-					Username:      wrk.rt.Config.RedisUsername(),
-					Password:      wrk.rt.Config.RedisPassword(),
+					MasterName:    wrk.redisCfg.MasterName,
+					SentinelAddrs: wrk.redisCfg.Addrs,
+					DB:            wrk.redisCfg.Database,
+					Username:      wrk.redisCfg.Username,
+					Password:      wrk.redisCfg.Password,
+					PoolSize:      wrk.redisCfg.Poolsize,
 				},
 				asyncConfig,
 			)
 		}
 	} else {
-		wrk.redis = asynq.NewServer(
+		wrk.as = asynq.NewServer(
 			asynq.RedisClusterClientOpt{
-				Addrs:    addrs,
-				Username: wrk.rt.Config.RedisUsername(),
-				Password: wrk.rt.Config.RedisPassword(),
+				Addrs:    wrk.redisCfg.Addrs,
+				Username: wrk.redisCfg.Username,
+				Password: wrk.redisCfg.Password,
 			},
 			asyncConfig,
 		)
 	}
 
-	wrk.redisMux = asynq.NewServeMux()
-	wrk.redisMux.HandleFunc("message", asynqHandler(wrk))
+	wrk.asMux = asynq.NewServeMux()
+	wrk.asMux.HandleFunc("job", asynqHandler(wrk))
 
-	err = wrk.redis.Run(wrk.redisMux)
+	err = wrk.as.Run(wrk.asMux)
 	wrk.rt.NilOrDie(err)
 
 	return err
 }
 
 func (wrk *Worker) Shutdown() error {
-	wrk.redis.Shutdown()
+	wrk.as.Shutdown()
 	return nil
 }
 

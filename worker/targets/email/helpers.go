@@ -6,6 +6,7 @@ import (
 	texttemplate "text/template"
 
 	"github.com/mrusme/hyperuplink/models/asyncjob"
+	"github.com/wneessen/go-mail"
 )
 
 type TmplCacheItem struct {
@@ -67,4 +68,25 @@ func (t *Email) LoadTemplates(
 	}
 
 	return textTmpl, htmlTmpl, nil
+}
+
+func (t *Email) SendMessages(
+	messages []*mail.Msg,
+) (err error) {
+	client, err := mail.NewClient(
+		t.def.Email.SMTPServer,
+		mail.WithSMTPAuth(mail.SMTPAuthType(t.def.Email.SMTPAuthType)),
+		mail.WithTLSPolicy(mail.TLSPolicy(t.def.Email.SMTPTLSPolicy)),
+		mail.WithUsername(t.def.Email.SMTPUsername),
+		mail.WithPassword(t.def.Email.SMTPPassword),
+	)
+	if err != nil {
+		return err
+	}
+
+	if err = client.DialAndSend(messages...); err != nil {
+		return err
+	}
+
+	return nil
 }

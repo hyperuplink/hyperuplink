@@ -22,25 +22,10 @@ func (t *Email) ExecuteNotificationReply(
 			"pretend", "send",
 			"messages", messages,
 		)
+		return nil
 	} else {
-
-		client, err := mail.NewClient(
-			t.def.Email.SMTPServer,
-			mail.WithSMTPAuth(mail.SMTPAuthType(t.def.Email.SMTPAuthType)),
-			mail.WithTLSPolicy(mail.TLSPolicy(t.def.Email.SMTPTLSPolicy)),
-			mail.WithUsername(t.def.Email.SMTPUsername),
-			mail.WithPassword(t.def.Email.SMTPPassword),
-		)
-		if err != nil {
-			return err
-		}
-
-		if err = client.DialAndSend(messages...); err != nil {
-			return err
-		}
+		return t.SendMessages(messages)
 	}
-
-	return nil
 }
 
 func (t *Email) buildMessages(

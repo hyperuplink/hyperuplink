@@ -12,6 +12,7 @@ import (
 
 	"github.com/mrusme/hyperuplink/services/config"
 	"github.com/mrusme/hyperuplink/services/database"
+	"github.com/mrusme/hyperuplink/services/dispatch"
 	"github.com/mrusme/hyperuplink/services/intnat"
 	"github.com/mrusme/hyperuplink/services/repositories"
 )
@@ -39,6 +40,7 @@ type Runtime struct {
 	Database     *database.Database
 	Repositories *repositories.Repositories
 	Intnat       *intnat.Intnat
+	Dispatch     *dispatch.Dispatch
 }
 
 const (
@@ -93,6 +95,15 @@ func New(cfgstr string) (rt *Runtime, err error) {
 		return nil, err
 	}
 
+	redisCfg, err := rt.Config.Redis()
+	if err != nil {
+		return nil, err
+	}
+	if rt.Dispatch, err = dispatch.New(redisCfg); err != nil {
+		rt.Error("status", "error", "error", err)
+		return nil, err
+	}
+
 	rt.Info("status", "ok")
 	return rt, err
 }
@@ -115,6 +126,11 @@ func (rt *Runtime) Startup() (err error) {
 		return err
 	}
 
+	if err = rt.Dispatch.Startup(); err != nil {
+		rt.Error("status", "error", "error", err)
+		return err
+	}
+
 	rt.Info("status", "ok")
 
 	return nil
@@ -122,6 +138,11 @@ func (rt *Runtime) Startup() (err error) {
 
 func (rt *Runtime) Shutdown() (err error) {
 	rt.Debug("status", "exec")
+
+	if err = rt.Dispatch.Shutdown(); err != nil {
+		rt.Error("status", "error", "error", err)
+		return err
+	}
 
 	if err = rt.Intnat.Shutdown(); err != nil {
 		rt.Error("status", "error", "error", err)
