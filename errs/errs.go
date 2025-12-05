@@ -9,11 +9,12 @@ var (
 	ErrConfigTypeUnsupported error = errors.New(
 		"Config type unsupported",
 	)
-
 	ErrIfaceTypeUnsupported error = errors.New(
 		"Interface type unsupported",
 	)
-
+	ErrTargetIDNotFound error = errors.New(
+		"Target ID not found",
+	)
 	ErrRedisAddrsEmpty error = errors.New(
 		"Redis.Addresses cannot be empty",
 	)

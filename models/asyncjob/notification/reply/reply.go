@@ -8,6 +8,8 @@ type Reply struct {
 	HTML       string
 	URL        string
 	ReplyTo    string
+	Category   Category
+	Forum      Forum
 	Topic      Topic
 }
 
@@ -20,13 +22,11 @@ type Recipient struct {
 type Topic struct {
 	Title string
 	URL   string
-	Forum Forum
 }
 
 type Forum struct {
-	Title    string
-	URL      string
-	Category Category
+	Title string
+	URL   string
 }
 
 type Category struct {

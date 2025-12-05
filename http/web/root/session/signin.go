@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
+	"github.com/mrusme/hyperuplink/models/asyncjob/notification/reply"
 	"github.com/mrusme/hyperuplink/models/user"
 )
 
@@ -25,6 +26,49 @@ func (r *Route) SignInShow(c fiber.Ctx) (err error) {
 	if ret, rerr := req.AccessControl(user.GuestRole); ret {
 		return rerr
 	}
+
+	//---------- [ TEST CODE ]--------------------------------------------------//
+	var re []reply.Reply
+	re = append(re, reply.Reply{
+		Recipient: reply.Recipient{
+			Username: "John",
+			Address:  "john@doe.org",
+			Lang:     "en",
+		},
+		Category: reply.Category{
+			Title: "Cloud",
+		},
+		Forum: reply.Forum{
+			Title: "General",
+		},
+		Topic: reply.Topic{
+			Title: "Is Hetzner good?",
+		},
+	})
+	re = append(re, reply.Reply{
+		Recipient: reply.Recipient{
+			Username: "Tom",
+			Address:  "tom@ato.org",
+			Lang:     "en",
+		},
+		Category: reply.Category{
+			Title: "Cloud",
+		},
+		Forum: reply.Forum{
+			Title: "General",
+		},
+		Topic: reply.Topic{
+			Title: "Is Google Cloud still bad?",
+		},
+	})
+	err = r.Runtime.Dispatch.ReplyNotifications(
+		"notifications",
+		re,
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+	//---------- [/ TEST CODE ]-------------------------------------------------//
 
 	return req.Respond()
 }

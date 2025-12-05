@@ -3,6 +3,7 @@ package targets
 import (
 	"errors"
 
+	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/models/asyncjob"
 	"github.com/mrusme/hyperuplink/runtime"
 	"github.com/mrusme/hyperuplink/services/config"
@@ -23,9 +24,9 @@ type (
 )
 
 type Targets struct {
-	rt         *runtime.Runtime
-	targets    ITargets
-	defs config.Targets
+	rt      *runtime.Runtime
+	targets ITargets
+	defs    config.Targets
 }
 
 func NewTarget(
@@ -100,6 +101,9 @@ func (ts *Targets) Execute(
 	id string,
 	j asyncjob.AsyncJob,
 ) error {
+	if _, ok := ts.targets[id]; !ok {
+		return errs.ErrTargetIDNotFound
+	}
 	return ts.targets[id].Execute(j)
 }
 

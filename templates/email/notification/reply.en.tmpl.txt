@@ -1,7 +1,9 @@
 Hello {{.Recipient.Username}},
 
-{{.Reply.Username}} replied to "{{.Topic}}" in {{.Category}}/{{.Forum}} with:
+{{.ByUsername}} replied to "{{.Topic.Title}}" in
+{{.Category.Title}}/{{.Forum.Title}} with:
 
-{{.Reply.Text}}
+{{.Text}}
 
-You can view the latest reply at {{.Reply.URL}} or you reply to this e-mail to respond.
+You can view the latest reply at {{.URL}} or you reply to this e-mail to
+respond.

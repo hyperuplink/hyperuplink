@@ -6,6 +6,7 @@ import (
 
 	"github.com/hibiken/asynq"
 	"github.com/mrusme/hyperuplink/models/asyncjob"
+	"github.com/mrusme/hyperuplink/models/asyncjob/notification/reply"
 	"github.com/mrusme/hyperuplink/services/config"
 )
 
@@ -76,4 +77,34 @@ func (disp *Dispatch) Job(j *asyncjob.AsyncJob) (err error) {
 	_, err = disp.ac.Enqueue(task)
 
 	return err
+}
+
+func (disp *Dispatch) ReplyNotifications(
+	targetID string,
+	payload []reply.Reply,
+) (err error) {
+	j := asyncjob.New(
+		targetID,
+		asyncjob.Notification,
+		asyncjob.Reply,
+	)
+	if err = j.SetPayload(payload); err != nil {
+		return err
+	}
+
+	if err = disp.Job(j); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (disp *Dispatch) ReplyNotification(
+	targetID string,
+	payload reply.Reply,
+) (err error) {
+	return disp.ReplyNotifications(
+		targetID,
+		[]reply.Reply{payload},
+	)
 }

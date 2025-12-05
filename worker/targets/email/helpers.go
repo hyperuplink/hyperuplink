@@ -62,7 +62,7 @@ func (t *Email) LoadTemplates(
 		tmpl+".txt"); err != nil {
 		return nil, nil, err
 	}
-	if textTmpl, err = texttemplate.ParseFS(t.rt.Embeds["templates"],
+	if htmlTmpl, err = htmltemplate.ParseFS(t.rt.Embeds["templates"],
 		tmpl+".html"); err != nil {
 		return nil, nil, err
 	}

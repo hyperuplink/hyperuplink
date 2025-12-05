@@ -14,8 +14,16 @@ func (t *Email) ExecuteNotificationReply(
 	t.rt.Info("execute target", "email",
 		"type", job.Type, "sub_type", job.SubType)
 
+	t.rt.Debug(
+		"payloads", payloads,
+	)
+
 	var messages []*mail.Msg
 	messages, err = t.buildMessages(job, args, payloads)
+	if err != nil {
+		t.rt.Error("error", err)
+		return err
+	}
 
 	if t.rt.IsDevelopmentMode() {
 		t.rt.Debug(

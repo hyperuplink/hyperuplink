@@ -31,8 +31,8 @@ Email.SMTPTLSPolicy = 0
 Email.SMTPAuthType = "AUTODISCOVER"
 Email.SMTPUsername = "user"
 Email.SMTPPassword = "pass"
-Email.FromEmail = "reply@example.org"
-Email.FromName = "Example.org"
+Email.From.Email = "reply@example.org"
+Email.From.Name = "Example.org"
 
 # [[Target]]
 # ID = "primary"
