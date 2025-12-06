@@ -69,6 +69,28 @@ func (f *Flash) Errors() (errs []string) {
 	return errs
 }
 
+func (f *Flash) Get(flashType FlashType) (s string) {
+	var ok bool = false
+
+	if s, ok = f.flashes[flashType]; !ok {
+		return ""
+	} else {
+		return s
+	}
+}
+
+func (f *Flash) Debug() (s string) {
+	return f.Get(DebugFlash)
+}
+
+func (f *Flash) Info() (s string) {
+	return f.Get(InfoFlash)
+}
+
+func (f *Flash) Warn() (s string) {
+	return f.Get(WarnFlash)
+}
+
 func (f *Flash) SetErrorsMap(errsmap map[string]error) {
 	f.errsmap = errsmap
 }

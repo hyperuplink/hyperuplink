@@ -87,5 +87,6 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	req.Flash.SetInfo(req.In.T("signup_success"))
 	return req.RedirectToRouteID("SessionConfirm")
 }

@@ -152,6 +152,18 @@ a.button {
   background-color: var(--danger) !important;
 }
 
+.warn {
+  background-color: var(--warn) !important;
+}
+
+.info {
+  background-color: var(--info) !important;
+}
+
+.debug {
+  background-color: var(--debug) !important;
+}
+
 .window.authentication {
   max-width: 380px;
   margin: var(--margin) auto;

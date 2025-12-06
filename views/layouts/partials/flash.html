@@ -1,5 +1,14 @@
-<div class="errors">
-  {{ range $field, $err := .Flash.All }}
+<div class="flash">
+  {{ range $field, $err := .Flash.Errors }}
   <div class="error raised margin padding">{{$._.T $err}}</div>
+  {{ end }}
+  {{ with .Flash.Warn }}
+  <div class="warn raised margin padding">{{$._.T .}}</div>
+  {{ end }}
+  {{ with .Flash.Info }}
+  <div class="info raised margin padding">{{$._.T .}}</div>
+  {{ end }}
+  {{ with .Flash.Debug }}
+  <div class="debug raised margin padding">{{$._.T .}}</div>
   {{ end }}
 </div>

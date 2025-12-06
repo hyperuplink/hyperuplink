@@ -50,4 +50,7 @@
   --affirmative: #8fbc8f;
   --highlight: #efc71d;
   --danger: #f2bfd1;
+  --warn: #ffba66;
+  --info: #afeeee;
+  --debug: #b0c4de;
 }
