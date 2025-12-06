@@ -153,6 +153,11 @@ func (t *Email) SendMessages(
 		)
 		return nil
 	} else {
+		t.rt.Debug(
+			"execute", "send",
+			"messages", messages,
+		)
+
 		client, err := mail.NewClient(
 			t.def.Email.SMTPServer,
 			mail.WithSMTPAuth(mail.SMTPAuthType(t.def.Email.SMTPAuthType)),

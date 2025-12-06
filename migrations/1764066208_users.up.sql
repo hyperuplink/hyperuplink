@@ -10,6 +10,7 @@ CREATE TABLE users (
   email_confirmation_token VARCHAR(32) DEFAULT '',
   email_confirmation_sent_at TIMESTAMP DEFAULT NULL,
   email_confirmed_at TIMESTAMP DEFAULT NULL,
+  language VARCHAR(2) DEFAULT 'en',
   otp_enabled BOOLEAN DEFAULT FALSE,
   otp_secret VARCHAR(32) DEFAULT '',
   otp_timestep SMALLINT DEFAULT 0,

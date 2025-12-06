@@ -7,6 +7,7 @@ import (
 
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
+	"github.com/mrusme/hyperuplink/models/asyncjob/confirmation/signupconfirmation"
 	"github.com/mrusme/hyperuplink/models/user"
 )
 
@@ -55,6 +56,7 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 	usr.Role = "user"
 	usr.Email = frm.Email
 	usr.SetEmailForConfirmation(frm.Email)
+	usr.Language = req.In.Lang()
 
 	err = usr.SetPassword(frm.Password)
 	if ret, rerr := req.RespondOnError(err); ret == true {
@@ -66,7 +68,23 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	// TODO: Trigger confirmation mail
+	sc, err := signupconfirmation.New(
+		usr,
+		req.In.T("signup_confirmation_subject"),
+		usr.EmailConfirmationToken,
+		myRoute.AsURL(),
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	err = r.Runtime.Dispatch.SignupConfirmation(
+		"notifications", // TODO: Replace with System.EmailTarget
+		sc,
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
 
 	return req.RedirectToRouteID("SessionConfirm")
 }

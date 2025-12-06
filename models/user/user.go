@@ -27,6 +27,8 @@ type User struct {
 	EmailConfirmationSentAt pgtype.Timestamp `json:"email_confirmation_sent_at"`
 	EmailConfirmedAt        pgtype.Timestamp `json:"email_confirmed_at"`
 
+	Language string `json:"language"`
+
 	OTPEnabled  bool   `json:"otp_enabled"`
 	OTPSecret   string `json:"otp_secret"`
 	OTPTimestep int    `json:"otp_timestep"`

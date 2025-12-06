@@ -3,12 +3,14 @@ package replynotification
 import (
 	"github.com/google/uuid"
 	"github.com/mrusme/hyperuplink/models/asyncjob/common"
+	"github.com/mrusme/hyperuplink/models/user"
 )
 
 type ReplyNotification struct {
 	Recipient common.Recipient
 	Subject   string
 	Reply     Reply
+	System    common.System
 }
 
 type Reply struct {
@@ -23,17 +25,66 @@ type Reply struct {
 }
 
 type Topic struct {
-	ID    uuid.UUID
-	Title string
-	URL   string
+	ID   uuid.UUID
+	Name string
+	URL  string
 }
 
 type Forum struct {
-	Title string
-	URL   string
+	Name string
+	URL  string
 }
 
 type Category struct {
-	Title string
-	URL   string
+	Name string
+	URL  string
 }
+
+func New(
+	forUser *user.User,
+	// forPost *post.Post,
+	// sys *system.System,
+	subject string,
+) (entity ReplyNotification, err error) {
+	entity = ReplyNotification{}
+	entity.SetRecipient(forUser)
+	entity.SetSubject(subject)
+	// entity.SetReply(forPost)
+	// entity.SetSystem(sys)
+
+	return entity, nil
+}
+
+func (entity ReplyNotification) SetRecipient(rcpt *user.User) {
+	entity.Recipient.SetRecipient(rcpt)
+}
+
+func (entity ReplyNotification) SetSubject(subject string) {
+	entity.Subject = subject
+}
+
+// func (entity ReplyNotification) SetReply(p *post.Post) {
+// 	entity.Reply = Reply{
+// 		ID:         p.TopicID,
+// 		ByUsername: p.Author.Username,
+// 		Text:       p.Text,
+// 		HTML:       p.Text, // TODO: Convert to safeHTML
+// 		URL:        p.Slug, // TODO: Build URL using System.BaseURL + / + slug
+// 		Category: Category{
+// 			Name: p.Category.Name,
+// 			URL: p.Category.Slug, // TODO: Build URL using System.BaseURL + / + slug
+// 		},
+// 		Forum: Forum{
+// 			Name: p.Forum.Name,
+// 			URL: p.Forum.Slug, // TODO: Build URL using System.BaseURL + / + slug
+// 		},
+// 		Topic: Topic{
+// 			Name: p.Forum.Name,
+// 			URL: p.Forum.Slug, // TODO: Build URL using System.BaseURL + / + slug
+// 		},
+// 	}
+// }
+
+// func (entity ReplyNotification) SetSystem(sys *system.System) {
+// 	entity.System.SetSystem(sys)
+// }

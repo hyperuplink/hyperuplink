@@ -7,8 +7,6 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
-	"github.com/mrusme/hyperuplink/models/asyncjob/common"
-	"github.com/mrusme/hyperuplink/models/asyncjob/notification/replynotification"
 	"github.com/mrusme/hyperuplink/models/user"
 )
 
@@ -27,53 +25,6 @@ func (r *Route) SignInShow(c fiber.Ctx) (err error) {
 	if ret, rerr := req.AccessControl(user.GuestRole); ret {
 		return rerr
 	}
-
-	//---------- [ TEST CODE ]--------------------------------------------------//
-	var re []replynotification.ReplyNotification
-	re = append(re, replynotification.ReplyNotification{
-		Recipient: common.Recipient{
-			Username: "John",
-			Address:  "john@doe.org",
-			Lang:     req.In.Lang(), // TODO: Query lang from user's settings
-		},
-		Reply: replynotification.Reply{
-			Category: replynotification.Category{
-				Title: "Cloud",
-			},
-			Forum: replynotification.Forum{
-				Title: "General",
-			},
-			Topic: replynotification.Topic{
-				Title: "Is Hetzner good?",
-			},
-		},
-	})
-	re = append(re, replynotification.ReplyNotification{
-		Recipient: common.Recipient{
-			Username: "Tom",
-			Address:  "tom@ato.org",
-			Lang:     req.In.Lang(), // TODO: Query lang from user's settings
-		},
-		Reply: replynotification.Reply{
-			Category: replynotification.Category{
-				Title: "Cloud",
-			},
-			Forum: replynotification.Forum{
-				Title: "General",
-			},
-			Topic: replynotification.Topic{
-				Title: "Is Google Cloud still bad?",
-			},
-		},
-	})
-	err = r.Runtime.Dispatch.ReplyNotifications(
-		"notifications",
-		re,
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-	//---------- [/ TEST CODE ]-------------------------------------------------//
 
 	return req.Respond()
 }

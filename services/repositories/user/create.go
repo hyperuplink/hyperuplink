@@ -17,6 +17,7 @@ func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
   ,email_confirmation_token
   ,email_confirmation_sent_at`+
 		// ,email_confirmed_at
+	`,language`+
 		// ,otp_enabled
 		// ,otp_secret
 		// ,otp_timestep
@@ -38,8 +39,8 @@ func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
 		,$4
 		,$5
 		,$6
-	,$7`+
-		// ,$8
+		,$7
+		,$8`+
 		// ,$9
 		// ,$10
 		// ,$11
@@ -56,6 +57,7 @@ func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
 		// ,$22
 		// ,$23
 		// ,$24
+		// ,$25
 		`) RETURNING id`,
 		model.Username,
 		model.Role,
@@ -67,6 +69,7 @@ func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
 		model.EmailConfirmationToken,
 		model.EmailConfirmationSentAt,
 		// model.EmailConfirmedAt,
+		model.Language,
 		// model.OTPEnabled,
 		// model.OTPSecret,
 		// model.OTPTimestep,
