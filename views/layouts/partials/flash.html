@@ -1,0 +1,5 @@
+<div class="errors">
+  {{ range $field, $err := .Flash.All }}
+  <div class="error raised margin padding">{{$._.T $err}}</div>
+  {{ end }}
+</div>

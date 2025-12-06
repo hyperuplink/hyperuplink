@@ -11,7 +11,7 @@ import (
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/helpers"
 	"github.com/mrusme/hyperuplink/http/web/request/bcn"
-	rerrors "github.com/mrusme/hyperuplink/http/web/request/errors"
+	"github.com/mrusme/hyperuplink/http/web/request/flash"
 	"github.com/mrusme/hyperuplink/http/web/request/form"
 	"github.com/mrusme/hyperuplink/http/web/request/in"
 	"github.com/mrusme/hyperuplink/http/web/request/menu"
@@ -29,7 +29,7 @@ type Request struct {
 	BCN     *bcn.BreadcrumbNavigation
 	Site    *site.Site
 	Session *session.Session
-	Errors  *rerrors.Errors
+	Flash   *flash.Flash
 	Form    *form.Form
 	In      *in.Internationalization
 	absPath string
@@ -54,7 +54,7 @@ func New(
 	req.BCN = bcn.New()
 	req.Site = site.New(req.r, req.c)
 	req.Session = session.New(req.c)
-	req.Errors = rerrors.New()
+	req.Flash = flash.New(req.c)
 	req.Form = form.New()
 	req.In = in.New(req.r, req.c)
 
@@ -113,19 +113,19 @@ func (req *Request) ValidateForm(f any, t reflect.Type) bool {
 		if valErrs, ok := err.(validator.ValidationErrors); ok {
 			for _, e := range valErrs {
 				if t.Kind() != reflect.Struct {
-					req.Errors.Set(valErrs)
+					req.Flash.SetError(valErrs)
 					break
 				}
 
 				field, ok := t.FieldByName(e.StructField())
 				if !ok {
-					req.Errors.Set(valErrs)
+					req.Flash.SetError(valErrs)
 					break
 				}
 
 				formTag, ok := field.Tag.Lookup("form")
 				if !ok {
-					req.Errors.Set(valErrs)
+					req.Flash.SetError(valErrs)
 					break
 				}
 
@@ -136,10 +136,10 @@ func (req *Request) ValidateForm(f any, t reflect.Type) bool {
 				))
 			}
 
-			req.Errors.SetMap(errmap)
+			req.Flash.SetErrorsMap(errmap)
 			req.Form.Set(f)
 		} else {
-			req.Errors.Set(err)
+			req.Flash.SetError(err)
 		}
 
 		return false
@@ -161,7 +161,7 @@ func (req *Request) RespondWithView(layouts []string, view string) error {
 		"Site":        req.Site,
 		"_":           req.In,
 		"Session":     req.Session,
-		"Errors":      req.Errors,
+		"Flash":       req.Flash,
 		"Form":        req.Form,
 	}, layoutsFull...)
 }
@@ -179,7 +179,7 @@ func (req *Request) RespondWithViewOnError(
 		return false, nil
 	}
 
-	req.Errors.Set(err)
+	req.Flash.SetError(err)
 	return true, req.RespondWithView(layouts, view)
 }
 
@@ -192,22 +192,30 @@ func (req *Request) RespondError(err error) (rerr error) {
 	return rerr
 }
 
+func (req *Request) redirect(url string) (err error) {
+	redir := req.c.Redirect()
+	for key, msg := range req.Flash.All() {
+		redir = redir.With(key, msg)
+	}
+	return redir.To(url)
+}
+
 func (req *Request) RedirectToRouteID(id string) error {
-	return req.c.Redirect().To(fmt.Sprintf("%s%s",
+	return req.redirect(fmt.Sprintf("%s%s",
 		req.relRoot,
 		route.For(id).AsURL(),
 	))
 }
 
 func (req *Request) RedirectToRoute(r route.Route) error {
-	return req.c.Redirect().To(fmt.Sprintf("%s%s",
+	return req.redirect(fmt.Sprintf("%s%s",
 		req.relRoot,
 		r.AsURL(),
 	))
 }
 
 func (req *Request) RedirectTo(path string) error {
-	return req.c.Redirect().To(fmt.Sprintf("%s%s",
+	return req.redirect(fmt.Sprintf("%s%s",
 		req.relRoot,
 		path,
 	))

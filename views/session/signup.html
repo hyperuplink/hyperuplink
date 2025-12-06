@@ -3,7 +3,7 @@
     <div class="title-bar-text">{{._.T .Site.Title}}</div>
   </div>
   <div class="window-body">
-    {{ template "views/layouts/partials/errors" . }}
+    {{ template "views/layouts/partials/flash" . }}
     <form method="post">
       <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
       <div class="tabs margin">
@@ -16,7 +16,7 @@
                        id="username"
                        name="username"
                        value="{{.Form.StringValueFor "username"}}"
-                       class="{{.Errors.ClassFor "username"}}">
+                       class="{{.Flash.ClassFor "username"}}">
               </div>
               <div class="field flex-column grow">
                 <label for="username">E-mail</label>
@@ -24,7 +24,7 @@
                        id="email"
                        name="email"
                        value="{{.Form.StringValueFor "email"}}"
-                       class="{{.Errors.ClassFor "email"}}">
+                       class="{{.Flash.ClassFor "email"}}">
               </div>
             </div>
             <div class="fieldrow flex-row flex-wrap gap">
@@ -34,7 +34,7 @@
                        id="password"
                        name="password"
                        value="{{.Form.StringValueFor "password"}}"
-                       class="{{.Errors.ClassFor "password"}}">
+                       class="{{.Flash.ClassFor "password"}}">
               </div>
               <div class="field flex-column grow">
                 <label for="password">Repeat</label>
@@ -42,7 +42,7 @@
                        id="password_repeat"
                        name="password_repeat"
                        value="{{.Form.StringValueFor "password_repeat"}}"
-                       class="{{.Errors.ClassFor "password_repeat"}}">
+                       class="{{.Flash.ClassFor "password_repeat"}}">
               </div>
             </div>
             <div class="actions flex-row gap justify-end">

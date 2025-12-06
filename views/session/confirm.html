@@ -3,7 +3,7 @@
     <div class="title-bar-text">{{._.T .Site.Title}}</div>
   </div>
   <div class="window-body">
-    {{ template "views/layouts/partials/errors" . }}
+    {{ template "views/layouts/partials/flash" . }}
     <form method="post">
       <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
       <div class="tabs margin">
@@ -16,7 +16,7 @@
                        id="username"
                        name="username"
                        value="{{.Form.StringValueFor "username"}}"
-                       class="{{.Errors.ClassFor "username"}}">
+                       class="{{.Flash.ClassFor "username"}}">
               </div>
               <div class="field flex-column grow">
                 <label for="token">{{._.T "token"}}</label>
@@ -24,12 +24,14 @@
                        id="token"
                        name="token"
                        value="{{.Form.StringValueFor "token"}}"
-                       class="{{.Errors.ClassFor "token"}}">
+                       class="{{.Flash.ClassFor "token"}}">
               </div>
             </div>
             <div class="actions flex-row gap justify-end">
               <button type="submit" class="affirmative">{{._.T "confirm"}}</button>
-              <a class="button" href="{{.Site.HrefTo "session/confirm/resend"}}" title="{{._.T "resend_confirmation"}}">{{._.T "resend_confirmation"}}</a>
+              <a class="button"
+                 href="{{.Site.HrefTo "session/confirm/resend"}}"
+                 title="{{._.T "resend_confirmation"}}">{{._.T "resend_confirmation"}}</a>
             </div>
           </div>
         </div>

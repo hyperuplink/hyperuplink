@@ -1,8 +1,0 @@
-<div class="errors">
-  {{ with .Errors.Get }}
-  <div class="error raised margin padding">{{$._.T .Error}}</div>
-  {{ end }}
-  {{ range $field, $err := .Errors.GetMap }}
-  <div class="error raised margin padding">{{$._.T $err.Error}}</div>
-  {{ end }}
-</div>

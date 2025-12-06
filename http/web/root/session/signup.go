@@ -50,7 +50,7 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 
 	r.Runtime.Debug("form", frm)
 
-	// TODO: Sign up user
+	// Sign up user
 	usr := new(user.User)
 	usr.Username = frm.Username
 	usr.Role = "user"
@@ -68,6 +68,7 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	// Send confirmation email
 	sc, err := signupconfirmation.New(
 		usr,
 		req.In.T("signup_confirmation_subject"),

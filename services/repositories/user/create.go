@@ -17,7 +17,7 @@ func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
   ,email_confirmation_token
   ,email_confirmation_sent_at`+
 		// ,email_confirmed_at
-	`,language`+
+		`,language`+
 		// ,otp_enabled
 		// ,otp_secret
 		// ,otp_timestep
