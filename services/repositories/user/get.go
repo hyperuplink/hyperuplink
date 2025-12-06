@@ -47,6 +47,7 @@ func (repo *Repository) GetByUsername(
 	if err != nil {
 		return nil, repo.db.ConvertError(err)
 	}
+	defer rows.Close()
 
 	usr, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[user.User])
 
@@ -68,6 +69,7 @@ func (repo *Repository) GetByEmail(
 	if err != nil {
 		return nil, repo.db.ConvertError(err)
 	}
+	defer rows.Close()
 
 	usr, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[user.User])
 
