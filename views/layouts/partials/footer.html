@@ -1,18 +1,19 @@
-        <div class="margin footer">
-          <div class="bar raised flex-row">
-            <div class="segment lowered padding">
-              Powered by <a href="" title="">Hyperuplink</a> v1.0.0
-            </div>
-            <div class="segment lowered padding grow">
-              <a href="" title="">Terms of Service</a> |
-              <a href="" title="">Privacy Policy</a> |
-              <a href="" title="">Contact</a>
-            </div>
-            <div class="segment lowered padding" style="text-align: right;">
-              <a href="" title="">
-                <img style="margin: 2px;" src="{{.Site.StaticFile "images/rss.gif"}}">
-              </a>
-            </div>
-          </div>
-        </div>
-
+<div class="margin footer">
+  <div class="bar raised flex-row">
+    <div class="segment lowered padding">
+      Powered by <a href="" title="">Hyperuplink</a> v1.0.0
+    </div>
+    <div class="segment lowered padding grow">
+      {{ $footerMenu := .Menu.GetFooter}}
+      {{ $footerMenuIdxLast := sub (len $footerMenu) 1 }}
+      {{ range $idx, $item := $footerMenu }}
+      <a href="{{$.Site.HrefTo $item.Href}}" title="{{$item.Title}}">{{ safeHTML $item.Label }}</a> {{if lt $idx $footerMenuIdxLast}}|{{end}}
+      {{ end }}
+    </div>
+    <div class="segment lowered padding" style="text-align: right;">
+      <a href="" title="">
+        <img style="margin: 2px;" src="{{.Site.StaticFile "images/rss.gif"}}">
+      </a>
+    </div>
+  </div>
+</div>

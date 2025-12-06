@@ -19,12 +19,12 @@
                        class="{{.Flash.ClassFor "username"}}">
               </div>
               <div class="field flex-column grow">
-                <label for="token">{{._.T "token"}}</label>
+                <label for="username">{{._.T "current_email"}}</label>
                 <input type="text"
-                       id="token"
-                       name="token"
-                       value="{{.Form.StringValueFor "token"}}"
-                       class="{{.Flash.ClassFor "token"}}">
+                       id="email"
+                       name="email"
+                       value="{{.Form.StringValueFor "email"}}"
+                       class="{{.Flash.ClassFor "email"}}">
               </div>
             </div>
             <div class="actions flex-row gap justify-end">

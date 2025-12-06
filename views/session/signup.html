@@ -11,7 +11,7 @@
           <div class="margin">
             <div class="fieldrow flex-row flex-wrap gap">
               <div class="field flex-column grow">
-                <label for="username">Username</label>
+                <label for="username">{{._.T "username"}}</label>
                 <input type="text"
                        id="username"
                        name="username"
@@ -19,7 +19,7 @@
                        class="{{.Flash.ClassFor "username"}}">
               </div>
               <div class="field flex-column grow">
-                <label for="username">E-mail</label>
+                <label for="username">{{._.T "email"}}</label>
                 <input type="text"
                        id="email"
                        name="email"
@@ -29,7 +29,7 @@
             </div>
             <div class="fieldrow flex-row flex-wrap gap">
               <div class="field flex-column grow">
-                <label for="password">Password</label>
+                <label for="password">{{._.T "password"}}</label>
                 <input type="password"
                        id="password"
                        name="password"
@@ -37,7 +37,7 @@
                        class="{{.Flash.ClassFor "password"}}">
               </div>
               <div class="field flex-column grow">
-                <label for="password">Repeat</label>
+                <label for="password">{{._.T "password_repeat"}}</label>
                 <input type="password"
                        id="password_repeat"
                        name="password_repeat"
@@ -46,13 +46,13 @@
               </div>
             </div>
             <div class="actions flex-row gap justify-end">
-              <button type="submit">Sign up</button>
+              <button type="submit">{{._.T "sign_up_verb"}}</button>
             </div>
           </div>
         </div>
       </div>
     </form>
-    <div class="margin">Or sign up via:</div>
+    <div class="margin">{{._.T "sign_up_via_oauth"}}</div>
     {{ template "views/layouts/partials/oauthproviders" . }}
   </div>
 </div>

@@ -75,6 +75,7 @@ func New(
 		}
 	}
 
+	req.Menu.SetI18n(req.In.T)
 	req.Menu.SetRole(req.Session.GetCurrentUserRole())
 
 	req.Site.SetTitle(req.In.T(title))

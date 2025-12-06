@@ -1,6 +1,6 @@
 {{ $dict := . }}
-{{ $menu := get $dict "Menu"}}
 {{ $site := get $dict "Site"}}
+{{ $menu := get $dict "Menu"}}
 {{ range $menu }}
 {{ if .IsSeparator }}
 <li role="separator"></li>

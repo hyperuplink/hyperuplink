@@ -13,3 +13,5 @@ confirm = "Confirm"
 resend_confirmation = "Resend confirmation"
 
 validation_email_email = "E-mail field must containt a valid e-mail address"
+
+_h_elp = "<u>H</u>elp"
