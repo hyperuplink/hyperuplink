@@ -1,7 +1,6 @@
 package localegen
 
 import (
-	"fmt"
 	"path"
 )
 
@@ -11,8 +10,6 @@ func LocaleGen() (err error) {
 	if ts, err = walkDir("."); err != nil {
 		return err
 	}
-
-	fmt.Printf("%v\n", ts)
 
 	var locEN map[string]string
 	if locEN, err = loadLocale(path.Join(".", "locales", "en.toml")); err != nil {

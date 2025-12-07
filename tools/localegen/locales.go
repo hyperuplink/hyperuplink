@@ -3,6 +3,7 @@ package localegen
 import (
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/pelletier/go-toml/v2"
 )
@@ -59,10 +60,13 @@ func processLocales(
 		loc, err = loadLocale(path)
 
 		for _, t := range ts {
-			if val, ok := loc[t]; !ok || val == "" {
-				var setval string = "!! " + t + " !!"
+			if val, ok := loc[t]; !ok ||
+				val == "" ||
+				(strings.HasPrefix(val, "#{{") && strings.HasSuffix(val, "}}#")) ||
+				(strings.HasPrefix(val, "!{{") && strings.HasSuffix(val, "}}!")) {
+				var setval string = "!{{" + t + "}}!"
 				if refval, refok := ref[t]; refok && refval != "" {
-					setval = "!(" + refval + ")!"
+					setval = "#{{" + refval + "}}#"
 				}
 				loc[t] = setval
 			}
