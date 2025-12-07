@@ -56,7 +56,7 @@ func processLocales(
 
 		path := filepath.Join(dir, entry.Name())
 
-		var loc map[string]string
+		var loc, newloc map[string]string
 		loc, err = loadLocale(path)
 
 		for _, t := range ts {
@@ -68,11 +68,11 @@ func processLocales(
 				if refval, refok := ref[t]; refok && refval != "" {
 					setval = "#{{" + refval + "}}#"
 				}
-				loc[t] = setval
+				newloc[t] = setval
 			}
 		}
 
-		if err = saveLocale(path, loc); err != nil {
+		if err = saveLocale(path, newloc); err != nil {
 			return err
 		}
 	}

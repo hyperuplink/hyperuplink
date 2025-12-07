@@ -59,29 +59,29 @@ func (m *Menu) AccountMenu(forRole user.Role) []MenuItem {
 	if forRole == user.GuestRole {
 		subItems = []MenuItem{
 			{
-				Label: m.T("sign_in_verb"),
-				Title: m.T("sign_in_verb"),
+				Label: m.T(route.For("SessionSignin").AsTitle()),
+				Title: m.T(route.For("SessionSignin").AsTitle()),
 				Href:  route.For("SessionSignin").AsURL(),
 			},
 			{
 				IsSeparator: true,
 			},
 			{
-				Label: m.T("sign_up_verb"),
-				Title: m.T("sign_up_verb"),
+				Label: m.T(route.For("SessionSignup").AsTitle()),
+				Title: m.T(route.For("SessionSignup").AsTitle()),
 				Href:  route.For("SessionSignup").AsURL(),
 			},
 		}
 	} else {
 		subItems = []MenuItem{
 			{
-				Label: m.T("profile"),
-				Title: m.T("profile"),
+				Label: m.T(route.For("AccountProfile").AsTitle()),
+				Title: m.T(route.For("AccountProfile").AsTitle()),
 				Href:  route.For("AccountProfile").AsURL(),
 			},
 			{
-				Label: m.T("settings"),
-				Title: m.T("settings"),
+				Label: m.T(route.For("AccountSettings").AsTitle()),
+				Title: m.T(route.For("AccountSettings").AsTitle()),
 				Href:  route.For("AccountSettings").AsURL(),
 			},
 			{
@@ -91,13 +91,13 @@ func (m *Menu) AccountMenu(forRole user.Role) []MenuItem {
 				Label: m.T("security"),
 				SubItems: []MenuItem{
 					{
-						Label: m.T("password"),
-						Title: m.T("password"),
+						Label: m.T(route.For("AccountPassword").AsTitle()),
+						Title: m.T(route.For("AccountPassword").AsTitle()),
 						Href:  route.For("AccountPassword").AsURL(),
 					},
 					{
-						Label: m.T("2_factor_authentication"),
-						Title: m.T("2_factor_authentication"),
+						Label: m.T(route.For("AccountTwofactor").AsTitle()),
+						Title: m.T(route.For("AccountTwofactor").AsTitle()),
 						Href:  route.For("AccountTwofactor").AsURL(),
 					},
 				},
@@ -106,8 +106,8 @@ func (m *Menu) AccountMenu(forRole user.Role) []MenuItem {
 				IsSeparator: true,
 			},
 			{
-				Label: m.T("sign_out_verb"),
-				Title: m.T("sign_out_verb"),
+				Label: m.T(route.For("SessionSignout").AsTitle()),
+				Title: m.T(route.For("SessionSignout").AsTitle()),
 				Href:  route.For("SessionSignout").AsURL(),
 			},
 		}
@@ -128,26 +128,26 @@ func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 				Label: m.T("ad_m_inistration"),
 				SubItems: []MenuItem{
 					{
-						Label: m.T("general"),
-						Title: m.T("general"),
+						Label: m.T(route.For("AdminGeneral").AsTitle()),
+						Title: m.T(route.For("AdminGeneral").AsTitle()),
 						Href:  route.For("AdminGeneral").AsURL(),
 					},
 					{
-						Label: m.T("authentication"),
-						Title: m.T("authentication"),
+						Label: m.T(route.For("AdminAuth").AsTitle()),
+						Title: m.T(route.For("AdminAuth").AsTitle()),
 						Href:  route.For("AdminAuth").AsURL(),
 					},
 					{
 						Label: m.T("communication"),
 						SubItems: []MenuItem{
 							{
-								Label: m.T("email"),
-								Title: m.T("email"),
+								Label: m.T(route.For("AdminCommsEmail").AsTitle()),
+								Title: m.T(route.For("AdminCommsEmail").AsTitle()),
 								Href:  route.For("AdminCommsEmail").AsURL(),
 							},
 							{
-								Label: m.T("xmpp"),
-								Title: m.T("xmpp"),
+								Label: m.T(route.For("AdminCommsXmpp").AsTitle()),
+								Title: m.T(route.For("AdminCommsXmpp").AsTitle()),
 								Href:  route.For("AdminCommsXmpp").AsURL(),
 							},
 						},
@@ -159,44 +159,44 @@ func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 						Label: m.T("board_settings"),
 						SubItems: []MenuItem{
 							{
-								Label: m.T("categories"),
-								Title: m.T("categories"),
+								Label: m.T(route.For("AdminBoardCategories").AsTitle()),
+								Title: m.T(route.For("AdminBoardCategories").AsTitle()),
 								Href:  route.For("AdminBoardCategories").AsURL(),
 							},
 							{
-								Label: m.T("forums"),
-								Title: m.T("forums"),
+								Label: m.T(route.For("AdminBoardForums").AsTitle()),
+								Title: m.T(route.For("AdminBoardForums").AsTitle()),
 								Href:  route.For("AdminBoardForums").AsURL(),
 							},
 							{
 								IsSeparator: true,
 							},
 							{
-								Label: m.T("posts"),
-								Title: m.T("posts"),
-								Href:  route.For("AdminBoardPosts").AsURL(),
+								Label: m.T(route.For("AdminBoardTopics").AsTitle()),
+								Title: m.T(route.For("AdminBoardTopics").AsTitle()),
+								Href:  route.For("AdminBoardTopics").AsURL(),
 							},
 							{
-								Label: m.T("attachments"),
-								Title: m.T("attachments"),
+								Label: m.T(route.For("AdminBoardAttachments").AsTitle()),
+								Title: m.T(route.For("AdminBoardAttachments").AsTitle()),
 								Href:  route.For("AdminBoardAttachments").AsURL(),
 							},
 							{
-								Label: m.T("profiles"),
-								Title: m.T("profiles"),
+								Label: m.T(route.For("AdminBoardProfiles").AsTitle()),
+								Title: m.T(route.For("AdminBoardProfiles").AsTitle()),
 								Href:  route.For("AdminBoardProfiles").AsURL(),
 							},
 							{
-								Label: m.T("signatures"),
-								Title: m.T("signatures"),
+								Label: m.T(route.For("AdminBoardSignatures").AsTitle()),
+								Title: m.T(route.For("AdminBoardSignatures").AsTitle()),
 								Href:  route.For("AdminBoardSignatures").AsURL(),
 							},
 							{
 								IsSeparator: true,
 							},
 							{
-								Label: m.T("look_and_feel"),
-								Title: m.T("look_and_feel"),
+								Label: m.T(route.For("AdminBoardTheme").AsTitle()),
+								Title: m.T(route.For("AdminBoardTheme").AsTitle()),
 								Href:  route.For("AdminBoardTheme").AsURL(),
 							},
 						},
@@ -205,16 +205,16 @@ func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 						IsSeparator: true,
 					},
 					{
-						Label: m.T("users"),
-						Title: m.T("users"),
+						Label: m.T(route.For("AdminUsers").AsTitle()),
+						Title: m.T(route.For("AdminUsers").AsTitle()),
 						Href:  route.For("AdminUsers").AsURL(),
 					},
 					{
 						IsSeparator: true,
 					},
 					{
-						Label: m.T("adminlog"),
-						Title: m.T("adminlog"),
+						Label: m.T(route.For("AdminLog").AsTitle()),
+						Title: m.T(route.For("AdminLog").AsTitle()),
 						Href:  route.For("AdminLog").AsURL(),
 					},
 				},
@@ -284,34 +284,34 @@ func (m *Menu) HelpMenu(forRole user.Role) []MenuItem {
 			Label: m.T("_h_elp"),
 			SubItems: []MenuItem{
 				{
-					Label: m.T("user_manual"),
-					Title: m.T("user_manual"),
+					Label: m.T(route.For("DocsManual").AsTitle()),
+					Title: m.T(route.For("DocsManual").AsTitle()),
 					Href:  route.For("DocsManual").AsURL(),
 				},
 				{
 					IsSeparator: true,
 				},
 				{
-					Label: m.T("terms_of_service"),
-					Title: m.T("terms_of_service"),
+					Label: m.T(route.For("DocsTerms").AsTitle()),
+					Title: m.T(route.For("DocsTerms").AsTitle()),
 					Href:  route.For("DocsTerms").AsURL(),
 				},
 				{
-					Label: m.T("privacy_policy"),
-					Title: m.T("privacy_policy"),
+					Label: m.T(route.For("DocsPrivacy").AsTitle()),
+					Title: m.T(route.For("DocsPrivacy").AsTitle()),
 					Href:  route.For("DocsPrivacy").AsURL(),
 				},
 				{
-					Label: m.T("contact"),
-					Title: m.T("contact"),
+					Label: m.T(route.For("DocsContact").AsTitle()),
+					Title: m.T(route.For("DocsContact").AsTitle()),
 					Href:  route.For("DocsContact").AsURL(),
 				},
 				{
 					IsSeparator: true,
 				},
 				{
-					Label: m.T("about"),
-					Title: m.T("about"),
+					Label: m.T(route.For("DocsAbout").AsTitle()),
+					Title: m.T(route.For("DocsAbout").AsTitle()),
 					Href:  route.For("DocsAbout").AsURL(),
 				},
 			},
@@ -322,18 +322,18 @@ func (m *Menu) HelpMenu(forRole user.Role) []MenuItem {
 func (m *Menu) FooterMenu(forRole user.Role) []MenuItem {
 	return []MenuItem{
 		{
-			Label: m.T("terms_of_service"),
-			Title: m.T("terms_of_service"),
+			Label: m.T(route.For("DocsTerms").AsTitle()),
+			Title: m.T(route.For("DocsTerms").AsTitle()),
 			Href:  route.For("DocsTerms").AsURL(),
 		},
 		{
-			Label: m.T("privacy_policy"),
-			Title: m.T("privacy_policy"),
+			Label: m.T(route.For("DocsPrivacy").AsTitle()),
+			Title: m.T(route.For("DocsPrivacy").AsTitle()),
 			Href:  route.For("DocsPrivacy").AsURL(),
 		},
 		{
-			Label: m.T("contact"),
-			Title: m.T("contact"),
+			Label: m.T(route.For("DocsContact").AsTitle()),
+			Title: m.T(route.For("DocsContact").AsTitle()),
 			Href:  route.For("DocsContact").AsURL(),
 		},
 	}

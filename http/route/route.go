@@ -21,7 +21,7 @@ var Routes map[string]Route = map[string]Route{
 	"AdminBoardAttachments":   {hierarchy: []string{"admin", "board", "attachments"}},
 	"AdminBoardCategories":    {hierarchy: []string{"admin", "board", "categories"}},
 	"AdminBoardForums":        {hierarchy: []string{"admin", "board", "forums"}},
-	"AdminBoardPosts":         {hierarchy: []string{"admin", "board", "posts"}},
+	"AdminBoardTopics":         {hierarchy: []string{"admin", "board", "topics"}},
 	"AdminBoardProfiles":      {hierarchy: []string{"admin", "board", "profiles"}},
 	"AdminBoardSignatures":    {hierarchy: []string{"admin", "board", "signatures"}},
 	"AdminBoardTheme":         {hierarchy: []string{"admin", "board", "theme"}},
