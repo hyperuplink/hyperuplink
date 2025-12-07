@@ -9,6 +9,7 @@ import (
 
 	"github.com/mrusme/hyperuplink/http"
 	"github.com/mrusme/hyperuplink/runtime"
+	"github.com/mrusme/hyperuplink/tools/localegen"
 	"github.com/mrusme/hyperuplink/worker"
 )
 
@@ -28,12 +29,14 @@ var embedLocales embed.FS
 var embedTemplates embed.FS
 
 var (
-	flagCfgstr  string
-	flagVersion bool
+	flagCfgstr    string
+	flagLocalegen bool
+	flagVersion   bool
 )
 
 func init() {
 	flag.StringVar(&flagCfgstr, "c", "file:///etc/hyperuplink.toml", "configuration string")
+	flag.BoolVar(&flagLocalegen, "l", false, "Generate locale files")
 	flag.BoolVar(&flagVersion, "v", false, "Print version information and exit")
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Use: %s [-opts]\n\n", os.Args[0])
@@ -46,12 +49,20 @@ func main() {
 
 	flag.Parse()
 
+	if flagLocalegen {
+		if err = localegen.LocaleGen(); err != nil {
+			os.Exit(1)
+		}
+
+		os.Exit(0)
+	}
 	if flagVersion {
 		fmt.Printf("Hyper Uplink %s\nCommit: %s\nBuild date: %s\n",
 			runtime.Version,
 			runtime.Commit,
 			runtime.Version,
 		)
+		os.Exit(0)
 	}
 
 	rt, err := runtime.New(flagCfgstr)
