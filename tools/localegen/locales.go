@@ -67,7 +67,9 @@ func processLocales(
 				(strings.HasPrefix(val, "!{{") && strings.HasSuffix(val, "}}!")) {
 				var setval string = "!{{" + t + "}}!"
 				if refval, refok := ref[t]; refok && refval != "" {
-					setval = "#{{" + refval + "}}#"
+					if strings.HasPrefix(refval, "!{{") == false {
+						setval = "#{{" + refval + "}}#"
+					}
 				}
 				newloc[t] = setval
 			} else {
