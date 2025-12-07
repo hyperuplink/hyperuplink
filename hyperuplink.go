@@ -36,7 +36,7 @@ var (
 
 func init() {
 	flag.StringVar(&flagCfgstr, "c", "file:///etc/hyperuplink.toml", "configuration string")
-	flag.BoolVar(&flagLocalegen, "l", false, "Generate locale files")
+	flag.BoolVar(&flagLocalegen, "localegen", false, "Generate locale files")
 	flag.BoolVar(&flagVersion, "v", false, "Print version information and exit")
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Use: %s [-opts]\n\n", os.Args[0])
