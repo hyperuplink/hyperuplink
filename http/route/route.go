@@ -60,7 +60,11 @@ func (r Route) AsURL() string {
 }
 
 func (r Route) AsTitle() string {
-	return strings.Join([]string(r.hierarchy), "_") + "_title"
+	joined := strings.Join([]string(r.hierarchy), "_")
+	if strings.Index(joined, ":") > -1 {
+		return ""
+	}
+	return joined + "_title"
 }
 
 func (r Route) Pathname() string {

@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"regexp"
 	"slices"
+
+	"github.com/mrusme/hyperuplink/http/route"
 )
 
 var SUPPORTED_EXTS []string = []string{
@@ -68,6 +70,13 @@ func extractTranslations(filepath string) (ts []string, err error) {
 
 	if err := scanner.Err(); err != nil {
 		return ts, err
+	}
+
+	for _, r := range route.Routes {
+		title := r.AsTitle()
+		if title != "" {
+			ts = append(ts, title)
+		}
 	}
 
 	return ts, nil
