@@ -58,6 +58,7 @@ func processLocales(
 
 		var loc, newloc map[string]string
 		loc, err = loadLocale(path)
+		newloc = make(map[string]string)
 
 		for _, t := range ts {
 			if val, ok := loc[t]; !ok ||
@@ -69,6 +70,8 @@ func processLocales(
 					setval = "#{{" + refval + "}}#"
 				}
 				newloc[t] = setval
+			} else {
+				newloc[t] = loc[t]
 			}
 		}
 
