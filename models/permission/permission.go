@@ -26,12 +26,45 @@ type Permission struct {
 
 func (m *Permission) SetReadOnly() {
 	m.Bits.Bytes = []byte{ReadOnly}
+	m.Bits.Valid = true
 }
 
 func (m *Permission) SetReadWrite() {
 	m.Bits.Bytes = []byte{ReadWrite}
+	m.Bits.Valid = true
 }
 
 func (m *Permission) SetModerate() {
 	m.Bits.Bytes = []byte{Moderate}
+	m.Bits.Valid = true
+}
+
+func (m *Permission) IsReadOnly() bool {
+	if m.Bits.Valid == true &&
+		len(m.Bits.Bytes) > 0 &&
+		m.Bits.Bytes[0] == ReadOnly {
+		return true
+	}
+
+	return false
+}
+
+func (m *Permission) IsReadWrite() bool {
+	if m.Bits.Valid == true &&
+		len(m.Bits.Bytes) > 0 &&
+		m.Bits.Bytes[0] == ReadWrite {
+		return true
+	}
+
+	return false
+}
+
+func (m *Permission) IsModerate() bool {
+	if m.Bits.Valid == true &&
+		len(m.Bits.Bytes) > 0 &&
+		m.Bits.Bytes[0] == Moderate {
+		return true
+	}
+
+	return false
 }
