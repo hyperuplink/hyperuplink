@@ -78,10 +78,10 @@ func (s *Site) Title() string {
 	return s.r.GetEnv().Title
 }
 
-func (s *Site) TitleFull() string {
+func (s *Site) TitleFull(systemTitle string) string {
 	return fmt.Sprintf("%s // %s",
 		s.r.GetEnv().Title,
-		"Hyperuplink", // TODO: Query title from database
+		systemTitle,
 	)
 }
 

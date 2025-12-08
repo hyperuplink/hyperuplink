@@ -11,6 +11,7 @@ type Route struct {
 
 // TODO: Find a way to build this automatically
 var Routes map[string]Route = map[string]Route{
+	"Root":                    {hierarchy: []string{"root"}},
 	"Account":                 {hierarchy: []string{"account"}},
 	"AccountPassword":         {hierarchy: []string{"account", "password"}},
 	"AccountProfile":          {hierarchy: []string{"account", "profile"}},
@@ -21,7 +22,7 @@ var Routes map[string]Route = map[string]Route{
 	"AdminBoardAttachments":   {hierarchy: []string{"admin", "board", "attachments"}},
 	"AdminBoardCategories":    {hierarchy: []string{"admin", "board", "categories"}},
 	"AdminBoardForums":        {hierarchy: []string{"admin", "board", "forums"}},
-	"AdminBoardTopics":         {hierarchy: []string{"admin", "board", "topics"}},
+	"AdminBoardTopics":        {hierarchy: []string{"admin", "board", "topics"}},
 	"AdminBoardProfiles":      {hierarchy: []string{"admin", "board", "profiles"}},
 	"AdminBoardSignatures":    {hierarchy: []string{"admin", "board", "signatures"}},
 	"AdminBoardTheme":         {hierarchy: []string{"admin", "board", "theme"}},

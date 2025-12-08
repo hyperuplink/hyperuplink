@@ -17,6 +17,8 @@ import (
 	"github.com/mrusme/hyperuplink/http/web/request/menu"
 	"github.com/mrusme/hyperuplink/http/web/request/session"
 	"github.com/mrusme/hyperuplink/http/web/request/site"
+	"github.com/mrusme/hyperuplink/models/setting"
+	settingRepo "github.com/mrusme/hyperuplink/services/repositories/setting"
 )
 
 type Request struct {
@@ -32,6 +34,7 @@ type Request struct {
 	Flash   *flash.Flash
 	Form    *form.Form
 	In      *in.Internationalization
+	System  *setting.System
 	absPath string
 	relRoot string
 }
@@ -58,6 +61,15 @@ func New(
 	req.Form = form.New()
 	req.In = in.New(req.r, req.c)
 
+	settingSystem, err := settingRepo.GetByID[setting.System](
+		req.r.GetRuntime().Repositories.Setting,
+		"system",
+	)
+	if err != nil {
+		req.r.GetRuntime().Error("error", err)
+	}
+	req.System = &settingSystem.JSONValue
+
 	req.absPath, req.relRoot = helpers.GetAbsPathAndRelRoot(req.c)
 
 	if userID, ok := req.Session.GetUserID(); ok {
@@ -78,6 +90,9 @@ func New(
 	req.Menu.SetI18n(req.In.T)
 	req.Menu.SetRole(req.Session.GetCurrentUserRole())
 
+	if title == "" {
+		title = req.System.Name
+	}
 	req.Site.SetTitle(req.In.T(title))
 
 	var parentRoute route.Route = req.rt
@@ -164,6 +179,7 @@ func (req *Request) RespondWithView(layouts []string, view string) error {
 		"Session":     req.Session,
 		"Flash":       req.Flash,
 		"Form":        req.Form,
+		"System":      req.System,
 	}, layoutsFull...)
 }
 
