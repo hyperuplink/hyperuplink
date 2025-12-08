@@ -13,8 +13,8 @@ func GetByID[T any](
 	var mod setting.Setting[T]
 
 	rows, err = repo.db.Query(`SELECT * FROM settings
-	WHERE id = $1
-	LIMIT 1`,
+		WHERE id = $1
+		LIMIT 1`,
 		id)
 	if err != nil {
 		return nil, repo.db.ConvertError(err)

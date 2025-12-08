@@ -22,8 +22,9 @@ const (
 	Signup      JobSubType = "signup"
 	EmailChange JobSubType = "email_change"
 	// Notification
-	Signin JobSubType = "signin"
-	Reply  JobSubType = "reply"
+	Signin  JobSubType = "signin"
+	Reply   JobSubType = "reply"
+	Mention JobSubType = "mention"
 )
 
 type AsyncJob struct {

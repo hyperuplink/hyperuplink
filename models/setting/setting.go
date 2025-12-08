@@ -11,4 +11,3 @@ type Setting[T any] struct {
 	JSONValue   T                `json:"json_value"`
 	TimeValue   pgtype.Timestamp `json:"time_value"`
 }
-

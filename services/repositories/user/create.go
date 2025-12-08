@@ -7,15 +7,16 @@ import (
 
 func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
 	err = repo.db.QueryRow(`INSERT INTO users (
-  username
-  ,role
-  ,password`+
+		 username
+		,role
+		,member_of
+		,password`+
 		// ,password_reset_token
 		// ,password_reset_sent_at
 		`,email
-  ,email_unconfirmed
-  ,email_confirmation_token
-  ,email_confirmation_sent_at`+
+		,email_unconfirmed
+		,email_confirmation_token
+		,email_confirmation_sent_at`+
 		// ,email_confirmed_at
 		`,language`+
 		// ,otp_enabled
@@ -33,15 +34,15 @@ func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
 		// ,banned_at
 		// ,deleted_at
 		`) VALUES (
-	$1
-	,$2
-	,$3
+		 $1
+		,$2
+		,$3
 		,$4
 		,$5
 		,$6
 		,$7
-		,$8`+
-		// ,$9
+		,$8
+		,$9`+
 		// ,$10
 		// ,$11
 		// ,$12
@@ -58,9 +59,11 @@ func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
 		// ,$23
 		// ,$24
 		// ,$25
+		// ,$26
 		`) RETURNING id`,
 		model.Username,
 		model.Role,
+		model.MemberOf,
 		model.Password,
 		// model.PasswordResetToken,
 		// model.PasswordResetSentAt,

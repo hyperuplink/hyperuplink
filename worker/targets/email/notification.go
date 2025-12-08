@@ -32,6 +32,9 @@ func (t *Email) ExecuteNotification(
 			payloads = append(payloads, payload)
 		}
 		return t.ExecuteNotificationReply(job, args, payloads)
+	case asyncjob.Mention:
+		// TODO
+		return errs.ErrNotImplemented
 	default:
 		return errs.ErrJobSubTypeInvalid
 	}

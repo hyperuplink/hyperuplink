@@ -16,6 +16,7 @@ type User struct {
 	ID       uuid.UUID `json:"id"`
 	Username string    `json:"username"`
 	Role     Role      `json:"role"`
+	MemberOf []string  `json:"member_of"`
 
 	Password            string           `json:"password"`
 	PasswordResetToken  string           `json:"password_reset_token"`
