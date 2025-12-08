@@ -1,0 +1,28 @@
+CREATE TABLE replies (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  topic_id UUID NOT NULL,
+  reply_id UUID DEFAULT NULL,
+  author_id UUID NOT NULL,
+  kind VARCHAR(16) DEFAULT 'regular',
+  text TEXT NOT NULL,
+  poll_vote SMALLINT,
+  rsvp_respponse SMALLINT,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  moderated_at TIMESTAMP DEFAULT NULL,
+  spammed_at TIMESTAMP DEFAULT NULL,
+  deleted_at TIMESTAMP DEFAULT NULL,
+  CONSTRAINT fk_topic FOREIGN KEY (topic_id) REFERENCES topics (
+    id
+  ) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_reply FOREIGN KEY (reply_id) REFERENCES replies (
+    id
+  ) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES users (
+    id
+  ) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE INDEX idx_replies_topics_id ON replies (topic_id);
+CREATE INDEX idx_replies_replies_id ON replies (reply_id);
+CREATE INDEX idx_replies_users_id ON replies (author_id);
