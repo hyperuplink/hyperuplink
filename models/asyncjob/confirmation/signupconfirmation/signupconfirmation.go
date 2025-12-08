@@ -1,7 +1,10 @@
 package signupconfirmation
 
 import (
+	"fmt"
+
 	"github.com/mrusme/hyperuplink/models/asyncjob/common"
+	"github.com/mrusme/hyperuplink/models/setting"
 	"github.com/mrusme/hyperuplink/models/user"
 )
 
@@ -18,18 +21,25 @@ type Signup struct {
 }
 
 func New(
+	sys *setting.System,
 	forUser *user.User,
 	subject string,
 	token string,
-	url string,
+	signupURL string,
 ) (entity SignupConfirmation, err error) {
 	entity = SignupConfirmation{}
+	entity.SetSystem(sys)
 	entity.SetRecipient(forUser)
 	entity.SetSubject(subject)
-	entity.Signup.SetSignup(token, url)
-	// entity.SetSystem(sys)
+	entity.Signup.SetSignup(token,
+		fmt.Sprintf("%s/%s", entity.System.BaseURL, signupURL),
+	)
 
 	return entity, nil
+}
+
+func (entity SignupConfirmation) SetSystem(sys *setting.System) {
+	entity.System.SetSystem(sys)
 }
 
 func (entity SignupConfirmation) SetRecipient(rcpt *user.User) {
@@ -42,9 +52,5 @@ func (entity SignupConfirmation) SetSubject(subject string) {
 
 func (entity Signup) SetSignup(token string, url string) {
 	entity.Token = token
-	entity.URL = url // TODO: Build URL using System.BaseURL + / + slug
+	entity.URL = url
 }
-
-// func (entity SignupConfirmation) SetSystem(sys *system.System) {
-// 	entity.System.SetSystem(sys)
-// }

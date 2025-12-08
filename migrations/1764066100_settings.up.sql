@@ -1,0 +1,7 @@
+CREATE TABLE settings (
+  id VARCHAR(64) PRIMARY KEY,
+  string_value TEXT DEFAULT NULL,
+  int_value INTEGER DEFAULT NULL,
+  json_value JSONB DEFAULT NULL,
+  time_value TIMESTAMP DEFAULT NULL
+);

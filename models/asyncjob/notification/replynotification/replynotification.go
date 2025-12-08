@@ -3,6 +3,7 @@ package replynotification
 import (
 	"github.com/google/uuid"
 	"github.com/mrusme/hyperuplink/models/asyncjob/common"
+	"github.com/mrusme/hyperuplink/models/setting"
 	"github.com/mrusme/hyperuplink/models/user"
 )
 
@@ -41,16 +42,16 @@ type Category struct {
 }
 
 func New(
+	sys *setting.System,
 	forUser *user.User,
 	// forPost *post.Post,
-	// sys *system.System,
 	subject string,
 ) (entity ReplyNotification, err error) {
 	entity = ReplyNotification{}
+	entity.SetSystem(sys)
 	entity.SetRecipient(forUser)
 	entity.SetSubject(subject)
 	// entity.SetReply(forPost)
-	// entity.SetSystem(sys)
 
 	return entity, nil
 }
@@ -85,6 +86,6 @@ func (entity ReplyNotification) SetSubject(subject string) {
 // 	}
 // }
 
-// func (entity ReplyNotification) SetSystem(sys *system.System) {
-// 	entity.System.SetSystem(sys)
-// }
+func (entity ReplyNotification) SetSystem(sys *setting.System) {
+	entity.System.SetSystem(sys)
+}

@@ -129,6 +129,12 @@ func (rt *Runtime) Startup() (err error) {
 		return err
 	}
 
+	rt.Debug("startup", "repositories")
+	if err = rt.Repositories.Startup(); err != nil {
+		rt.Error("status", "error", "error", err)
+		return err
+	}
+
 	rt.Debug("startup", "intnat")
 	if err = rt.Intnat.Startup(); err != nil {
 		rt.Error("status", "error", "error", err)
@@ -157,6 +163,12 @@ func (rt *Runtime) Shutdown() (err error) {
 
 	rt.Debug("shutdown", "intnat")
 	if err = rt.Intnat.Shutdown(); err != nil {
+		rt.Error("status", "error", "error", err)
+		return err
+	}
+
+	rt.Debug("shutdown", "repositories")
+	if err = rt.Repositories.Shutdown(); err != nil {
 		rt.Error("status", "error", "error", err)
 		return err
 	}

@@ -8,7 +8,9 @@ import (
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/asyncjob/confirmation/signupconfirmation"
+	"github.com/mrusme/hyperuplink/models/setting"
 	"github.com/mrusme/hyperuplink/models/user"
+	repoSetting "github.com/mrusme/hyperuplink/services/repositories/setting"
 )
 
 type SignUpForm struct {
@@ -67,9 +69,18 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	settingSystem, err := repoSetting.GetByID[setting.System](r.Runtime.Repositories.Setting, "system")
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
 
 	// Send confirmation email
 	sc, err := signupconfirmation.New(
+		&settingSystem.JSONValue,
 		usr,
 		req.In.T("signup_confirmation_subject"),
 		usr.EmailConfirmationToken,

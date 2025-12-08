@@ -1,6 +1,9 @@
 package common
 
-import "github.com/mrusme/hyperuplink/models/user"
+import (
+	"github.com/mrusme/hyperuplink/models/setting"
+	"github.com/mrusme/hyperuplink/models/user"
+)
 
 type Recipient struct {
 	Username string
@@ -15,9 +18,10 @@ func (entity Recipient) SetRecipient(rcpt *user.User) {
 }
 
 type System struct {
-	Name string
+	Name    string
+	BaseURL string
 }
 
-// func (entity System) SetSystem(sys *system.System) {
-// 	entity.Name = sys.Name
-// }
+func (entity System) SetSystem(sys *setting.System) {
+	entity.Name = sys.Name
+}
