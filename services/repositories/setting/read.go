@@ -15,7 +15,8 @@ func GetByID[T any](
 	rows, err = repo.db.Query(`SELECT * FROM settings
 		WHERE id = $1
 		LIMIT 1`,
-		id)
+		id,
+	)
 	if err != nil {
 		return nil, repo.db.ConvertError(err)
 	}

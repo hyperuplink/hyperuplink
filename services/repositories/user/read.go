@@ -6,23 +6,19 @@ import (
 	"github.com/mrusme/hyperuplink/models/user"
 )
 
-func (repo *Repository) GetByID(
-	id string,
+func (repo *Repository) GetByUUID(
+	id uuid.UUID,
 ) (model *user.User, err error) {
-	var uuID uuid.UUID
 	var rows pgx.Rows
 	var mod user.User
-
-	if uuID, err = uuid.Parse(id); err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
 
 	rows, err = repo.db.Query(`SELECT * FROM users
 		WHERE id = $1
 		AND banned_at IS NULL
 		AND deleted_at IS NULL
 		LIMIT 1`,
-		uuID)
+		id,
+	)
 	if err != nil {
 		return nil, repo.db.ConvertError(err)
 	}
@@ -30,6 +26,18 @@ func (repo *Repository) GetByID(
 	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[user.User])
 
 	return &mod, repo.db.ConvertError(err)
+}
+
+func (repo *Repository) GetByID(
+	id string,
+) (model *user.User, err error) {
+	var uuID uuid.UUID
+
+	if uuID, err = uuid.Parse(id); err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+
+	return repo.GetByUUID(uuID)
 }
 
 func (repo *Repository) GetByUsername(

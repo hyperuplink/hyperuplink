@@ -4,6 +4,7 @@ import (
 	"github.com/mrusme/hyperuplink/services/database"
 	"github.com/mrusme/hyperuplink/services/repositories/category"
 	"github.com/mrusme/hyperuplink/services/repositories/forum"
+	"github.com/mrusme/hyperuplink/services/repositories/permission"
 	"github.com/mrusme/hyperuplink/services/repositories/reply"
 	"github.com/mrusme/hyperuplink/services/repositories/setting"
 	"github.com/mrusme/hyperuplink/services/repositories/topic"
@@ -12,14 +13,15 @@ import (
 )
 
 type Repositories struct {
-	db       *database.Database
-	Setting  *setting.Repository
-	Unit     *unit.Repository
-	User     *user.Repository
-	Category *category.Repository
-	Forum    *forum.Repository
-	Topic    *topic.Repository
-	Reply    *reply.Repository
+	db         *database.Database
+	Setting    *setting.Repository
+	Unit       *unit.Repository
+	User       *user.Repository
+	Category   *category.Repository
+	Forum      *forum.Repository
+	Topic      *topic.Repository
+	Reply      *reply.Repository
+	Permission *permission.Repository
 }
 
 func New(
@@ -70,6 +72,12 @@ func New(
 	}
 	repos.Reply = replyRepo
 
+	var permissionRepo *permission.Repository
+	if permissionRepo, err = permission.New(repos.db); err != nil {
+		return nil, err
+	}
+	repos.Permission = permissionRepo
+
 	return repos, nil
 }
 
@@ -102,10 +110,18 @@ func (repos *Repositories) Startup() (err error) {
 		return err
 	}
 
+	if err = repos.Permission.Startup(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func (repos *Repositories) Shutdown() (err error) {
+	if err = repos.Permission.Shutdown(); err != nil {
+		return err
+	}
+
 	if err = repos.Reply.Shutdown(); err != nil {
 		return err
 	}

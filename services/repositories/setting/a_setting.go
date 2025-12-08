@@ -18,8 +18,10 @@ func New(db *database.Database) (*Repository, error) {
 
 func (repo *Repository) Startup() (err error) {
 	var settingSystem *setting.Setting[setting.System]
+
 	if settingSystem, err = GetByID[setting.System](repo, "system"); err != nil {
 		settingSystem = new(setting.Setting[setting.System])
+		settingSystem.ID = "system"
 		settingSystem.JSONValue = setting.System{
 			Name:    "Hyperuplink",
 			BaseURL: "http://localhost:3000",
