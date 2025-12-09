@@ -25,6 +25,8 @@ func New(
 		base.Get("", r.Index).Name("index")
 		base.Post("", r.Create).Name("create")
 		base.Post("/update", r.Update).Name("update")
+		base.Post("/moveup", r.MoveUp).Name("moveup")
+		base.Post("/movedown", r.MoveDown).Name("movedown")
 	}, r.Path+".")
 
 	return r, nil

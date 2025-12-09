@@ -25,7 +25,7 @@
             action="{{$.Site.GetPathname}}/moveup"
             class="flex-column">
         <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-        <input type="hidden" name="id" value="">
+        <input type="hidden" name="id" value="{{$item.ID}}">
         <label>&nbsp;</label>
         <button type="submit" class="" title="{{$._.T "move_up"}}">&uarr;</button>
       </form>
@@ -33,6 +33,7 @@
             action="{{$.Site.GetPathname}}/movedown"
             class="flex-column">
         <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+        <input type="hidden" name="id" value="{{$item.ID}}">
         <label>&nbsp;</label>
         <button type="submit" class="" title="{{$._.T "move_down"}}">&darr;</button>
       </form>
@@ -40,7 +41,7 @@
             action="{{$.Site.GetPathname}}/destroy"
             class="flex-column">
         <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-        <input type="hidden" name="id" value="">
+        <input type="hidden" name="id" value="{{$item.ID}}">
         <label>&nbsp;</label>
         <button type="submit" class="danger" title="{{$._.T "delete"}}">&times;</button>
       </form>
