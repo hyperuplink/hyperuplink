@@ -16,6 +16,7 @@ type MenuItem struct {
 	IsSeparator bool
 	IsCheckbox  bool
 	Checked     bool
+	Disabled    bool
 	Label       string
 	Title       string
 	Href        string
@@ -44,6 +45,7 @@ func (m *Menu) T(msg string) string {
 func (m *Menu) generate() {
 	m.menuItems = []MenuItem{}
 
+	m.menuItems = append(m.menuItems, m.FileMenu(m.role)...)
 	m.menuItems = append(m.menuItems, m.AccountMenu(m.role)...)
 	m.menuItems = append(m.menuItems, m.AdminMenu(m.role)...)
 	m.menuItems = append(m.menuItems, m.ViewMenu(m.role)...)
@@ -51,6 +53,65 @@ func (m *Menu) generate() {
 
 	m.footerMenuItems = []MenuItem{}
 	m.footerMenuItems = append(m.footerMenuItems, m.FooterMenu(m.role)...)
+}
+
+func (m *Menu) FileMenu(forRole user.Role) []MenuItem {
+	var subItems []MenuItem
+
+	subItems = []MenuItem{
+		{
+			Disabled: (forRole == user.GuestRole),
+			Label:    m.T("new"),
+			Title:    m.T("new"),
+			Href:     route.For("CategoriesForumsTopicsNew").AsURL(),
+		},
+		{
+			Label: m.T("open"),
+			SubItems: []MenuItem{
+				{ // TODO: List of previously opened posts
+					Label: m.T("Hetzner experiences?"),
+					Title: m.T("Hetzner experiences?"),
+					Href:  route.For("CategoriesForumsTopics").AsURL(),
+				},
+			},
+		},
+		{
+			IsSeparator: true,
+		},
+		{
+			Label: m.T(route.For("Search").AsTitle()),
+			Title: m.T(route.For("Search").AsTitle()),
+			Href:  route.For("Search").AsURL(),
+		},
+		{
+			IsSeparator: true,
+		},
+		{
+			Label: m.T("rss"),
+			Title: m.T("rss"),
+			Href:  route.For("current").AsURL()+"?format=rss", // TODO: Implement current route
+		},
+		{
+			Label: m.T("print"),
+			Title: m.T("print"),
+			Href:  route.For("current").AsURL()+"?format=print", // TODO: Implement current route
+		},
+		{
+			IsSeparator: true,
+		},
+		{
+			Label: m.T("Quit"),
+			Title: m.T("Quit"),
+			Href:  "",
+		},
+	}
+
+	return []MenuItem{
+		{
+			Label:    m.T("_f_file"),
+			SubItems: subItems,
+		},
+	}
 }
 
 func (m *Menu) AccountMenu(forRole user.Role) []MenuItem {
