@@ -10,7 +10,7 @@ import (
 )
 
 type ConfirmResendForm struct {
-	Email string `form:"email" validate:"required,email"`
+	CurrentEmail string `form:"current_email" validate:"required,email"`
 }
 
 func (r *Route) ConfirmResendShow(c fiber.Ctx) (err error) {
@@ -37,7 +37,7 @@ func (r *Route) ConfirmResendCreate(c fiber.Ctx) (err error) {
 	r.Runtime.Debug("form", frm)
 
 	var usr *user.User
-	usr, err = r.Runtime.Repositories.User.GetByEmail(frm.Email)
+	usr, err = r.Runtime.Repositories.User.GetByEmail(frm.CurrentEmail)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

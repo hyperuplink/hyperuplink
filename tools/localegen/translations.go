@@ -56,11 +56,19 @@ func extractTranslations(filepath string) (ts []string, err error) {
 	}
 	defer file.Close()
 
-	re := regexp.MustCompile(`\.T."(\w+)".`)
+	re1 := regexp.MustCompile(`\.T."(\w+)".`)
+	re2 := regexp.MustCompile(`\.Form\.Input\s+"\w+"\s+"(\w+)"`)
+
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
-		submatches := re.FindAllStringSubmatch(line, -1)
+		submatches := re1.FindAllStringSubmatch(line, -1)
+		for _, sm := range submatches {
+			if len(sm) > 1 {
+				ts = append(ts, sm[1])
+			}
+		}
+		submatches = re2.FindAllStringSubmatch(line, -1)
 		for _, sm := range submatches {
 			if len(sm) > 1 {
 				ts = append(ts, sm[1])
