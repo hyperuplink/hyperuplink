@@ -12,9 +12,15 @@
     {{ if .IsCheckbox }}
     role="checkbox"
     aria-checked="{{.Checked}}"
+    {{ end }}
+    {{ if .Disabled }}
+    aria-disabled="true"
     {{ end }}>
   {{ if .Href }}
-  <a href="{{$site.HrefTo .Href}}" title="{{.Title}}">{{ safeHTML .Label }}</a>
+  <a {{ if not .Disabled }}
+     href="{{$site.HrefTo .Href}}"
+     {{ end }}
+     title="{{.Title}}">{{ safeHTML .Label }}</a>
 {{ else }}
   {{ safeHTML .Label }}
   {{ end }}
