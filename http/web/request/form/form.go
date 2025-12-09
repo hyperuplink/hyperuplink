@@ -1,18 +1,25 @@
 package form
 
 import (
+	"fmt"
+	"html/template"
 	"reflect"
 
 	"github.com/mrusme/hyperuplink/errs"
+	"github.com/mrusme/hyperuplink/http/web/request/flash"
+	"github.com/mrusme/hyperuplink/http/web/request/in"
 )
 
 type Form struct {
+	fl  *flash.Flash
+	in  *in.Internationalization
 	frm map[string]interface{}
 }
 
-func New() *Form {
+func New(fl *flash.Flash, in *in.Internationalization) *Form {
 	f := new(Form)
-
+	f.fl = fl
+	f.in = in
 	return f
 }
 
@@ -58,4 +65,18 @@ func (f *Form) StringValueFor(field string) string {
 	}
 
 	return ""
+}
+
+func (f *Form) Input(inputType string, name string, hasLabel bool) template.HTML {
+	var html string = ""
+
+	if hasLabel {
+		html = fmt.Sprintf("<label for=\"%s\">%s</label>",
+			name, f.in.T(name))
+	}
+
+	html = fmt.Sprintf("%s<input type=\"%s\" id=\"%s\" name=\"%s\" value=\"%s\" class=\"%s\">",
+		html, inputType, name, name, f.StringValueFor(name), f.fl.ClassFor(name))
+
+	return template.HTML(html)
 }

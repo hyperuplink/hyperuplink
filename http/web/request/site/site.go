@@ -14,12 +14,13 @@ import (
 )
 
 type Site struct {
-	r       route.IRouteController
-	c       fiber.Ctx
-	csrf    string
-	absPath string
-	relRoot string
-	title   string
+	r        route.IRouteController
+	c        fiber.Ctx
+	csrf     string
+	pathName string
+	absPath  string
+	relRoot  string
+	title    string
 
 	currentUser *user.User
 }
@@ -31,7 +32,7 @@ func New(r route.IRouteController, c fiber.Ctx) *Site {
 	s.c = c
 	s.csrf = csrf.TokenFromContext(s.c)
 
-	s.absPath, s.relRoot = helpers.GetAbsPathAndRelRoot(s.c)
+	s.pathName, s.absPath, s.relRoot = helpers.GetPaths(s.c)
 
 	return s
 }
@@ -42,6 +43,10 @@ func (s *Site) GetRelRoot() string {
 
 func (s *Site) GetAbsPath() string {
 	return s.absPath
+}
+
+func (s *Site) GetPathname() string {
+	return s.pathName
 }
 
 func (s *Site) GetCSRFToken() string {

@@ -58,8 +58,8 @@ func New(
 	req.Site = site.New(req.r, req.c)
 	req.Session = session.New(req.c)
 	req.Flash = flash.New(req.c)
-	req.Form = form.New()
 	req.In = in.New(req.r, req.c)
+	req.Form = form.New(req.Flash, req.In)
 
 	settingSystem, err := settingRepo.GetByID[setting.System](
 		req.r.GetRuntime().Repositories.Setting,
@@ -70,7 +70,7 @@ func New(
 	}
 	req.System = &settingSystem.JSONValue
 
-	req.absPath, req.relRoot = helpers.GetAbsPathAndRelRoot(req.c)
+	_, req.absPath, req.relRoot = helpers.GetPaths(req.c)
 
 	if userID, ok := req.Session.GetUserID(); ok {
 		usr, err := req.r.GetRuntime().Repositories.User.GetByID(userID)

@@ -1,0 +1,52 @@
+<div class="margin window active">
+  <div class="title-bar">
+    <div class="title-bar-text">{{.Site.Title}}</div>
+  </div>
+  <div class="window-body">
+    <!-- CATEGORY -->
+    <div class="raised padding margin post flex-row gap">
+      <form method="post"
+            action="{{.Site.GetPathname}}/update"
+            class="flex-column grow">
+        <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
+        <input type="hidden" name="id" value="">
+        <div class="flex-row gap">
+          <div class="flex-column grow">
+            {{.Form.Input "text" "name" true}}
+          </div>
+          <div class="flex-column grow">
+            {{.Form.Input "text" "slug" true}}
+          </div>
+          <div class="flex-column">
+            <label>&nbsp;</label>
+            <button type="submit" class="affirmative">&check;</button>
+          </div>
+        </div>
+      </form>
+      <form method="post"
+            action="{{.Site.GetPathname}}/moveup"
+            class="flex-column">
+        <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
+        <input type="hidden" name="id" value="">
+        <label>&nbsp;</label>
+        <button type="submit" class="">&uarr;</button>
+      </form>
+      <form method="post"
+            action="{{.Site.GetPathname}}/movedown"
+            class="flex-column">
+        <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
+        <label>&nbsp;</label>
+        <button type="submit" class="">&darr;</button>
+      </form>
+      <form method="post"
+            action="{{.Site.GetPathname}}/destroy"
+            class="flex-column">
+        <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
+        <input type="hidden" name="id" value="">
+        <label>&nbsp;</label>
+        <button type="submit" class="danger">&times;</button>
+      </form>
+    </div>
+    <!-- END -->
+  </div>
+</div>

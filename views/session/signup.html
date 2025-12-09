@@ -11,38 +11,18 @@
           <div class="margin">
             <div class="fieldrow flex-row flex-wrap gap">
               <div class="field flex-column grow">
-                <label for="username">{{._.T "username"}}</label>
-                <input type="text"
-                       id="username"
-                       name="username"
-                       value="{{.Form.StringValueFor "username"}}"
-                       class="{{.Flash.ClassFor "username"}}">
+                {{.Form.Input "text" "username" true}}
               </div>
               <div class="field flex-column grow">
-                <label for="username">{{._.T "email"}}</label>
-                <input type="text"
-                       id="email"
-                       name="email"
-                       value="{{.Form.StringValueFor "email"}}"
-                       class="{{.Flash.ClassFor "email"}}">
+                {{.Form.Input "text" "email" true}}
               </div>
             </div>
             <div class="fieldrow flex-row flex-wrap gap">
               <div class="field flex-column grow">
-                <label for="password">{{._.T "password"}}</label>
-                <input type="password"
-                       id="password"
-                       name="password"
-                       value="{{.Form.StringValueFor "password"}}"
-                       class="{{.Flash.ClassFor "password"}}">
+                {{.Form.Input "password" "password" true}}
               </div>
               <div class="field flex-column grow">
-                <label for="password">{{._.T "password_repeat"}}</label>
-                <input type="password"
-                       id="password_repeat"
-                       name="password_repeat"
-                       value="{{.Form.StringValueFor "password_repeat"}}"
-                       class="{{.Flash.ClassFor "password_repeat"}}">
+                {{.Form.Input "password" "password_repeat" true}}
               </div>
             </div>
             <div class="actions flex-row gap justify-end">
