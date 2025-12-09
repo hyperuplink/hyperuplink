@@ -6,8 +6,9 @@ import (
 )
 
 func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
-	err = repo.db.QueryRow(`INSERT INTO users (
-		 username
+	err = repo.db.QueryRow(`INSERT INTO users (`+
+		// id
+		`username
 		,role
 		,member_of
 		,password`+
@@ -61,6 +62,7 @@ func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
 		// ,$25
 		// ,$26
 		`) RETURNING id`,
+		// model.ID,
 		model.Username,
 		model.Role,
 		model.MemberOf,

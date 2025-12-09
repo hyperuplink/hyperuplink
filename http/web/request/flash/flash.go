@@ -1,38 +1,39 @@
 package flash
 
-import "github.com/gofiber/fiber/v3"
+import (
+	"github.com/gofiber/fiber/v3"
+)
 
 type FlashType string
 
 const (
-	DebugFlash FlashType = "debug"
-	InfoFlash  FlashType = "info"
-	WarnFlash  FlashType = "warn"
-	ErrorFlash FlashType = "error"
+	DebugFlash FlashType = "_debug"
+	InfoFlash  FlashType = "_info"
+	WarnFlash  FlashType = "_warn"
+	ErrorFlash FlashType = "_error"
 )
 
 type Flash struct {
 	c       fiber.Ctx
-	errsmap map[string]error
-	flashes map[FlashType]string
+	flashes map[string]string
 }
 
 func New(c fiber.Ctx) (f *Flash) {
 	f = new(Flash)
 	f.c = c
-	f.errsmap = make(map[string]error)
-	f.flashes = make(map[FlashType]string)
+	f.flashes = make(map[string]string)
 
-	for _, msg := range c.Redirect().Messages() {
-		f.flashes[FlashType(msg.Key)] = msg.Value
+	messages := c.Redirect().Messages()
+	for _, msg := range messages {
+		f.flashes[msg.Key] = msg.Value
 	}
 
 	return f
 }
 
 func (f *Flash) HasErrors() bool {
-	_, ok := f.flashes[ErrorFlash]
-	if ok || len(f.errsmap) > 0 {
+	errs := f.Errors()
+	if len(errs) > 0 {
 		return true
 	}
 
@@ -40,39 +41,42 @@ func (f *Flash) HasErrors() bool {
 }
 
 func (f *Flash) SetError(err error) {
-	f.flashes[ErrorFlash] = err.Error()
+	f.flashes[string(ErrorFlash)] = err.Error()
 }
 
 func (f *Flash) SetInfo(info string) {
-	f.flashes[InfoFlash] = info
+	f.flashes[string(InfoFlash)] = info
 }
 
 func (f *Flash) All() (flashes map[string]string) {
-	flashes = make(map[string]string)
-	for key, msg := range f.flashes {
-		flashes[string(key)] = msg
-	}
-	for key, err := range f.errsmap {
-		flashes[key] = err.Error()
-	}
+	return f.flashes
+}
 
-	return flashes
+func (f *Flash) Clear() {
+	f.flashes = make(map[string]string)
+}
+
+func (f *Flash) errors() (errs []string) {
+	for key, err := range f.flashes {
+		if key != string(DebugFlash) &&
+			key != string(InfoFlash) &&
+			key != string(WarnFlash) {
+			errs = append(errs, err)
+		}
+	}
+	return errs
 }
 
 func (f *Flash) Errors() (errs []string) {
-	if err, ok := f.flashes[ErrorFlash]; ok {
-		errs = append(errs, err)
-	}
-	for _, err := range f.errsmap {
-		errs = append(errs, err.Error())
-	}
+	errs = f.errors()
+	f.Clear()
 	return errs
 }
 
 func (f *Flash) Get(flashType FlashType) (s string) {
 	var ok bool = false
 
-	if s, ok = f.flashes[flashType]; !ok {
+	if s, ok = f.flashes[string(flashType)]; !ok {
 		return ""
 	} else {
 		return s
@@ -80,27 +84,31 @@ func (f *Flash) Get(flashType FlashType) (s string) {
 }
 
 func (f *Flash) Debug() (s string) {
-	return f.Get(DebugFlash)
+	s = f.Get(DebugFlash)
+	f.Clear()
+	return s
 }
 
 func (f *Flash) Info() (s string) {
-	return f.Get(InfoFlash)
+	s = f.Get(InfoFlash)
+	f.Clear()
+	return s
 }
 
 func (f *Flash) Warn() (s string) {
-	return f.Get(WarnFlash)
+	s = f.Get(WarnFlash)
+	f.Clear()
+	return s
 }
 
 func (f *Flash) SetErrorsMap(errsmap map[string]error) {
-	f.errsmap = errsmap
-}
-
-func (f *Flash) GetErrorsMap() (errsmap map[string]error) {
-	return f.errsmap
+	for field, err := range errsmap {
+		f.flashes[field] = err.Error()
+	}
 }
 
 func (f *Flash) ClassFor(field string) string {
-	if _, exists := f.errsmap[field]; exists {
+	if _, exists := f.flashes[field]; exists {
 		return "error"
 	}
 

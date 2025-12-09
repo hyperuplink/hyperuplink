@@ -4,15 +4,19 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/mrusme/hyperuplink/models/category"
+	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
 
-func (repo *Repository) All() (model *[]category.Category, err error) {
+func (repo *Repository) All(qo common.QueryOptions) (model *[]category.Category, err error) {
 	var rows pgx.Rows
 	var mod []category.Category
 
-	rows, err = repo.db.Query(`SELECT * FROM categories
-		WHERE deleted_at IS NULL
-		`)
+	rows, err = repo.db.Query(qo.Query(
+		`SELECT * FROM categories`,
+		common.QueryCapabilities{
+			HasDeleted: true,
+		},
+	))
 	if err != nil {
 		return nil, repo.db.ConvertError(err)
 	}

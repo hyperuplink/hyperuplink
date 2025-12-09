@@ -364,7 +364,7 @@ select:not([size], [multiple]), select[size="1"] {
   border-radius: 3px;
   box-shadow: inset 1px 1px 0 var(--border-brightness-13), inset 2px 2px 0 var(--border-brightness-15), inset -1px -1px 1px var(--border-brightness-05);
   padding: 2px 10px;
-  min-width: 32px;
+  min-width: 36px;
   text-align: center;
   /* font-weight: bold; */
   cursor: default;

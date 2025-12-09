@@ -11,6 +11,7 @@ import (
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/helpers"
 	"github.com/mrusme/hyperuplink/http/web/request/bcn"
+	"github.com/mrusme/hyperuplink/http/web/request/data"
 	"github.com/mrusme/hyperuplink/http/web/request/flash"
 	"github.com/mrusme/hyperuplink/http/web/request/form"
 	"github.com/mrusme/hyperuplink/http/web/request/in"
@@ -34,6 +35,7 @@ type Request struct {
 	Flash   *flash.Flash
 	Form    *form.Form
 	In      *in.Internationalization
+	Data    *data.Data
 	System  *setting.System
 	absPath string
 	relRoot string
@@ -60,6 +62,7 @@ func New(
 	req.Flash = flash.New(req.c)
 	req.In = in.New(req.r, req.c)
 	req.Form = form.New(req.Flash, req.In)
+	req.Data = data.New(req.c)
 
 	settingSystem, err := settingRepo.GetByID[setting.System](
 		req.r.GetRuntime().Repositories.Setting,
@@ -116,6 +119,10 @@ func New(
 	))
 
 	return req
+}
+
+func (req *Request) SetData(key string, val interface{}) {
+	req.Data.Set(key, val)
 }
 
 func (req *Request) HrefTo(path string) string {
@@ -179,6 +186,7 @@ func (req *Request) RespondWithView(layouts []string, view string) error {
 		"Session":     req.Session,
 		"Flash":       req.Flash,
 		"Form":        req.Form,
+		"Data":        req.Data,
 		"System":      req.System,
 	}, layoutsFull...)
 }

@@ -67,7 +67,12 @@ func (f *Form) StringValueFor(field string) string {
 	return ""
 }
 
-func (f *Form) Input(inputType string, name string, hasLabel bool) template.HTML {
+func (f *Form) Input(
+	inputType string,
+	name string,
+	value string,
+	hasLabel bool,
+) template.HTML {
 	var html string = ""
 
 	if hasLabel {
@@ -75,8 +80,13 @@ func (f *Form) Input(inputType string, name string, hasLabel bool) template.HTML
 			name, f.in.T(name))
 	}
 
+	fvalue := f.StringValueFor(name)
+	if fvalue != "" {
+		value = fvalue
+	}
+
 	html = fmt.Sprintf("%s<input type=\"%s\" id=\"%s\" name=\"%s\" value=\"%s\" class=\"%s\">",
-		html, inputType, name, name, f.StringValueFor(name), f.fl.ClassFor(name))
+		html, inputType, name, name, value, f.fl.ClassFor(name))
 
 	return template.HTML(html)
 }

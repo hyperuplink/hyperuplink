@@ -3,48 +3,62 @@
     <div class="title-bar-text">{{.Site.Title}}</div>
   </div>
   <div class="window-body">
+    {{ template "views/layouts/partials/flash" . }}
+    {{ range $idx, $item := .Data.Get "categories" }}
     <!-- CATEGORY -->
     <div class="raised padding margin post flex-row gap">
       <form method="post"
-            action="{{.Site.GetPathname}}/update"
+            action="{{$.Site.GetPathname}}/update"
             class="flex-column grow">
-        <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
-        <input type="hidden" name="id" value="">
+        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+        <input type="hidden" name="id" value="{{$item.ID}}">
         <div class="flex-row gap">
-          <div class="flex-column grow">
-            {{.Form.Input "text" "name" true}}
-          </div>
-          <div class="flex-column grow">
-            {{.Form.Input "text" "slug" true}}
-          </div>
+          <div class="flex-column grow">{{$.Form.Input "text" "name" $item.Name true}}</div>
+          <div class="flex-column grow">{{$.Form.Input "text" "slug" $item.Slug true}}</div>
           <div class="flex-column">
             <label>&nbsp;</label>
-            <button type="submit" class="affirmative">&check;</button>
+            <button type="submit" class="affirmative" title="{{$._.T "save"}}">&check;</button>
           </div>
         </div>
       </form>
       <form method="post"
-            action="{{.Site.GetPathname}}/moveup"
+            action="{{$.Site.GetPathname}}/moveup"
             class="flex-column">
-        <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
+        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
         <input type="hidden" name="id" value="">
         <label>&nbsp;</label>
-        <button type="submit" class="">&uarr;</button>
+        <button type="submit" class="" title="{{$._.T "move_up"}}">&uarr;</button>
       </form>
       <form method="post"
-            action="{{.Site.GetPathname}}/movedown"
+            action="{{$.Site.GetPathname}}/movedown"
             class="flex-column">
-        <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
+        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
         <label>&nbsp;</label>
-        <button type="submit" class="">&darr;</button>
+        <button type="submit" class="" title="{{$._.T "move_down"}}">&darr;</button>
       </form>
       <form method="post"
-            action="{{.Site.GetPathname}}/destroy"
+            action="{{$.Site.GetPathname}}/destroy"
             class="flex-column">
-        <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
+        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
         <input type="hidden" name="id" value="">
         <label>&nbsp;</label>
-        <button type="submit" class="danger">&times;</button>
+        <button type="submit" class="danger" title="{{$._.T "delete"}}">&times;</button>
+      </form>
+    </div>
+    <!-- END -->
+    {{ end }}
+    <!-- NEW CATEGORY -->
+    <div class="lowered padding margin post flex-row gap">
+      <form method="post" action="{{.Site.GetPathname}}" class="flex-column grow">
+        <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
+        <div class="flex-row gap">
+          <div class="flex-column grow">{{.Form.Input "text" "name" "" true}}</div>
+          <div class="flex-column grow">{{.Form.Input "text" "slug" "" true}}</div>
+          <div class="flex-column">
+            <label>&nbsp;</label>
+            <button type="submit" class="affirmative" style="width: 168px;">{{._.T "add"}}</button>
+          </div>
+        </div>
       </form>
     </div>
     <!-- END -->

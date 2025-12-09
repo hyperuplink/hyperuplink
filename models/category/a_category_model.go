@@ -6,9 +6,10 @@ import (
 )
 
 type Category struct {
-	ID   uuid.UUID `json:"id"`
-	Name string    `json:"name"`
-	Slug string    `json:"slug"`
+	ID       uuid.UUID `json:"id"`
+	Name     string    `json:"name"`
+	Slug     string    `json:"slug"`
+	Position int       `json:"position"`
 
 	CreatedAt pgtype.Timestamp `json:"created_at"`
 	UpdatedAt pgtype.Timestamp `json:"updated_at"`

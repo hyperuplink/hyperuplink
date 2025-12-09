@@ -6,24 +6,26 @@ import (
 )
 
 func (repo *Repository) Create(model *category.Category) (rowID uuid.UUID, err error) {
-	err = repo.db.QueryRow(`INSERT INTO categories (
-		 id
-		,name
-		,slug`+
+	err = repo.db.QueryRow(`INSERT INTO categories (`+
+		// id
+		`name
+		,slug
+		,position`+
 		// ,created_at
 		// ,updated_at
 		// ,deleted_at
 		`) VALUES (
-		,$1
+		 $1
 		,$2
-		,$3`+
+		,(SELECT COALESCE(MAX(position), 0) + 1 FROM categories)`+
 		// ,$4
 		// ,$5
 		// ,$6
 		`) RETURNING id`,
-		model.ID,
+		// model.ID,
 		model.Name,
 		model.Slug,
+		// model.Position,
 		// model.CreatedAt,
 		// model.UpdatedAt,
 		// model.DeletedAt,
