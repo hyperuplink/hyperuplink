@@ -100,8 +100,8 @@ func (m *Menu) FileMenu(forRole user.Role) []MenuItem {
 			IsSeparator: true,
 		},
 		{
-			Label: m.T("Quit"),
-			Title: m.T("Quit"),
+			Label: m.T("quit"),
+			Title: m.T("quit"),
 			Href:  "",
 		},
 	}
