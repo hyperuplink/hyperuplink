@@ -15,7 +15,7 @@ func (repo *Repository) AllForTopicUUID(
 	rows, err = repo.db.Query(`SELECT * FROM replies
 		WHERE topic_id = $1
 		AND deleted_at IS NULL
-		LIMIT 1`,
+		`,
 		id,
 	)
 	if err != nil {

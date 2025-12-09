@@ -19,6 +19,7 @@ var Routes map[string]Route = map[string]Route{
 	"AccountTwofactor":          {hierarchy: []string{"account", "twofactor"}},
 	"Admin":                     {hierarchy: []string{"admin"}},
 	"AdminAuth":                 {hierarchy: []string{"admin", "auth"}},
+	"AdminBoard":                {hierarchy: []string{"admin", "board"}},
 	"AdminBoardAttachments":     {hierarchy: []string{"admin", "board", "attachments"}},
 	"AdminBoardCategories":      {hierarchy: []string{"admin", "board", "categories"}},
 	"AdminBoardForums":          {hierarchy: []string{"admin", "board", "forums"}},

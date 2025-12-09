@@ -4,7 +4,28 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/mrusme/hyperuplink/models/topic"
+	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
+
+func (repo *Repository) All(qo common.QueryOptions) (model *[]topic.Topic, err error) {
+	var rows pgx.Rows
+	var mod []topic.Topic
+
+	rows, err = repo.db.Query(qo.Query(
+		`SELECT * FROM topics`,
+		common.QueryCapabilities{
+			HasSpammed: true,
+			HasDeleted: true,
+		},
+	))
+	if err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+
+	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[topic.Topic])
+
+	return &mod, repo.db.ConvertError(err)
+}
 
 func (repo *Repository) AllForForumUUID(
 	id uuid.UUID,
@@ -15,7 +36,7 @@ func (repo *Repository) AllForForumUUID(
 	rows, err = repo.db.Query(`SELECT * FROM topics
 		WHERE forum_id = $1
 		AND deleted_at IS NULL
-		LIMIT 1`,
+		`,
 		id,
 	)
 	if err != nil {

@@ -14,7 +14,7 @@ func (repo *Repository) All() (model *[]permission.Permission, err error) {
 
 	rows, err = repo.db.Query(`SELECT * FROM permissions
 		WHERE deleted_at IS NULL
-		LIMIT 1`)
+		`)
 	if err != nil {
 		return nil, repo.db.ConvertError(err)
 	}
