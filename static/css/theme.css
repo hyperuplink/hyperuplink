@@ -1,3 +1,12 @@
+/*
+ * This theme is based upon the amazing work of Niels Sonnich Poulsen (c) 2022
+ * (http://nielssp.dk) that was published under the MIT license at
+ * https://github.com/nielssp/classic-stylesheets
+ *
+ * It is, however, a modified version streamlining color management to allow
+ * for easier styling and implementation of a dark theme. The modifications were
+ * made as part of Hyperuplink and are licensed under the project's license.
+ */
 :root {
   --preferred-font: "Virtue";
   --desktop-bg: #9999cc;
@@ -53,11 +62,16 @@ body {
   color: var(--window-fg);
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-button, input, textarea, select {
+button,
+input,
+textarea,
+select {
   font-family: inherit;
   font-size: inherit;
 }
@@ -74,13 +88,20 @@ code {
   background: var(--desktop-bg);
 }
 
-.top-panel, .right-panel, .buttom-panel, .left-panel {
+.top-panel,
+.right-panel,
+.buttom-panel,
+.left-panel {
   background: var(--surface-13);
 }
 
 .top-panel {
   border-bottom: 1px solid var(--border-brightness-00);
-  box-shadow: inset 1px 0 0 var(--border-brightness-15), inset 0 1px 0 var(--border-brightness-15), inset -1px 0 0 var(--border-brightness-09), inset 0 -1px 0 var(--border-brightness-09);
+  box-shadow:
+    inset 1px 0 0 var(--border-brightness-15),
+    inset 0 1px 0 var(--border-brightness-15),
+    inset -1px 0 0 var(--border-brightness-09),
+    inset 0 -1px 0 var(--border-brightness-09);
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
@@ -99,7 +120,9 @@ code {
 
 fieldset {
   border: 1px solid var(--border-brightness-08);
-  box-shadow: inset 1px 1px 0 var(--border-brightness-15), 1px 1px 0 var(--border-brightness-15);
+  box-shadow:
+    inset 1px 1px 0 var(--border-brightness-15),
+    1px 1px 0 var(--border-brightness-15);
   position: relative;
 }
 
@@ -123,7 +146,9 @@ legend {
   min-width: 0;
   padding: 0;
   background: var(--surface-13);
-  box-shadow: inset 1px 1px var(--border-brightness-15), inset -1px -1px var(--border-brightness-11);
+  box-shadow:
+    inset 1px 1px var(--border-brightness-15),
+    inset -1px -1px var(--border-brightness-11);
   border-radius: 0;
 }
 .horizontal-scrollbar > button::after,
@@ -137,7 +162,9 @@ legend {
 .vertical-scrollbar > button:not(:disabled):active {
   padding: 0;
   background: var(--surface-07);
-  box-shadow: inset 1px 1px var(--border-brightness-05), inset -1px -1px var(--border-brightness-09);
+  box-shadow:
+    inset 1px 1px var(--border-brightness-05),
+    inset -1px -1px var(--border-brightness-09);
   box-shadow: none;
   outline: none;
 }
@@ -146,7 +173,11 @@ legend {
   flex-grow: 1;
   background: var(--surface-10);
   position: relative;
-  box-shadow: inset 1px 1px var(--border-brightness-07), inset 2px 2px var(--border-brightness-08), inset -1px -1px var(--border-brightness-12), inset -2px -2px var(--border-brightness-11);
+  box-shadow:
+    inset 1px 1px var(--border-brightness-07),
+    inset 2px 2px var(--border-brightness-08),
+    inset -1px -1px var(--border-brightness-12),
+    inset -2px -2px var(--border-brightness-11);
   overflow: hidden;
   border: 1px solid var(--border-brightness-00);
 }
@@ -154,7 +185,11 @@ legend {
 .vertical-scrollbar > .scrollbar-track > .scrollbar-thumb {
   position: absolute;
   background: var(--primary-4);
-  box-shadow: inset 1px 1px var(--primary-5), inset -1px -1px var(--primary-3), 1px 1px var(--border-brightness-07), 2px 2px var(--border-brightness-08);
+  box-shadow:
+    inset 1px 1px var(--primary-5),
+    inset -1px -1px var(--primary-3),
+    1px 1px var(--border-brightness-07),
+    2px 2px var(--border-brightness-08);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -162,7 +197,11 @@ legend {
 .horizontal-scrollbar > .scrollbar-track > .scrollbar-thumb:active,
 .vertical-scrollbar > .scrollbar-track > .scrollbar-thumb:active {
   background: var(--primary-3);
-  box-shadow: inset 1px 1px var(--primary-4), inset -1px -1px var(--primary-2), 1px 1px var(--border-brightness-07), 2px 2px var(--border-brightness-08);
+  box-shadow:
+    inset 1px 1px var(--primary-4),
+    inset -1px -1px var(--primary-2),
+    1px 1px var(--border-brightness-07),
+    2px 2px var(--border-brightness-08);
 }
 
 .horizontal-scrollbar {
@@ -203,14 +242,62 @@ legend {
   content: "";
   width: 8px;
   height: 8px;
-  background-image: linear-gradient(90deg, var(--primary-6), var(--primary-6) 1px, transparent 1px, transparent 2px), linear-gradient(90deg, var(--primary-5), var(--primary-5) 1px, transparent 1px, transparent 2px), linear-gradient(90deg, transparent, transparent 1px, var(--primary-2) 1px, var(--primary-2) 2px);
+  background-image:
+    linear-gradient(
+      90deg,
+      var(--primary-6),
+      var(--primary-6) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    linear-gradient(
+      90deg,
+      var(--primary-5),
+      var(--primary-5) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      var(--primary-2) 1px,
+      var(--primary-2) 2px
+    );
   background-repeat: repeat-x;
   background-position-x: 0, 0, 0;
-  background-position-y: -1px, -1px, 1px;
-  background-size: 2px 2px, 2px 100%, 2px 100%;
+  background-position-y:
+    -1px,
+    -1px,
+    1px;
+  background-size:
+    2px 2px,
+    2px 100%,
+    2px 100%;
 }
 .horizontal-scrollbar > .scrollbar-track > .scrollbar-thumb:active::after {
-  background-image: linear-gradient(90deg, var(--primary-5), var(--primary-5) 1px, transparent 1px, transparent 2px), linear-gradient(90deg, var(--primary-4), var(--primary-4) 1px, transparent 1px, transparent 2px), linear-gradient(90deg, transparent, transparent 1px, var(--primary-1) 1px, var(--primary-1) 2px);
+  background-image:
+    linear-gradient(
+      90deg,
+      var(--primary-5),
+      var(--primary-5) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    linear-gradient(
+      90deg,
+      var(--primary-4),
+      var(--primary-4) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      var(--primary-1) 1px,
+      var(--primary-1) 2px
+    );
 }
 
 .vertical-scrollbar {
@@ -251,19 +338,71 @@ legend {
   content: "";
   width: 8px;
   height: 8px;
-  background-image: linear-gradient(180deg, var(--primary-6), var(--primary-6) 1px, transparent 1px, transparent 2px), linear-gradient(180deg, var(--primary-5), var(--primary-5) 1px, transparent 1px, transparent 2px), linear-gradient(180deg, transparent, transparent 1px, var(--primary-2) 1px, var(--primary-2) 2px);
+  background-image:
+    linear-gradient(
+      180deg,
+      var(--primary-6),
+      var(--primary-6) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    linear-gradient(
+      180deg,
+      var(--primary-5),
+      var(--primary-5) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    linear-gradient(
+      180deg,
+      transparent,
+      transparent 1px,
+      var(--primary-2) 1px,
+      var(--primary-2) 2px
+    );
   background-repeat: repeat-y;
-  background-position-x: -1px, -1px, 1px;
+  background-position-x:
+    -1px,
+    -1px,
+    1px;
   background-position-y: 0, 0, 0;
-  background-size: 2px 2px, 100% 2px, 100% 2px;
+  background-size:
+    2px 2px,
+    100% 2px,
+    100% 2px;
 }
 .vertical-scrollbar > .scrollbar-track > .scrollbar-thumb:active::after {
-  background-image: linear-gradient(180deg, var(--primary-5), var(--primary-5) 1px, transparent 1px, transparent 2px), linear-gradient(180deg, var(--primary-4), var(--primary-4) 1px, transparent 1px, transparent 2px), linear-gradient(180deg, transparent, transparent 1px, var(--primary-1) 1px, var(--primary-1) 2px);
+  background-image:
+    linear-gradient(
+      180deg,
+      var(--primary-5),
+      var(--primary-5) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    linear-gradient(
+      180deg,
+      var(--primary-4),
+      var(--primary-4) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    linear-gradient(
+      180deg,
+      transparent,
+      transparent 1px,
+      var(--primary-1) 1px,
+      var(--primary-1) 2px
+    );
 }
 
 ::-webkit-scrollbar {
   background: var(--surface-10);
-  box-shadow: inset 1px 1px var(--border-brightness-07), inset 2px 2px var(--border-brightness-08), inset -1px -1px var(--border-brightness-12), inset -2px -2px var(--border-brightness-11);
+  box-shadow:
+    inset 1px 1px var(--border-brightness-07),
+    inset 2px 2px var(--border-brightness-08),
+    inset -1px -1px var(--border-brightness-12),
+    inset -2px -2px var(--border-brightness-11);
   border: 1px solid var(--border-brightness-00);
   width: 16px;
   height: 16px;
@@ -276,7 +415,9 @@ legend {
 ::-webkit-scrollbar-button,
 ::-webkit-scrollbar-thumb {
   background: var(--surface-13);
-  box-shadow: inset 1px 1px var(--border-brightness-15), inset -1px -1px var(--border-brightness-11);
+  box-shadow:
+    inset 1px 1px var(--border-brightness-15),
+    inset -1px -1px var(--border-brightness-11);
   border: 1px solid var(--border-brightness-00);
 }
 
@@ -287,27 +428,133 @@ legend {
   background-position: center center;
 }
 ::-webkit-scrollbar-thumb:vertical {
-  background-image: repeating-linear-gradient(180deg, var(--primary-6), var(--primary-6) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(180deg, var(--primary-5), var(--primary-5) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(180deg, transparent, transparent 1px, var(--primary-2) 1px, var(--primary-2) 2px);
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      var(--primary-6),
+      var(--primary-6) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      var(--primary-5),
+      var(--primary-5) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      transparent,
+      transparent 1px,
+      var(--primary-2) 1px,
+      var(--primary-2) 2px
+    );
   background-position-x: calc(50% - 4px), calc(50% - 1px), 50%;
-  background-size: 1px 8px, 7px 8px, 7px 8px;
-  box-shadow: inset 1px 1px var(--primary-5), inset -1px -1px var(--primary-3), 0 1px var(--border-brightness-07), 0 2px var(--border-brightness-08);
+  background-size:
+    1px 8px,
+    7px 8px,
+    7px 8px;
+  box-shadow:
+    inset 1px 1px var(--primary-5),
+    inset -1px -1px var(--primary-3),
+    0 1px var(--border-brightness-07),
+    0 2px var(--border-brightness-08);
 }
 ::-webkit-scrollbar-thumb:horizontal {
-  background-image: repeating-linear-gradient(90deg, var(--primary-6), var(--primary-6) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(90deg, var(--primary-5), var(--primary-5) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(90deg, transparent, transparent 1px, var(--primary-2) 1px, var(--primary-2) 2px);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      var(--primary-6),
+      var(--primary-6) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      var(--primary-5),
+      var(--primary-5) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      var(--primary-2) 1px,
+      var(--primary-2) 2px
+    );
   background-position-y: calc(50% - 4px), calc(50% - 1px), 50%;
-  background-size: 8px 1px, 8px 7px, 8px 7px;
-  box-shadow: inset 1px 1px var(--primary-5), inset -1px -1px var(--primary-3), 1px 0 var(--border-brightness-07), 2px 0 var(--border-brightness-08);
+  background-size:
+    8px 1px,
+    8px 7px,
+    8px 7px;
+  box-shadow:
+    inset 1px 1px var(--primary-5),
+    inset -1px -1px var(--primary-3),
+    1px 0 var(--border-brightness-07),
+    2px 0 var(--border-brightness-08);
 }
 ::-webkit-scrollbar-thumb:active {
   background-color: var(--primary-3);
 }
 ::-webkit-scrollbar-thumb:active:vertical {
-  background-image: repeating-linear-gradient(180deg, var(--primary-5), var(--primary-5) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(180deg, var(--primary-4), var(--primary-4) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(180deg, transparent, transparent 1px, var(--primary-1) 1px, var(--primary-1) 2px);
-  box-shadow: inset 1px 1px var(--primary-4), inset -1px -1px var(--primary-2), 0 1px var(--border-brightness-07), 0 2px var(--border-brightness-08);
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      var(--primary-5),
+      var(--primary-5) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      var(--primary-4),
+      var(--primary-4) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      transparent,
+      transparent 1px,
+      var(--primary-1) 1px,
+      var(--primary-1) 2px
+    );
+  box-shadow:
+    inset 1px 1px var(--primary-4),
+    inset -1px -1px var(--primary-2),
+    0 1px var(--border-brightness-07),
+    0 2px var(--border-brightness-08);
 }
 ::-webkit-scrollbar-thumb:active:horizontal {
-  background-image: repeating-linear-gradient(90deg, var(--primary-5), var(--primary-5) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(90deg, var(--primary-4), var(--primary-4) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(90deg, transparent, transparent 1px, var(--primary-1) 1px, var(--primary-1) 2px);
-  box-shadow: inset 1px 1px var(--primary-4), inset -1px -1px var(--primary-2), 1px 0 var(--border-brightness-07), 2px 0 var(--border-brightness-08);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      var(--primary-5),
+      var(--primary-5) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      var(--primary-4),
+      var(--primary-4) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      var(--primary-1) 1px,
+      var(--primary-1) 2px
+    );
+  box-shadow:
+    inset 1px 1px var(--primary-4),
+    inset -1px -1px var(--primary-2),
+    1px 0 var(--border-brightness-07),
+    2px 0 var(--border-brightness-08);
 }
 
 ::-webkit-scrollbar-button {
@@ -317,7 +564,9 @@ legend {
 }
 ::-webkit-scrollbar-button:active {
   background: var(--surface-07);
-  box-shadow: inset 1px 1px var(--border-brightness-05), inset -1px -1px var(--border-brightness-09);
+  box-shadow:
+    inset 1px 1px var(--border-brightness-05),
+    inset -1px -1px var(--border-brightness-09);
   box-shadow: none;
 }
 
@@ -356,13 +605,21 @@ legend {
   background-repeat: no-repeat;
 }
 
-button, input[type=button], input[type=submit], input[type=reset], .button,
-select:not([size], [multiple]), select[size="1"] {
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.button,
+select:not([size], [multiple]),
+select[size="1"] {
   background-color: var(--surface-13);
   color: var(--window-fg);
   border: 1px solid var(--border-brightness-00);
   border-radius: 3px;
-  box-shadow: inset 1px 1px 0 var(--border-brightness-13), inset 2px 2px 0 var(--border-brightness-15), inset -1px -1px 1px var(--border-brightness-05);
+  box-shadow:
+    inset 1px 1px 0 var(--border-brightness-13),
+    inset 2px 2px 0 var(--border-brightness-15),
+    inset -1px -1px 1px var(--border-brightness-05);
   padding: 2px 10px;
   min-width: 36px;
   text-align: center;
@@ -370,52 +627,195 @@ select:not([size], [multiple]), select[size="1"] {
   cursor: default;
   user-select: none;
 }
-button:disabled, button.disabled, input[type=button]:disabled, input[type=button].disabled, input[type=submit]:disabled, input[type=submit].disabled, input[type=reset]:disabled, input[type=reset].disabled, .button:disabled, .button.disabled,
+button:disabled,
+button.disabled,
+input[type="button"]:disabled,
+input[type="button"].disabled,
+input[type="submit"]:disabled,
+input[type="submit"].disabled,
+input[type="reset"]:disabled,
+input[type="reset"].disabled,
+.button:disabled,
+.button.disabled,
 select:not([size], [multiple]):disabled,
-select:not([size], [multiple]).disabled, select[size="1"]:disabled, select[size="1"].disabled {
+select:not([size], [multiple]).disabled,
+select[size="1"]:disabled,
+select[size="1"].disabled {
   color: var(--surface-07);
   border-color: var(--border-brightness-08);
   box-shadow: none;
 }
-button:not(:disabled, .disabled):active, button.active, input[type=button]:not(:disabled, .disabled):active, input[type=button].active, input[type=submit]:not(:disabled, .disabled):active, input[type=submit].active, input[type=reset]:not(:disabled, .disabled):active, input[type=reset].active, .button:not(:disabled, .disabled):active, .button.active,
+button:not(:disabled, .disabled):active,
+button.active,
+input[type="button"]:not(:disabled, .disabled):active,
+input[type="button"].active,
+input[type="submit"]:not(:disabled, .disabled):active,
+input[type="submit"].active,
+input[type="reset"]:not(:disabled, .disabled):active,
+input[type="reset"].active,
+.button:not(:disabled, .disabled):active,
+.button.active,
 select:not([size], [multiple]):not(:disabled, .disabled):active,
-select:not([size], [multiple]).active, select[size="1"]:not(:disabled, .disabled):active, select[size="1"].active {
+select:not([size], [multiple]).active,
+select[size="1"]:not(:disabled, .disabled):active,
+select[size="1"].active {
   background-color: var(--surface-06);
   color: var(--surface-15);
-  box-shadow: inset 1px 1px 1px var(--border-brightness-03), inset -1px -1px 1px var(--border-brightness-09);
+  box-shadow:
+    inset 1px 1px 1px var(--border-brightness-03),
+    inset -1px -1px 1px var(--border-brightness-09);
 }
-button:focus-visible, input[type=button]:focus-visible, input[type=submit]:focus-visible, input[type=reset]:focus-visible, .button:focus-visible,
-select:not([size], [multiple]):focus-visible, select[size="1"]:focus-visible {
+button:focus-visible,
+input[type="button"]:focus-visible,
+input[type="submit"]:focus-visible,
+input[type="reset"]:focus-visible,
+.button:focus-visible,
+select:not([size], [multiple]):focus-visible,
+select[size="1"]:focus-visible {
   outline: 2px solid var(--primary-3);
   border-radius: 1px;
 }
 
-form:focus-within:not(:has(button:focus, input[type=button]:focus, input[type=submit]:focus, input[type=reset]:focus)) button:default, form:focus-within:not(:has(button:focus, input[type=button]:focus, input[type=submit]:focus, input[type=reset]:focus)) input[type=button]:default, form:focus-within:not(:has(button:focus, input[type=button]:focus, input[type=submit]:focus, input[type=reset]:focus)) input[type=submit]:default, form:focus-within:not(:has(button:focus, input[type=button]:focus, input[type=submit]:focus, input[type=reset]:focus)) input[type=reset]:default, form:focus-within:not(:has(button:focus, input[type=button]:focus, input[type=submit]:focus, input[type=reset]:focus)) .button:default {
+form:focus-within:not(
+    :has(
+      button:focus,
+      input[type="button"]:focus,
+      input[type="submit"]:focus,
+      input[type="reset"]:focus
+    )
+  )
+  button:default,
+form:focus-within:not(
+    :has(
+      button:focus,
+      input[type="button"]:focus,
+      input[type="submit"]:focus,
+      input[type="reset"]:focus
+    )
+  )
+  input[type="button"]:default,
+form:focus-within:not(
+    :has(
+      button:focus,
+      input[type="button"]:focus,
+      input[type="submit"]:focus,
+      input[type="reset"]:focus
+    )
+  )
+  input[type="submit"]:default,
+form:focus-within:not(
+    :has(
+      button:focus,
+      input[type="button"]:focus,
+      input[type="submit"]:focus,
+      input[type="reset"]:focus
+    )
+  )
+  input[type="reset"]:default,
+form:focus-within:not(
+    :has(
+      button:focus,
+      input[type="button"]:focus,
+      input[type="submit"]:focus,
+      input[type="reset"]:focus
+    )
+  )
+  .button:default {
   position: relative;
 }
-form:focus-within:not(:has(button:focus, input[type=button]:focus, input[type=submit]:focus, input[type=reset]:focus)) button:default::before, form:focus-within:not(:has(button:focus, input[type=button]:focus, input[type=submit]:focus, input[type=reset]:focus)) input[type=button]:default::before, form:focus-within:not(:has(button:focus, input[type=button]:focus, input[type=submit]:focus, input[type=reset]:focus)) input[type=submit]:default::before, form:focus-within:not(:has(button:focus, input[type=button]:focus, input[type=submit]:focus, input[type=reset]:focus)) input[type=reset]:default::before, form:focus-within:not(:has(button:focus, input[type=button]:focus, input[type=submit]:focus, input[type=reset]:focus)) .button:default::before {
+form:focus-within:not(
+    :has(
+      button:focus,
+      input[type="button"]:focus,
+      input[type="submit"]:focus,
+      input[type="reset"]:focus
+    )
+  )
+  button:default::before,
+form:focus-within:not(
+    :has(
+      button:focus,
+      input[type="button"]:focus,
+      input[type="submit"]:focus,
+      input[type="reset"]:focus
+    )
+  )
+  input[type="button"]:default::before,
+form:focus-within:not(
+    :has(
+      button:focus,
+      input[type="button"]:focus,
+      input[type="submit"]:focus,
+      input[type="reset"]:focus
+    )
+  )
+  input[type="submit"]:default::before,
+form:focus-within:not(
+    :has(
+      button:focus,
+      input[type="button"]:focus,
+      input[type="submit"]:focus,
+      input[type="reset"]:focus
+    )
+  )
+  input[type="reset"]:default::before,
+form:focus-within:not(
+    :has(
+      button:focus,
+      input[type="button"]:focus,
+      input[type="submit"]:focus,
+      input[type="reset"]:focus
+    )
+  )
+  .button:default::before {
   content: " ";
   position: absolute;
   inset: -3px;
   border-radius: 4px;
   box-sizing: border-box;
-  box-shadow: 0px 0px 0px 1px var(--border-brightness-00), inset 1px 1px 0 var(--border-brightness-13), inset -1px -1px 0 #737373, inset 0 0 0 2px var(--border-brightness-10-1);
+  box-shadow:
+    0px 0px 0px 1px var(--border-brightness-00),
+    inset 1px 1px 0 var(--border-brightness-13),
+    inset -1px -1px 0 #737373,
+    inset 0 0 0 2px var(--border-brightness-10-1);
 }
 
-button.primary, input[type=button].primary, input[type=submit].primary, input[type=reset].primary, .button.primary {
+button.primary,
+input[type="button"].primary,
+input[type="submit"].primary,
+input[type="reset"].primary,
+.button.primary {
   position: relative;
 }
-button.primary::before, input[type=button].primary::before, input[type=submit].primary::before, input[type=reset].primary::before, .button.primary::before {
+button.primary::before,
+input[type="button"].primary::before,
+input[type="submit"].primary::before,
+input[type="reset"].primary::before,
+.button.primary::before {
   content: " ";
   position: absolute;
   inset: -3px;
   border-radius: 4px;
   box-sizing: border-box;
-  box-shadow: 0px 0px 0px 1px var(--border-brightness-00), inset 1px 1px 0 var(--border-brightness-13), inset -1px -1px 0 #737373, inset 0 0 0 2px var(--border-brightness-10-1);
+  box-shadow:
+    0px 0px 0px 1px var(--border-brightness-00),
+    inset 1px 1px 0 var(--border-brightness-13),
+    inset -1px -1px 0 #737373,
+    inset 0 0 0 2px var(--border-brightness-10-1);
 }
 
-input:not([type=button], [type=submit], [type=reset], [type=checkbox], [type=radio], [type=range]), textarea, .input,
-select[multiple], select[size]:not([size="1"]) {
+input:not(
+  [type="button"],
+  [type="submit"],
+  [type="reset"],
+  [type="checkbox"],
+  [type="radio"],
+  [type="range"]
+),
+textarea,
+.input,
+select[multiple],
+select[size]:not([size="1"]) {
   background: var(--field-bg);
   color: var(--field-fg);
   border: 1px solid var(--border-brightness-00);
@@ -423,41 +823,98 @@ select[multiple], select[size]:not([size="1"]) {
   margin: 2px;
   padding: 2px;
 }
-input:not([type=button], [type=submit], [type=reset], [type=checkbox], [type=radio], [type=range])::selection, textarea::selection, .input::selection,
-select[multiple]::selection, select[size]:not([size="1"])::selection {
+input:not(
+    [type="button"],
+    [type="submit"],
+    [type="reset"],
+    [type="checkbox"],
+    [type="radio"],
+    [type="range"]
+  )::selection,
+textarea::selection,
+.input::selection,
+select[multiple]::selection,
+select[size]:not([size="1"])::selection {
   background-color: var(--selection-bg);
   color: var(--selection-fg);
 }
-input:not([type=button], [type=submit], [type=reset], [type=checkbox], [type=radio], [type=range]):disabled, input:not([type=button], [type=submit], [type=reset], [type=checkbox], [type=radio], [type=range]).disabled, textarea:disabled, textarea.disabled, .input:disabled, .input.disabled,
+input:not(
+    [type="button"],
+    [type="submit"],
+    [type="reset"],
+    [type="checkbox"],
+    [type="radio"],
+    [type="range"]
+  ):disabled,
+input:not(
+    [type="button"],
+    [type="submit"],
+    [type="reset"],
+    [type="checkbox"],
+    [type="radio"],
+    [type="range"]
+  ).disabled,
+textarea:disabled,
+textarea.disabled,
+.input:disabled,
+.input.disabled,
 select[multiple]:disabled,
-select[multiple].disabled, select[size]:not([size="1"]):disabled, select[size]:not([size="1"]).disabled {
+select[multiple].disabled,
+select[size]:not([size="1"]):disabled,
+select[size]:not([size="1"]).disabled {
   color: var(--disabled-fg);
   border-color: var(--border-brightness-05);
   box-shadow: 0 0 0 1px var(--surface-13);
 }
-input:not([type=button], [type=submit], [type=reset], [type=checkbox], [type=radio], [type=range]):focus, input:not([type=button], [type=submit], [type=reset], [type=checkbox], [type=radio], [type=range]).focus, textarea:focus, textarea.focus, .input:focus, .input.focus,
+input:not(
+    [type="button"],
+    [type="submit"],
+    [type="reset"],
+    [type="checkbox"],
+    [type="radio"],
+    [type="range"]
+  ):focus,
+input:not(
+    [type="button"],
+    [type="submit"],
+    [type="reset"],
+    [type="checkbox"],
+    [type="radio"],
+    [type="range"]
+  ).focus,
+textarea:focus,
+textarea.focus,
+.input:focus,
+.input.focus,
 select[multiple]:focus,
-select[multiple].focus, select[size]:not([size="1"]):focus, select[size]:not([size="1"]).focus {
+select[multiple].focus,
+select[size]:not([size="1"]):focus,
+select[size]:not([size="1"]).focus {
   outline: 2px solid var(--primary-3);
   border-radius: 1px;
 }
 
-select[multiple], select[size]:not([size="1"]) {
+select[multiple],
+select[size]:not([size="1"]) {
   padding: 0;
 }
-select[multiple] > option, select[size]:not([size="1"]) > option {
+select[multiple] > option,
+select[size]:not([size="1"]) > option {
   padding: 2px 6px;
 }
-select[multiple] > option:checked, select[size]:not([size="1"]) > option:checked {
+select[multiple] > option:checked,
+select[size]:not([size="1"]) > option:checked {
   background-color: var(--selection-bg);
   color: var(--selection-fg);
 }
-select[multiple]:focus, select[size]:not([size="1"]):focus {
+select[multiple]:focus,
+select[size]:not([size="1"]):focus {
   box-shadow: none;
   outline: 2px solid var(--primary-3);
   border-radius: 1px;
 }
-select[multiple]:focus > option:checked, select[size]:not([size="1"]):focus > option:checked {
+select[multiple]:focus > option:checked,
+select[size]:not([size="1"]):focus > option:checked {
   outline: none;
 }
 
@@ -470,7 +927,9 @@ select[multiple]:focus > option:checked, select[size]:not([size="1"]):focus > op
   grid-area: s;
   padding-right: 27px;
   text-align: left;
-  box-shadow: inset 1px 1px var(--border-brightness-15), inset -1px -1px var(--border-brightness-10);
+  box-shadow:
+    inset 1px 1px var(--border-brightness-15),
+    inset -1px -1px var(--border-brightness-10);
 }
 .dropdown > select:disabled + .dropdown-button {
   color: var(--border-brightness-08);
@@ -478,7 +937,12 @@ select[multiple]:focus > option:checked, select[size]:not([size="1"]):focus > op
 }
 .dropdown > select:not(:disabled):active + .dropdown-button {
   color: var(--surface-15);
-  box-shadow: inset 1px 1px var(--border-brightness-04), inset 2px 2px var(--border-brightness-05), inset -1px -1px var(--border-brightness-08), inset -2px -2px var(--border-brightness-07), -1px 0 var(--border-brightness-02);
+  box-shadow:
+    inset 1px 1px var(--border-brightness-04),
+    inset 2px 2px var(--border-brightness-05),
+    inset -1px -1px var(--border-brightness-08),
+    inset -2px -2px var(--border-brightness-07),
+    -1px 0 var(--border-brightness-02);
 }
 .dropdown > .dropdown-button {
   justify-self: end;
@@ -489,7 +953,12 @@ select[multiple]:focus > option:checked, select[size]:not([size="1"]):focus > op
   color: var(--window-fg);
   width: 20px;
   pointer-events: none;
-  box-shadow: inset 1px 1px var(--surface-13), inset 2px 2px var(--border-brightness-15), inset -1px -1px var(--border-brightness-07), inset -2px -2px var(--border-brightness-10), -1px 0 var(--border-brightness-10);
+  box-shadow:
+    inset 1px 1px var(--surface-13),
+    inset 2px 2px var(--border-brightness-15),
+    inset -1px -1px var(--border-brightness-07),
+    inset -2px -2px var(--border-brightness-10),
+    -1px 0 var(--border-brightness-10);
   margin: 1px;
 }
 .dropdown > .dropdown-button::after {
@@ -504,22 +973,26 @@ select[multiple]:focus > option:checked, select[size]:not([size="1"]):focus > op
   background: currentColor;
 }
 
-input[type=checkbox] {
+input[type="checkbox"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   background: var(--surface-13);
   border: 1px solid var(--border-brightness-00);
-  box-shadow: inset 1px 1px 0 var(--border-brightness-15), inset -1px -1px 0 var(--border-brightness-08);
+  box-shadow:
+    inset 1px 1px 0 var(--border-brightness-15),
+    inset -1px -1px 0 var(--border-brightness-08);
   width: 12px;
   height: 12px;
   border-radius: 0;
 }
-input[type=checkbox]:not(:disabled):active {
+input[type="checkbox"]:not(:disabled):active {
   background: var(--surface-07);
-  box-shadow: inset 1px 1px 0 var(--border-brightness-05), inset -1px -1px 0 var(--border-brightness-09);
+  box-shadow:
+    inset 1px 1px 0 var(--border-brightness-05),
+    inset -1px -1px 0 var(--border-brightness-09);
 }
-input[type=checkbox]:checked::after {
+input[type="checkbox"]:checked::after {
   content: "";
   display: block;
   width: 10px;
@@ -530,36 +1003,46 @@ input[type=checkbox]:checked::after {
   transform: rotate(-45deg);
   box-shadow: -1px 1px 0 rgba(0, 0, 0, 0.3);
 }
-input[type=checkbox]:disabled {
+input[type="checkbox"]:disabled {
   border-color: var(--border-brightness-08);
   box-shadow: none;
 }
-input[type=checkbox]:disabled::after {
+input[type="checkbox"]:disabled::after {
   box-shadow: none;
   border-color: var(--border-brightness-08);
 }
 
-input[type=checkbox]:disabled + label,
-input[type=radio]:disabled + label {
+input[type="checkbox"]:disabled + label,
+input[type="radio"]:disabled + label {
   color: var(--surface-07);
 }
 
-input[type=radio] {
+input[type="radio"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background: linear-gradient(to bottom right, var(--surface-15), var(--border-brightness-08));
-  box-shadow: inset 1px 1px 0 var(--surface-13), inset -1px -1px 0 var(--border-brightness-08);
+  background: linear-gradient(
+    to bottom right,
+    var(--surface-15),
+    var(--border-brightness-08)
+  );
+  box-shadow:
+    inset 1px 1px 0 var(--surface-13),
+    inset -1px -1px 0 var(--border-brightness-08);
   border: 1px solid var(--border-brightness-00);
   width: 12px;
   height: 12px;
   border-radius: 50%;
 }
-input[type=radio]:checked {
-  background: linear-gradient(to bottom right, var(--surface-05), var(--surface-15));
+input[type="radio"]:checked {
+  background: linear-gradient(
+    to bottom right,
+    var(--surface-05),
+    var(--surface-15)
+  );
   box-shadow: inset 1px 1px 0 var(--border-brightness-05);
 }
-input[type=radio]:checked::after {
+input[type="radio"]:checked::after {
   content: "";
   display: block;
   width: 6px;
@@ -569,27 +1052,31 @@ input[type=radio]:checked::after {
   margin-top: 2px;
   margin-left: 2px;
 }
-input[type=radio]:not(:disabled):active {
-  background: linear-gradient(to bottom right, var(--surface-04), var(--surface-11));
+input[type="radio"]:not(:disabled):active {
+  background: linear-gradient(
+    to bottom right,
+    var(--surface-04),
+    var(--surface-11)
+  );
   box-shadow: inset 1px 1px 0 var(--border-brightness-04);
 }
-input[type=radio]:disabled {
+input[type="radio"]:disabled {
   background: var(--surface-13);
   border-color: var(--border-brightness-08);
   box-shadow: none;
 }
-input[type=radio]:disabled::after {
+input[type="radio"]:disabled::after {
   background-color: var(--border-brightness-08);
 }
 
-input[type=radio]:focus-visible + label,
-input[type=checkbox]:focus-visible + label {
+input[type="radio"]:focus-visible + label,
+input[type="checkbox"]:focus-visible + label {
   border-radius: 1px;
   outline-offset: 0;
   position: relative;
 }
-input[type=radio]:focus-visible + label::after,
-input[type=checkbox]:focus-visible + label::after {
+input[type="radio"]:focus-visible + label::after,
+input[type="checkbox"]:focus-visible + label::after {
   content: "";
   display: block;
   position: absolute;
@@ -601,85 +1088,187 @@ input[type=checkbox]:focus-visible + label::after {
   border-radius: 1px;
 }
 
-input[type=radio]:focus,
-input[type=checkbox]:focus {
+input[type="radio"]:focus,
+input[type="checkbox"]:focus {
   outline: none;
 }
 
-label > input[type=radio]:focus-visible,
-label > input[type=checkbox]:focus-visible {
+label > input[type="radio"]:focus-visible,
+label > input[type="checkbox"]:focus-visible {
   outline: 2px solid var(--primary-3);
   border-radius: 1px;
 }
 
-input[type=range] {
+input[type="range"] {
   -webkit-appearance: none;
   width: 100%;
   background: transparent;
   padding: 2px;
 }
-input[type=range]:focus-visible {
+input[type="range"]:focus-visible {
   outline: 2px solid var(--primary-3);
   border-radius: 1px;
 }
-input[type=range]::-moz-range-track {
+input[type="range"]::-moz-range-track {
   height: 3px;
   background: var(--surface-10);
   border: 1px solid var(--border-brightness-02);
   border-radius: 2px;
-  box-shadow: -1px -1px var(--border-brightness-10), 1px 1px var(--border-brightness-15);
+  box-shadow:
+    -1px -1px var(--border-brightness-10),
+    1px 1px var(--border-brightness-15);
   margin: 0 5px;
 }
-input[type=range]::-moz-range-thumb {
+input[type="range"]::-moz-range-thumb {
   border-radius: 0;
   box-sizing: border-box;
   background-color: var(--primary-4);
-  background-image: repeating-linear-gradient(90deg, var(--primary-6), var(--primary-6) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(90deg, var(--primary-5), var(--primary-5) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(90deg, transparent, transparent 1px, var(--primary-2) 1px, var(--primary-2) 2px);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      var(--primary-6),
+      var(--primary-6) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      var(--primary-5),
+      var(--primary-5) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      var(--primary-2) 1px,
+      var(--primary-2) 2px
+    );
   background-position-x: 3px;
   background-position-y: 3px, 3px, 4px;
-  background-size: 6px 1px, 6px 4px, 6px 4px;
+  background-size:
+    6px 1px,
+    6px 4px,
+    6px 4px;
   background-repeat: no-repeat;
   border: 1px solid var(--border-brightness-00);
   width: 14px;
   height: 13px;
   border-radius: 2px;
-  box-shadow: inset 1px 1px var(--primary-5), inset -1px -1px var(--primary-3);
+  box-shadow:
+    inset 1px 1px var(--primary-5),
+    inset -1px -1px var(--primary-3);
 }
-input[type=range]::-moz-range-thumb:active {
+input[type="range"]::-moz-range-thumb:active {
   background-color: var(--primary-3);
-  background-image: repeating-linear-gradient(90deg, var(--primary-5), var(--primary-5) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(90deg, var(--primary-4), var(--primary-4) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(90deg, transparent, transparent 1px, var(--primary-1) 1px, var(--primary-1) 2px);
-  box-shadow: inset 1px 1px var(--primary-4), inset -1px -1px var(--primary-2);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      var(--primary-5),
+      var(--primary-5) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      var(--primary-4),
+      var(--primary-4) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      var(--primary-1) 1px,
+      var(--primary-1) 2px
+    );
+  box-shadow:
+    inset 1px 1px var(--primary-4),
+    inset -1px -1px var(--primary-2);
 }
-input[type=range]::-webkit-slider-runnable-track {
+input[type="range"]::-webkit-slider-runnable-track {
   height: 3px;
   background: var(--surface-10);
   border: 1px solid var(--border-brightness-02);
   border-radius: 2px;
-  box-shadow: -1px -1px var(--border-brightness-10), 1px 1px var(--border-brightness-15);
+  box-shadow:
+    -1px -1px var(--border-brightness-10),
+    1px 1px var(--border-brightness-15);
   margin: 0 5px;
   margin: 10px 5px;
 }
-input[type=range]::-webkit-slider-thumb {
+input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   margin-top: -5px;
   border-radius: 0;
   box-sizing: border-box;
   background-color: var(--primary-4);
-  background-image: repeating-linear-gradient(90deg, var(--primary-6), var(--primary-6) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(90deg, var(--primary-5), var(--primary-5) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(90deg, transparent, transparent 1px, var(--primary-2) 1px, var(--primary-2) 2px);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      var(--primary-6),
+      var(--primary-6) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      var(--primary-5),
+      var(--primary-5) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      var(--primary-2) 1px,
+      var(--primary-2) 2px
+    );
   background-position-x: 3px;
   background-position-y: 3px, 3px, 4px;
-  background-size: 6px 1px, 6px 4px, 6px 4px;
+  background-size:
+    6px 1px,
+    6px 4px,
+    6px 4px;
   background-repeat: no-repeat;
   border: 1px solid var(--border-brightness-00);
   width: 14px;
   height: 13px;
   border-radius: 2px;
-  box-shadow: inset 1px 1px var(--primary-5), inset -1px -1px var(--primary-3);
+  box-shadow:
+    inset 1px 1px var(--primary-5),
+    inset -1px -1px var(--primary-3);
 }
-input[type=range]::-webkit-slider-thumb:active {
+input[type="range"]::-webkit-slider-thumb:active {
   background-color: var(--primary-3);
-  background-image: repeating-linear-gradient(90deg, var(--primary-5), var(--primary-5) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(90deg, var(--primary-4), var(--primary-4) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(90deg, transparent, transparent 1px, var(--primary-1) 1px, var(--primary-1) 2px);
-  box-shadow: inset 1px 1px var(--primary-4), inset -1px -1px var(--primary-2);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      var(--primary-5),
+      var(--primary-5) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      var(--primary-4),
+      var(--primary-4) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      var(--primary-1) 1px,
+      var(--primary-1) 2px
+    );
+  box-shadow:
+    inset 1px 1px var(--primary-4),
+    inset -1px -1px var(--primary-2);
 }
 
 progress,
@@ -689,7 +1278,11 @@ progress,
   appearance: none;
   background: var(--surface-11);
   border: 1px solid var(--border-brightness-00);
-  box-shadow: 1px 1px var(--border-brightness-15), -1px -1px var(--border-brightness-10), inset 1px 1px var(--border-brightness-08), inset -1px -1px var(--border-brightness-13);
+  box-shadow:
+    1px 1px var(--border-brightness-15),
+    -1px -1px var(--border-brightness-10),
+    inset 1px 1px var(--border-brightness-08),
+    inset -1px -1px var(--border-brightness-13);
   height: 12px;
 }
 
@@ -697,16 +1290,35 @@ progress,
   position: relative;
   overflow: hidden;
 }
-.progress-bar:not([aria-valuenow])::after, .progress-bar > .progress-bar-value {
+.progress-bar:not([aria-valuenow])::after,
+.progress-bar > .progress-bar-value {
   content: "";
   display: block;
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
-  background: linear-gradient(to bottom, var(--primary-2), var(--primary-3), var(--primary-4), var(--primary-5), var(--primary-6), var(--primary-5), var(--primary-4), var(--primary-3), var(--primary-2), var(--primary-1));
+  background: linear-gradient(
+    to bottom,
+    var(--primary-2),
+    var(--primary-3),
+    var(--primary-4),
+    var(--primary-5),
+    var(--primary-6),
+    var(--primary-5),
+    var(--primary-4),
+    var(--primary-3),
+    var(--primary-2),
+    var(--primary-1)
+  );
   border-right: 1px solid var(--border-brightness-00);
-  box-shadow: inset 1px 0 var(--primary-3), inset 2px 0 rgba(255, 255, 255, 0.2), inset -1px 0 var(--primary-1), inset -2px 0 var(--primary-2), 1px 0 var(--border-brightness-05), 2px 0 var(--border-brightness-08);
+  box-shadow:
+    inset 1px 0 var(--primary-3),
+    inset 2px 0 rgba(255, 255, 255, 0.2),
+    inset -1px 0 var(--primary-1),
+    inset -2px 0 var(--primary-2),
+    1px 0 var(--border-brightness-05),
+    2px 0 var(--border-brightness-08);
 }
 .progress-bar:not([aria-valuenow])::after {
   width: 50%;
@@ -716,19 +1328,57 @@ progress,
 
 progress::-webkit-progress-bar {
   background: var(--surface-11);
-  box-shadow: inset 1px 1px var(--border-brightness-08), inset -1px -1px var(--border-brightness-13);
+  box-shadow:
+    inset 1px 1px var(--border-brightness-08),
+    inset -1px -1px var(--border-brightness-13);
 }
 
 progress::-webkit-progress-value {
-  background: linear-gradient(to bottom, var(--primary-2), var(--primary-3), var(--primary-4), var(--primary-5), var(--primary-6), var(--primary-5), var(--primary-4), var(--primary-3), var(--primary-2), var(--primary-1));
+  background: linear-gradient(
+    to bottom,
+    var(--primary-2),
+    var(--primary-3),
+    var(--primary-4),
+    var(--primary-5),
+    var(--primary-6),
+    var(--primary-5),
+    var(--primary-4),
+    var(--primary-3),
+    var(--primary-2),
+    var(--primary-1)
+  );
   border-right: 1px solid var(--border-brightness-00);
-  box-shadow: inset 1px 0 var(--primary-3), inset 2px 0 rgba(255, 255, 255, 0.2), inset -1px 0 var(--primary-1), inset -2px 0 var(--primary-2), 1px 0 var(--border-brightness-05), 2px 0 var(--border-brightness-08);
+  box-shadow:
+    inset 1px 0 var(--primary-3),
+    inset 2px 0 rgba(255, 255, 255, 0.2),
+    inset -1px 0 var(--primary-1),
+    inset -2px 0 var(--primary-2),
+    1px 0 var(--border-brightness-05),
+    2px 0 var(--border-brightness-08);
 }
 
 progress::-moz-progress-bar {
-  background: linear-gradient(to bottom, var(--primary-2), var(--primary-3), var(--primary-4), var(--primary-5), var(--primary-6), var(--primary-5), var(--primary-4), var(--primary-3), var(--primary-2), var(--primary-1));
+  background: linear-gradient(
+    to bottom,
+    var(--primary-2),
+    var(--primary-3),
+    var(--primary-4),
+    var(--primary-5),
+    var(--primary-6),
+    var(--primary-5),
+    var(--primary-4),
+    var(--primary-3),
+    var(--primary-2),
+    var(--primary-1)
+  );
   border-right: 1px solid var(--border-brightness-00);
-  box-shadow: inset 1px 0 var(--primary-3), inset 2px 0 rgba(255, 255, 255, 0.2), inset -1px 0 var(--primary-1), inset -2px 0 var(--primary-2), 1px 0 var(--border-brightness-05), 2px 0 var(--border-brightness-08);
+  box-shadow:
+    inset 1px 0 var(--primary-3),
+    inset 2px 0 rgba(255, 255, 255, 0.2),
+    inset -1px 0 var(--primary-1),
+    inset -2px 0 var(--primary-2),
+    1px 0 var(--border-brightness-05),
+    2px 0 var(--border-brightness-08);
 }
 
 progress:indeterminate::-moz-progress-bar {
@@ -766,7 +1416,8 @@ progress:not([value])::-webkit-progress-value {
   font-size: 12px;
   cursor: default;
 }
-.title-bar .title-bar-text::before, .title-bar .title-bar-text::after {
+.title-bar .title-bar-text::before,
+.title-bar .title-bar-text::after {
   display: block;
   content: "";
   flex-grow: 1;
@@ -789,7 +1440,12 @@ progress:not([value])::-webkit-progress-value {
 .menu {
   background: var(--surface-12);
   border: 1px solid var(--border-brightness-00);
-  box-shadow: 1px 1px 0 var(--border-brightness-00), inset 1px 0 0 var(--border-brightness-15), inset 0 1px 0 var(--border-brightness-15), inset -1px 0 0 var(--border-brightness-09), inset 0 -1px 0 var(--border-brightness-09);
+  box-shadow:
+    1px 1px 0 var(--border-brightness-00),
+    inset 1px 0 0 var(--border-brightness-15),
+    inset 0 1px 0 var(--border-brightness-15),
+    inset -1px 0 0 var(--border-brightness-09),
+    inset 0 -1px 0 var(--border-brightness-09);
 }
 
 .window.active > .title-bar,
@@ -801,7 +1457,8 @@ progress:not([value])::-webkit-progress-value {
   background: var(--surface-12);
   color: var(--window-fg);
 }
-.window.active > .title-bar > .title-bar-text::before, .window.active > .title-bar > .title-bar-text::after,
+.window.active > .title-bar > .title-bar-text::before,
+.window.active > .title-bar > .title-bar-text::after,
 .window:focus-within > .title-bar > .title-bar-text::before,
 .window:focus-within > .title-bar > .title-bar-text::after,
 .dialog.active > .title-bar > .title-bar-text::before,
@@ -812,11 +1469,29 @@ progress:not([value])::-webkit-progress-value {
 .menu > .title-bar > .title-bar-text::after,
 .title-bar.active > .title-bar-text::before,
 .title-bar.active > .title-bar-text::after {
-  background-image: linear-gradient(0deg, var(--surface-15), var(--surface-15) 1px, transparent 1px, transparent 1px), linear-gradient(0deg, transparent, transparent 1px, var(--border-brightness-07) 1px, var(--border-brightness-07) 1px);
+  background-image:
+    linear-gradient(
+      0deg,
+      var(--surface-15),
+      var(--surface-15) 1px,
+      transparent 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      0deg,
+      transparent,
+      transparent 1px,
+      var(--border-brightness-07) 1px,
+      var(--border-brightness-07) 1px
+    );
   background-repeat: repeat-y;
   background-position-x: -1px, 1px;
-  background-position-y: -1px, -1px;
-  background-size: 100% 2px, 100% 2px;
+  background-position-y:
+    -1px,
+    -1px;
+  background-size:
+    100% 2px,
+    100% 2px;
 }
 
 .menu > .title-bar {
@@ -853,13 +1528,32 @@ progress:not([value])::-webkit-progress-value {
   border: 1px solid var(--border-brightness-02);
   margin: 2px 1px 5px;
   padding: 0;
-  background: linear-gradient(to bottom right, var(--surface-09), var(--surface-15));
-  box-shadow: -1px -1px 0 var(--border-brightness-08), -1px 0 0 var(--border-brightness-08), 0 -1px var(--border-brightness-08), 1px 1px 0 var(--border-brightness-15), 1px 0 0 var(--border-brightness-15), 0 1px 0 var(--border-brightness-15), inset 1px 1px 0 var(--border-brightness-12), inset -1px -1px 0 var(--border-brightness-08);
+  background: linear-gradient(
+    to bottom right,
+    var(--surface-09),
+    var(--surface-15)
+  );
+  box-shadow:
+    -1px -1px 0 var(--border-brightness-08),
+    -1px 0 0 var(--border-brightness-08),
+    0 -1px var(--border-brightness-08),
+    1px 1px 0 var(--border-brightness-15),
+    1px 0 0 var(--border-brightness-15),
+    0 1px 0 var(--border-brightness-15),
+    inset 1px 1px 0 var(--border-brightness-12),
+    inset -1px -1px 0 var(--border-brightness-08);
 }
 
 .title-bar-buttons button:active {
-  background: linear-gradient(to bottom right, var(--surface-04), var(--surface-11));
-  box-shadow: -1px -1px 0 var(--border-brightness-08), 1px 1px 0 var(--border-brightness-15), inset -1px -1px 0 var(--border-brightness-09);
+  background: linear-gradient(
+    to bottom right,
+    var(--surface-04),
+    var(--surface-11)
+  );
+  box-shadow:
+    -1px -1px 0 var(--border-brightness-08),
+    1px 1px 0 var(--border-brightness-15),
+    inset -1px -1px 0 var(--border-brightness-09);
 }
 
 .window-body {
@@ -873,48 +1567,60 @@ progress:not([value])::-webkit-progress-value {
   color: var(--window-fg);
   background: var(--surface-13);
   border: 1px solid var(--border-brightness-00);
-  box-shadow: 1px 1px 0 var(--border-brightness-15), 1px 0 0 var(--border-brightness-15), 0 1px 0 var(--border-brightness-15), -1px -1px 0 var(--border-brightness-09), -1px 0 0 var(--border-brightness-09), 0 -1px 0 var(--border-brightness-09);
+  box-shadow:
+    1px 1px 0 var(--border-brightness-15),
+    1px 0 0 var(--border-brightness-15),
+    0 1px 0 var(--border-brightness-15),
+    -1px -1px 0 var(--border-brightness-09),
+    -1px 0 0 var(--border-brightness-09),
+    0 -1px 0 var(--border-brightness-09);
 }
 
-[role=menubar] {
+[role="menubar"] {
   color: var(--window-fg);
   background-color: var(--surface-13);
 }
-[role=menubar] > li > ul, [role=menubar] > li > .menu {
+[role="menubar"] > li > ul,
+[role="menubar"] > li > .menu {
   left: 0;
   top: 100%;
   min-width: 200px;
 }
 
-[role=menu] {
+[role="menu"] {
   color: var(--window-fg);
   background-color: var(--surface-13);
   border: 1px solid var(--border-brightness-00);
-  box-shadow: inset 1px 1px var(--border-brightness-15), inset -1px -1px var(--border-brightness-08), 1px 1px var(--border-brightness-00);
+  box-shadow:
+    inset 1px 1px var(--border-brightness-15),
+    inset -1px -1px var(--border-brightness-08),
+    1px 1px var(--border-brightness-00);
 }
-[role=menu] li {
+[role="menu"] li {
   padding: 1px 3px 1px 21px;
 }
-[role=menu] li[data-shortcut]::after {
+[role="menu"] li[data-shortcut]::after {
   float: right;
   content: attr(data-shortcut);
   display: block;
   margin-left: 4px;
 }
-[role=menu] li > ul, [role=menu] li > .menu {
+[role="menu"] li > ul,
+[role="menu"] li > .menu {
   left: 100%;
   margin: 0;
   top: -1px;
   min-width: 200px;
 }
-[role=menu] li[role=separator] {
+[role="menu"] li[role="separator"] {
   border-top: 1px solid var(--border-brightness-08);
   border-bottom: 1px solid var(--border-brightness-15);
   height: 0;
   padding: 0;
   margin: 2px 0;
 }
-[role=menu] li[role=checkbox][aria-checked=true]::before, [role=menu] li[role=radio][aria-checked=true]::before {
+[role="menu"] li[role="checkbox"][aria-checked="true"]::before,
+[role="menu"] li[role="radio"][aria-checked="true"]::before {
   content: "";
   position: absolute;
   left: 3px;
@@ -931,7 +1637,7 @@ progress:not([value])::-webkit-progress-value {
   mask-repeat: no-repeat;
   mask-size: 9px 8px;
 }
-[role=menu] li[aria-haspopup=true]::after {
+[role="menu"] li[aria-haspopup="true"]::after {
   content: "";
   display: block;
   position: absolute;
@@ -950,29 +1656,31 @@ progress:not([value])::-webkit-progress-value {
   mask-position: center center;
 }
 
-.menu > [role=menu] {
+.menu > [role="menu"] {
   border: 0;
   border-top: 1px solid var(--border-brightness-05);
 }
 
-[role=menu] li:focus,
-[role=menubar] li:focus {
+[role="menu"] li:focus,
+[role="menubar"] li:focus {
   outline: none;
 }
 
-[role=menubar] > li {
+[role="menubar"] > li {
   padding: 1px 8px;
 }
 
-[role=menu] li:focus-within,
-[role=menubar] li:focus-within {
+[role="menu"] li:focus-within,
+[role="menubar"] li:focus-within {
   background: var(--primary-2);
-  box-shadow: inset 1px 0 var(--primary-3), inset -1px 0 var(--primary-2);
+  box-shadow:
+    inset 1px 0 var(--primary-3),
+    inset -1px 0 var(--primary-2);
   color: var(--field-bg);
 }
 
-[role=menu] li[aria-disabled],
-[role=menubar] li[aria-disabled] {
+[role="menu"] li[aria-disabled],
+[role="menubar"] li[aria-disabled] {
   color: var(--surface-07);
 }
 
@@ -994,7 +1702,10 @@ progress:not([value])::-webkit-progress-value {
   position: relative;
   background: var(--surface-12);
   height: 23px;
-  box-shadow: inset 0 1px var(--border-brightness-00), inset 0 2px var(--border-brightness-12), inset 0 3px var(--border-brightness-00);
+  box-shadow:
+    inset 0 1px var(--border-brightness-00),
+    inset 0 2px var(--border-brightness-12),
+    inset 0 3px var(--border-brightness-00);
 }
 .tabs > menu > button:focus {
   outline: none;
@@ -1025,54 +1736,67 @@ progress:not([value])::-webkit-progress-value {
   margin-right: -14px;
 }
 
-.tabs > menu > button:not([aria-selected=true]):active {
+.tabs > menu > button:not([aria-selected="true"]):active {
   background: var(--surface-06);
-  box-shadow: inset 0 1px var(--border-brightness-00), inset 0 2px var(--border-brightness-04), inset 0 3px var(--border-brightness-05);
+  box-shadow:
+    inset 0 1px var(--border-brightness-00),
+    inset 0 2px var(--border-brightness-04),
+    inset 0 3px var(--border-brightness-05);
 }
 
-.tabs > menu > button:not([aria-selected=true]):active::before,
-.tabs > menu > button:not([aria-selected=true]):active::after {
+.tabs > menu > button:not([aria-selected="true"]):active::before,
+.tabs > menu > button:not([aria-selected="true"]):active::after {
   background-image: url(../icons/tab-active.svg);
 }
 
-.tabs > menu > button[aria-selected=true] {
+.tabs > menu > button[aria-selected="true"] {
   color: var(--window-fg);
   background: var(--surface-14);
-  box-shadow: inset 0 1px var(--border-brightness-00), inset 0 2px var(--border-brightness-12), inset 0 3px var(--border-brightness-15);
+  box-shadow:
+    inset 0 1px var(--border-brightness-00),
+    inset 0 2px var(--border-brightness-12),
+    inset 0 3px var(--border-brightness-15);
   z-index: 2;
   height: 25px;
 }
-.tabs > menu > button[aria-selected=true]::before, .tabs > menu > button[aria-selected=true]::after {
+.tabs > menu > button[aria-selected="true"]::before,
+.tabs > menu > button[aria-selected="true"]::after {
   background-image: url(../icons/tab-selected.svg);
   height: 25px;
 }
 
-.tabs > [role=tabpanel] {
+.tabs > [role="tabpanel"] {
   position: relative;
   z-index: 1;
   margin-top: -4px;
   background: var(--surface-14);
   border: 1px solid var(--border-brightness-00);
-  box-shadow: inset 1px 1px 0 var(--border-brightness-12), inset 2px 2px 0 var(--border-brightness-15), inset -1px -1px 0 var(--border-brightness-09), inset -2px -2px 0 var(--border-brightness-11);
+  box-shadow:
+    inset 1px 1px 0 var(--border-brightness-12),
+    inset 2px 2px 0 var(--border-brightness-15),
+    inset -1px -1px 0 var(--border-brightness-09),
+    inset -2px -2px 0 var(--border-brightness-11);
 }
 
 .list {
   background: var(--field-bg);
   color: var(--field-fg);
   border: 1px solid var(--border-brightness-00);
-  box-shadow: -1px -1px var(--border-brightness-08), 1px 1px var(--border-brightness-15);
+  box-shadow:
+    -1px -1px var(--border-brightness-08),
+    1px 1px var(--border-brightness-15);
   overflow: auto;
   cursor: default;
 }
-.list > [role=option] {
+.list > [role="option"] {
   padding: 2px 6px 2px 6px;
   white-space: nowrap;
 }
-.list > [role=option][aria-selected=true] {
+.list > [role="option"][aria-selected="true"] {
   background-color: var(--selection-bg);
   color: var(--selection-fg);
 }
-.list > [role=option]:focus {
+.list > [role="option"]:focus {
   outline: none;
 }
 .list:focus-within {
@@ -1102,14 +1826,14 @@ progress:not([value])::-webkit-progress-value {
 .icon-grid > .icon:focus {
   outline: none;
 }
-.icon-grid > .icon[aria-selected=true] > img {
+.icon-grid > .icon[aria-selected="true"] > img {
   filter: brightness(0.5);
 }
-.icon-grid > .icon[aria-selected=true] > .icon-label {
+.icon-grid > .icon[aria-selected="true"] > .icon-label {
   background-color: var(--field-fg);
   color: var(--field-bg);
 }
-.icon-grid:focus-within > .icon[aria-selected=true] > .icon-label {
+.icon-grid:focus-within > .icon[aria-selected="true"] > .icon-label {
   background-color: var(--field-fg);
   color: var(--field-bg);
 }
@@ -1120,13 +1844,15 @@ progress:not([value])::-webkit-progress-value {
 }
 .detailed th {
   text-align: left;
-  /* font-weight: normal; */
+  font-weight: normal;
   background-color: var(--surface-12);
   color: var(--window-fg);
   border: 1px solid var(--border-brightness-03);
   border-top-color: var(--border-brightness-06);
   border-left-color: var(--border-brightness-06);
-  box-shadow: inset 1px 1px var(--border-brightness-15), inset -1px -1px var(--border-brightness-08);
+  box-shadow:
+    inset 1px 1px var(--border-brightness-15),
+    inset -1px -1px var(--border-brightness-08);
   padding: 2px 6px 2px 6px;
   white-space: nowrap;
 }
@@ -1137,11 +1863,11 @@ progress:not([value])::-webkit-progress-value {
 .detailed tr:focus {
   outline: none;
 }
-.detailed tr[aria-selected=true] {
+.detailed tr[aria-selected="true"] {
   background-color: var(--selection-bg);
   color: var(--selection-fg);
 }
-.detailed .icon[aria-selected=true] .icon-label {
+.detailed .icon[aria-selected="true"] .icon-label {
   background-color: var(--field-fg);
   color: var(--field-bg);
 }
@@ -1172,10 +1898,10 @@ progress:not([value])::-webkit-progress-value {
 .detailed .icon:focus .icon-label {
   outline: none;
 }
-.detailed .icon[aria-selected=true] > img {
+.detailed .icon[aria-selected="true"] > img {
   filter: brightness(0.5);
 }
-.detailed .icon[aria-selected=true] > .icon-label {
+.detailed .icon[aria-selected="true"] > .icon-label {
   background-color: var(--field-fg);
   color: var(--field-bg);
 }
@@ -1184,27 +1910,27 @@ progress:not([value])::-webkit-progress-value {
   top: 0;
 }
 
-.list ul[role=tree] {
+.list ul[role="tree"] {
   position: relative;
   margin-bottom: 1px;
 }
-.list ul[role=tree] > li {
+.list ul[role="tree"] > li {
   padding-left: 20px;
 }
-.list ul[role=tree] li {
+.list ul[role="tree"] li {
   list-style-type: none;
   background: var(--surface-14);
 }
-.list ul[role=tree] li > details {
+.list ul[role="tree"] li > details {
   margin: 0;
   display: block;
 }
-.list ul[role=tree] li > details > summary {
+.list ul[role="tree"] li > details > summary {
   margin: 0;
   display: flex;
   align-items: center;
 }
-.list ul[role=tree] li > details > summary::before {
+.list ul[role="tree"] li > details > summary::before {
   content: "";
   display: block;
   background-color: var(--primary-4);
@@ -1216,15 +1942,16 @@ progress:not([value])::-webkit-progress-value {
   position: absolute;
   left: 4px;
 }
-.list ul[role=tree] li > details > summary:active::before {
+.list ul[role="tree"] li > details > summary:active::before {
   background-color: var(--primary-2);
 }
-.list ul[role=tree] li > details[open] > summary::before {
+.list ul[role="tree"] li > details[open] > summary::before {
   background-position: -12px;
   -webkit-mask-position: -12px;
   mask-position: -12px;
 }
-.list ul[role=tree] li::after, .list ul[role=tree] li ul::before {
+.list ul[role="tree"] li::after,
+.list ul[role="tree"] li ul::before {
   content: "";
   display: block;
   position: absolute;
@@ -1232,44 +1959,44 @@ progress:not([value])::-webkit-progress-value {
   right: 0;
   border-bottom: 1px solid var(--border-brightness-15);
 }
-.list ul[role=tree] .icon {
+.list ul[role="tree"] .icon {
   display: inline-flex;
   flex-direction: row;
   align-items: center;
   outline: none;
 }
-.list ul[role=tree] .icon > img {
+.list ul[role="tree"] .icon > img {
   width: 16px;
   height: 16px;
   margin-right: 1px;
 }
-.list ul[role=tree] .icon > .icon-label {
+.list ul[role="tree"] .icon > .icon-label {
   text-align: center;
   padding: 1px 3px;
 }
-.list ul[role=tree] .icon:focus .icon-label {
+.list ul[role="tree"] .icon:focus .icon-label {
   outline: none;
 }
-.list ul[role=tree] .icon[aria-selected=true] > img {
+.list ul[role="tree"] .icon[aria-selected="true"] > img {
   filter: brightness(0.5);
 }
-.list ul[role=tree] .icon[aria-selected=true] > .icon-label {
+.list ul[role="tree"] .icon[aria-selected="true"] > .icon-label {
   background-color: var(--field-fg);
   color: var(--field-bg);
 }
-.list ul[role=tree] [role=treeitem]:not(.icon) {
+.list ul[role="tree"] [role="treeitem"]:not(.icon) {
   display: inline-flex;
   outline: none;
 }
-.list ul[role=tree] [role=treeitem]:not(.icon)[aria-selected=true] {
+.list ul[role="tree"] [role="treeitem"]:not(.icon)[aria-selected="true"] {
   background-color: var(--field-fg);
   color: var(--field-bg);
 }
-.list ul[role=tree] ul {
+.list ul[role="tree"] ul {
   margin-left: 8px;
   padding-left: 10px;
 }
-.list ul[role=tree] ul li {
+.list ul[role="tree"] ul li {
   margin-left: -15px;
   padding-left: 16px;
 }
