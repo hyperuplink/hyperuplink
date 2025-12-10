@@ -3,13 +3,17 @@ package root
 import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/helpers"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/category"
-	"github.com/mrusme/hyperuplink/models/forum"
 	"github.com/mrusme/hyperuplink/models/user"
+	"github.com/mrusme/hyperuplink/models/vforum"
 	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
+
+type CategoryWithForums struct {
+	Category category.Category
+	Forums   []vforum.VForum
+}
 
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	myRoute := route.For("Root")
@@ -30,8 +34,8 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var fums *[]forum.Forum
-	fums, err = r.Runtime.Repositories.Forum.All(common.QueryOptions{
+	var fums *[]vforum.VForum
+	fums, err = r.Runtime.Repositories.Forum.VAll(common.QueryOptions{
 		OrderBy: "position",
 		Order:   common.Ascending,
 	})
@@ -39,9 +43,9 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var catsfums []helpers.CategoryWithForums
+	var catsfums []CategoryWithForums
 	for _, cat := range *cats {
-		catfum := helpers.CategoryWithForums{
+		catfum := CategoryWithForums{
 			Category: cat,
 		}
 		for _, fum := range *fums {

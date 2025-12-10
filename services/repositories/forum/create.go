@@ -28,5 +28,9 @@ func (repo *Repository) Create(model *forum.Forum) (rowID uuid.UUID, err error) 
 		model.CategoryID,
 		model.Description,
 	).Scan(&rowID)
+	if err != nil {
+		// TODO: Does it make sense to run this as a transaction?
+		_, err = repo.db.Exec(`REFRESH MATERIALIZED VIEW vforums`)
+	}
 	return rowID, repo.db.ConvertError(err)
 }

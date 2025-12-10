@@ -1,7 +1,7 @@
 <!-- CATEGORY -->
 {{ $category := .Data.Get "category" }}
+{{ template "views/layouts/partials/flash" . }}
 <div class="margin window active">
-  {{ template "views/layouts/partials/flash" . }}
   <div class="title-bar">
     <div class="title-bar-text">{{$category.Name}}</div>
   </div>

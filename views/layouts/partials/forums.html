@@ -30,7 +30,9 @@
       <!-- FORUM -->
       <tr role="option">
         <td class="icon big">
-          <a href="_{{$category.Slug}}/{{$forum.Slug}}" title="{{$forum.Name}}" class="icon big">
+          <a href="_{{$category.Slug}}/{{$forum.Slug}}"
+             title="{{$forum.Name}}"
+             class="icon big">
             <img src="static/icons/category.png">
             <div class="icon-label">
               <div>{{$forum.Name}}</div>
@@ -38,8 +40,8 @@
             </div>
           </a>
         </td>
-        <td class="no-mobile" style="text-align: right;">118</td>
-        <td class="no-mobile" style="text-align: right;">479</td>
+        <td class="no-mobile" style="text-align: right;">{{$forum.Topics}}</td>
+        <td class="no-mobile" style="text-align: right;">{{$forum.Replies}}</td>
         <td class="no-mobile" style="text-align: right;">2025-11-18 22:11</td>
       </tr>
       <!-- END FORUM -->

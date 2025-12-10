@@ -4,14 +4,7 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/mrusme/hyperuplink/models/category"
-	"github.com/mrusme/hyperuplink/models/forum"
 )
-
-type CategoryWithForums struct {
-	Category category.Category
-	Forums   []forum.Forum
-}
 
 func GetPaths(c fiber.Ctx) (
 	pathName string,

@@ -5,8 +5,8 @@ import (
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/category"
-	"github.com/mrusme/hyperuplink/models/forum"
 	"github.com/mrusme/hyperuplink/models/user"
+	"github.com/mrusme/hyperuplink/models/vforum"
 	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
 
@@ -34,8 +34,8 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 	req.UpdateTitle(cat.Name)
 	req.SetData("category", cat)
 
-	var fums *[]forum.Forum
-	fums, err = r.Runtime.Repositories.Forum.AllForCategoryUUID(
+	var fums *[]vforum.VForum
+	fums, err = r.Runtime.Repositories.Forum.VAllForCategoryUUID(
 		cat.ID,
 		common.QueryOptions{
 			OrderBy: "position",

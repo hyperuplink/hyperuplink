@@ -18,6 +18,7 @@ func New(cfg config.Redis) (disp *Dispatch, err error) {
 	disp = new(Dispatch)
 
 	disp.cfg = cfg
+	disp.ac = nil
 
 	return disp, nil
 }
@@ -56,7 +57,9 @@ func (disp *Dispatch) Startup() (err error) {
 }
 
 func (disp *Dispatch) Shutdown() (err error) {
-	disp.ac.Close()
+	if disp.ac != nil {
+		disp.ac.Close()
+	}
 	return nil
 }
 

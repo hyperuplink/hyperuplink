@@ -3,13 +3,17 @@ package forums
 import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/helpers"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/category"
 	"github.com/mrusme/hyperuplink/models/forum"
 	"github.com/mrusme/hyperuplink/models/user"
 	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
+
+type CategoryWithForums struct {
+	Category category.Category
+	Forums   []forum.Forum
+}
 
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	myRoute := route.For("AdminBoardForums")
@@ -39,9 +43,9 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var catsfums []helpers.CategoryWithForums
+	var catsfums []CategoryWithForums
 	for _, cat := range *cats {
-		catfum := helpers.CategoryWithForums{
+		catfum := CategoryWithForums{
 			Category: cat,
 		}
 		for _, fum := range *fums {

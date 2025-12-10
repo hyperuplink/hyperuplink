@@ -22,6 +22,7 @@ func (repo *Repository) Delete(model *forum.Forum) (err error) {
 	if err != nil {
 		return repo.db.ConvertError(err)
 	}
+
 	_, err = tx.Exec(`
 		WITH ordered_forums AS (
 			SELECT id, ROW_NUMBER() OVER (PARTITION BY category_id ORDER BY position) - 1 AS new_position
@@ -34,6 +35,11 @@ func (repo *Repository) Delete(model *forum.Forum) (err error) {
 		WHERE forums.id = ordered_forums.id
 		`,
 	)
+	if err != nil {
+		return repo.db.ConvertError(err)
+	}
+
+	_, err = tx.Exec(`REFRESH MATERIALIZED VIEW vforums`)
 	if err != nil {
 		return repo.db.ConvertError(err)
 	}
