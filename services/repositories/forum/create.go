@@ -6,7 +6,13 @@ import (
 )
 
 func (repo *Repository) Create(model *forum.Forum) (rowID uuid.UUID, err error) {
-	err = repo.db.QueryRow(`INSERT INTO forums (
+	tx, err := repo.db.Tx()
+	if err != nil {
+		return rowID, repo.db.ConvertError(err)
+	}
+	defer tx.End()
+
+	err = tx.QueryRow(`INSERT INTO forums (
 		 name
 		,slug
 		,position
@@ -29,8 +35,13 @@ func (repo *Repository) Create(model *forum.Forum) (rowID uuid.UUID, err error) 
 		model.Description,
 	).Scan(&rowID)
 	if err != nil {
-		// TODO: Does it make sense to run this as a transaction?
-		_, err = repo.db.Exec(`REFRESH MATERIALIZED VIEW vforums`)
+		return rowID, repo.db.ConvertError(err)
 	}
-	return rowID, repo.db.ConvertError(err)
+
+	_, err = tx.Exec(`REFRESH MATERIALIZED VIEW vforums`)
+	if err != nil {
+		return rowID, repo.db.ConvertError(err)
+	}
+
+	return rowID, repo.db.ConvertError(tx.Commit())
 }
