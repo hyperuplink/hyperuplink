@@ -3,12 +3,10 @@ package root
 import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/http/web/root/account"
 	"github.com/mrusme/hyperuplink/http/web/root/admin"
 	"github.com/mrusme/hyperuplink/http/web/root/categories"
 	"github.com/mrusme/hyperuplink/http/web/root/session"
-	"github.com/mrusme/hyperuplink/models/user"
 	"github.com/mrusme/hyperuplink/runtime"
 )
 
@@ -60,19 +58,6 @@ func (r *Route) GetPath() string {
 
 func (r *Route) GetEnv() *route.Environment {
 	return r.Env
-}
-
-func (r *Route) Index(c fiber.Ctx) error {
-	myRoute := route.For("Root")
-	req := request.New(r, c, myRoute,
-		[]string{"base"}, myRoute.AsURL(),
-		"")
-
-	if ret, rerr := req.AccessControl(user.GuestRole); ret {
-		return rerr
-	}
-
-	return req.Respond()
 }
 
 func (r *Route) Show(c fiber.Ctx) error {
