@@ -89,6 +89,7 @@
     <!-- END CATEGORY -->
     {{ end }}
     <!-- NEW FORUM -->
+    <div class="margin">{{._.T "add_new_forum"}}</div>
     <div class="lowered padding margin post flex-row gap">
       <form method="post" action="{{.Site.GetPathname}}" class="flex-column grow">
         <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">

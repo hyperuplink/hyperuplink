@@ -16,7 +16,7 @@ type ForumUpdateForm struct {
 	Name        string `form:"name" validate:"required,min=1,max=32"`
 	Slug        string `form:"slug" validate:"required,slug,min=1,max=32"`
 	CategoryID  string `form:"category_id" validate:"required,uuid"`
-	Description string `form:"description" validate:"required,min=1,max=128"`
+	Description string `form:"description" validate:"min=0,max=128"`
 }
 
 func (r *Route) Update(c fiber.Ctx) (err error) {

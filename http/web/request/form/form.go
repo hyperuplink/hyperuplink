@@ -85,8 +85,8 @@ func (f *Form) Input(
 		value = fvalue
 	}
 
-	html = fmt.Sprintf("%s<input type=\"%s\" id=\"%s\" name=\"%s\" value=\"%s\" class=\"%s\">",
-		html, inputType, name, name, value, f.fl.ClassFor(name))
+	html = fmt.Sprintf("%s<input type=\"%s\" name=\"%s\" value=\"%s\" class=\"%s\">",
+		html, inputType, name, value, f.fl.ClassFor(name))
 
 	return template.HTML(html)
 }

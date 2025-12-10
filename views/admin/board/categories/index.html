@@ -62,6 +62,7 @@
     <!-- END -->
     {{ end }}
     <!-- NEW CATEGORY -->
+    <div class="margin">{{._.T "add_new_category"}}</div>
     <div class="lowered padding margin post flex-row gap">
       <form method="post" action="{{.Site.GetPathname}}" class="flex-column grow">
         <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
