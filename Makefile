@@ -34,7 +34,7 @@ db\:dump: ## dump current data from development database into dummy.sql
 	pg_dump -h localhost -p 5432 -U postgres -d hyperuplink_dev -t categories -t forums --data-only --inserts -f dummy.sql
 
 db\:restore: ## restore dummy.sql data
-	psql -h localhost -p 5432 -U postgres < dummy.sql
+	psql -h localhost -p 5432 -U postgres -d hyperuplink_dev < dummy.sql
 
 run: build ## build and run
 	./build/hyperuplink -c "file://$(PWD)/hyperuplink.toml"

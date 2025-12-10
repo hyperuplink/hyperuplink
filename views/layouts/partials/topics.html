@@ -1,0 +1,44 @@
+{{ $dict := . }}
+{{ $site := get $dict "Site"}}
+{{ $forum := get $dict "Forum"}}
+<div class="list" role="listbox">
+  <table class="detailed">
+    <thead>
+      <tr>
+        <th scope="col" role="button">Name</th>
+        <th class="no-mobile"
+            scope="col"
+            role="button"
+            style="text-align: right;
+                   width: 60px">Replies</th>
+        <th class="no-mobile"
+            scope="col"
+            role="button"
+            style="text-align: right;
+                   width: 60px">Views</th>
+        <th class="no-mobile"
+            scope="col"
+            role="button"
+            aria-sort="descending"
+            style="text-align: right;
+                   width: 140px">Updated</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr role="option">
+        <td>
+          <a href="#" title="" class="icon big">
+            <img src="{{.Site.GetRelRoot}}static/icons/post.png">
+            <div class="icon-label">
+              <div>Opinions on Clouvider?</div>
+              <div class="icon-sublabel">by TomAto on Tue Nov 04, 2025 1:06 pm</div>
+            </div>
+          </a>
+        </td>
+        <td class="no-mobile" style="text-align: right;">12</td>
+        <td class="no-mobile" style="text-align: right;">89</td>
+        <td class="no-mobile" style="text-align: right;">2025-07-14 20:28</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

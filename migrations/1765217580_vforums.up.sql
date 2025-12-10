@@ -1,14 +1,14 @@
 CREATE MATERIALIZED VIEW vforums AS
 SELECT
     f.*,
-    (SELECT COUNT(*)
+    COALESCE((SELECT COUNT(*)
      FROM topics t
-     WHERE t.forum_id = f.id) AS topics,
+     WHERE t.forum_id = f.id), 0) AS topics,
 
-    (SELECT COUNT(*)
+    COALESCE((SELECT COUNT(*)
      FROM replies r
      JOIN topics t ON r.topic_id = t.id
-     WHERE t.forum_id = f.id) AS replies,
+     WHERE t.forum_id = f.id), 0) AS replies,
 
     (SELECT MAX(r.created_at)
      FROM replies r

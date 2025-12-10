@@ -33,7 +33,7 @@
           <a href="_{{$category.Slug}}/{{$forum.Slug}}"
              title="{{$forum.Name}}"
              class="icon big">
-            <img src="static/icons/category.png">
+            <img src="{{.Site.GetRelRoot}}static/icons/category.png">
             <div class="icon-label">
               <div>{{$forum.Name}}</div>
               <div class="icon-sublabel">{{$forum.Description}}</div>
