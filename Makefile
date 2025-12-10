@@ -1,4 +1,4 @@
-.PHONY: test build help
+.PHONY: all help test build db\:drop db\:dump db\:restore
 PWD := $(shell pwd)
 GOPATH := $(shell go env GOPATH)
 
@@ -27,8 +27,14 @@ build: ## build
 	@echo "DATE    = $(DATE)"
 	@CGO_ENABLED=0 GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags "-s -w -X \"${PROJECT}/runtime.Version=${VERSION}\" -X \"${PROJECT}/runtime.Commit=${COMMIT}\" -X \"${PROJECT}/runtime.Date=${DATE}\"" -o $(PWD)/build/$(NAME)
 
-drop: ## drop (and recreate) development database
+db\:drop: ## drop (and recreate) development database
 	psql -h localhost -p 5432 -U postgres -c "DROP DATABASE hyperuplink_dev;" -c "CREATE DATABASE hyperuplink_dev;"
+
+db\:dump: ## dump current data from development database into dummy.sql
+	pg_dump -h localhost -p 5432 -U postgres -d hyperuplink_dev -t categories -t forums --data-only --inserts -f dummy.sql
+
+db\:restore: ## restore dummy.sql data
+	psql -h localhost -p 5432 -U postgres < dummy.sql
 
 run: build ## build and run
 	./build/hyperuplink -c "file://$(PWD)/hyperuplink.toml"
