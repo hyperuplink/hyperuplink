@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"regexp"
 	runt "runtime"
 	"strconv"
 	"strings"
@@ -35,17 +36,31 @@ import (
 	slogfiber "github.com/samber/slog-fiber"
 )
 
+const (
+	VALID_SLUG_REGEX     = `^[a-z0-9\-]+$`
+	VALID_SLUG_REGEX_NEG = `[^a-z0-9\-]`
+)
+
 type Web struct {
-	rt      *runtime.Runtime
-	app     *fiber.App
-	r       route.IRouteController
-	engine  *html.Engine
-	watcher *fsnotify.Watcher
-	hash    string
+	rt        *runtime.Runtime
+	app       *fiber.App
+	r         route.IRouteController
+	engine    *html.Engine
+	validator *validator.Validate
+	watcher   *fsnotify.Watcher
+	hash      string
 }
 
 type structValidator struct {
 	validate *validator.Validate
+}
+
+func IsValidSlug(fl validator.FieldLevel) bool {
+	value := fl.Field().String()
+
+	re := regexp.MustCompile(VALID_SLUG_REGEX)
+
+	return re.MatchString(value)
 }
 
 func (v *structValidator) Validate(out any) error {
@@ -61,6 +76,9 @@ func New(
 	if srv.engine, err = srv.getViewsEngine(); err != nil {
 		return nil, err
 	}
+
+	srv.validator = validator.New()
+	srv.validator.RegisterValidation("slug", IsValidSlug)
 
 	srv.app = fiber.New(fiber.Config{
 		StrictRouting:      false,
@@ -78,7 +96,7 @@ func New(
 		ServerHeader:      srv.rt.Config.ServerServerHeader(),
 		AppName:           "hyperuplink",
 		Views:             srv.engine,
-		StructValidator:   &structValidator{validate: validator.New()},
+		StructValidator:   &structValidator{validate: srv.validator},
 	})
 
 	return srv, nil

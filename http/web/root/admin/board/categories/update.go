@@ -15,7 +15,7 @@ import (
 type CategoryUpdateForm struct {
 	ID   string `form:"id" validate:"required,uuid"`
 	Name string `form:"name" validate:"required,min=1,max=32"`
-	Slug string `form:"slug" validate:"required,min=1,max=32"`
+	Slug string `form:"slug" validate:"required,slug,min=1,max=32"`
 }
 
 func (r *Route) Update(c fiber.Ctx) (err error) {

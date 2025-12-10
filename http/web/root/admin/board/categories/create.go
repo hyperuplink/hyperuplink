@@ -12,7 +12,7 @@ import (
 
 type CategoryCreateForm struct {
 	Name string `form:"name" validate:"required,min=1,max=32"`
-	Slug string `form:"slug" validate:"required,min=1,max=32"`
+	Slug string `form:"slug" validate:"required,slug,min=1,max=32"`
 }
 
 func (r *Route) Create(c fiber.Ctx) (err error) {
