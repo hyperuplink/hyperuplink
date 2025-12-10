@@ -26,4 +26,3 @@ func (repo *Repository) Delete(model *forum.Forum) (err error) {
 	)
 	return repo.db.ConvertError(err)
 }
-
