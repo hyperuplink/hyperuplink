@@ -4,7 +4,8 @@
   </div>
   <div class="window-body">
     {{ template "views/layouts/partials/flash" . }}
-    {{ range $idx, $item := .Data.Get "categories" }}
+    {{ $categories := .Data.Get "categories"}}
+    {{ range $idx, $item := $categories }}
     <!-- CATEGORY -->
     <div class="raised padding margin post flex-row gap">
       <form method="post"
@@ -27,7 +28,13 @@
         <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
         <input type="hidden" name="id" value="{{$item.ID}}">
         <label>&nbsp;</label>
-        <button type="submit" class="" title="{{$._.T "move_up"}}">&uarr;</button>
+        <button type="submit"
+                class=""
+                title="{{$._.T "move_up"}}"
+                {{ if eq $idx 0 }}
+                disabled=""
+                {{ end }}>&uarr;
+        </button>
       </form>
       <form method="post"
             action="{{$.Site.GetPathname}}/movedown"
@@ -35,7 +42,13 @@
         <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
         <input type="hidden" name="id" value="{{$item.ID}}">
         <label>&nbsp;</label>
-        <button type="submit" class="" title="{{$._.T "move_down"}}">&darr;</button>
+        <button type="submit"
+                class=""
+                title="{{$._.T "move_down"}}"
+                {{ if eq $idx (sub (len $categories) 1) }}
+                disabled=""
+                {{ end }}>&darr;
+        </button>
       </form>
       <form method="post"
             action="{{$.Site.GetPathname}}/destroy"

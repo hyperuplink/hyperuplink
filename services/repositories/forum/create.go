@@ -7,26 +7,29 @@ import (
 
 func (repo *Repository) Create(model *forum.Forum) (rowID uuid.UUID, err error) {
 	err = repo.db.QueryRow(`INSERT INTO forums (
-		 id
-		,name
+		 name
 		,slug
-		,category_id`+
+		,position
+		,category_id
+		,description`+
 		// ,created_at
 		// ,updated_at
 		// ,deleted_at
 		`) VALUES (
 		,$1
 		,$2
+		,(SELECT COALESCE(MAX(position), 0) + 1 FROM categories WHERE category_id = $3 AND deleted_at IS NULL)
 		,$3
 		,$4`+
-		// ,$5
-		// ,$6
 		// ,$7
+		// ,$8
+		// ,$9
 		`) RETURNING id`,
-		model.ID,
 		model.Name,
 		model.Slug,
+		// model.Position,
 		model.CategoryID,
+		model.Description,
 		// model.CreatedAt,
 		// model.UpdatedAt,
 		// model.DeletedAt,

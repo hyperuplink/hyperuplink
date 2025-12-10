@@ -17,7 +17,7 @@ func (repo *Repository) Create(model *category.Category) (rowID uuid.UUID, err e
 		`) VALUES (
 		 $1
 		,$2
-		,(SELECT COALESCE(MAX(position), 0) + 1 FROM categories)`+
+		,(SELECT COALESCE(MAX(position), 0) + 1 FROM categories WHERE deleted_at IS NULL)`+
 		// ,$4
 		// ,$5
 		// ,$6

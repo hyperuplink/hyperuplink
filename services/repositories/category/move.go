@@ -9,6 +9,7 @@ func (repo *Repository) MoveUp(model *category.Category) (err error) {
 		SELECT id, position
 		FROM categories
 		WHERE id = $1
+			AND deleted_at IS NULL
 	)
 	UPDATE categories
 	SET position = CASE
@@ -17,7 +18,8 @@ func (repo *Repository) MoveUp(model *category.Category) (err error) {
 		ELSE categories.position
 	END
 	FROM moved_up
-	WHERE categories.id = moved_up.id OR categories.position = moved_up.position - 1`,
+	WHERE (categories.id = moved_up.id OR (categories.position = moved_up.position - 1))
+		AND categories.deleted_at IS NULL`,
 		model.ID,
 	)
 	return repo.db.ConvertError(err)
@@ -28,6 +30,7 @@ func (repo *Repository) MoveDown(model *category.Category) (err error) {
 		SELECT id, position
 		FROM categories
 		WHERE id = $1
+			AND deleted_at IS NULL
 	)
 	UPDATE categories
 	SET position = CASE
@@ -36,7 +39,8 @@ func (repo *Repository) MoveDown(model *category.Category) (err error) {
 		ELSE categories.position
 	END
 	FROM moved_down
-	WHERE categories.id = moved_down.id OR categories.position = moved_down.position + 1`,
+	WHERE (categories.id = moved_down.id OR (categories.position = moved_down.position + 1))
+		AND categories.deleted_at IS NULL`,
 		model.ID,
 	)
 	return repo.db.ConvertError(err)
