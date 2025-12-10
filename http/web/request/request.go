@@ -121,6 +121,11 @@ func New(
 	return req
 }
 
+func (req *Request) UpdateTitle(title string) {
+	req.Site.SetTitle(title)
+	req.BCN.UpdateLabel(title)
+}
+
 func (req *Request) SetData(key string, val interface{}) {
 	req.Data.Set(key, val)
 }

@@ -35,7 +35,7 @@ func (qo QueryOptions) Query(
 	if strings.Index(query, "WHERE") == -1 {
 		q = fmt.Sprintf("%s WHERE ", query)
 	} else {
-		q = fmt.Sprintf("%s ", query)
+		q = fmt.Sprintf("%s AND ", query)
 	}
 
 	var wheres []string

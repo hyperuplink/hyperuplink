@@ -9,3 +9,6 @@
 !/build/.gitkeep
 /dist/**
 .DS_Store
+
+# TODO: Remove
+/static/css/theme2.css

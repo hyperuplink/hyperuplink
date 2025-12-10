@@ -1,0 +1,49 @@
+{{ $dict := . }}
+{{ $site := get $dict "Site"}}
+{{ $category := get $dict "Category"}}
+{{ $forums := get $dict "Forums"}}
+<div class="list" role="listbox">
+  <table class="detailed">
+    <thead>
+      <tr>
+        <th scope="col" role="button">Name</th>
+        <th class="no-mobile"
+            scope="col"
+            role="button"
+            style="text-align: right;
+                   width: 60px">Topics</th>
+        <th class="no-mobile"
+            scope="col"
+            role="button"
+            style="text-align: right;
+                   width: 60px">Replies</th>
+        <th class="no-mobile"
+            scope="col"
+            role="button"
+            aria-sort="descending"
+            style="text-align: right;
+                   width: 140px">Updated</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{ range $forums_idx, $forum := $forums }}
+      <!-- FORUM -->
+      <tr role="option">
+        <td class="icon big">
+          <a href="_{{$category.Slug}}/{{$forum.Slug}}" title="{{$forum.Name}}" class="icon big">
+            <img src="static/icons/category.png">
+            <div class="icon-label">
+              <div>{{$forum.Name}}</div>
+              <div class="icon-sublabel">{{$forum.Description}}</div>
+            </div>
+          </a>
+        </td>
+        <td class="no-mobile" style="text-align: right;">118</td>
+        <td class="no-mobile" style="text-align: right;">479</td>
+        <td class="no-mobile" style="text-align: right;">2025-11-18 22:11</td>
+      </tr>
+      <!-- END FORUM -->
+      {{ end }}
+    </tbody>
+  </table>
+</div>

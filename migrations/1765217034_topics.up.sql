@@ -6,6 +6,7 @@ CREATE TABLE topics (
   author_id UUID NOT NULL,
   kind VARCHAR(16) DEFAULT 'regular',
   anonymous BOOLEAN DEFAULT FALSE,
+  pinned BOOLEAN DEFAULT FALSE,
   text TEXT NOT NULL,
   poll_options VARCHAR(78) [],
   created_at TIMESTAMP DEFAULT now(),

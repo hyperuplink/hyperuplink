@@ -1,0 +1,12 @@
+<!-- CATEGORY -->
+{{ $category := .Data.Get "category" }}
+<div class="margin window active">
+  {{ template "views/layouts/partials/flash" . }}
+  <div class="title-bar">
+    <div class="title-bar-text">{{$category.Name}}</div>
+  </div>
+  <div class="window-body">
+    {{ template "views/layouts/partials/forums" dict "Site" .Site "Category" $category "Forums" (.Data.Get "forums") }}
+  </div>
+</div>
+<!-- END CATEGORY -->

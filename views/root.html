@@ -56,53 +56,11 @@
 <!-- CATEGORY -->
 <div class="margin window active">
   <div class="title-bar">
-    <div class="title-bar-text">{{$category.Name}}</div>
-  </div>
-  <div class="window-body">
-    <div class="list" role="listbox">
-      <table class="detailed">
-        <thead>
-          <tr>
-            <th scope="col" role="button">Name</th>
-            <th class="no-mobile"
-                scope="col"
-                role="button"
-                style="text-align: right;
-                       width: 60px">Topics</th>
-            <th class="no-mobile"
-                scope="col"
-                role="button"
-                style="text-align: right;
-                       width: 60px">Posts</th>
-            <th class="no-mobile"
-                scope="col"
-                role="button"
-                aria-sort="descending"
-                style="text-align: right;
-                       width: 140px">Updated</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{ range $forums_idx, $forum := $item.Forums }}
-          <!-- FORUM -->
-          <tr role="option">
-            <td class="icon big">
-              <img src="static/icons/category.png">
-              <div class="icon-label">
-                <div>{{$forum.Name}}</div>
-                <div class="icon-sublabel">{{$forum.Description}}</div>
-              </div>
-            </td>
-            <td class="no-mobile" style="text-align: right;">118</td>
-            <td class="no-mobile" style="text-align: right;">479</td>
-            <td class="no-mobile" style="text-align: right;">2025-11-18 22:11</td>
-          </tr>
-          <!-- END FORUM -->
-          {{ end }}
-        </tbody>
-      </table>
+    <div class="title-bar-text">
+      <a href="_{{$category.Slug}}" title="{{$category.Name}}">{{$category.Name}}</a>
     </div>
   </div>
+  <div class="window-body">{{ template "views/layouts/partials/forums" dict "Site" $.Site "Category" $category "Forums" $item.Forums }}</div>
 </div>
 <!-- END CATEGORY -->
 {{ end }}

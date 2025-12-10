@@ -23,6 +23,7 @@ type Topic struct {
 
 	Kind        Kind     `json:"kind"`
 	Anonymous   bool     `json:"anonymous"`
+	Pinned      bool     `json:"pinned"`
 	Text        string   `json:"text"`
 	PollOptions []string `json:"poll_options"`
 
