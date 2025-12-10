@@ -1,20 +1,17 @@
 package category
 
 import (
-	"context"
-
 	"github.com/mrusme/hyperuplink/models/category"
 )
 
 func (repo *Repository) Delete(model *category.Category) (err error) {
-	tx, cancel, err := repo.db.Tx()
-	defer cancel()
+	tx, err := repo.db.Tx()
 	if err != nil {
 		return repo.db.ConvertError(err)
 	}
-	defer tx.Rollback(context.Background())
+	defer tx.End()
 
-	_, err = tx.Exec(context.Background(), `
+	_, err = tx.Exec(`
 		UPDATE categories SET
 			updated_at = NOW(),
 			deleted_at = NOW()
@@ -25,7 +22,7 @@ func (repo *Repository) Delete(model *category.Category) (err error) {
 	if err != nil {
 		return repo.db.ConvertError(err)
 	}
-	_, err = tx.Exec(context.Background(), `
+	_, err = tx.Exec(`
 		WITH ordered_categories AS (
 			SELECT id, ROW_NUMBER() OVER (ORDER BY position) - 1 AS new_position
 			FROM categories
@@ -41,7 +38,5 @@ func (repo *Repository) Delete(model *category.Category) (err error) {
 		return repo.db.ConvertError(err)
 	}
 
-	return repo.db.ConvertError(
-		tx.Commit(context.Background()),
-	)
+	return repo.db.ConvertError(tx.Commit())
 }
