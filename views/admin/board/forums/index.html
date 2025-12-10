@@ -1,0 +1,119 @@
+<div class="margin window active">
+  <div class="title-bar">
+    <div class="title-bar-text">{{.Site.Title}}</div>
+  </div>
+  <div class="window-body">
+    {{ template "views/layouts/partials/flash" . }}
+    {{ $categories_forums := .Data.Get "categories_forums"}}
+    {{ range $categories_idx, $item := $categories_forums }}
+    {{$category := $item.Category}}
+    <!-- CATEGORY -->
+    <fieldset class="margin">
+      <legend>{{$item.Category.Name}}</legend>
+      {{ range $forums_idx, $forum := $item.Forums }}
+      <!-- FORUM -->
+      <div class="raised padding margin post flex-row gap">
+        <form method="post"
+              action="{{$.Site.GetPathname}}/update"
+              class="flex-column grow">
+          <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+          <input type="hidden" name="id" value="{{$forum.ID}}">
+          <div class="flex-row gap">
+            <div class="flex-column">
+              <label>{{$._.T "category"}}</label>
+              <div class="dropdown">
+                <select name="category_id" size="1">
+                  {{ range $categories_idx, $item := $categories_forums }}
+                  {{$category := $item.Category}}
+                  <option value="{{$category.ID}}"
+                          {{ if eq $category.ID $forum.CategoryID }}
+                          selected
+                          {{ end }}>{{$category.Name}}
+                  </option>
+                  {{ end }}
+                </select>
+                <div class="dropdown-button"></div>
+              </div>
+            </div>
+            <div class="flex-column grow">{{$.Form.Input "text" "name" $forum.Name true}}</div>
+            <div class="flex-column grow">{{$.Form.Input "text" "slug" $forum.Slug true}}</div>
+            <div class="flex-column">
+              <label>&nbsp;</label>
+              <button type="submit" class="affirmative" title="{{$._.T "save"}}">&check;</button>
+            </div>
+          </div>
+          <div class="flex-row gap">
+            <div class="flex-column grow">{{$.Form.Input "text" "description" $forum.Description true}}</div>
+          </div>
+        </form>
+        <form method="post"
+              action="{{$.Site.GetPathname}}/moveup"
+              class="flex-column">
+          <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+          <input type="hidden" name="id" value="{{$forum.ID}}">
+          <label>&nbsp;</label>
+          <button type="submit"
+                  class=""
+                  title="{{$._.T "move_up"}}"
+                  {{ if eq $forums_idx 0 }}
+                  disabled=""
+                  {{ end }}>&uarr;
+          </button>
+        </form>
+        <form method="post"
+              action="{{$.Site.GetPathname}}/movedown"
+              class="flex-column">
+          <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+          <input type="hidden" name="id" value="{{$forum.ID}}">
+          <label>&nbsp;</label>
+          <button type="submit"
+                  class=""
+                  title="{{$._.T "move_down"}}"
+                  {{ if eq $forums_idx (sub (len $item.Forums) 1) }}
+                  disabled=""
+                  {{ end }}>&darr;
+          </button>
+        </form>
+        <form method="post"
+              action="{{$.Site.GetPathname}}/destroy"
+              class="flex-column">
+          <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+          <input type="hidden" name="id" value="{{$forum.ID}}">
+          <label>&nbsp;</label>
+          <button type="submit" class="danger" title="{{$._.T "delete"}}">&times;</button>
+        </form>
+      </div>
+      <!-- END FORUM -->
+      {{ end }}
+    </fieldset>
+    <!-- END CATEGORY -->
+    {{ end }}
+    <!-- NEW FORUM -->
+    <div class="lowered padding margin post flex-row gap">
+      <form method="post" action="{{.Site.GetPathname}}" class="flex-column grow">
+        <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
+        <div class="flex-row gap">
+          <div class="flex-column">
+            <label>{{._.T "category"}}</label>
+            <div class="dropdown">
+              <select name="category_id" size="1">
+                {{ range $categories_idx, $item := $categories_forums }}
+                {{$category := $item.Category}}
+                <option value="{{$category.ID}}">{{$category.Name}}</option>
+                {{ end }}
+              </select>
+              <div class="dropdown-button"></div>
+            </div>
+          </div>
+          <div class="flex-column grow">{{.Form.Input "text" "name" "" true}}</div>
+          <div class="flex-column grow">{{.Form.Input "text" "slug" "" true}}</div>
+          <div class="flex-column">
+            <label>&nbsp;</label>
+            <button type="submit" class="affirmative" style="width: 168px;">{{._.T "add"}}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- END -->
+  </div>
+</div>

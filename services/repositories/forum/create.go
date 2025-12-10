@@ -11,28 +11,22 @@ func (repo *Repository) Create(model *forum.Forum) (rowID uuid.UUID, err error) 
 		,slug
 		,position
 		,category_id
-		,description`+
-		// ,created_at
-		// ,updated_at
-		// ,deleted_at
-		`) VALUES (
-		,$1
+		,description
+		,created_at
+		,updated_at
+	) VALUES (
+		 $1
 		,$2
-		,(SELECT COALESCE(MAX(position), 0) + 1 FROM categories WHERE category_id = $3 AND deleted_at IS NULL)
+		,(SELECT COALESCE(MAX(position), 0) + 1 FROM forums WHERE category_id = $3 AND deleted_at IS NULL)
 		,$3
-		,$4`+
-		// ,$7
-		// ,$8
-		// ,$9
-		`) RETURNING id`,
+		,$4
+		,NOW()
+		,NOW()
+	) RETURNING id`,
 		model.Name,
 		model.Slug,
-		// model.Position,
 		model.CategoryID,
 		model.Description,
-		// model.CreatedAt,
-		// model.UpdatedAt,
-		// model.DeletedAt,
 	).Scan(&rowID)
 	return rowID, repo.db.ConvertError(err)
 }

@@ -1,10 +1,8 @@
-package board
+package forums
 
 import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/root/admin/board/categories"
-	"github.com/mrusme/hyperuplink/http/web/root/admin/board/forums"
 	"github.com/mrusme/hyperuplink/runtime"
 )
 
@@ -20,17 +18,16 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = route.For("AdminBoard").Pathname()
+	r.Path = route.For("AdminBoardForums").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
-		adminBoardCategoriesRoute, err := categories.New(r.Runtime, base)
-		r.Runtime.NilOrDie(err)
-		r.Routes = append(r.Routes, adminBoardCategoriesRoute)
-
-		adminBoardForumsRoute, err := forums.New(r.Runtime, base)
-		r.Runtime.NilOrDie(err)
-		r.Routes = append(r.Routes, adminBoardForumsRoute)
+		base.Get("", r.Index).Name("index")
+		base.Post("", r.Create).Name("create")
+		base.Post("/update", r.Update).Name("update")
+		base.Post("/moveup", r.MoveUp).Name("moveup")
+		base.Post("/movedown", r.MoveDown).Name("movedown")
+		base.Post("/destroy", r.Destroy).Name("destroy")
 	}, r.Path+".")
 
 	return r, nil
@@ -47,3 +44,4 @@ func (r *Route) GetPath() string {
 func (r *Route) GetEnv() *route.Environment {
 	return r.Env
 }
+

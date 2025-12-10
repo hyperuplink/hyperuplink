@@ -6,35 +6,19 @@ import (
 )
 
 func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
-	err = repo.db.QueryRow(`INSERT INTO users (`+
-		// id
-		`username
+	err = repo.db.QueryRow(`INSERT INTO users (
+		 username
 		,role
 		,member_of
-		,password`+
-		// ,password_reset_token
-		// ,password_reset_sent_at
-		`,email
+		,password
+		,email
 		,email_unconfirmed
 		,email_confirmation_token
-		,email_confirmation_sent_at`+
-		// ,email_confirmed_at
-		`,language`+
-		// ,otp_enabled
-		// ,otp_secret
-		// ,otp_timestep
-		// ,sign_in_last_at
-		// ,sign_in_failed_attempts
-		// ,sign_in_locked_at
-		// ,sign_in_unlock_token
-		// ,profile_picture
-		// ,signature
-		// ,created_at
-		// ,updated_at
-		// ,confirmed_at
-		// ,banned_at
-		// ,deleted_at
-		`) VALUES (
+		,email_confirmation_sent_at
+		,language
+		,created_at
+		,updated_at
+		) VALUES (
 		 $1
 		,$2
 		,$3
@@ -43,52 +27,19 @@ func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
 		,$6
 		,$7
 		,$8
-		,$9`+
-		// ,$10
-		// ,$11
-		// ,$12
-		// ,$13
-		// ,$14
-		// ,$15
-		// ,$16
-		// ,$17
-		// ,$18
-		// ,$19
-		// ,$20
-		// ,$21
-		// ,$22
-		// ,$23
-		// ,$24
-		// ,$25
-		// ,$26
-		`) RETURNING id`,
-		// model.ID,
+		,$9
+		,NOW()
+		,NOW()
+		) RETURNING id`,
 		model.Username,
 		model.Role,
 		model.MemberOf,
 		model.Password,
-		// model.PasswordResetToken,
-		// model.PasswordResetSentAt,
 		model.Email,
 		model.EmailUnconfirmed,
 		model.EmailConfirmationToken,
 		model.EmailConfirmationSentAt,
-		// model.EmailConfirmedAt,
 		model.Language,
-		// model.OTPEnabled,
-		// model.OTPSecret,
-		// model.OTPTimestep,
-		// model.SignInLastAt,
-		// model.SignInFailedAttempts,
-		// model.SignInLockedAt,
-		// model.SignInUnlockToken,
-		// model.ProfilePicture,
-		// model.Signature,
-		// model.CreatedAt,
-		// model.UpdatedAt,
-		// model.ConfirmedAt,
-		// model.BannedAt,
-		// model.DeletedAt,
 	).Scan(&rowID)
 	return rowID, repo.db.ConvertError(err)
 }

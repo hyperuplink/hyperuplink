@@ -13,4 +13,8 @@ CREATE TABLE forums (
   ) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS idx_forums_slug ON forums (
+  slug, category_id, deleted_at
+);
+
 CREATE INDEX idx_forums_categories_id ON forums (category_id);

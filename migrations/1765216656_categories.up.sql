@@ -7,3 +7,7 @@ CREATE TABLE categories (
   updated_at TIMESTAMP DEFAULT now(),
   deleted_at TIMESTAMP DEFAULT NULL
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_categories_slug ON categories (
+  slug, deleted_at
+);

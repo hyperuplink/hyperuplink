@@ -1,4 +1,4 @@
-package categories
+package forums
 
 import (
 	"reflect"
@@ -7,18 +7,18 @@ import (
 	"github.com/google/uuid"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
-	"github.com/mrusme/hyperuplink/models/category"
+	"github.com/mrusme/hyperuplink/models/forum"
 	"github.com/mrusme/hyperuplink/models/user"
 )
 
-type CategoryUpdateForm struct {
-	ID   string `form:"id" validate:"required,uuid"`
-	Name string `form:"name" validate:"required,min=1,max=32"`
-	Slug string `form:"slug" validate:"required,slug,min=1,max=32"`
+type ForumCreateForm struct {
+	Name       string `form:"name" validate:"required,min=1,max=32"`
+	Slug       string `form:"slug" validate:"required,slug,min=1,max=32"`
+	CategoryID string `form:"category_id" validate:"required,uuid"`
 }
 
-func (r *Route) Update(c fiber.Ctx) (err error) {
-	myRoute := route.For("AdminBoardCategories")
+func (r *Route) Create(c fiber.Ctx) (err error) {
+	myRoute := route.For("AdminBoardForums")
 	req := request.New(r, c, myRoute,
 		[]string{"base"}, myRoute.AsURL()+"/index",
 		myRoute.AsTitle())
@@ -27,7 +27,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(CategoryUpdateForm)
+	frm := new(ForumCreateForm)
 
 	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
 		return req.RedirectToRoute(myRoute)
@@ -35,15 +35,15 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 
 	r.Runtime.Debug("form", frm)
 
-	cat := new(category.Category)
-	cat.ID, err = uuid.Parse(frm.ID)
+	fum := new(forum.Forum)
+	fum.Name = frm.Name
+	fum.Slug = frm.Slug
+	fum.CategoryID, err = uuid.Parse(frm.CategoryID)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
-	cat.Name = frm.Name
-	cat.Slug = frm.Slug
 
-	err = r.Runtime.Repositories.Category.Update(cat)
+	_, err = r.Runtime.Repositories.Forum.Create(fum)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
