@@ -253,8 +253,16 @@ a.button {
   padding: 8px;
 }
 
-.reply > form > .actions > .button {
-  padding: 4px 14px;
+/* .reply > form > .actions > .button { */
+/*   padding: 4px 14px; */
+/* } */
+
+.text blockquote {
+  font-style: italic;
+}
+
+.text blockquote > p::before {
+  content: "> ";
 }
 
 @media (max-width: 600px) {

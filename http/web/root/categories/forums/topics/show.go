@@ -40,6 +40,11 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 	req.UpdateParentTitle(top.ForumName)
 	req.UpdateGrandParentHref(req.HrefTo("_" + top.CategorySlug))
 	req.UpdateGrandParentTitle(top.CategoryName)
+
+	top.Text, err = r.Runtime.Markdown.Convert(top.Text)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
 	req.SetData("topic", top)
 
 	return req.Respond()
