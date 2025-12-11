@@ -4,8 +4,8 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
-	"github.com/mrusme/hyperuplink/models/forum"
 	"github.com/mrusme/hyperuplink/models/user"
+	"github.com/mrusme/hyperuplink/models/vforum"
 	"github.com/mrusme/hyperuplink/models/vtopic"
 	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
@@ -20,8 +20,8 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var fum *forum.Forum
-	fum, err = r.Runtime.Repositories.Forum.GetBySlug(
+	var fum *vforum.VForum
+	fum, err = r.Runtime.Repositories.Forum.VGetBySlug(
 		c.Params("forums"), // TODO: Abstract into req, automatic err handling
 		common.QueryOptions{
 			Limit: 1,
@@ -32,6 +32,8 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 	}
 
 	req.UpdateTitle(fum.Name)
+	req.UpdateParentHref(req.HrefTo("_" + fum.CategorySlug))
+	req.UpdateParentTitle(fum.CategoryName)
 	req.SetData("forum", fum)
 
 	var tops *[]vtopic.VTopic

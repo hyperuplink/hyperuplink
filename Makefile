@@ -36,5 +36,8 @@ db\:dump: ## dump current data from development database into dummy.sql
 db\:restore: ## restore dummy.sql data
 	psql -h localhost -p 5432 -U postgres -d hyperuplink_dev < dummy.sql
 
+db\:refresh: ## trigger refresh of materialized views
+	psql -h localhost -p 5432 -U postgres -d hyperuplink_dev -c "REFRESH MATERIALIZED VIEW vforums; REFRESH MATERIALIZED VIEW vtopics;"
+
 run: build ## build and run
 	./build/hyperuplink -c "file://$(PWD)/hyperuplink.toml"

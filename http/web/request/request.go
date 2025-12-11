@@ -55,6 +55,9 @@ func New(
 	req.rt = rt
 	req.layouts = layouts
 	req.view = view
+	if req.view == "" {
+		req.view = "root"
+	}
 	req.Menu = menu.New()
 	req.BCN = bcn.New()
 	req.Site = site.New(req.r, req.c)
@@ -124,6 +127,14 @@ func New(
 func (req *Request) UpdateTitle(title string) {
 	req.Site.SetTitle(title)
 	req.BCN.UpdateLabel(title)
+}
+
+func (req *Request) UpdateParentTitle(title string) {
+	req.BCN.UpdateParentLabel(title)
+}
+
+func (req *Request) UpdateParentHref(href string) {
+	req.BCN.UpdateParentHref(href)
 }
 
 func (req *Request) SetData(key string, val interface{}) {

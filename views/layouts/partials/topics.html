@@ -1,6 +1,7 @@
 {{ $dict := . }}
 {{ $site := get $dict "Site"}}
 {{ $forum := get $dict "Forum"}}
+{{ $topics := get $dict "Topics"}}
 <div class="list" role="listbox">
   <table class="detailed">
     <thead>
@@ -25,20 +26,22 @@
       </tr>
     </thead>
     <tbody>
+      {{ range $idx_topic, $topic := $topics }}
       <tr role="option">
         <td>
           <a href="#" title="" class="icon big">
             <img src="{{.Site.GetRelRoot}}static/icons/post.png">
             <div class="icon-label">
-              <div>Opinions on Clouvider?</div>
-              <div class="icon-sublabel">by TomAto on Tue Nov 04, 2025 1:06 pm</div>
+              <div>{{$topic.Name}}</div>
+              <div class="icon-sublabel">by {{$topic.Author}} on {{$topic.CreatedAt.Time}}</div>
             </div>
           </a>
         </td>
-        <td class="no-mobile" style="text-align: right;">12</td>
-        <td class="no-mobile" style="text-align: right;">89</td>
-        <td class="no-mobile" style="text-align: right;">2025-07-14 20:28</td>
+        <td class="no-mobile" style="text-align: right;">{{$topic.Replies}}</td>
+        <td class="no-mobile" style="text-align: right;">{{$topic.Views}}</td>
+        <td class="no-mobile" style="text-align: right;">{{$topic.LastReplyAt.Time}}</td>
       </tr>
+      {{ end }}
     </tbody>
   </table>
 </div>
