@@ -64,6 +64,14 @@ func (r *Route) ConfirmShow(c fiber.Ctx) (err error) {
 		[]string{"base"}, myRoute.AsURL(),
 		myRoute.AsTitle())
 
+	if ret, rerr := req.AccessControl(
+		user.GuestRole,
+		user.UserRole,
+		user.AdminRole,
+	); ret {
+		return rerr
+	}
+
 	return req.Respond()
 }
 
@@ -72,6 +80,14 @@ func (r *Route) ConfirmCreate(c fiber.Ctx) (err error) {
 	req := request.New(r, c, myRoute,
 		[]string{"base"}, myRoute.AsURL(),
 		myRoute.AsTitle())
+
+	if ret, rerr := req.AccessControl(
+		user.GuestRole,
+		user.UserRole,
+		user.AdminRole,
+	); ret {
+		return rerr
+	}
 
 	frm := new(ConfirmForm)
 

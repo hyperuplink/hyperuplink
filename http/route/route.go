@@ -125,6 +125,28 @@ func (r Route) HasBreadcrumb() bool {
 	return r.noBreadcrumb == false
 }
 
+func (r Route) Fill(params map[string]string) (rt Route) {
+	var filledHierarchy []string
+
+	for _, segment := range r.hierarchy {
+		cidx := strings.Index(segment, ":")
+		if cidx > -1 {
+			segmentVar := segment[cidx+1:]
+			if filler, ok := params[segmentVar]; ok {
+				filledHierarchy = append(filledHierarchy, segment[0:cidx]+filler)
+			} else {
+				filledHierarchy = append(filledHierarchy, segment)
+			}
+		} else {
+			filledHierarchy = append(filledHierarchy, segment)
+		}
+	}
+
+	return Route{
+		hierarchy: filledHierarchy,
+	}
+}
+
 func For(id string) (r Route) {
 	var ok bool
 

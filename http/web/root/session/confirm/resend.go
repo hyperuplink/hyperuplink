@@ -28,6 +28,14 @@ func (r *Route) ConfirmResendCreate(c fiber.Ctx) (err error) {
 		[]string{"base"}, myRoute.AsURL(),
 		myRoute.AsTitle())
 
+	if ret, rerr := req.AccessControl(
+		user.GuestRole,
+		user.UserRole,
+		user.AdminRole,
+	); ret {
+		return rerr
+	}
+
 	frm := new(ConfirmResendForm)
 
 	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {

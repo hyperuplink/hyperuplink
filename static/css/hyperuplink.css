@@ -239,6 +239,12 @@ a.button {
   padding: 0px 4px;
 }
 
+.editor > div > input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-left: 0px;
+}
+
 .editor > textarea {
   width: 100%;
   box-sizing: border-box;

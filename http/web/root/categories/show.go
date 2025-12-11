@@ -16,7 +16,11 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 		[]string{"base"}, "categories/show",
 		"")
 
-	if ret, rerr := req.AccessControl(user.GuestRole); ret {
+	if ret, rerr := req.AccessControl(
+		user.GuestRole, // TODO: Remove!
+		user.UserRole,
+		user.AdminRole,
+	); ret {
 		return rerr
 	}
 

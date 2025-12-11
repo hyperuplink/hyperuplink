@@ -49,25 +49,17 @@ func (b *BreadcrumbNavigation) Prepend(bc Breadcrumb) {
 	b.breadcrumbs = append([]Breadcrumb{bc}, b.breadcrumbs...)
 }
 
-func (b *BreadcrumbNavigation) UpdateParentLabel(label string) {
+func (b *BreadcrumbNavigation) UpdateLabel(revIdx int, label string) {
 	bl := len(b.breadcrumbs)
-	if bl > 1 {
-		b.breadcrumbs[bl-2].Label = label
-		b.breadcrumbs[bl-2].Title = label
+	if bl >= revIdx {
+		b.breadcrumbs[bl-revIdx].Label = label
+		b.breadcrumbs[bl-revIdx].Title = label
 	}
 }
 
-func (b *BreadcrumbNavigation) UpdateParentHref(href string) {
+func (b *BreadcrumbNavigation) UpdateHref(revIdx int, href string) {
 	bl := len(b.breadcrumbs)
-	if bl > 1 {
-		b.breadcrumbs[bl-2].Href = href
-	}
-}
-
-func (b *BreadcrumbNavigation) UpdateLabel(label string) {
-	bl := len(b.breadcrumbs)
-	if bl > 0 {
-		b.breadcrumbs[bl-1].Label = label
-		b.breadcrumbs[bl-1].Title = label
+	if bl >= revIdx {
+		b.breadcrumbs[bl-revIdx].Href = href
 	}
 }

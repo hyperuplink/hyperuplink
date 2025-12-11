@@ -126,15 +126,23 @@ func New(
 
 func (req *Request) UpdateTitle(title string) {
 	req.Site.SetTitle(title)
-	req.BCN.UpdateLabel(title)
+	req.BCN.UpdateLabel(1, title)
 }
 
 func (req *Request) UpdateParentTitle(title string) {
-	req.BCN.UpdateParentLabel(title)
+	req.BCN.UpdateLabel(2, title)
 }
 
 func (req *Request) UpdateParentHref(href string) {
-	req.BCN.UpdateParentHref(href)
+	req.BCN.UpdateHref(2, href)
+}
+
+func (req *Request) UpdateGrandParentTitle(title string) {
+	req.BCN.UpdateLabel(3, title)
+}
+
+func (req *Request) UpdateGrandParentHref(href string) {
+	req.BCN.UpdateHref(3, href)
 }
 
 func (req *Request) SetData(key string, val interface{}) {

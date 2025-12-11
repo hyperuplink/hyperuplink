@@ -7,24 +7,19 @@ import (
 
 func (repo *Repository) Create(model *topic.Topic) (rowID uuid.UUID, err error) {
 	err = repo.db.QueryRow(`INSERT INTO topics (
-		 id
-		,name
+		 name
 		,slug
 		,forum_id
 		,author_id
 		,kind
 		,anonymous
 		,text
-		,poll_options`+
-		// ,created_at
-		// ,updated_at
-		`,ended_at`+
-		// ,moderated_at
-		// ,spammed_at
-		// ,locked_at
-		// ,deleted_at
-		`) VALUES (
-		,$1
+		,poll_options
+		,created_at
+		,updated_at
+		,ended_at
+		) VALUES (
+		 $1
 		,$2
 		,$3
 		,$4
@@ -32,16 +27,10 @@ func (repo *Repository) Create(model *topic.Topic) (rowID uuid.UUID, err error) 
 		,$6
 		,$7
 		,$8
+		,NOW()
+		,NOW()
 		,$9
-		,$10`+
-		// ,$11
-		// ,$12
-		// ,$13
-		// ,$14
-		// ,$15
-		// ,$16
-		`) RETURNING id`,
-		model.ID,
+	) RETURNING id`,
 		model.Name,
 		model.Slug,
 		model.ForumID,
@@ -50,13 +39,7 @@ func (repo *Repository) Create(model *topic.Topic) (rowID uuid.UUID, err error) 
 		model.Anonymous,
 		model.Text,
 		model.PollOptions,
-		// model.CreatedAt,
-		// model.UpdatedAt,
 		model.EndedAt,
-		// model.ModeratedAt,
-		// model.SpammedAt,
-		// model.LockedAt,
-		// model.DeletedAt,
 	).Scan(&rowID)
 	return rowID, repo.db.ConvertError(err)
 }

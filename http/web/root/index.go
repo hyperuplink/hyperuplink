@@ -21,7 +21,11 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		[]string{"base"}, myRoute.AsURL(),
 		"")
 
-	if ret, rerr := req.AccessControl(user.GuestRole); ret {
+	if ret, rerr := req.AccessControl(
+		user.GuestRole,
+		user.UserRole,
+		user.AdminRole,
+	); ret {
 		return rerr
 	}
 

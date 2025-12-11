@@ -40,7 +40,9 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 		[]string{"base"}, myRoute.AsURL(),
 		myRoute.AsTitle())
 
-	if ret, rerr := req.AccessControl(user.GuestRole); ret {
+	if ret, rerr := req.AccessControl(
+		user.GuestRole,
+	); ret {
 		return rerr
 	}
 

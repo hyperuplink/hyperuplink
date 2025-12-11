@@ -44,7 +44,7 @@ func (repo *Repository) VAllForForumID(
 	return repo.VAllForForumUUID(uuID, qo)
 }
 
-func (repo *Repository) VGetBySlug(
+func (repo *Repository) VGetByForumUUIDSlug(
 	forumUUID uuid.UUID,
 	slug string,
 	qo common.QueryOptions,
@@ -62,6 +62,49 @@ func (repo *Repository) VGetBySlug(
 			},
 		),
 		forumUUID,
+		slug,
+	)
+	if err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+
+	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[vtopic.VTopic])
+
+	return &mod, repo.db.ConvertError(err)
+}
+
+func (repo *Repository) VGetByForumIDSlug(
+	forumID string,
+	slug string,
+	qo common.QueryOptions,
+) (model *vtopic.VTopic, err error) {
+	var uuID uuid.UUID
+
+	if uuID, err = uuid.Parse(forumID); err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+
+	return repo.VGetByForumUUIDSlug(uuID, slug, qo)
+}
+
+func (repo *Repository) VGetBySlugs(
+	forumSlug string,
+	slug string,
+	qo common.QueryOptions,
+) (model *vtopic.VTopic, err error) {
+	var rows pgx.Rows
+	var mod vtopic.VTopic
+
+	rows, err = repo.db.Query(
+		qo.Query(
+			`SELECT * FROM vtopics
+			WHERE forum_slug = $1 AND slug = $2`,
+			common.QueryCapabilities{
+				HasSpammed: true,
+				HasDeleted: true,
+			},
+		),
+		forumSlug,
 		slug,
 	)
 	if err != nil {

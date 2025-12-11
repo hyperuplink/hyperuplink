@@ -38,7 +38,12 @@
 </ul>
 <!-- END MENUBAR -->
 <div class="editor">
-  <textarea name="reply"
+  <div class="">
+    <label for="name">{{ $._.T "subject"}}:</label>
+    {{$.Form.Input "text" "name" "" false}}
+  </div>
+  <label for="text">{{ $._.T "text"}}:</label>
+  <textarea name="text"
             cols="72"
             rows="12"
             wrap="soft"

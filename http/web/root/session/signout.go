@@ -15,7 +15,8 @@ func (r *Route) SignOutShow(c fiber.Ctx) (err error) {
 		myRoute.AsTitle())
 
 	if ret, rerr := req.AccessControl(
-		user.UserRole, user.AdminRole,
+		user.UserRole,
+		user.AdminRole,
 	); ret {
 		return rerr
 	}

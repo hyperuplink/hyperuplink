@@ -24,7 +24,11 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		[]string{"base"}, myRoute.AsURL()+"/index",
 		myRoute.AsTitle())
 
-	if ret, rerr := req.AccessControl(user.GuestRole); ret {
+	if ret, rerr := req.AccessControl(
+		user.GuestRole, // TODO: Remove!
+		user.UserRole,
+		user.AdminRole,
+	); ret {
 		return rerr
 	}
 
@@ -83,7 +87,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 
 		if topic_slug != "" {
 			var top *vtopic.VTopic
-			top, err = r.Runtime.Repositories.Topic.VGetBySlug(
+			top, err = r.Runtime.Repositories.Topic.VGetByForumUUIDSlug(
 				fum.ID,
 				topic_slug,
 				common.QueryOptions{

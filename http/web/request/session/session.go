@@ -3,6 +3,7 @@ package session
 import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/session"
+	"github.com/google/uuid"
 	"github.com/mrusme/hyperuplink/models/user"
 )
 
@@ -57,6 +58,21 @@ func (s *Session) GetUserID() (string, bool) {
 	}
 
 	return userID.(string), true
+}
+
+func (s *Session) GetUserUUID() (uuID uuid.UUID, ok bool) {
+	var userID string
+	var err error
+
+	if userID, ok = s.GetUserID(); !ok {
+		return uuID, false
+	}
+
+	if uuID, err = uuid.Parse(userID); err != nil {
+		return uuID, false
+	}
+
+	return uuID, true
 }
 
 func (s *Session) Reset() error {
