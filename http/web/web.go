@@ -106,12 +106,13 @@ func (srv *Web) loadMiddlewares() error {
 	srv.app.Use(slogfiber.NewWithConfig(srv.rt.Logger, slogfiber.Config{
 		DefaultLevel:       srv.rt.LoggerLevel,
 		WithRequestID:      true,
-		WithRequestBody:    false,
+		WithRequestBody:    srv.rt.IsDevelopmentMode(),
 		WithRequestHeader:  true,
-		WithResponseBody:   false,
+		WithResponseBody:   false, // srv.rt.IsDevelopmentMode(),
 		WithResponseHeader: true,
 		WithSpanID:         true,
-		WithTraceID:        true,
+		WithTraceID:        srv.rt.IsDevelopmentMode(),
+		Filters:            []slogfiber.Filter{slogfiber.IgnorePathPrefix("/static/")},
 	}))
 	srv.app.Use(recover.New())
 	srv.app.Use(requestid.New())
