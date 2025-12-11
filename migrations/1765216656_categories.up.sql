@@ -9,5 +9,5 @@ CREATE TABLE categories (
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_categories_slug ON categories (
-  slug, deleted_at
-);
+  slug
+) WHERE deleted_at IS NULL;

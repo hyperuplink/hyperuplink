@@ -11,7 +11,7 @@ type Recipient struct {
 	Lang     string
 }
 
-func (entity Recipient) SetRecipient(rcpt *user.User) {
+func (entity *Recipient) SetRecipient(rcpt *user.User) {
 	entity.Username = rcpt.Username
 	entity.Address = rcpt.Email
 	entity.Lang = rcpt.Language
@@ -22,6 +22,7 @@ type System struct {
 	BaseURL string
 }
 
-func (entity System) SetSystem(sys *setting.System) {
+func (entity *System) SetSystem(sys *setting.System) {
 	entity.Name = sys.Name
+	entity.BaseURL = sys.BaseURL
 }

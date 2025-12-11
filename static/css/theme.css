@@ -8,7 +8,6 @@
  * made as part of Hyperuplink and are licensed under the project's license.
  */
 :root {
-  --preferred-font: "Virtue";
   --desktop-bg: #9999cc;
   --window-fg: #000000;
   --field-bg: #fff;
@@ -81,7 +80,8 @@ a:focus {
 }
 
 code {
-  font-family: monospace;
+  font-family: var(--font-monospace);
+  font-size: var(--font-size-monospace);
 }
 
 .desktop {

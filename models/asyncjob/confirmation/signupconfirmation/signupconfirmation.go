@@ -9,10 +9,10 @@ import (
 )
 
 type SignupConfirmation struct {
-	Recipient common.Recipient
+	Recipient *common.Recipient
 	Subject   string
-	Signup    Signup
-	System    common.System
+	Signup    *Signup
+	System    *common.System
 }
 
 type Signup struct {
@@ -26,8 +26,12 @@ func New(
 	subject string,
 	token string,
 	signupURL string,
-) (entity SignupConfirmation, err error) {
-	entity = SignupConfirmation{}
+) (entity *SignupConfirmation, err error) {
+	entity = new(SignupConfirmation)
+	entity.Recipient = new(common.Recipient)
+	entity.Signup = new(Signup)
+	entity.System = new(common.System)
+
 	entity.SetSystem(sys)
 	entity.SetRecipient(forUser)
 	entity.SetSubject(subject)
@@ -38,19 +42,19 @@ func New(
 	return entity, nil
 }
 
-func (entity SignupConfirmation) SetSystem(sys *setting.System) {
+func (entity *SignupConfirmation) SetSystem(sys *setting.System) {
 	entity.System.SetSystem(sys)
 }
 
-func (entity SignupConfirmation) SetRecipient(rcpt *user.User) {
+func (entity *SignupConfirmation) SetRecipient(rcpt *user.User) {
 	entity.Recipient.SetRecipient(rcpt)
 }
 
-func (entity SignupConfirmation) SetSubject(subject string) {
+func (entity *SignupConfirmation) SetSubject(subject string) {
 	entity.Subject = subject
 }
 
-func (entity Signup) SetSignup(token string, url string) {
+func (entity *Signup) SetSignup(token string, url string) {
 	entity.Token = token
 	entity.URL = url
 }

@@ -18,7 +18,8 @@ func New() (*Markdown, error) {
 	md.md = goldmark.New(
 		goldmark.WithExtensions(
 			highlighting.NewHighlighting(
-				highlighting.WithStyle("TODO"),
+				// https://xyproto.github.io/splash/docs/
+				highlighting.WithStyle("xcode"),
 				highlighting.WithFormatOptions(
 					chromahtml.WithLineNumbers(true),
 				),

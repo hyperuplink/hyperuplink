@@ -8,10 +8,10 @@ import (
 )
 
 type ReplyNotification struct {
-	Recipient common.Recipient
+	Recipient *common.Recipient
 	Subject   string
-	Reply     Reply
-	System    common.System
+	Reply     *Reply
+	System    *common.System
 }
 
 type Reply struct {
@@ -20,9 +20,9 @@ type Reply struct {
 	Text       string
 	HTML       string
 	URL        string
-	Category   Category
-	Forum      Forum
-	Topic      Topic
+	Category   *Category
+	Forum      *Forum
+	Topic      *Topic
 }
 
 type Topic struct {
@@ -46,8 +46,12 @@ func New(
 	forUser *user.User,
 	// forPost *post.Post,
 	subject string,
-) (entity ReplyNotification, err error) {
-	entity = ReplyNotification{}
+) (entity *ReplyNotification, err error) {
+	entity = new(ReplyNotification)
+	entity.Recipient = new(common.Recipient)
+	entity.Reply = new(Reply)
+	entity.System = new(common.System)
+
 	entity.SetSystem(sys)
 	entity.SetRecipient(forUser)
 	entity.SetSubject(subject)
@@ -56,11 +60,11 @@ func New(
 	return entity, nil
 }
 
-func (entity ReplyNotification) SetRecipient(rcpt *user.User) {
+func (entity *ReplyNotification) SetRecipient(rcpt *user.User) {
 	entity.Recipient.SetRecipient(rcpt)
 }
 
-func (entity ReplyNotification) SetSubject(subject string) {
+func (entity *ReplyNotification) SetSubject(subject string) {
 	entity.Subject = subject
 }
 
@@ -86,6 +90,6 @@ func (entity ReplyNotification) SetSubject(subject string) {
 // 	}
 // }
 
-func (entity ReplyNotification) SetSystem(sys *setting.System) {
+func (entity *ReplyNotification) SetSystem(sys *setting.System) {
 	entity.System.SetSystem(sys)
 }

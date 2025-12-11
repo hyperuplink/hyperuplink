@@ -1,6 +1,9 @@
 :root {
-  font-family: "ChiKareGo2";
-  font-size: 16px;
+  --font-regular: "ChiKareGo2";
+  --font-size-regular: 16px;
+
+  --font-monospace: "ChiKareGo2";
+  --font-size-monospace: 16px;
 
   --desktop-bg: url("../images/background-light.gif") top left repeat;
   --window-fg: #000000;
@@ -47,10 +50,13 @@
 
   --selection-bg: var(--primary-5);
   --selection-fg: #000;
+
   --affirmative: #8fbc8f;
   --highlight: #efc71d;
   --danger: #f2bfd1;
   --warn: #ffba66;
   --info: #afeeee;
   --debug: #b0c4de;
+
+  --text-quote: #28784b;
 }

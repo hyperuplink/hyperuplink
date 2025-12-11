@@ -225,6 +225,7 @@ func (srv *Web) getViewsEngine() (*html.Engine, error) {
 	} else {
 		engine = html.NewFileSystem(http.FS(srv.rt.Embeds["views"]), ".html")
 	}
+	// https://masterminds.github.io/sprig/
 	engine.AddFuncMap(sprig.FuncMap())
 	engine.AddFunc("safeHTML",
 		func(s string) template.HTML {

@@ -38,10 +38,5 @@ func (repo *Repository) Create(model *forum.Forum) (rowID uuid.UUID, err error) 
 		return rowID, repo.db.ConvertError(err)
 	}
 
-	_, err = tx.Exec(`REFRESH MATERIALIZED VIEW vforums`)
-	if err != nil {
-		return rowID, repo.db.ConvertError(err)
-	}
-
 	return rowID, repo.db.ConvertError(tx.Commit())
 }

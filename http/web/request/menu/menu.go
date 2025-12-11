@@ -63,18 +63,19 @@ func (m *Menu) FileMenu(forRole user.Role) []MenuItem {
 			Disabled: (forRole == user.GuestRole),
 			Label:    m.T("new"),
 			Title:    m.T("new"),
-			Href:     route.For("CategoriesForumsTopicsNew").AsURL(),
+			Href:     route.For("New").AsURL(),
 		},
-		{
-			Label: m.T("open"),
-			SubItems: []MenuItem{
-				{ // TODO: List of previously opened posts
-					Label: m.T("Hetzner experiences?"),
-					Title: m.T("Hetzner experiences?"),
-					Href:  route.For("CategoriesForumsTopics").AsURL(),
-				},
-			},
-		},
+		// TODO: Implement Open for recently viewed posts
+		// {
+		// 	Label: m.T("open"),
+		// 	SubItems: []MenuItem{
+		// 		{ // TODO: List of previously opened posts
+		// 			Label: m.T("Hetzner experiences?"),
+		// 			Title: m.T("Hetzner experiences?"),
+		// 			Href:  route.For("CategoriesForumsTopics").AsURL(),
+		// 		},
+		// 	},
+		// },
 		{
 			IsSeparator: true,
 		},

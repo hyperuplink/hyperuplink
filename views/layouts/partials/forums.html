@@ -42,7 +42,7 @@
         </td>
         <td class="no-mobile" style="text-align: right;">{{$forum.Topics}}</td>
         <td class="no-mobile" style="text-align: right;">{{$forum.Replies}}</td>
-        <td class="no-mobile" style="text-align: right;">2025-11-18 22:11</td>
+        <td class="no-mobile" style="text-align: right;">{{$site.DateTime $forum.LastReplyAt}}</td>
       </tr>
       <!-- END FORUM -->
       {{ end }}

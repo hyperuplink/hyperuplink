@@ -7,7 +7,7 @@ import (
 
 func (disp *Dispatch) SignupConfirmations(
 	targetID string,
-	payload []signupconfirmation.SignupConfirmation,
+	payload []*signupconfirmation.SignupConfirmation,
 ) (err error) {
 	j := asyncjob.New(
 		targetID,
@@ -27,10 +27,10 @@ func (disp *Dispatch) SignupConfirmations(
 
 func (disp *Dispatch) SignupConfirmation(
 	targetID string,
-	payload signupconfirmation.SignupConfirmation,
+	payload *signupconfirmation.SignupConfirmation,
 ) (err error) {
 	return disp.SignupConfirmations(
 		targetID,
-		[]signupconfirmation.SignupConfirmation{payload},
+		[]*signupconfirmation.SignupConfirmation{payload},
 	)
 }

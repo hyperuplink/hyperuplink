@@ -14,7 +14,7 @@ CREATE TABLE forums (
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_forums_slug ON forums (
-  slug, category_id, deleted_at
-);
+  slug
+) WHERE deleted_at IS NULL;
 
 CREATE INDEX idx_forums_categories_id ON forums (category_id);

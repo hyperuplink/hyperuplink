@@ -9,10 +9,11 @@ SELECT
      FROM replies r
      WHERE r.topic_id = t.id) AS "last_reply_at",
 
-    u.username AS author,
+    u.username AS author_username,
     u.email AS author_email,
     u.profile_picture AS author_profile_picture,
     u.signature AS author_signature,
+    u.created_at AS author_joined_at,
 
     c.Name AS category_name,
     c.Slug AS category_slug,
@@ -23,3 +24,31 @@ FROM topics t
 LEFT JOIN users u ON u.id = t.author_id
 LEFT JOIN forums f ON f.id = t.forum_id
 LEFT JOIN categories c ON c.id = f.category_id;
+
+CREATE OR REPLACE FUNCTION refresh_vtopics() RETURNS TRIGGER
+  AS $$
+  BEGIN
+      REFRESH MATERIALIZED VIEW vtopics;
+    RETURN NULL;
+  END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER refresh_vtopics
+ AFTER INSERT OR UPDATE ON users
+ FOR EACH STATEMENT EXECUTE PROCEDURE refresh_vtopics();
+
+CREATE TRIGGER refresh_vtopics
+ AFTER INSERT OR UPDATE ON categories
+ FOR EACH STATEMENT EXECUTE PROCEDURE refresh_vtopics();
+
+CREATE TRIGGER refresh_vtopics
+ AFTER INSERT OR UPDATE ON forums
+ FOR EACH STATEMENT EXECUTE PROCEDURE refresh_vtopics();
+
+CREATE TRIGGER refresh_vtopics
+ AFTER INSERT ON topics
+ FOR EACH STATEMENT EXECUTE PROCEDURE refresh_vtopics();
+
+CREATE TRIGGER refresh_vtopics
+ AFTER INSERT ON replies
+ FOR EACH STATEMENT EXECUTE PROCEDURE refresh_vtopics();

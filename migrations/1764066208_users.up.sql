@@ -29,8 +29,10 @@ CREATE TABLE users (
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON users (
-  email, deleted_at
-);
+  email
+) WHERE deleted_at IS NULL;
+
+
 CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username ON users (
-  username, deleted_at
-);
+  username
+) WHERE deleted_at IS NULL;

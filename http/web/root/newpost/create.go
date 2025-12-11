@@ -9,6 +9,8 @@ import (
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/topic"
 	"github.com/mrusme/hyperuplink/models/user"
+	"github.com/mrusme/hyperuplink/models/vtopic"
+	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
 
 type NewCreateForm struct {
@@ -56,9 +58,21 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	var vtop *vtopic.VTopic
+	vtop, err = r.Runtime.Repositories.Topic.VGetByForumUUIDSlug(
+		top.ForumID,
+		top.Slug,
+		common.QueryOptions{
+			Limit: 1,
+		},
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
 	fill := make(map[string]string)
-	fill["categories"] = "category" // TODO: Set category slug
-	fill["forums"] = "forum"       // TODO: Set forum slug
+	fill["categories"] = vtop.CategorySlug
+	fill["forums"] = vtop.ForumSlug
 	fill["topics"] = top.Slug
 	return req.RedirectToRoute(route.For("CategoriesForumsTopics").Fill(fill))
 }

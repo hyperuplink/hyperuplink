@@ -9,6 +9,7 @@ CREATE TABLE topics (
   pinned BOOLEAN DEFAULT FALSE,
   text TEXT NOT NULL,
   poll_options VARCHAR(78) [],
+  views BIGINT DEFAULT 0,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   ended_at TIMESTAMP DEFAULT NULL,
@@ -23,6 +24,10 @@ CREATE TABLE topics (
     id
   ) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_topics_slug ON topics (
+  slug, forum_id
+) WHERE deleted_at IS NULL;
 
 CREATE INDEX idx_topics_forums_id ON topics (forum_id);
 CREATE INDEX idx_topics_users_id ON topics (author_id);

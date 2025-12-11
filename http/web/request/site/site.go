@@ -8,6 +8,7 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/csrf"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/helpers"
 	"github.com/mrusme/hyperuplink/models/user"
@@ -92,4 +93,23 @@ func (s *Site) TitleFull(systemTitle string) string {
 
 func (s *Site) SetTitle(title string) {
 	s.r.GetEnv().Title = title
+}
+
+func (s *Site) Date(ts pgtype.Timestamp) (date string) {
+	if ts.Valid == false {
+		return "-"
+	}
+
+	// TODO: Make it user configurable
+	return ts.Time.Format("2006-01-02")
+}
+
+func (s *Site) DateTime(ts pgtype.Timestamp) (timedate string) {
+	if ts.Valid == false {
+		return "-"
+	}
+
+	// TODO: Make it user configurable
+	// TODO: Handle user timezone
+	return ts.Time.Format("2006-01-02, 15:04 MST")
 }

@@ -23,10 +23,6 @@ func (repo *Repository) MoveUp(model *forum.Forum) (err error) {
 		AND forums.deleted_at IS NULL`,
 		model.ID,
 	)
-	if err == nil {
-		// TODO: Does it make sense to run this as a transaction?
-		_, err = repo.db.Exec(`REFRESH MATERIALIZED VIEW vforums`)
-	}
 	return repo.db.ConvertError(err)
 }
 
@@ -49,9 +45,5 @@ func (repo *Repository) MoveDown(model *forum.Forum) (err error) {
 		AND forums.deleted_at IS NULL`,
 		model.ID,
 	)
-	if err == nil {
-		// TODO: Does it make sense to run this as a transaction?
-		_, err = repo.db.Exec(`REFRESH MATERIALIZED VIEW vforums`)
-	}
 	return repo.db.ConvertError(err)
 }

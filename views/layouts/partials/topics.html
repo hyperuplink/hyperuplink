@@ -29,17 +29,17 @@
       {{ range $idx_topic, $topic := $topics }}
       <tr role="option">
         <td>
-          <a href="#" title="" class="icon big">
-            <img src="{{.Site.GetRelRoot}}static/icons/post.png">
+          <a href="{{$site.GetRelRoot}}_{{$topic.CategorySlug}}/{{$topic.ForumSlug}}/{{$topic.Slug}}" title="" class="icon big">
+            <img src="{{$site.GetRelRoot}}static/icons/post.png">
             <div class="icon-label">
               <div>{{$topic.Name}}</div>
-              <div class="icon-sublabel">by {{$topic.Author}} on {{$topic.CreatedAt.Time}}</div>
+              <div class="icon-sublabel">by {{$topic.AuthorUsername}} on {{$topic.CreatedAt.Time}}</div>
             </div>
           </a>
         </td>
         <td class="no-mobile" style="text-align: right;">{{$topic.Replies}}</td>
         <td class="no-mobile" style="text-align: right;">{{$topic.Views}}</td>
-        <td class="no-mobile" style="text-align: right;">{{$topic.LastReplyAt.Time}}</td>
+        <td class="no-mobile" style="text-align: right;">{{$site.DateTime $topic.LastReplyAt}}</td>
       </tr>
       {{ end }}
     </tbody>

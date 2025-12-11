@@ -39,10 +39,5 @@ func (repo *Repository) Delete(model *forum.Forum) (err error) {
 		return repo.db.ConvertError(err)
 	}
 
-	_, err = tx.Exec(`REFRESH MATERIALIZED VIEW vforums`)
-	if err != nil {
-		return repo.db.ConvertError(err)
-	}
-
 	return repo.db.ConvertError(tx.Commit())
 }

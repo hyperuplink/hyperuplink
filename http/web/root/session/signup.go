@@ -92,6 +92,12 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	r.Runtime.Error("sc", sc)
+	r.Runtime.Error("sc", sc)
+	r.Runtime.Error("sc", sc)
+	r.Runtime.Error("sc", sc)
+	r.Runtime.Error("sc", sc)
+
 	err = r.Runtime.Dispatch.SignupConfirmation(
 		"notifications", // TODO: Replace with System.EmailTarget
 		sc,

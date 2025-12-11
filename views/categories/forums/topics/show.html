@@ -1,7 +1,8 @@
 {{ $topic := .Data.Get "topic"}}
+{{ $replies := .Data.Get "replies"}}
 <div class="margin window active">
   <div class="title-bar">
-    <div class="title-bar-text">Opinions on Clouvider?</div>
+    <div class="title-bar-text">{{$.Site.Title}}</div>
   </div>
   <div class="window-body">
     {{ template "views/layouts/partials/flash" . }}
@@ -10,22 +11,21 @@
       <fieldset class="profile padding">
         <img class="picture lowered"
              src="{{$.Site.GetRelRoot}}static/images/avatar.jpg">
-        <div class="username">{{$topic.Author}}</div>
+        <div class="username">{{$topic.AuthorUsername}}</div>
         <div class="status">Elite Member</div>
         <div class="postnum">Posts: 381</div>
-        <div class="joined">Joined: 2025-04-21</div>
+        <div class="joined">Joined: {{$.Site.Date $topic.AuthorJoinedAt}}</div>
       </fieldset>
       <div class="content flex-column">
-        <div class="text">
-          {{safeHTML $topic.Text}}
-        </div>
+        <div class="text">{{ safeHTML $topic.Text }}</div>
         <div class="actions flex-row justify-end gap">
           <a class="button danger" href="" title="Report post to admins">!</a>
           <a class="button" href="#reply" title="Reply to this post in thread">@</a>
         </div>
       </div>
     </div>
-    <!-- POST -->
+    {{ if $replies }}
+    <!-- REPLY -->
     <div class="raised padding margin post flex-row">
       <fieldset class="profile padding">
         <img class="picture lowered" src="static/images/avatar2.jpg">
@@ -53,39 +53,7 @@
         </div>
       </div>
     </div>
-    <!-- POST -->
-    <div class="raised padding margin post flex-row">
-      <fieldset class="profile padding">
-        <img class="picture lowered" src="static/images/avatar3.jpg">
-        <div class="username">PamGranade</div>
-        <div class="status">Regular</div>
-        <div class="postnum">Posts: 128</div>
-        <div class="joined">Joined: 2024-09-17</div>
-      </fieldset>
-      <div class="content flex-column">
-        <div class="text">
-          Haha, ipsum dolor sit amet, consectetur adipiscing elit. In sit amet congue ante. Praesent non eros odio. Cras nec ante purus:
-          <br />
-          <br />
-          <pre>
-:(){ :|:& };:
-                </pre>
-          Suspendisse congue tortor at nibh blandit, ut molestie lacus aliquam. Aenean eget augue non turpis ornare pellentesque. Etiam in turpis mauris. Phasellus vel enim eu justo vehicula porttitor at vel quam. Phasellus a lorem id erat pretium viverra.
-        </div>
-        <div class="actions flex-row justify-end gap">
-          <a class="button danger" href="" title="Report post to admins">!</a>
-          <a class="button" href="#reply" title="Reply to this post in thread">@</a>
-        </div>
-      </div>
-    </div>
-    <div class="pagination flex-row justify-center gap margin">
-      <div class="button disabled">|&lt;</div>
-      <div class="button disabled">&lt;-</div>
-      <div class="button active">1</div>
-      <div class="button">2</div>
-      <div class="button">3</div>
-      <div class="button">-&gt;</div>
-      <div class="button">&gt;|</div>
-    </div>
+    {{ end }}
+    {{ template "views/layouts/partials/pagination" . }}
   </div>
 </div>

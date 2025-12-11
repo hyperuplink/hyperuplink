@@ -31,7 +31,7 @@ db\:drop: ## drop (and recreate) development database
 	psql -h localhost -p 5432 -U postgres -c "DROP DATABASE hyperuplink_dev;" -c "CREATE DATABASE hyperuplink_dev;"
 
 db\:dump: ## dump current data from development database into dummy.sql
-	pg_dump -h localhost -p 5432 -U postgres -d hyperuplink_dev -t categories -t forums --data-only --inserts -f dummy.sql
+	pg_dump -h localhost -p 5432 -U postgres -d hyperuplink_dev -t users -t categories -t forums -t topics -t replies --data-only --inserts -f dummy.sql
 
 db\:restore: ## restore dummy.sql data
 	psql -h localhost -p 5432 -U postgres -d hyperuplink_dev < dummy.sql
