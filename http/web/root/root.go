@@ -6,6 +6,7 @@ import (
 	"github.com/mrusme/hyperuplink/http/web/root/account"
 	"github.com/mrusme/hyperuplink/http/web/root/admin"
 	"github.com/mrusme/hyperuplink/http/web/root/categories"
+	"github.com/mrusme/hyperuplink/http/web/root/newpost"
 	"github.com/mrusme/hyperuplink/http/web/root/session"
 	"github.com/mrusme/hyperuplink/runtime"
 )
@@ -43,6 +44,10 @@ func New(
 		categoriesRoute, err := categories.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
 		r.Routes = append(r.Routes, categoriesRoute)
+
+		newpostRoute, err := newpost.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, newpostRoute)
 	}, "root.")
 
 	return r, nil

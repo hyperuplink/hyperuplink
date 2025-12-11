@@ -4,18 +4,22 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/mrusme/hyperuplink/models/reply"
+	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
 
 func (repo *Repository) AllForTopicUUID(
 	id uuid.UUID,
+	qo common.QueryOptions,
 ) (model *[]reply.Reply, err error) {
 	var rows pgx.Rows
 	var mod []reply.Reply
 
-	rows, err = repo.db.Query(`SELECT * FROM replies
-		WHERE topic_id = $1
-		AND deleted_at IS NULL
-		`,
+	rows, err = repo.db.Query(qo.Query(
+		`SELECT * FROM replies WHERE topic_id = $1`,
+		common.QueryCapabilities{
+			HasSpammed: true,
+			HasDeleted: true,
+		}),
 		id,
 	)
 	if err != nil {
@@ -29,6 +33,7 @@ func (repo *Repository) AllForTopicUUID(
 
 func (repo *Repository) AllForTopicID(
 	id string,
+	qo common.QueryOptions,
 ) (model *[]reply.Reply, err error) {
 	var uuID uuid.UUID
 
@@ -36,19 +41,22 @@ func (repo *Repository) AllForTopicID(
 		return nil, repo.db.ConvertError(err)
 	}
 
-	return repo.AllForTopicUUID(uuID)
+	return repo.AllForTopicUUID(uuID, qo)
 }
 
 func (repo *Repository) GetByUUID(
 	id uuid.UUID,
+	qo common.QueryOptions,
 ) (model *reply.Reply, err error) {
 	var rows pgx.Rows
 	var mod reply.Reply
 
-	rows, err = repo.db.Query(`SELECT * FROM replies
-		WHERE id = $1
-		AND deleted_at IS NULL
-		LIMIT 1`,
+	rows, err = repo.db.Query(qo.Query(
+		`SELECT * FROM replies WHERE id = $1`,
+		common.QueryCapabilities{
+			HasSpammed: true,
+			HasDeleted: true,
+		}),
 		id,
 	)
 	if err != nil {
@@ -62,6 +70,7 @@ func (repo *Repository) GetByUUID(
 
 func (repo *Repository) GetByID(
 	id string,
+	qo common.QueryOptions,
 ) (model *reply.Reply, err error) {
 	var uuID uuid.UUID
 
@@ -69,5 +78,5 @@ func (repo *Repository) GetByID(
 		return nil, repo.db.ConvertError(err)
 	}
 
-	return repo.GetByUUID(uuID)
+	return repo.GetByUUID(uuID, qo)
 }

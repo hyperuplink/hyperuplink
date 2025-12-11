@@ -1,0 +1,48 @@
+{{ $categories_forums := .Data.Get "categories_forums"}}
+{{ $forum := .Data.Get "forum"}}
+{{ $topic := .Data.Get "topic"}}
+{{ $reply := .Data.Get "reply"}}
+<div class="margin window active">
+  <div class="title-bar">
+    <div class="title-bar-text">
+      {{ if and $forum (not $topic) }}
+      {{._.T "new_topic_in"}} {{$forum.Name}}
+      {{ else if and $forum $topic }}
+      {{._.T "new_reply_in"}} {{$topic.Name}}
+    {{ else }}
+      {{.Site.Title}}
+      {{ end }}
+    </div>
+  </div>
+  <div class="window-body">
+    {{ template "views/layouts/partials/flash" . }}
+    <div id="newpost" class="newpost">
+      <form method="post" action="{{$.Site.GetPathname}}" class="flex-column gap">
+        {{ template "views/layouts/partials/editor" . }}
+        <div class="attributes margin">
+          <div class="flex-row gap">
+            {{ if not $forum }}
+            <div class="flex-column">
+              <label>{{$._.T "forum"}}</label>
+              <div class="dropdown">
+                <select name="category_id" size="1">
+                  {{ range $idx_category_forums, $category_forums := $categories_forums }}
+                  {{ range $idx_category_forum, $category_forum := $category_forums.Forums }}
+                  <option value="{{$category_forum.ID}}">{{$category_forums.Category.Name}}/{{$category_forum.Name}}</option>
+                  {{ end }}
+                  {{ end }}
+                </select>
+                <div class="dropdown-button"></div>
+              </div>
+            </div>
+            {{ end }}
+          </div>
+        </div>
+        <div class="actions flex-row justify-end gap padding">
+          <input type="reset" class="button danger" value="{{._.T "clear_verb"}}">
+          <button type="submit" class="button primary">{{._.T "post_verb"}}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

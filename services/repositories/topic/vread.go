@@ -14,13 +14,12 @@ func (repo *Repository) VAllForForumUUID(
 	var rows pgx.Rows
 	var mod []vtopic.VTopic
 
-	rows, err = repo.db.Query(
-		qo.Query(`SELECT * FROM vtopics
-		WHERE forum_id = $1`,
-			common.QueryCapabilities{
-				HasDeleted: true,
-			},
-		),
+	rows, err = repo.db.Query(qo.Query(
+		`SELECT * FROM vtopics WHERE forum_id = $1`,
+		common.QueryCapabilities{
+			HasSpammed: true,
+			HasDeleted: true,
+		}),
 		id,
 	)
 	if err != nil {
@@ -43,4 +42,33 @@ func (repo *Repository) VAllForForumID(
 	}
 
 	return repo.VAllForForumUUID(uuID, qo)
+}
+
+func (repo *Repository) VGetBySlug(
+	forumUUID uuid.UUID,
+	slug string,
+	qo common.QueryOptions,
+) (model *vtopic.VTopic, err error) {
+	var rows pgx.Rows
+	var mod vtopic.VTopic
+
+	rows, err = repo.db.Query(
+		qo.Query(
+			`SELECT * FROM vtopics
+			WHERE forum_id = $1 AND slug = $2`,
+			common.QueryCapabilities{
+				HasSpammed: true,
+				HasDeleted: true,
+			},
+		),
+		forumUUID,
+		slug,
+	)
+	if err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+
+	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[vtopic.VTopic])
+
+	return &mod, repo.db.ConvertError(err)
 }
