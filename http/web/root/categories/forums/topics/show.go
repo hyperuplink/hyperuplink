@@ -62,29 +62,42 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 	}
 	req.SetData("topic", top)
 
-	page, err := strconv.Atoi(c.Query("page", "1"))
+	var reps *[]vreply.VReply
+	var activePage int
+	var total int64
+	var perPage int = 2 // TODO: Move to System
+	var limit int = perPage
+	var offAdjust int = 1
+
+	activePage, err = strconv.Atoi(c.Query("page", "1"))
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
 
-	var reps *[]vreply.VReply
-	var total int64
-	var perPage int = 2
+	// If we are on the first page, we subtract 1 from limit due to the Topic,
+	// and we set offadjust to 0 because we only need to adjust the offset for
+	// all pages past the first one.
+	if activePage == 1 {
+		limit -= 1
+		offAdjust = 0
+	}
 	reps, total, err = r.Runtime.Repositories.Reply.VAllForTopicUUID(
 		top.ID,
 		common.QueryOptions{
-			OrderBy: "created_at",
-			Order:   common.Ascending,
-			Limit:   perPage,
-			Page:    page,
+			OrderBy:   "created_at",
+			Order:     common.Ascending,
+			Limit:     limit,
+			Page:      activePage,
+			OffAdjust: offAdjust,
 		},
 	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
+	// We add the Topic to the total
+	total += 1
 	pages := helpers.GetNumberOfPages(total, perPage)
-
-	req.Site.SetPager(site.NewPager(pages, perPage, page))
+	req.Site.SetPager(site.NewPager(pages, perPage, activePage))
 
 	req.SetData("replies", reps)
 

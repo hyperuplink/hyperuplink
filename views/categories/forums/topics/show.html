@@ -1,7 +1,5 @@
 {{ $topic := .Data.Get "topic"}}
 {{ $replies := .Data.Get "replies"}}
-{{ $pages := .Data.Get "pages"}}
-{{ $page := .Data.Get "page"}}
 <div class="margin window active">
   <div class="title-bar">
     <div class="title-bar-text">{{$.Site.Title}}</div>
@@ -9,6 +7,7 @@
   <div class="window-body">
     {{ template "views/layouts/partials/flash" . }}
     <!-- POST -->
+    {{ if eq $.Site.GetPager.ActivePage 1 }}
     <div class="raised padding margin post flex-row">
       <fieldset class="profile padding">
         <img class="picture lowered"
@@ -26,6 +25,7 @@
         </div>
       </div>
     </div>
+    {{ end }}
     {{ range $idx_reply, $reply := $replies }}
     <!-- REPLY -->
     <div class="raised padding margin post flex-row">
