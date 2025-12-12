@@ -65,7 +65,7 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 	var reps *[]vreply.VReply
 	var activePage int
 	var total int64
-	var perPage int = 2 // TODO: Move to System
+	var perPage int = req.System.GetPostsPerPage()
 	var limit int = perPage
 	var offAdjust int = 1
 
