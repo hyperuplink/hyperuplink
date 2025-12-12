@@ -6,6 +6,13 @@ func (s *Session) SetCurrentUser(u *user.User) {
 	s.currentUser = u
 }
 
+func (s *Session) GetCurrentUserUsername() string {
+	if s.currentUser != nil {
+		return s.currentUser.Username
+	}
+	return ""
+}
+
 func (s *Session) GetCurrentUserRole() user.Role {
 	if s.currentUser != nil {
 		return s.currentUser.Role

@@ -5,9 +5,16 @@
       <!-- <div class="text">VT100 Community</div> -->
     </a>
   </div>
-  <ul role="menubar">
-    {{ template "views/layouts/partials/menu" dict "Site" .Site "Menu" .Menu.Get }}
-  </ul>
+  <div class="flex-row menubar">
+    <div class="flex-column grow">
+      <ul role="menubar">
+        {{ template "views/layouts/partials/menu" dict "Site" .Site "Menu" .Menu.Get }}
+      </ul>
+    </div>
+    <div class="flex-column">
+      <a href="{{.Site.GetRelRoot}}~{{$.Session.GetCurrentUserUsername}}" class="username">{{$.Session.GetCurrentUserUsername}}</a>
+    </div>
+  </div>
   <div class="breadcrumbs raised">
     <ul class="lowered flex-row gap">
       {{$breadcrumbs := .Breadcrumbs.Get}}

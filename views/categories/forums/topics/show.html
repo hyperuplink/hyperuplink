@@ -13,7 +13,8 @@
       <fieldset class="profile padding">
         <img class="picture lowered"
              src="{{$.Site.GetRelRoot}}static/images/avatar.jpg">
-        <div class="username">{{$topic.AuthorUsername}}</div>
+        <a href="{{$.Site.GetRelRoot}}~{{$topic.AuthorUsername}}"
+           title="{{$topic.AuthorUsername}}">{{$topic.AuthorUsername}}</a>
         <div class="status">Elite Member</div>
         <div class="postnum">Posts: 381</div>
         <div class="joined">Joined: {{$.Site.Date $topic.AuthorJoinedAt}}</div>
@@ -33,7 +34,10 @@
       <fieldset class="profile padding">
         <img class="picture lowered"
              src="{{$.Site.GetRelRoot}}static/images/avatar2.jpg">
-        <div class="username">{{$reply.AuthorUsername}}</div>
+        <div class="username">
+          <a href="{{$.Site.GetRelRoot}}~{{$reply.AuthorUsername}}"
+             title="{{$reply.AuthorUsername}}">{{$reply.AuthorUsername}}</a>
+        </div>
         <div class="status">New here</div>
         <div class="postnum">Posts: 69</div>
         <div class="joined">Joined: {{$.Site.Date $reply.AuthorJoinedAt}}</div>

@@ -30,6 +30,17 @@ body {
   background-color: var(--primary-2);
 }
 
+.menubar .username {
+  padding: 1px 8px;
+  text-decoration: none;
+}
+
+.menubar .username::before {
+  content: "～";
+  /* color: var(--affirmative); */
+  margin-right: 1px;
+}
+
 .tabs > [role="tabpanel"] {
   position: relative;
   z-index: 0;
@@ -262,9 +273,17 @@ a.button {
 /*   padding: 4px 14px; */
 /* } */
 
+.text ul {
+  margin-left: 20px;
+}
+
 .text blockquote {
   font-style: italic;
   color: var(--text-quote);
+}
+
+.text blockquote > p {
+  margin: 0;
 }
 
 .text blockquote > p::before {
