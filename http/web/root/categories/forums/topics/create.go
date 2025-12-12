@@ -77,7 +77,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 	var total int64
 	total, err = r.Runtime.Repositories.Reply.VAllCountForTopicUUID(rep.TopicID, common.QueryOptions{})
 
-	pages := helpers.GetNumberOfPages(total, 2)
+	pages := helpers.GetNumberOfPages(total, req.System.GetPostsPerPage())
 
 	return req.RedirectToRouteWithQuery(myRoute.Fill(
 		map[string]string{
