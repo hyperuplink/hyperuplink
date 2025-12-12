@@ -1,0 +1,28 @@
+{{ $dict := . }}
+{{ $site := get $dict "Site"}}
+{{ $_ := get $dict "_"}}
+{{ $post := get $dict "post"}}
+<div class="raised padding margin post flex-row">
+  <fieldset class="profile padding">
+    <img class="picture lowered"
+         src="{{$site.GetRelRoot}}static/images/avatar.jpg">
+    <a href="{{$site.GetRelRoot}}~{{$post.AuthorUsername}}"
+       title="{{$post.AuthorUsername}}">{{$post.AuthorUsername}}</a>
+    <div class="role">{{ $_.T (nospace (cat $post.AuthorRole "_role")) }}</div>
+    <div class="units">
+      {{ range $post.AuthorMemberOf }}
+      <div class="unit">{{ title . }}</div>
+      {{ end }}
+    </div>
+    <div class="joined">{{ $_.T "joined"}}: {{$site.Date $post.AuthorJoinedAt}}</div>
+  </fieldset>
+  <div class="content flex-column">
+    <div class="text">{{ safeHTML $post.Text }}</div>
+    <div class="actions flex-row justify-end gap">
+      <a class="button danger" href="" title="{{$_.T "report_post"}}">!</a>
+      <a class="button"
+         href="{{$site.GetPathname}}?page={{$site.GetPager.ActivePage}}&reply={{$post.ID}}#reply"
+         title="{{$_.T "reply_to_post"}}">@</a>
+    </div>
+  </div>
+</div>

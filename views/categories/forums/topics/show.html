@@ -10,59 +10,11 @@
     {{ template "views/layouts/partials/flash" . }}
     <!-- POST -->
     {{ if eq $.Site.GetPager.ActivePage 1 }}
-    <div class="raised padding margin post flex-row">
-      <fieldset class="profile padding">
-        <img class="picture lowered"
-             src="{{$.Site.GetRelRoot}}static/images/avatar.jpg">
-        <a href="{{$.Site.GetRelRoot}}~{{$topic.AuthorUsername}}"
-           title="{{$topic.AuthorUsername}}">{{$topic.AuthorUsername}}</a>
-        <div class="role">{{ title $topic.AuthorRole }}</div>
-        <div class="units">
-          {{ range $topic.AuthorMemberOf }}
-          <div class="unit">{{ title . }}</div>
-          {{ end }}
-        </div>
-        <div class="joined">Joined: {{$.Site.Date $topic.AuthorJoinedAt}}</div>
-      </fieldset>
-      <div class="content flex-column">
-        <div class="text">{{ safeHTML $topic.Text }}</div>
-        <div class="actions flex-row justify-end gap">
-          <a class="button danger" href="" title="Report post to admins">!</a>
-          <a class="button"
-             href="?page={{$.Site.GetPager.ActivePage}}&reply={{$topic.ID}}#reply"
-             title="Reply to this post in thread">@</a>
-        </div>
-      </div>
-    </div>
+    {{ template "views/layouts/partials/post" dict "Site" $.Site "_" $._ "post" $topic }}
     {{ end }}
     {{ range $idx_reply, $reply := $replies }}
     <!-- REPLY -->
-    <div class="raised padding margin post flex-row">
-      <fieldset class="profile padding">
-        <img class="picture lowered"
-             src="{{$.Site.GetRelRoot}}static/images/avatar2.jpg">
-        <div class="username">
-          <a href="{{$.Site.GetRelRoot}}~{{$reply.AuthorUsername}}"
-             title="{{$reply.AuthorUsername}}">{{$reply.AuthorUsername}}</a>
-        </div>
-        <div class="role">{{ title $reply.AuthorRole }}</div>
-        <div class="units">
-          {{ range $reply.AuthorMemberOf }}
-          <div class="unit">{{ title . }}</div>
-          {{ end }}
-        </div>
-        <div class="joined">Joined: {{$.Site.Date $reply.AuthorJoinedAt}}</div>
-      </fieldset>
-      <div class="content flex-column">
-        <div class="text">{{ safeHTML $reply.Text }}</div>
-        <div class="actions flex-row justify-end gap">
-          <a class="button danger" href="" title="Report post to admins">!</a>
-          <a class="button"
-             href="?page={{$.Site.GetPager.ActivePage}}&reply={{$reply.ID}}#reply"
-             title="Reply to this post in thread">@</a>
-        </div>
-      </div>
-    </div>
+    {{ template "views/layouts/partials/post" dict "Site" $.Site "_" $._ "post" $reply }}
     {{ end }}
     {{ template "views/layouts/partials/pagination" dict "Site" .Site }}
   </div>
