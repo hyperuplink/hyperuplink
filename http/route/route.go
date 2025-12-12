@@ -148,6 +148,10 @@ func (r Route) Fill(params map[string]string) (rt Route) {
 	}
 }
 
+func (r *Route) SetHierarchy(h []string) {
+	r.hierarchy = h
+}
+
 func For(id string) (r Route) {
 	var ok bool
 

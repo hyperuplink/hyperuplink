@@ -49,7 +49,22 @@ func (s *Site) GetAbsPath() string {
 }
 
 func (s *Site) GetPathname() string {
-	return s.pathName
+	cidx := strings.Index(s.pathName, ":")
+	if cidx == -1 {
+		return s.pathName
+	}
+
+	segment := s.pathName[(cidx + 1):]
+
+	r := route.Route{}
+	r.SetHierarchy([]string{"root", s.pathName})
+	rf := r.Fill(
+		map[string]string{
+			segment: s.c.Params(segment),
+		},
+	)
+
+	return rf.AsURL()
 }
 
 func (s *Site) GetCSRFToken() string {

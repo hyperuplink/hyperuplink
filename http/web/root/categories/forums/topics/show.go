@@ -116,5 +116,12 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 		}
 	}
 
+	pathName, absPath, relRoot := helpers.GetPaths(c)
+	r.Runtime.Debug(
+		"PATHNAME", pathName,
+		"ABSPATH", absPath,
+		"RELROOT", relRoot,
+	)
+
 	return req.Respond()
 }

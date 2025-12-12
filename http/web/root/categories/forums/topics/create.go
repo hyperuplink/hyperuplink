@@ -37,7 +37,13 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 	frm := new(TopicCreateForm)
 
 	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
-		return req.RedirectToRoute(myRoute)
+		return req.RedirectToRoute(myRoute.Fill(
+			map[string]string{
+				"categories": c.Params("categories"),
+				"forums":     c.Params("forums"),
+				"topics":     c.Params("topics"),
+			},
+		))
 	}
 
 	r.Runtime.Debug("form", frm)
