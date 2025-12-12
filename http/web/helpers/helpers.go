@@ -23,7 +23,7 @@ func GetPaths(c fiber.Ctx) (
 	}
 	parts := lenSplitAbsPath - 1
 
-	relRoot = ""
+	relRoot = "./"
 	for i := 1; i < parts; i++ {
 		relRoot += "../"
 	}
