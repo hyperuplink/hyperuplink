@@ -1,5 +1,7 @@
 {{ $topic := .Data.Get "topic"}}
 {{ $replies := .Data.Get "replies"}}
+{{ $pages := .Data.Get "pages"}}
+{{ $page := .Data.Get "page"}}
 <div class="margin window active">
   <div class="title-bar">
     <div class="title-bar-text">{{$.Site.Title}}</div>
@@ -24,29 +26,19 @@
         </div>
       </div>
     </div>
-    {{ if $replies }}
+    {{ range $idx_reply, $reply := $replies }}
     <!-- REPLY -->
     <div class="raised padding margin post flex-row">
       <fieldset class="profile padding">
-        <img class="picture lowered" src="static/images/avatar2.jpg">
-        <div class="username">BerryCran</div>
+        <img class="picture lowered"
+             src="{{$.Site.GetRelRoot}}static/images/avatar2.jpg">
+        <div class="username">{{$reply.AuthorUsername}}</div>
         <div class="status">New here</div>
         <div class="postnum">Posts: 69</div>
-        <div class="joined">Joined: 2024-01-19</div>
+        <div class="joined">Joined: {{$.Site.Date $reply.AuthorJoinedAt}}</div>
       </fieldset>
       <div class="content flex-column">
-        <div class="text">
-          <em style="color: green;">
-            > Be Lorem
-            <br />
-            > Say ipsum
-            <br />
-            > Experience dolor
-            <br />
-          </em>
-          <br />
-          Maecenas vitae consequat est, a fringilla nibh. Duis auctor lectus lorem, ac feugiat eros tempus eu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
-        </div>
+        <div class="text">{{ safeHTML $reply.Text }}</div>
         <div class="actions flex-row justify-end gap">
           <a class="button danger" href="" title="Report post to admins">!</a>
           <a class="button" href="#reply" title="Reply to this post in thread">@</a>
@@ -54,6 +46,26 @@
       </div>
     </div>
     {{ end }}
-    {{ template "views/layouts/partials/pagination" . }}
+    {{ template "views/layouts/partials/pagination" dict "Site" .Site "pages" $pages "page" $page }}
+  </div>
+</div>
+<!-- REPLY -->
+<div class="margin window active">
+  <div class="title-bar">
+    <div class="title-bar-text">Reply to thread</div>
+  </div>
+  <div class="window-body">
+    <div id="newpost" class="newpost">
+      <form method="post" action="{{$.Site.GetPathname}}" class="">
+        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+        <input type="hidden" name="topic_id" value="{{$topic.ID}}">
+        <input type="hidden" name="reply_id" value="">
+        {{ template "views/layouts/partials/editor" dict "Site" .Site "Form" .Form "_" ._ "hasSubject" false }}
+        <div class="actions flex-row justify-end gap padding">
+          <input type="reset" class="button danger" value="{{._.T "clear_verb"}}">
+          <button type="submit" class="button primary">{{._.T "post_verb"}}</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

@@ -22,7 +22,8 @@ func New(
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
-		base.Get("/", r.Show).Name("show")
+		base.Get("", r.Show).Name("show")
+		base.Post("", r.Create).Name("create")
 	}, r.Path+".")
 
 	return r, nil

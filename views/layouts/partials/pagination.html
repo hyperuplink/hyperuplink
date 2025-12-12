@@ -1,9 +1,13 @@
+{{ $dict := . }}
+{{ $site := get $dict "Site"}}
+{{ $pages := get $dict "pages"}}
+{{ $page := get $dict "page"}}
 <div class="pagination flex-row justify-center gap margin">
   <div class="button disabled">|&lt;</div>
   <div class="button disabled">&lt;-</div>
-  <div class="button active">1</div>
-  <div class="button">2</div>
-  <div class="button">3</div>
+  {{ range $i, $e := untilStep 1 $pages 1 }}
+  <div class="button {{ if eq $page $e }}active{{ end }}">{{$e}}</div>
+  {{ end }}
   <div class="button">-&gt;</div>
   <div class="button">&gt;|</div>
 </div>

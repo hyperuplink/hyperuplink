@@ -64,7 +64,7 @@ func (qo QueryOptions) Query(
 	if qo.Limit > 0 {
 		q = fmt.Sprintf("%s LIMIT %d", q, qo.Limit)
 		if qo.Page > 0 {
-			q = fmt.Sprintf("%s OFFSET %d", q, int(qo.Page*qo.Limit))
+			q = fmt.Sprintf("%s OFFSET %d", q, int((qo.Page-1)*qo.Limit))
 		}
 	}
 

@@ -24,9 +24,9 @@ const (
 type Reply struct {
 	ID uuid.UUID `json:"id"`
 
-	TopicID  uuid.UUID `json:"topic_id"`
-	ReplyID  uuid.UUID `json:"reply_id"`
-	AuthorID uuid.UUID `json:"author_id"`
+	TopicID  uuid.UUID     `json:"topic_id"`
+	ReplyID  uuid.NullUUID `json:"reply_id"`
+	AuthorID uuid.UUID     `json:"author_id"`
 
 	Kind         Kind         `json:"kind"`
 	Text         string       `json:"text"`

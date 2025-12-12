@@ -19,7 +19,7 @@
     <div id="newpost" class="newpost">
       <form method="post" action="{{$.Site.GetPathname}}" class="">
         <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-        {{ template "views/layouts/partials/editor" . }}
+        {{ template "views/layouts/partials/editor" dict "Site" .Site "Form" .Form "_" ._ "hasSubject" true }}
         <div class="attributes margin">
           <div class="flex-row gap">
             {{ if not $forum }}
