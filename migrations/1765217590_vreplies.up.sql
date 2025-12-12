@@ -2,6 +2,8 @@ CREATE MATERIALIZED VIEW vreplies AS
 SELECT
     r.*,
     u.username AS author_username,
+    u.role AS author_role,
+    u.member_of AS author_member_of,
     u.email AS author_email,
     u.profile_picture AS author_profile_picture,
     u.signature AS author_signature,

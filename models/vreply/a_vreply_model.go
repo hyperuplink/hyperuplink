@@ -9,6 +9,8 @@ type VReply struct {
 	reply.Reply
 
 	AuthorUsername       string           `json:"author_username"`
+	AuthorRole           string           `json:"author_role"`
+	AuthorMemberOf       []string         `json:"author_member_of"`
 	AuthorEmail          string           `json:"author_email"`
 	AuthorProfilePicture string           `json:"author_profile_picture"`
 	AuthorSignature      string           `json:"author_signature"`

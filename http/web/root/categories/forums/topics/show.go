@@ -103,9 +103,15 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 
 	replyTo := c.Query("reply", "")
 	if replyTo != "" {
-		for _, rep := range *reps {
-			if rep.ID.String() == replyTo {
-				req.SetData("reply_to", rep)
+		if top.ID.String() == replyTo {
+			req.SetData("reply_to", top)
+			req.SetData("reply_to_type", "topic")
+		} else {
+			for _, rep := range *reps {
+				if rep.ID.String() == replyTo {
+					req.SetData("reply_to", rep)
+					req.SetData("reply_to_type", "reply")
+				}
 			}
 		}
 	}
