@@ -14,6 +14,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Gohu";
+  src: url("../fonts/gohufont-uni-14.woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
   font-family: var(--font-regular);
   font-size: var(--font-size-regular);
@@ -212,11 +220,11 @@ a.button {
   font-size: 1.1rem;
 }
 
-.post > .profile > .status {
+.post > .profile > .role {
   font-size: 1rem;
 }
 
-.post > .profile > .postnum {
+.post > .profile > .units {
   font-size: 0.9rem;
 }
 
@@ -262,6 +270,9 @@ a.button {
 }
 
 .editor > textarea {
+  font-family: var(--font-text);
+  font-size: var(--font-size-text);
+
   width: 100%;
   box-sizing: border-box;
   margin-left: 0px;
@@ -272,6 +283,11 @@ a.button {
 /* .reply > form > .actions > .button { */
 /*   padding: 4px 14px; */
 /* } */
+
+.text {
+  font-family: var(--font-text);
+  font-size: var(--font-size-text);
+}
 
 .text ul {
   margin-left: 20px;
