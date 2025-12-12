@@ -7,12 +7,11 @@ import (
 	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
 
-func (repo *Repository) VAllForTopicUUID(
+func (repo *Repository) VAllCountForTopicUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
-) (model *[]vreply.VReply, total int64, err error) {
+) (total int64, err error) {
 	var rows pgx.Rows
-	var mod []vreply.VReply
 
 	qoc := qo
 	qoc.OrderBy = ""
@@ -27,15 +26,27 @@ func (repo *Repository) VAllForTopicUUID(
 		id,
 	)
 	if err != nil {
-		return nil, total, repo.db.ConvertError(err)
+		return total, repo.db.ConvertError(err)
 	}
 
 	var pag map[string]any
 	pag, err = pgx.CollectOneRow(rows, pgx.RowToMap)
 	if err != nil {
-		return nil, total, repo.db.ConvertError(err)
+		return total, repo.db.ConvertError(err)
 	}
 	total = pag["total_posts"].(int64)
+
+	return total, nil
+}
+
+func (repo *Repository) VAllForTopicUUID(
+	id uuid.UUID,
+	qo common.QueryOptions,
+) (model *[]vreply.VReply, total int64, err error) {
+	var rows pgx.Rows
+	var mod []vreply.VReply
+
+	total, err = repo.VAllCountForTopicUUID(id, qo)
 
 	rows, err = repo.db.Query(qo.Query(
 		`SELECT * FROM vreplies WHERE topic_id = $1`,

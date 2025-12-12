@@ -1,11 +1,11 @@
 package topics
 
 import (
-	"math"
 	"strconv"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
+	"github.com/mrusme/hyperuplink/http/web/helpers"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/http/web/request/site"
 	"github.com/mrusme/hyperuplink/models/user"
@@ -41,9 +41,18 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 	}
 
 	req.UpdateTitle(top.Name)
-	req.UpdateParentHref(req.HrefTo(top.ForumSlug))
+	req.UpdateParentHref(req.HrefTo(route.For("CategoriesForums").Fill(
+		map[string]string{
+			"categories": top.CategorySlug,
+			"forums":     top.ForumSlug,
+		},
+	).AsURL()))
 	req.UpdateParentTitle(top.ForumName)
-	req.UpdateGrandParentHref(req.HrefTo("_" + top.CategorySlug))
+	req.UpdateGrandParentHref(req.HrefTo(route.For("Categories").Fill(
+		map[string]string{
+			"categories": top.CategorySlug,
+		},
+	).AsURL()))
 	req.UpdateGrandParentTitle(top.CategoryName)
 
 	// TODO: Move to Create/Update and save Markdown
@@ -73,18 +82,11 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
+	pages := helpers.GetNumberOfPages(total, perPage)
 
-	pages := int(math.Ceil(float64(total) / float64(perPage)))
+	req.Site.SetPager(site.NewPager(pages, perPage, page))
 
 	req.SetData("replies", reps)
-	r.Runtime.Debug(
-		"replies", reps,
-		"total", total,
-		"perPage", perPage,
-		"pages", pages,
-		"page", page,
-	)
-	req.Site.SetPager(site.NewPager(pages, perPage, page))
 
 	return req.Respond()
 }

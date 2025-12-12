@@ -4,11 +4,13 @@ import "testing"
 
 func TestRouteFill(t *testing.T) {
 	r := For("CategoriesForumsTopics")
-	f := make(map[string]string)
-	f["categories"] = "hosting"
-	f["forums"] = "aws"
-	f["topics"] = "evil"
-	fr := r.Fill(f)
+	fr := r.Fill(
+		map[string]string{
+			"categories": "hosting",
+			"forums":     "aws",
+			"topics":     "evil",
+		},
+	)
 
 	if fr.AsURL() != "_hosting/aws/evil" {
 		t.Errorf("Fill() incorrect: %s", fr.AsURL())

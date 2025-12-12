@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"math"
 	"strings"
 
 	"github.com/gofiber/fiber/v3"
@@ -28,4 +29,9 @@ func GetPaths(c fiber.Ctx) (
 	}
 
 	return pathName, absPath, relRoot
+}
+
+func GetNumberOfPages(total int64, perPage int) (pages int) {
+	pages = int(math.Ceil(float64(total) / float64(perPage)))
+	return pages
 }

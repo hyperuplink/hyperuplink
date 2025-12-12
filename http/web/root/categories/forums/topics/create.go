@@ -2,13 +2,16 @@ package topics
 
 import (
 	"reflect"
+	"strconv"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
 	"github.com/mrusme/hyperuplink/http/route"
+	"github.com/mrusme/hyperuplink/http/web/helpers"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/reply"
 	"github.com/mrusme/hyperuplink/models/user"
+	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
 
 type TopicCreateForm struct {
@@ -71,9 +74,16 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	fill := make(map[string]string)
-	fill["categories"] = c.Params("categories")
-	fill["forums"] = c.Params("forums")
-	fill["topics"] = c.Params("topics")
-	return req.RedirectToRoute(myRoute.Fill(fill))
+	var total int64
+	total, err = r.Runtime.Repositories.Reply.VAllCountForTopicUUID(rep.TopicID, common.QueryOptions{})
+
+	pages := helpers.GetNumberOfPages(total, 2)
+
+	return req.RedirectToRouteWithQuery(myRoute.Fill(
+		map[string]string{
+			"categories": c.Params("categories"),
+			"forums":     c.Params("forums"),
+			"topics":     c.Params("topics"),
+		},
+	), "page", strconv.Itoa(pages))
 }

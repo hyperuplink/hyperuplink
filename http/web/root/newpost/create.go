@@ -70,9 +70,11 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	fill := make(map[string]string)
-	fill["categories"] = vtop.CategorySlug
-	fill["forums"] = vtop.ForumSlug
-	fill["topics"] = top.Slug
-	return req.RedirectToRoute(route.For("CategoriesForumsTopics").Fill(fill))
+	return req.RedirectToRoute(route.For("CategoriesForumsTopics").Fill(
+		map[string]string{
+			"categories": vtop.CategorySlug,
+			"forums":     vtop.ForumSlug,
+			"topics":     top.Slug,
+		},
+	))
 }

@@ -263,6 +263,25 @@ func (req *Request) RedirectToRoute(r route.Route) error {
 	))
 }
 
+func (req *Request) RedirectToRouteWithQuery(r route.Route, queries ...string) error {
+	url := fmt.Sprintf("%s%s",
+		req.relRoot,
+		r.AsURL(),
+	)
+	for i, query := range queries {
+		char := "&"
+		if i == 0 {
+			char = "?"
+		} else if i%2 == 0 {
+			char = "&"
+		} else {
+			char = "="
+		}
+		url = fmt.Sprintf("%s%s%s", url, char, query)
+	}
+	return req.redirect(url)
+}
+
 func (req *Request) RedirectTo(path string) error {
 	return req.redirect(fmt.Sprintf("%s%s",
 		req.relRoot,
