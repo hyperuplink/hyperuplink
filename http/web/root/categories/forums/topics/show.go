@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
+	"github.com/mrusme/hyperuplink/http/web/request/site"
 	"github.com/mrusme/hyperuplink/models/user"
 	"github.com/mrusme/hyperuplink/models/vreply"
 	"github.com/mrusme/hyperuplink/models/vtopic"
@@ -73,11 +74,17 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	pages := int(math.Ceil(float64(total / int64(perPage))))
+	pages := int(math.Ceil(float64(total) / float64(perPage)))
 
 	req.SetData("replies", reps)
-	req.SetData("pages", pages)
-	req.SetData("page", page)
+	r.Runtime.Debug(
+		"replies", reps,
+		"total", total,
+		"perPage", perPage,
+		"pages", pages,
+		"page", page,
+	)
+	req.Site.SetPager(site.NewPager(pages, perPage, page))
 
 	return req.Respond()
 }

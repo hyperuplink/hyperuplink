@@ -16,6 +16,8 @@ func (repo *Repository) VAllForTopicUUID(
 
 	qoc := qo
 	qoc.OrderBy = ""
+	qoc.Limit = 0
+	qoc.Page = 0
 	rows, err = repo.db.Query(qoc.Query(
 		`SELECT COUNT(id) AS total_posts FROM vreplies WHERE topic_id = $1`,
 		common.QueryCapabilities{

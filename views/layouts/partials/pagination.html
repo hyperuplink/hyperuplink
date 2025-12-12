@@ -1,13 +1,13 @@
 {{ $dict := . }}
 {{ $site := get $dict "Site"}}
-{{ $pages := get $dict "pages"}}
-{{ $page := get $dict "page"}}
+{{ $pager := $site.GetPager}}
+{{ $pgv := $pager.GetView}}
 <div class="pagination flex-row justify-center gap margin">
-  <div class="button disabled">|&lt;</div>
-  <div class="button disabled">&lt;-</div>
-  {{ range $i, $e := untilStep 1 $pages 1 }}
-  <div class="button {{ if eq $page $e }}active{{ end }}">{{$e}}</div>
+  {{ range $i, $pv := $pgv }}
+  <a class="button {{ if eq $pv.Active true }}active{{ end }} {{ if eq $pv.Disabled true }}disabled{{ end }}"
+     {{ if eq $pv.Disabled false }}
+     href="?page={{$pv.Page}}"
+     {{ end }}
+     title="{{ safeHTML $pv.Label }}">{{ safeHTML $pv.Label }}</a>
   {{ end }}
-  <div class="button">-&gt;</div>
-  <div class="button">&gt;|</div>
 </div>

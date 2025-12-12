@@ -21,8 +21,9 @@ type Site struct {
 	pathName string
 	absPath  string
 	relRoot  string
-	title    string
+	pager    *Pager
 
+	title       string
 	currentUser *user.User
 }
 
@@ -32,6 +33,7 @@ func New(r route.IRouteController, c fiber.Ctx) *Site {
 	s.r = r
 	s.c = c
 	s.csrf = csrf.TokenFromContext(s.c)
+	s.pager = NewPager(1, 1, 1)
 
 	s.pathName, s.absPath, s.relRoot = helpers.GetPaths(s.c)
 
