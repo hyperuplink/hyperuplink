@@ -101,5 +101,14 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 
 	req.SetData("replies", reps)
 
+	replyTo := c.Query("reply", "")
+	if replyTo != "" {
+		for _, rep := range *reps {
+			if rep.ID.String() == replyTo {
+				req.SetData("reply_to", rep)
+			}
+		}
+	}
+
 	return req.Respond()
 }

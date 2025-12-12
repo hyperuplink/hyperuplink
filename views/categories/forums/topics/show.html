@@ -1,5 +1,6 @@
 {{ $topic := .Data.Get "topic"}}
 {{ $replies := .Data.Get "replies"}}
+{{ $reply_to := .Data.Get "reply_to"}}
 <div class="margin window active">
   <div class="title-bar">
     <div class="title-bar-text">{{$.Site.Title}}</div>
@@ -41,7 +42,9 @@
         <div class="text">{{ safeHTML $reply.Text }}</div>
         <div class="actions flex-row justify-end gap">
           <a class="button danger" href="" title="Report post to admins">!</a>
-          <a class="button" href="#reply" title="Reply to this post in thread">@</a>
+          <a class="button"
+             href="?page={{$.Site.GetPager.ActivePage}}&reply={{$reply.ID}}#reply"
+             title="Reply to this post in thread">@</a>
         </div>
       </div>
     </div>
@@ -50,17 +53,23 @@
   </div>
 </div>
 <!-- REPLY -->
+{{ $reply_to_id := "" }}
+{{ $reply_to_quote := "" }}
+{{ if $reply_to }}
+{{ $reply_to_id = $reply_to.ID }}
+{{ $reply_to_quote = $reply_to.Text }}
+{{ end }}
 <div class="margin window active">
   <div class="title-bar">
-    <div class="title-bar-text">Reply to thread</div>
+    <div class="title-bar-text">{{$._.T "reply_to_thread"}}</div>
   </div>
   <div class="window-body">
-    <div id="newpost" class="newpost">
+    <div id="reply" class="reply">
       <form method="post" action="{{$.Site.GetPathname}}" class="">
         <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
         <input type="hidden" name="topic_id" value="{{$topic.ID}}">
-        <input type="hidden" name="reply_id" value="">
-        {{ template "views/layouts/partials/editor" dict "Site" .Site "Form" .Form "_" ._ "hasSubject" false }}
+        <input type="hidden" name="reply_id" value="{{$reply_to_id}}">
+        {{ template "views/layouts/partials/editor" dict "Site" .Site "Form" .Form "_" ._ "hasSubject" false "text" ($.Site.Quote $reply_to_quote) }}
         <div class="actions flex-row justify-end gap padding">
           <input type="reset" class="button danger" value="{{._.T "clear_verb"}}">
           <button type="submit" class="button primary">{{._.T "post_verb"}}</button>

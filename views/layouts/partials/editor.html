@@ -3,6 +3,7 @@
 {{ $form := get $dict "Form"}}
 {{ $_ := get $dict "_"}}
 {{ $hasSubject := get $dict "hasSubject"}}
+{{ $text := get $dict "text"}}
 <!-- MENUBAR -->
 <ul role="menubar">
   <li tabindex="0" aria-haspopup="true">
@@ -50,9 +51,5 @@
   </div>
   {{ end }}
   <label for="text">{{ $_.T "text"}}:</label>
-  <textarea name="text"
-            cols="72"
-            rows="12"
-            wrap="soft"
-            placeholder="Write here, Markdown supported."></textarea>
+  <textarea name="text" cols="72" rows="12" wrap="soft" placeholder="{{ $_.T "editor_placeholder" }}">{{$text}}</textarea>
 </div>
