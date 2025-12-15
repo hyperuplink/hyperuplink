@@ -7,10 +7,13 @@ type Storage struct {
 }
 
 type StorageS3 struct {
-	Endpoint  string
-	Region    string
-	AccessKey string
-	SecretKey string
+	Endpoint          string
+	Region            string
+	AccessKey         string
+	SecretKey         string
+	PublicURL         string
+	PublicDownload    bool
+	PresignedDownload bool
 }
 
 type Storages []Storage

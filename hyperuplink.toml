@@ -37,3 +37,14 @@ Email.From.Name = "Example.org"
 # [[Target]]
 # ID = "primary"
 # Type = "xmpp"
+
+[[Storage]]
+ID = "profilepictures"
+Type = "S3"
+S3.Endpoint = "http://localhost:9000"
+S3.Region = "us-east-1"
+S3.AccessKey = "minioadmin"
+S3.SecretKey = "minioadmin"
+S3.PublicURL = "http://localhost:9000"
+S3.PublicDownload = true
+S3.PresignedDownload = false

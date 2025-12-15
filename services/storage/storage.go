@@ -12,6 +12,7 @@ type IStorage interface {
 	Startup() error
 	Shutdown() error
 	StoreFile(src string, dest string) error
+	GetFileDownloadURL(dest string) (string, error)
 }
 
 type Storage struct {

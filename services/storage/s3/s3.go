@@ -1,6 +1,7 @@
 package s3
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -40,19 +41,44 @@ func (st *S3) Shutdown() (err error) {
 	return nil
 }
 
+func (st *S3) getBucketObjectFile(dest string) (bucket string, objKey string, fileName string, err error) {
+	destSplit := filepath.SplitList(dest)
+	destSplitLen := len(destSplit)
+	if destSplitLen < 2 {
+		return bucket, objKey, fileName, errs.ErrFilePathInvalid
+	}
+	bucket = destSplit[0]
+	objKey = strings.Join(destSplit[1:], "/")
+	fileName = destSplit[(destSplitLen - 1)]
+
+	return bucket, objKey, fileName, nil
+}
+
+func (st *S3) getFileContentType(file *os.File) (contentType string, err error) {
+	buffer := make([]byte, 512)
+	_, err = file.Read(buffer)
+	if err != nil {
+		return "", err
+	}
+
+	_, err = file.Seek(0, 0)
+	if err != nil {
+		return "", err
+	}
+
+	contentType = http.DetectContentType(buffer)
+	return contentType, nil
+}
+
 func (st *S3) StoreFile(src string, dest string) (err error) {
 	if src == "" || dest == "" {
 		return errs.ErrFilePathInvalid
 	}
 
-	destSplit := filepath.SplitList(dest)
-	destSplitLen := len(destSplit)
-	if destSplitLen < 2 {
-		return errs.ErrFilePathInvalid
+	var bucket, objKey, fileName string
+	if bucket, objKey, fileName, err = st.getBucketObjectFile(dest); err != nil {
+		return err
 	}
-	bucket := destSplit[0]
-	objKey := strings.Join(destSplit[1:], "/")
-	fileName := destSplit[(destSplitLen - 1)]
 
 	file, err := os.Open(src)
 	if err != nil {
@@ -76,18 +102,33 @@ func (st *S3) StoreFile(src string, dest string) (err error) {
 	return err
 }
 
-func (st *S3) getFileContentType(file *os.File) (contentType string, err error) {
-	buffer := make([]byte, 512)
-	_, err = file.Read(buffer)
-	if err != nil {
-		return "", err
+func (st *S3) GetFileDownloadURL(dest string) (dlurl string, err error) {
+	if dest == "" {
+		return dlurl, errs.ErrFilePathInvalid
 	}
 
-	_, err = file.Seek(0, 0)
-	if err != nil {
-		return "", err
+	if st.cfg.S3.PublicDownload {
+		return fmt.Sprintf("%s/%s", st.cfg.S3.PublicURL, dest), nil
 	}
 
-	contentType = http.DetectContentType(buffer)
-	return contentType, nil
+	if st.cfg.S3.PresignedDownload {
+		var bucket, objKey string
+		if bucket, objKey, _, err = st.getBucketObjectFile(dest); err != nil {
+			return dlurl, err
+		}
+
+		dlurl = st.client.GeneratePresignedURL(simples3.PresignedInput{
+			Bucket:        bucket,
+			ObjectKey:     objKey,
+			Method:        "GET",
+			ExpirySeconds: 60, // TODO: Make configurable
+		})
+
+		return dlurl, nil
+	}
+
+	// TODO: If neither public nor presigned downloads are possible, download the
+	// file temporarily into Redis and provide a temporary download URL that lets
+	// the client get it through a special Route. Set a TTL in Redis.
+	return dlurl, errs.ErrNotImplemented
 }
