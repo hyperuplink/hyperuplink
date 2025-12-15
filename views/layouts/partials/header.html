@@ -12,7 +12,10 @@
       </ul>
     </div>
     <div class="flex-column">
-      <a href="{{.Site.GetRelRoot}}~{{$.Session.GetCurrentUserUsername}}" class="username">{{$.Session.GetCurrentUserUsername}}</a>
+      {{ if $.Session.IsLoggedIn }}
+      <a href="{{.Site.GetRelRoot}}~{{$.Session.GetCurrentUserUsername}}"
+         class="username">{{$.Session.GetCurrentUserUsername}}</a>
+      {{ end }}
     </div>
   </div>
   <div class="breadcrumbs raised">

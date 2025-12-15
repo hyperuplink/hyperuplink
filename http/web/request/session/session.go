@@ -86,3 +86,11 @@ func (s *Session) Destroy() error {
 
 	return sess.Destroy()
 }
+
+func (s *Session) IsLoggedIn() bool {
+	if _, ok := s.GetUserID(); !ok {
+		return false
+	}
+
+	return true
+}
