@@ -93,13 +93,13 @@ func New(
 		}
 	}
 
-	req.Menu.SetI18n(req.In.T)
+	req.Menu.SetI18n(req.In.Ts)
 	req.Menu.SetRole(req.Session.GetCurrentUserRole())
 
 	if title == "" {
 		title = req.System.Name
 	}
-	req.Site.SetTitle(req.In.T(title))
+	req.Site.SetTitle(req.In.Ts(title))
 
 	var parentRoute route.Route = req.rt
 	for parentRoute.Len() > 1 {
@@ -107,8 +107,8 @@ func New(
 		if parentRoute.HasBreadcrumb() {
 			req.BCN.Prepend(*bcn.NewBreadcrumb(
 				false,
-				req.In.T(parentRoute.AsTitle()),
-				req.In.T(parentRoute.AsTitle()),
+				req.In.Ts(parentRoute.AsTitle()),
+				req.In.Ts(parentRoute.AsTitle()),
 				req.HrefTo(parentRoute.AsURL()),
 			))
 		}

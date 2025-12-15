@@ -7,38 +7,38 @@
 <!-- MENUBAR -->
 <ul role="menubar">
   <li tabindex="0" aria-haspopup="true">
-    <u>F</u>ile
+    {{$_.T "_f_file"}}
     <ul role="menu">
-      <li tabindex="0" data-shortcut="Ctrl+S">Save Draft</li>
+      <li tabindex="0" data-shortcut="Ctrl+S">{{$_.T "save_draft"}}</li>
       <li role="separator"></li>
-      <li tabindex="0">Discard</li>
+      <li tabindex="0">{{$_.T "discard_verb"}}</li>
     </ul>
   </li>
   <li tabindex="0" aria-haspopup="true">
-    <u>E</u>dit
+    {{$_.T "_e_dit"}}
     <ul role="menu">
-      <li data-shortcut="Ctrl+Z" aria-disabled="true">Undo</li>
+      <li data-shortcut="Ctrl+Z" aria-disabled="true">{{$_.T "undo_verb"}}</li>
       <li role="separator"></li>
-      <li data-shortcut="Ctrl+X" aria-disabled="true">Cut</li>
-      <li tabindex="0" data-shortcut="Ctrl+C" aria-disabled="true">Copy</li>
-      <li tabindex="0" data-shortcut="Ctrl+V">Paste</li>
+      <li data-shortcut="Ctrl+X" aria-disabled="true">{{$_.T "cut_verb"}}</li>
+      <li tabindex="0" data-shortcut="Ctrl+C" aria-disabled="true">{{$_.T "copy_verb"}}</li>
+      <li tabindex="0" data-shortcut="Ctrl+V">{{$_.T "paste_verb"}}</li>
     </ul>
   </li>
   <li tabindex="0" aria-haspopup="true">
-    For<u>m</u>at
+    {{$_.T "for_m_at"}}
     <ul role="menu">
-      <li tabindex="0" data-shortcut="Ctrl+B">Bold</li>
-      <li tabindex="0" data-shortcut="Ctrl+I">Italic</li>
-      <li tabindex="0" data-shortcut="Ctrl+U">Underline</li>
+      <li tabindex="0" data-shortcut="Ctrl+B">{{$_.T "bold_adjective"}}</li>
+      <li tabindex="0" data-shortcut="Ctrl+I">{{$_.T "italic_adjective"}}</li>
+      <li tabindex="0" data-shortcut="Ctrl+U">{{$_.T "underlined_adjective"}}</li>
       <li role="separator"></li>
-      <li tabindex="0" data-shortcut="Ctrl+O">Quote</li>
-      <li tabindex="0" data-shortcut="Ctrl+M">Image</li>
+      <li tabindex="0" data-shortcut="Ctrl+O">{{$_.T "quote_verb"}}</li>
+      <li tabindex="0" data-shortcut="Ctrl+M">{{$_.T "image_noun"}}</li>
     </ul>
   </li>
   <li tabindex="0" class="help-menu" aria-haspopup="true">
-    <u>H</u>elp
+    {{$_.T "_h_elp"}}
     <ul role="menu">
-      <li tabindex="0">Formatting</li>
+      <li tabindex="0">{{$_.T "formatting_noun"}}</li>
     </ul>
   </li>
 </ul>

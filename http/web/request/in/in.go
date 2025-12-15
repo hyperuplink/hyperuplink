@@ -1,6 +1,7 @@
 package in
 
 import (
+	"html/template"
 	"strings"
 
 	"github.com/gofiber/fiber/v3"
@@ -30,8 +31,12 @@ func New(r route.IRouteController, c fiber.Ctx) *Internationalization {
 	return i
 }
 
-func (i *Internationalization) T(msg string) string {
+func (i *Internationalization) Ts(msg string) string {
 	return i.I18n.Get(msg)
+}
+
+func (i *Internationalization) T(msg string) template.HTML {
+	return template.HTML(i.Ts(msg))
 }
 
 func (i *Internationalization) SetLang(lang string) {

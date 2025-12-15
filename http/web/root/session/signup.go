@@ -84,7 +84,7 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 	sc, err := signupconfirmation.New(
 		&settingSystem.JSONValue,
 		usr,
-		req.In.T("signup_confirmation_subject"),
+		req.In.Ts("signup_confirmation_subject"),
 		usr.EmailConfirmationToken,
 		myRoute.AsURL(),
 	)
@@ -106,6 +106,6 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	req.Flash.SetInfo(req.In.T("signup_success"))
+	req.Flash.SetInfo(req.In.Ts("signup_success"))
 	return req.RedirectToRouteID("SessionConfirm")
 }
