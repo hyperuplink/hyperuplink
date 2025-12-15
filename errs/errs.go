@@ -15,6 +15,15 @@ var (
 	ErrTargetIDNotFound error = errors.New(
 		"Target ID not found",
 	)
+	ErrStorageIDNotFound error = errors.New(
+		"Storage ID not found",
+	)
+	ErrStorageTypeInvalid error = errors.New(
+		"Storage type is invalid",
+	)
+	ErrFilePathInvalid error = errors.New(
+		"File path is invalid",
+	)
 	ErrRedisAddrsEmpty error = errors.New(
 		"Redis.Addresses cannot be empty",
 	)
