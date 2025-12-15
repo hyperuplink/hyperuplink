@@ -56,7 +56,7 @@ func extractTranslations(filepath string) (ts []string, err error) {
 	}
 	defer file.Close()
 
-	re1 := regexp.MustCompile(`\.T."(\w+)".`)
+	re1 := regexp.MustCompile(`\.Ts{0,1}."(\w+)".`)
 	re2 := regexp.MustCompile(`\.Form\.Input\s+"\w+"\s+"(\w+)"`)
 
 	scanner := bufio.NewScanner(file)
