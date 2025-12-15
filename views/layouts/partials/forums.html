@@ -1,28 +1,29 @@
 {{ $dict := . }}
 {{ $site := get $dict "Site"}}
+{{ $_ := get $dict "_"}}
 {{ $category := get $dict "Category"}}
 {{ $forums := get $dict "Forums"}}
 <div class="list" role="listbox">
   <table class="detailed">
     <thead>
       <tr>
-        <th scope="col" role="button">Name</th>
+        <th scope="col" role="button">{{$_.T "name_noun"}}</th>
         <th class="no-mobile"
             scope="col"
             role="button"
             style="text-align: right;
-                   width: 60px">Topics</th>
+                   width: 60px">{{$_.T "topics_noun"}}</th>
         <th class="no-mobile"
             scope="col"
             role="button"
             style="text-align: right;
-                   width: 60px">Replies</th>
+                   width: 60px">{{$_.T "replies_noun"}}</th>
         <th class="no-mobile"
             scope="col"
             role="button"
             aria-sort="descending"
             style="text-align: right;
-                   width: 140px">Updated</th>
+                   width: 140px">{{$_.T "updated_adjective"}}</th>
       </tr>
     </thead>
     <tbody>
