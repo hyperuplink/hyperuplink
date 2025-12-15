@@ -7,7 +7,7 @@
     <div class="title-bar-text">{{$forum.Name}}</div>
   </div>
   <div class="window-body">
-    {{ template "views/layouts/partials/topics" dict "Site" .Site "Forum" $forum "Topics" $topics }}
+    {{ template "views/layouts/partials/topics" dict "Site" .Site "_" ._ "Forum" $forum "Topics" $topics }}
   </div>
 </div>
 <!-- END FORUM -->
