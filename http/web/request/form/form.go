@@ -72,6 +72,7 @@ func (f *Form) Input(
 	name string,
 	value string,
 	hasLabel bool,
+	args ...string,
 ) template.HTML {
 	var html string = ""
 
@@ -85,8 +86,23 @@ func (f *Form) Input(
 		value = fvalue
 	}
 
-	html = fmt.Sprintf("%s<input type=\"%s\" name=\"%s\" value=\"%s\" class=\"%s\">",
-		html, inputType, name, value, f.fl.ClassFor(name))
+	var kv string = ""
+	for i := 0; i < len(args); i++ {
+		key := args[i]
+		i++
+		val := args[i]
+
+		if val == "" {
+			kv = fmt.Sprintf(`%s %s`, kv, key)
+		} else {
+			kv = fmt.Sprintf(`%s %s="%s"`, kv, key, val)
+		}
+	}
+
+	html = fmt.Sprintf(
+		`%s<input type="%s" name="%s" value="%s" class="%s" %s>`,
+		html, inputType, name, value, f.fl.ClassFor(name), kv,
+	)
 
 	return template.HTML(html)
 }

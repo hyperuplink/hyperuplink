@@ -97,6 +97,22 @@ func (s *Site) CSS(name string) string {
 	return s.StaticFile("css/" + name)
 }
 
+func (s *Site) ProfilePicture(id string) (dlurl string) {
+	var err error
+
+	// TODO: Get provider ID from System
+	// TODO: Get path from System
+	// TODO: Get .png from format configured in System
+	if dlurl, err = s.r.GetRuntime().Storage.GetFileDownloadURL(
+		"profile-pictures",
+		"profile-pictures/"+id+".png",
+	); err != nil {
+		return s.StaticFile("images/avatar.jpg")
+	}
+
+	return dlurl
+}
+
 func (s *Site) Title() string {
 	return s.r.GetEnv().Title
 }

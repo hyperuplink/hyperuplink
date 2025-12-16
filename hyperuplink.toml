@@ -39,7 +39,7 @@ Email.From.Name = "Example.org"
 # Type = "xmpp"
 
 [[Storage]]
-ID = "profilepictures"
+ID = "profile-pictures"
 Type = "S3"
 S3.Endpoint = "http://localhost:9000"
 S3.Region = "us-east-1"

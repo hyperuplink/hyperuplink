@@ -2,6 +2,7 @@ package s3
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -42,7 +43,9 @@ func (st *S3) Shutdown() (err error) {
 }
 
 func (st *S3) getBucketObjectFile(dest string) (bucket string, objKey string, fileName string, err error) {
-	destSplit := filepath.SplitList(dest)
+	separator := string(os.PathSeparator)
+	cleanDest := filepath.Clean(dest)
+	destSplit := strings.Split(cleanDest, separator)
 	destSplitLen := len(destSplit)
 	if destSplitLen < 2 {
 		return bucket, objKey, fileName, errs.ErrFilePathInvalid
@@ -54,7 +57,7 @@ func (st *S3) getBucketObjectFile(dest string) (bucket string, objKey string, fi
 	return bucket, objKey, fileName, nil
 }
 
-func (st *S3) getFileContentType(file *os.File) (contentType string, err error) {
+func (st *S3) getFileContentType(file io.ReadSeeker) (contentType string, err error) {
 	buffer := make([]byte, 512)
 	_, err = file.Read(buffer)
 	if err != nil {
@@ -70,14 +73,9 @@ func (st *S3) getFileContentType(file *os.File) (contentType string, err error) 
 	return contentType, nil
 }
 
-func (st *S3) StoreFile(src string, dest string) (err error) {
+func (st *S3) StoreFileName(src string, dest string) (err error) {
 	if src == "" || dest == "" {
 		return errs.ErrFilePathInvalid
-	}
-
-	var bucket, objKey, fileName string
-	if bucket, objKey, fileName, err = st.getBucketObjectFile(dest); err != nil {
-		return err
 	}
 
 	file, err := os.Open(src)
@@ -86,8 +84,21 @@ func (st *S3) StoreFile(src string, dest string) (err error) {
 	}
 	defer file.Close()
 
+	return st.StoreFile(file, dest)
+}
+
+func (st *S3) StoreFile(src io.ReadSeeker, dest string) (err error) {
+	if src == nil || dest == "" {
+		return errs.ErrFilePathInvalid
+	}
+
+	var bucket, objKey, fileName string
+	if bucket, objKey, fileName, err = st.getBucketObjectFile(dest); err != nil {
+		return err
+	}
+
 	var contentType string
-	if contentType, err = st.getFileContentType(file); err != nil {
+	if contentType, err = st.getFileContentType(src); err != nil {
 		return err
 	}
 
@@ -96,7 +107,7 @@ func (st *S3) StoreFile(src string, dest string) (err error) {
 		ObjectKey:   objKey,
 		FileName:    fileName,
 		ContentType: contentType,
-		Body:        file,
+		Body:        src,
 	})
 
 	return err

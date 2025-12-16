@@ -4,7 +4,13 @@
   </div>
   <div class="window-body">
     {{ template "views/layouts/partials/flash" . }}
-
-
+    <form method="post"
+          action="{{$.Site.GetPathname}}/update"
+          enctype="multipart/form-data"
+          class="">
+      <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+      {{$.Form.Input "file" "profile_picture" "" true "accept" "image/*"}}
+      <button type="submit" class="affirmative" title="{{$._.T "save"}}">{{$._.T "update"}}</button>
+    </form>
   </div>
 </div>

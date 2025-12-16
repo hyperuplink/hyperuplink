@@ -2,13 +2,11 @@ package profile
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/category"
 	"github.com/mrusme/hyperuplink/models/forum"
 	"github.com/mrusme/hyperuplink/models/user"
-	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
 
 type CategoryWithForums struct {
@@ -30,24 +28,8 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var userID string
-	var ok bool
-	if userID, ok = req.Session.GetUserID(); !ok {
-		err = errs.ErrUserIDNotFound
-		if ret, rerr := req.RespondOnError(err); ret == true {
-			return rerr
-		}
-	}
-
-	usr, err := r.Runtime.Repositories.User.GetByID(
-		userID,
-		common.QueryOptions{
-			WithBanned:  false,
-			WithSpammed: false,
-			WithDeleted: false,
-			Limit:       1,
-		},
-	)
+	var usr *user.User
+	usr, err = r.getUser(req)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

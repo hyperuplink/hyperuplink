@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"io"
 	"strings"
 
 	"github.com/mrusme/hyperuplink/errs"
@@ -11,7 +12,8 @@ import (
 type IStorage interface {
 	Startup() error
 	Shutdown() error
-	StoreFile(src string, dest string) error
+	StoreFile(src io.ReadSeeker, dest string) error
+	StoreFileName(src string, dest string) error
 	GetFileDownloadURL(dest string) (string, error)
 }
 
@@ -60,7 +62,7 @@ func (str *Storage) Shutdown() (err error) {
 
 func (str *Storage) StoreFile(
 	providerID string,
-	src string,
+	src io.ReadSeeker,
 	dest string,
 ) (err error) {
 	if _, ok := str.providers[providerID]; !ok {
@@ -68,6 +70,18 @@ func (str *Storage) StoreFile(
 	}
 
 	return str.providers[providerID].StoreFile(src, dest)
+}
+
+func (str *Storage) StoreFileName(
+	providerID string,
+	src string,
+	dest string,
+) (err error) {
+	if _, ok := str.providers[providerID]; !ok {
+		return errs.ErrStorageIDNotFound
+	}
+
+	return str.providers[providerID].StoreFileName(src, dest)
 }
 
 func (str *Storage) GetFileDownloadURL(

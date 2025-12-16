@@ -5,7 +5,7 @@
 <div class="raised padding margin post flex-row">
   <fieldset class="profile padding">
     <img class="picture lowered"
-         src="{{$site.GetRelRoot}}static/images/avatar.jpg">
+         src="{{$site.ProfilePicture $post.AuthorProfilePicture}}">
     <a href="{{$site.GetRelRoot}}~{{$post.AuthorUsername}}"
        title="{{$post.AuthorUsername}}">{{$post.AuthorUsername}}</a>
     <div class="role">{{ $_.T (nospace (cat $post.AuthorRole "_role")) }}</div>
