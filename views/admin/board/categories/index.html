@@ -9,7 +9,7 @@
     <!-- CATEGORY -->
     <div class="raised padding margin post flex-row gap">
       <form method="post"
-            action="{{$.Site.GetPathname}}/update"
+            action="{{$.Site.GetFormAction "update"}}"
             class="flex-column grow">
         <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
         <input type="hidden" name="id" value="{{$item.ID}}">
@@ -23,7 +23,7 @@
         </div>
       </form>
       <form method="post"
-            action="{{$.Site.GetPathname}}/moveup"
+            action="{{$.Site.GetFormAction "moveup"}}"
             class="flex-column">
         <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
         <input type="hidden" name="id" value="{{$item.ID}}">
@@ -37,7 +37,7 @@
         </button>
       </form>
       <form method="post"
-            action="{{$.Site.GetPathname}}/movedown"
+            action="{{$.Site.GetFormAction "movedown"}}"
             class="flex-column">
         <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
         <input type="hidden" name="id" value="{{$item.ID}}">
@@ -51,7 +51,7 @@
         </button>
       </form>
       <form method="post"
-            action="{{$.Site.GetPathname}}/destroy"
+            action="{{$.Site.GetFormAction "destroy"}}"
             class="flex-column">
         <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
         <input type="hidden" name="id" value="{{$item.ID}}">
@@ -70,7 +70,7 @@
   <div class="window-body">
     <!-- NEW CATEGORY -->
     <div class="padding margin post flex-row gap">
-      <form method="post" action="{{.Site.GetPathname}}" class="flex-column grow">
+      <form method="post" action="{{.Site.GetFormAction}}" class="flex-column grow">
         <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
         <div class="flex-row gap">
           <div class="flex-column grow">{{.Form.Input "text" "name" "" true}}</div>

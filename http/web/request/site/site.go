@@ -67,6 +67,16 @@ func (s *Site) GetPathname() string {
 	return rf.AsURL()
 }
 
+func (s *Site) GetFormAction(target string) string {
+	pathname := s.GetPathname()
+
+	if pathname == target {
+		return pathname
+	}
+
+	return pathname + "/" + target
+}
+
 func (s *Site) GetCSRFToken() string {
 	return s.csrf
 }

@@ -34,7 +34,7 @@
   </div>
   <div class="window-body">
     <div id="reply" class="reply">
-      <form method="post" action="{{$.Site.GetPathname}}" class="">
+      <form method="post" action="{{$.Site.GetFormAction}}" class="">
         <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
         <input type="hidden" name="topic_id" value="{{$topic.ID}}">
         <input type="hidden" name="reply_id" value="{{$reply_to_id}}">

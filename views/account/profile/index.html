@@ -5,7 +5,7 @@
   <div class="window-body">
     {{ template "views/layouts/partials/flash" . }}
     <form method="post"
-          action="{{$.Site.GetPathname}}/update"
+          action="{{$.Site.GetFormAction "update"}}"
           enctype="multipart/form-data"
           class="">
       <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
