@@ -33,7 +33,15 @@ func (im *Magick) Shutdown() (err error) {
 	return err
 }
 
-func (im *Magick) Convert(src io.ReadSeekCloser) (dest io.ReadSeekCloser, destName string, err error) {
+func (im *Magick) Convert(
+	src io.ReadSeekCloser,
+	toFormatExt string,
+	args ...string,
+) (
+	dest io.ReadSeekCloser,
+	destName string,
+	err error,
+) {
 	var tmpSrcFile, tmpDestFile *os.File
 	var tmpSrcName, tmpDestName string
 
@@ -52,7 +60,7 @@ func (im *Magick) Convert(src io.ReadSeekCloser) (dest io.ReadSeekCloser, destNa
 
 	tmpSrcFile.Close()
 
-	if tmpDestFile, err = os.CreateTemp(im.tmpDir, "convert.*.webp"); err != nil {
+	if tmpDestFile, err = os.CreateTemp(im.tmpDir, "convert.*."+toFormatExt); err != nil {
 		if tmpSrcName != "" {
 			os.Remove(tmpSrcName)
 		}
@@ -62,7 +70,12 @@ func (im *Magick) Convert(src io.ReadSeekCloser) (dest io.ReadSeekCloser, destNa
 
 	tmpDestFile.Close()
 
-	cmd := exec.Command(im.convertPath, tmpSrcName, tmpDestName)
+	var params []string
+
+	params = append(params, tmpSrcName)
+	params = append(params, args...)
+	params = append(params, tmpDestName)
+	cmd := exec.Command(im.convertPath, params...)
 	err = cmd.Run()
 	if tmpSrcName != "" {
 		os.Remove(tmpSrcName)
@@ -82,4 +95,19 @@ func (im *Magick) Convert(src io.ReadSeekCloser) (dest io.ReadSeekCloser, destNa
 	}
 
 	return tmpDestFile, tmpDestFile.Name(), nil
+}
+
+func (im *Magick) ConvertProfilePicture(
+	src io.ReadSeekCloser,
+	toFormatExt string,
+) (
+	dest io.ReadSeekCloser,
+	destName string,
+	err error,
+) {
+	return im.Convert(src, toFormatExt,
+		"-resize", "512x512^",
+		"-gravity", "Center",
+		"-extent", "512x512",
+	)
 }

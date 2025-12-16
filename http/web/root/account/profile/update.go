@@ -49,8 +49,9 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	profilePictureFile, profilePictureFileName, err := r.Runtime.Magick.Convert(
+	profilePictureFile, profilePictureFileName, err := r.Runtime.Magick.ConvertProfilePicture(
 		profilePictureMultipartFile,
+		"webp", // TODO: Get .webp from format configured in System
 	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		profilePictureMultipartFile.Close()

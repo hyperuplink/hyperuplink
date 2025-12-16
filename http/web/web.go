@@ -139,11 +139,11 @@ func (srv *Web) loadMiddlewares() error {
 
 	sessConfig := session.Config{
 		Storage:         storage,
-		CookieSecure:    true,             // HTTPS only
-		CookieHTTPOnly:  true,             // Prevent XSS
-		CookieSameSite:  "Lax",            // CSRF protection
-		IdleTimeout:     30 * time.Minute, // Session timeout
-		AbsoluteTimeout: 24 * time.Hour,   // Maximum session life
+		CookieSecure:    true,           // HTTPS only
+		CookieHTTPOnly:  true,           // Prevent XSS
+		CookieSameSite:  "Lax",          // CSRF protection
+		IdleTimeout:     6 * time.Hour,  // Session timeout
+		AbsoluteTimeout: 24 * time.Hour, // Maximum session life
 		Extractor:       extractors.FromCookie("__hyperuplink_session"),
 	}
 
