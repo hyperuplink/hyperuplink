@@ -6,7 +6,8 @@ SELECT
     u.member_of AS author_member_of,
     u.email AS author_email,
     u.profile_picture AS author_profile_picture,
-    u.signature AS author_signature,
+    u.signature_text AS author_signature_text,
+    u.signature_html AS author_signature_html,
     u.created_at AS author_joined_at
 FROM replies r
 LEFT JOIN users u ON u.id = r.author_id;

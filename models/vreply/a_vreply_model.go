@@ -13,6 +13,7 @@ type VReply struct {
 	AuthorMemberOf       []string         `json:"author_member_of"`
 	AuthorEmail          string           `json:"author_email"`
 	AuthorProfilePicture string           `json:"author_profile_picture"`
-	AuthorSignature      string           `json:"author_signature"`
+	AuthorSignatureText  string           `json:"author_signature_text"`
+	AuthorSignatureHTML  string           `json:"author_signature_html"`
 	AuthorJoinedAt       pgtype.Timestamp `json:"author_joined_at"`
 }

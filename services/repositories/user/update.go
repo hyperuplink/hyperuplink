@@ -26,13 +26,14 @@ func (repo *Repository) Update(model *user.User) (err error) {
 		,sign_in_locked_at =          $18
 		,sign_in_unlock_token =       $19
 		,profile_picture =            $20
-		,signature =                  $21
-		,created_at =                 $22
-		,updated_at =                 $23
-		,confirmed_at =               $24
-		,banned_at =                  $25
-		,deleted_at =                 $26
-		WHERE id =                    $27`,
+		,signature_text =             $21
+		,signature_html =             $22
+		,created_at =                 $23
+		,updated_at =                 $24
+		,confirmed_at =               $25
+		,banned_at =                  $26
+		,deleted_at =                 $27
+		WHERE id =                    $28`,
 		model.Username,
 		model.Role,
 		model.MemberOf,
@@ -53,7 +54,8 @@ func (repo *Repository) Update(model *user.User) (err error) {
 		model.SignInLockedAt,
 		model.SignInUnlockToken,
 		model.ProfilePicture,
-		model.Signature,
+		model.SignatureText,
+		model.SignatureHTML,
 		model.CreatedAt,
 		model.UpdatedAt,
 		model.ConfirmedAt,

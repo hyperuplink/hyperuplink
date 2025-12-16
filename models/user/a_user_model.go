@@ -40,7 +40,8 @@ type User struct {
 	SignInUnlockToken    string           `json:"sign_in_unlock_token"`
 
 	ProfilePicture string `json:"profile_picture"`
-	Signature      string `json:"signature"`
+	SignatureText  string `json:"signature_text"`
+	SignatureHTML  string `json:"signature_html"`
 
 	CreatedAt   pgtype.Timestamp `json:"created_at"`
 	UpdatedAt   pgtype.Timestamp `json:"updated_at"`
