@@ -102,10 +102,10 @@ func (s *Site) ProfilePicture(id string) (dlurl string) {
 
 	// TODO: Get provider ID from System
 	// TODO: Get path from System
-	// TODO: Get .png from format configured in System
+	// TODO: Get .webp from format configured in System
 	if dlurl, err = s.r.GetRuntime().Storage.GetFileDownloadURL(
 		"profile-pictures",
-		"profile-pictures/"+id+".png",
+		"profile-pictures/"+id+".webp",
 	); err != nil {
 		return s.StaticFile("images/avatar.jpg")
 	}

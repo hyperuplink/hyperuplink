@@ -2,6 +2,7 @@ package profile
 
 import (
 	"mime/multipart"
+	"os"
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
@@ -37,28 +38,42 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 
 	r.Runtime.Debug("form", frm)
 
-	profilePictureFile, err := frm.ProfilePicture.Open()
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-	defer profilePictureFile.Close()
-
 	var usr *user.User
 	usr, err = r.getUser(req)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
 
+	profilePictureMultipartFile, err := frm.ProfilePicture.Open()
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	profilePictureFile, profilePictureFileName, err := r.Runtime.Magick.Convert(
+		profilePictureMultipartFile,
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		profilePictureMultipartFile.Close()
+		return rerr
+	}
+
 	profilePictureID := shortuuid.New()
 
-	// TODO: Get providerID from System config
+	// TODO: Get provider ID from System
+	// TODO: Get path from System
+	// TODO: Get .webp from format configured in System
 	err = r.Runtime.Storage.StoreFile(
 		"profile-pictures",
 		profilePictureFile,
-		"profile-pictures/"+profilePictureID+".png",
+		"profile-pictures/"+profilePictureID+".webp",
 	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
+	}
+
+	profilePictureFile.Close()
+	if profilePictureFileName != "" {
+		os.Remove(profilePictureFileName)
 	}
 
 	// oldProfilePicutreID := usr.ProfilePicture

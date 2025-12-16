@@ -14,6 +14,7 @@ import (
 	"github.com/mrusme/hyperuplink/services/database"
 	"github.com/mrusme/hyperuplink/services/dispatch"
 	"github.com/mrusme/hyperuplink/services/intnat"
+	"github.com/mrusme/hyperuplink/services/magick"
 	"github.com/mrusme/hyperuplink/services/markdown"
 	"github.com/mrusme/hyperuplink/services/repositories"
 	"github.com/mrusme/hyperuplink/services/storage"
@@ -42,6 +43,7 @@ type Runtime struct {
 	Database     *database.Database
 	Repositories *repositories.Repositories
 	Storage      *storage.Storage
+	Magick       *magick.Magick
 	Intnat       *intnat.Intnat
 	Markdown     *markdown.Markdown
 	Dispatch     *dispatch.Dispatch
@@ -108,6 +110,12 @@ func New(cfgstr string) (rt *Runtime, err error) {
 		return nil, err
 	}
 
+	rt.Debug("new", "magick")
+	if rt.Magick, err = magick.New(); err != nil {
+		rt.Error("status", "error", "error", err)
+		return nil, err
+	}
+
 	rt.Debug("new", "intnat")
 	if rt.Intnat, err = intnat.New(); err != nil {
 		rt.Error("status", "error", "error", err)
@@ -163,6 +171,12 @@ func (rt *Runtime) Startup() (err error) {
 		return err
 	}
 
+	rt.Debug("startup", "magick")
+	if err = rt.Magick.Startup(); err != nil {
+		rt.Error("status", "error", "error", err)
+		return err
+	}
+
 	rt.Debug("startup", "intnat")
 	if err = rt.Intnat.Startup(); err != nil {
 		rt.Error("status", "error", "error", err)
@@ -203,6 +217,12 @@ func (rt *Runtime) Shutdown() (err error) {
 
 	rt.Debug("shutdown", "intnat")
 	if err = rt.Intnat.Shutdown(); err != nil {
+		rt.Error("status", "error", "error", err)
+		return err
+	}
+
+	rt.Debug("shutdown", "magick")
+	if err = rt.Magick.Shutdown(); err != nil {
 		rt.Error("status", "error", "error", err)
 		return err
 	}
