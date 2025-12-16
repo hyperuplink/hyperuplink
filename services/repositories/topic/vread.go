@@ -7,6 +7,28 @@ import (
 	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
 
+func (repo *Repository) VAll(
+	qo common.QueryOptions,
+) (model *[]vtopic.VTopic, err error) {
+	var rows pgx.Rows
+	var mod []vtopic.VTopic
+
+	rows, err = repo.db.Query(qo.Query(
+		`SELECT * FROM vtopics`,
+		common.QueryCapabilities{
+			HasSpammed: true,
+			HasDeleted: true,
+		}),
+	)
+	if err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+
+	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[vtopic.VTopic])
+
+	return &mod, repo.db.ConvertError(err)
+}
+
 func (repo *Repository) VAllForForumUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,

@@ -1,0 +1,45 @@
+{{ $dict := . }}
+{{ $site := get $dict "Site"}}
+{{ $_ := get $dict "_"}}
+{{ $topics := get $dict "topics"}}
+<div class="list" role="listbox" aria-multiselectable="true">
+  <table class="detailed">
+    <thead>
+      <tr>
+        <th scope="col" role="button">{{$_.T "name_noun"}}</th>
+        <th class="no-mobile" scope="col" role="button" style="width: 160px;">{{$_.T "forum_noun"}}</th>
+        <th class="no-mobile"
+            scope="col"
+            role="button"
+            style="text-align: right;
+                   width: 60px">{{$_.T "replies_noun"}}</th>
+        <th class="no-mobile"
+            scope="col"
+            role="button"
+            aria-sort="descending"
+            style="text-align: right;
+                   width: 140px">{{$_.T "updated_adjective"}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{ range $idx_topic, $topic := $topics }}
+      <tr>
+        <td>
+          <a href="{{$site.GetRelRoot}}_{{$topic.CategorySlug}}/{{$topic.ForumSlug}}/{{$topic.Slug}}"
+             title=""
+             class="icon big">
+            <img src="{{$site.GetRelRoot}}static/icons/post.png">
+            <div class="icon-label">
+              <div>{{$topic.Name}}</div>
+              <div class="icon-sublabel">by {{$topic.AuthorUsername}} on {{$topic.CreatedAt.Time}}</div>
+            </div>
+          </a>
+        </td>
+        <td class="no-mobile">{{$topic.ForumName}}</td>
+        <td class="no-mobile" style="text-align: right;">{{$topic.Replies}}</td>
+        <td class="no-mobile" style="text-align: right;">{{$site.DateTime $topic.LastReplyAt}}</td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+</div>

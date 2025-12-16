@@ -7,6 +7,7 @@ import (
 	"github.com/mrusme/hyperuplink/models/category"
 	"github.com/mrusme/hyperuplink/models/user"
 	"github.com/mrusme/hyperuplink/models/vforum"
+	"github.com/mrusme/hyperuplink/models/vtopic"
 	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
 
@@ -61,6 +62,20 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	req.SetData("categories_forums", catsfums)
+
+	var tops *[]vtopic.VTopic
+	tops, err = r.Runtime.Repositories.Topic.VAll(
+		common.QueryOptions{
+			OrderBy: "updated_at",
+			Order:   common.Descending,
+			Limit:   10,
+		},
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	req.SetData("topics", tops)
 
 	return req.Respond()
 }
