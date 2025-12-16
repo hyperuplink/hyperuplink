@@ -12,6 +12,7 @@ func (repo *Repository) Create(model *reply.Reply) (rowID uuid.UUID, err error) 
 		,author_id
 		,kind
 		,text
+		,html
 		,poll_vote
 		,rsvp_response
 		,created_at
@@ -24,6 +25,7 @@ func (repo *Repository) Create(model *reply.Reply) (rowID uuid.UUID, err error) 
 		,$5
 		,$6
 		,$7
+		,$8
 		,NOW()
 		,NOW()
 		) RETURNING id`,
@@ -32,6 +34,7 @@ func (repo *Repository) Create(model *reply.Reply) (rowID uuid.UUID, err error) 
 		model.AuthorID,
 		model.Kind,
 		model.Text,
+		model.HTML,
 		model.PollVote,
 		model.RSVPResponse,
 	).Scan(&rowID)

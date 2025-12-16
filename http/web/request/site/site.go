@@ -67,10 +67,16 @@ func (s *Site) GetPathname() string {
 	return rf.AsURL()
 }
 
-func (s *Site) GetFormAction(target string) string {
+func (s *Site) GetFormAction(args ...string) string {
 	pathname := s.GetPathname()
 
-	if pathname == target {
+	if len(args) == 0 {
+		return pathname
+	}
+
+	target := args[0]
+
+	if target == "" || target == pathname {
 		return pathname
 	}
 
@@ -109,6 +115,11 @@ func (s *Site) CSS(name string) string {
 
 func (s *Site) ProfilePicture(id string) (dlurl string) {
 	var err error
+	var staticPicture string = s.StaticFile("images/avatar.jpg")
+
+	if id == "" {
+		return staticPicture
+	}
 
 	// TODO: Get provider ID from System
 	// TODO: Get path from System
@@ -117,7 +128,7 @@ func (s *Site) ProfilePicture(id string) (dlurl string) {
 		"profile-pictures",
 		"profile-pictures/"+id+".webp",
 	); err != nil {
-		return s.StaticFile("images/avatar.jpg")
+		return staticPicture
 	}
 
 	return dlurl

@@ -8,6 +8,7 @@ CREATE TABLE topics (
   anonymous BOOLEAN DEFAULT FALSE,
   pinned BOOLEAN DEFAULT FALSE,
   text TEXT NOT NULL,
+  html TEXT NOT NULL,
   poll_options VARCHAR(78) [],
   views BIGINT DEFAULT 0,
   created_at TIMESTAMP DEFAULT now(),

@@ -30,6 +30,7 @@ type Reply struct {
 
 	Kind         Kind         `json:"kind"`
 	Text         string       `json:"text"`
+	HTML         string       `json:"html"`
 	PollVote     int          `json:"poll_vote"`
 	RSVPResponse RSVPResponse `json:"rsvp_response"`
 

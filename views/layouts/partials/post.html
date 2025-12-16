@@ -17,7 +17,7 @@
     <div class="joined">{{ $_.T "joined"}}: {{$site.Date $post.AuthorJoinedAt}}</div>
   </fieldset>
   <div class="content flex-column">
-    <div class="text">{{ safeHTML $post.Text }}</div>
+    <div class="text">{{ safeHTML $post.HTML }}</div>
     <div class="actions flex-row justify-end gap">
       <a class="button danger" href="" title="{{$_.T "report_post"}}">!</a>
       <a class="button"

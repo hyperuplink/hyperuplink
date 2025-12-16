@@ -14,6 +14,7 @@ func (repo *Repository) Create(model *topic.Topic) (rowID uuid.UUID, err error) 
 		,kind
 		,anonymous
 		,text
+		,html
 		,poll_options
 		,created_at
 		,updated_at
@@ -27,9 +28,10 @@ func (repo *Repository) Create(model *topic.Topic) (rowID uuid.UUID, err error) 
 		,$6
 		,$7
 		,$8
-		,NOW()
-		,NOW()
 		,$9
+		,NOW()
+		,NOW()
+		,$10
 	) RETURNING id`,
 		model.Name,
 		model.Slug,
@@ -38,6 +40,7 @@ func (repo *Repository) Create(model *topic.Topic) (rowID uuid.UUID, err error) 
 		model.Kind,
 		model.Anonymous,
 		model.Text,
+		model.HTML,
 		model.PollOptions,
 		model.EndedAt,
 	).Scan(&rowID)

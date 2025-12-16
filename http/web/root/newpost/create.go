@@ -52,6 +52,10 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 	top.Kind = topic.Regular
 	top.Anonymous = false
 	top.Text = frm.Text
+	top.HTML, err = r.Runtime.Markdown.Convert(top.Text)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
 	// top.PollOptions =
 	_, err = r.Runtime.Repositories.Topic.Create(top)
 	if ret, rerr := req.RespondOnError(err); ret == true {

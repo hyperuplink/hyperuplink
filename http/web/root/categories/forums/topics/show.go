@@ -55,11 +55,6 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 	).AsURL()))
 	req.UpdateGrandParentTitle(top.CategoryName)
 
-	// TODO: Move to Create/Update and save Markdown
-	top.Text, err = r.Runtime.Markdown.Convert(top.Text)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
 	req.SetData("topic", top)
 
 	var reps *[]vreply.VReply
@@ -115,13 +110,6 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 			}
 		}
 	}
-
-	pathName, absPath, relRoot := helpers.GetPaths(c)
-	r.Runtime.Debug(
-		"PATHNAME", pathName,
-		"ABSPATH", absPath,
-		"RELROOT", relRoot,
-	)
 
 	return req.Respond()
 }

@@ -5,6 +5,7 @@ CREATE TABLE replies (
   author_id UUID NOT NULL,
   kind VARCHAR(16) DEFAULT 'regular',
   text TEXT NOT NULL,
+  html TEXT NOT NULL,
   poll_vote SMALLINT,
   rsvp_response SMALLINT,
   created_at TIMESTAMP DEFAULT now(),

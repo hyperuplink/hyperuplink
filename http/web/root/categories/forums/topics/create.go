@@ -73,6 +73,10 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 	rep.AuthorID, _ = req.Session.GetUserUUID()
 	rep.Kind = reply.Regular
 	rep.Text = frm.Text
+	rep.HTML, err = r.Runtime.Markdown.Convert(rep.Text)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
 	// rep.PollVote =
 	// rep.RSVPResponse =
 	_, err = r.Runtime.Repositories.Reply.Create(rep)

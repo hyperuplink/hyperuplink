@@ -25,6 +25,7 @@ type Topic struct {
 	Anonymous   bool     `json:"anonymous"`
 	Pinned      bool     `json:"pinned"`
 	Text        string   `json:"text"`
+	HTML        string   `json:"html"`
 	PollOptions []string `json:"poll_options"`
 
 	Views int64 `json:"views"`
