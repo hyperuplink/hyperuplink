@@ -19,6 +19,7 @@ import (
 	"github.com/mrusme/hyperuplink/http/web/request/session"
 	"github.com/mrusme/hyperuplink/http/web/request/site"
 	"github.com/mrusme/hyperuplink/models/setting"
+	"github.com/mrusme/hyperuplink/services/repositories/common"
 	settingRepo "github.com/mrusme/hyperuplink/services/repositories/setting"
 )
 
@@ -79,7 +80,15 @@ func New(
 	_, req.absPath, req.relRoot = helpers.GetPaths(req.c)
 
 	if userID, ok := req.Session.GetUserID(); ok {
-		usr, err := req.r.GetRuntime().Repositories.User.GetByID(userID)
+		usr, err := req.r.GetRuntime().Repositories.User.GetByID(
+			userID,
+			common.QueryOptions{
+				WithBanned:  false,
+				WithSpammed: false,
+				WithDeleted: false,
+				Limit:       1,
+			},
+		)
 		if err != nil {
 			// We seemingly have a session but we can't find a user for it in our
 			// database. This could be, because maybe the user got banned or deleted.

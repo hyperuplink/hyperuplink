@@ -58,10 +58,25 @@ func (str *Storage) Shutdown() (err error) {
 	return nil
 }
 
-func (str *Storage) StoreFile(providerID string, src string, dest string) (err error) {
+func (str *Storage) StoreFile(
+	providerID string,
+	src string,
+	dest string,
+) (err error) {
 	if _, ok := str.providers[providerID]; !ok {
 		return errs.ErrStorageIDNotFound
 	}
 
 	return str.providers[providerID].StoreFile(src, dest)
+}
+
+func (str *Storage) GetFileDownloadURL(
+	providerID string,
+	dest string,
+) (dlurl string, err error) {
+	if _, ok := str.providers[providerID]; !ok {
+		return dlurl, errs.ErrStorageIDNotFound
+	}
+
+	return str.providers[providerID].GetFileDownloadURL(dest)
 }

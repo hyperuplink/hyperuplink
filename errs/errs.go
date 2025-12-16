@@ -6,6 +6,9 @@ var (
 	ErrNotImplemented error = errors.New(
 		"Not implemented",
 	)
+	ErrUserIDNotFound error = errors.New(
+		"User ID not found",
+	)
 	ErrConfigTypeUnsupported error = errors.New(
 		"Config type unsupported",
 	)

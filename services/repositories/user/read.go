@@ -4,19 +4,22 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/mrusme/hyperuplink/models/user"
+	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
 
 func (repo *Repository) GetByUUID(
 	id uuid.UUID,
+	qo common.QueryOptions,
 ) (model *user.User, err error) {
 	var rows pgx.Rows
 	var mod user.User
 
-	rows, err = repo.db.Query(`SELECT * FROM users
-		WHERE id = $1
-		AND banned_at IS NULL
-		AND deleted_at IS NULL
-		LIMIT 1`,
+	rows, err = repo.db.Query(qo.Query(
+		`SELECT * FROM users WHERE id = $1`,
+		common.QueryCapabilities{
+			HasBanned:  true,
+			HasDeleted: true,
+		}),
 		id,
 	)
 	if err != nil {
@@ -30,6 +33,7 @@ func (repo *Repository) GetByUUID(
 
 func (repo *Repository) GetByID(
 	id string,
+	qo common.QueryOptions,
 ) (model *user.User, err error) {
 	var uuID uuid.UUID
 
@@ -37,20 +41,22 @@ func (repo *Repository) GetByID(
 		return nil, repo.db.ConvertError(err)
 	}
 
-	return repo.GetByUUID(uuID)
+	return repo.GetByUUID(uuID, qo)
 }
 
 func (repo *Repository) GetByUsername(
 	username string,
+	qo common.QueryOptions,
 ) (model *user.User, err error) {
 	var rows pgx.Rows
 	var mod user.User
 
-	rows, err = repo.db.Query(`SELECT * FROM users
-		WHERE username = $1
-		AND banned_at IS NULL
-		AND deleted_at IS NULL
-		LIMIT 1`,
+	rows, err = repo.db.Query(qo.Query(
+		`SELECT * FROM users WHERE username = $1`,
+		common.QueryCapabilities{
+			HasBanned:  true,
+			HasDeleted: true,
+		}),
 		username)
 	if err != nil {
 		return nil, repo.db.ConvertError(err)
@@ -64,15 +70,17 @@ func (repo *Repository) GetByUsername(
 
 func (repo *Repository) GetByEmail(
 	email string,
+	qo common.QueryOptions,
 ) (model *user.User, err error) {
 	var rows pgx.Rows
 	var mod user.User
 
-	rows, err = repo.db.Query(`SELECT * FROM users
-		WHERE email = $1
-		AND banned_at IS NULL
-		AND deleted_at IS NULL
-		LIMIT 1`,
+	rows, err = repo.db.Query(qo.Query(
+		`SELECT * FROM users WHERE email = $1`,
+		common.QueryCapabilities{
+			HasBanned:  true,
+			HasDeleted: true,
+		}),
 		email)
 	if err != nil {
 		return nil, repo.db.ConvertError(err)

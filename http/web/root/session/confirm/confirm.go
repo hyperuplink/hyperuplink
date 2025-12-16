@@ -9,6 +9,7 @@ import (
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/user"
 	"github.com/mrusme/hyperuplink/runtime"
+	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
 
 type Route struct {
@@ -98,7 +99,15 @@ func (r *Route) ConfirmCreate(c fiber.Ctx) (err error) {
 	r.Runtime.Debug("form", frm)
 
 	var usr *user.User
-	usr, err = r.Runtime.Repositories.User.GetByUsername(frm.Username)
+	usr, err = r.Runtime.Repositories.User.GetByUsername(
+		frm.Username,
+		common.QueryOptions{
+			WithBanned:  false,
+			WithSpammed: false,
+			WithDeleted: false,
+			Limit:       1,
+		},
+	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

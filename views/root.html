@@ -60,7 +60,7 @@
       <a href="_{{$category.Slug}}" title="{{$category.Name}}">{{$category.Name}}</a>
     </div>
   </div>
-  <div class="window-body">{{ template "views/layouts/partials/forums" dict "Site" $.Site "Category" $category "Forums" $item.Forums }}</div>
+  <div class="window-body">{{ template "views/layouts/partials/forums" dict "Site" $.Site "_" $._ "Category" $category "Forums" $item.Forums }}</div>
 </div>
 <!-- END CATEGORY -->
 {{ end }}

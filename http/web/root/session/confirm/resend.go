@@ -7,6 +7,7 @@ import (
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/user"
+	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
 
 type ConfirmResendForm struct {
@@ -45,7 +46,15 @@ func (r *Route) ConfirmResendCreate(c fiber.Ctx) (err error) {
 	r.Runtime.Debug("form", frm)
 
 	var usr *user.User
-	usr, err = r.Runtime.Repositories.User.GetByEmail(frm.CurrentEmail)
+	usr, err = r.Runtime.Repositories.User.GetByEmail(
+		frm.CurrentEmail,
+		common.QueryOptions{
+			WithBanned:  false,
+			WithSpammed: false,
+			WithDeleted: false,
+			Limit:       1,
+		},
+	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
