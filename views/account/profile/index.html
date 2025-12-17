@@ -10,24 +10,26 @@
           enctype="multipart/form-data"
           class="">
       <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-      <!------ Profile Picture ------>
-      <fieldset class="profile-picture margin padding">
-        <legend>{{$._.T "profile_picture"}}</legend>
-        <img class="picture lowered"
-             src="{{$.Site.ProfilePicture $user.ProfilePicture}}">
-        {{$.Form.Input "file" "profile_picture" "" true "accept" "image/*"}}
-      </fieldset>
-      <!------ Signature       ------>
-      <fieldset class="signature margin padding">
-        <legend>{{$._.T "signature"}}</legend>
-        <label>{{$._.T "preview_noun"}}:</label>
-        <div class="padding lowered signature-preview">{{safeHTML $user.SignatureHTML}}</div>
-        <textarea name="signature_text"
-                  cols="72"
-                  rows="12"
-                  wrap="soft"
-                  placeholder="{{ $._.T "signature_placeholder" }}">{{$user.SignatureText}}</textarea>
-      </fieldset>
+      <div class="flex-row flex-wrap gap">
+        <!------ Profile Picture ------>
+        <fieldset class="flex-column grow profile-picture margin padding">
+          <legend>{{$._.T "profile_picture"}}</legend>
+          <img class="picture lowered"
+               src="{{$.Site.ProfilePicture $user.ProfilePicture}}">
+          {{$.Form.Input "file" "profile_picture" "" true "accept" "image/*"}}
+        </fieldset>
+        <!------ Signature       ------>
+        <fieldset class="flex-column grow signature margin padding">
+          <legend>{{$._.T "signature"}}</legend>
+          <label>{{$._.T "preview_noun"}}:</label>
+          <div class="padding lowered signature-preview">{{ safeHTML $user.SignatureHTML }}</div>
+          <textarea name="signature_text"
+                    cols="72"
+                    rows="12"
+                    wrap="soft"
+                    placeholder="{{ $._.T "signature_placeholder" }}">{{$user.SignatureText}}</textarea>
+        </fieldset>
+      </div>
       <div class="actions margin flex-row justify-end gap">
         <button type="submit" class="affirmative" title="{{$._.T "update"}}">{{$._.T "update"}}</button>
       </div>
