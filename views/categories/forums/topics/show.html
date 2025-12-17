@@ -10,16 +10,17 @@
     {{ template "views/layouts/partials/flash" . }}
     <!-- POST -->
     {{ if eq $.Site.GetPager.ActivePage 1 }}
-    {{ template "views/layouts/partials/post" dict "Site" $.Site "_" $._ "post" $topic }}
+    {{ template "views/layouts/partials/post" dict "Site" $.Site "Session" $.Session "_" $._ "post" $topic }}
     {{ end }}
     {{ range $idx_reply, $reply := $replies }}
     <!-- REPLY -->
-    {{ template "views/layouts/partials/post" dict "Site" $.Site "_" $._ "post" $reply }}
+    {{ template "views/layouts/partials/post" dict "Site" $.Site "Session" $.Session "_" $._ "post" $reply }}
     {{ end }}
     {{ template "views/layouts/partials/pagination" dict "Site" .Site }}
   </div>
 </div>
 <!-- REPLY -->
+{{ if $.Session.IsLoggedIn }}
 {{ $reply_to_id := "" }}
 {{ $reply_to_quote := "" }}
 {{ if $reply_to }}
@@ -47,3 +48,4 @@
     </div>
   </div>
 </div>
+{{ end }}

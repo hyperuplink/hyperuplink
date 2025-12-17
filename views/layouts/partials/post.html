@@ -1,5 +1,6 @@
 {{ $dict := . }}
 {{ $site := get $dict "Site"}}
+{{ $session := get $dict "Session"}}
 {{ $_ := get $dict "_"}}
 {{ $post := get $dict "post"}}
 <div class="raised padding margin post flex-row">
@@ -19,10 +20,12 @@
   <div class="content flex-column">
     <div class="text">{{ safeHTML $post.HTML }}</div>
     <div class="actions flex-row justify-end gap">
+      {{ if $session.IsLoggedIn }}
       <a class="button danger" href="" title="{{$_.T "report_post"}}">!</a>
       <a class="button"
          href="{{$site.GetPathname}}?page={{$site.GetPager.ActivePage}}&reply={{$post.ID}}#reply"
          title="{{$_.T "reply_to_post"}}">@</a>
+      {{ end }}
     </div>
   </div>
 </div>
