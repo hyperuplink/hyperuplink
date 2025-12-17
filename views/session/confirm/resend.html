@@ -2,7 +2,7 @@
   <div class="title-bar">
     <div class="title-bar-text">{{._.T .Site.Title}}</div>
   </div>
-  <div class="window-body">
+  <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
     <form method="post">
       <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
@@ -10,12 +10,8 @@
         <div role="tabpanel" id="tab1" class="padding">
           <div class="margin">
             <div class="fieldrow flex-row flex-wrap gap">
-              <div class="field flex-column grow">
-                {{.Form.Input "text" "username" "" true}}
-              </div>
-              <div class="field flex-column grow">
-                {{.Form.Input "text" "current_email" "" true}}
-              </div>
+              <div class="field flex-column grow">{{.Form.Input "text" "username" "" true}}</div>
+              <div class="field flex-column grow">{{.Form.Input "text" "current_email" "" true}}</div>
             </div>
             <div class="actions flex-row gap justify-end">
               <button type="submit" class="affirmative">{{._.T "confirm"}}</button>

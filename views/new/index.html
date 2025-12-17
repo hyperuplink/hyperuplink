@@ -14,10 +14,10 @@
       {{ end }}
     </div>
   </div>
-  <div class="window-body">
+  <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
     <div id="newpost" class="newpost">
-      <form method="post" action="{{$.Site.GetPathname}}" class="">
+      <form method="post" action="{{$.Site.GetFormAction}}" class="">
         <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
         {{ template "views/layouts/partials/editor" dict "Site" .Site "Form" .Form "_" ._ "hasSubject" true }}
         <div class="attributes margin">

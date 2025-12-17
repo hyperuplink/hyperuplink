@@ -2,7 +2,7 @@
   <div class="title-bar">
     <div class="title-bar-text">{{._.T .Site.Title}}</div>
   </div>
-  <div class="window-body">
+  <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
     <form method="post">
       <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">

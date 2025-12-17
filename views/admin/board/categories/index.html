@@ -2,7 +2,7 @@
   <div class="title-bar">
     <div class="title-bar-text">{{.Site.Title}}</div>
   </div>
-  <div class="window-body">
+  <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
     {{ $categories := .Data.Get "categories"}}
     {{ range $idx, $item := $categories }}

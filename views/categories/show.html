@@ -5,7 +5,7 @@
   <div class="title-bar">
     <div class="title-bar-text">{{$category.Name}}</div>
   </div>
-  <div class="window-body">
+  <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/forums" dict "Site" .Site "_" ._ "Category" $category "Forums" (.Data.Get "forums") }}
   </div>
 </div>
