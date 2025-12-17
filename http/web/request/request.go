@@ -108,6 +108,7 @@ func New(
 	if title == "" {
 		title = req.System.Name
 	}
+	req.Site.SetRoute(req.rt)
 	req.Site.SetTitle(req.In.Ts(title))
 
 	var parentRoute route.Route = req.rt

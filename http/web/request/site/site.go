@@ -23,6 +23,7 @@ type Site struct {
 	relRoot  string
 	pager    *Pager
 
+	rt          route.Route
 	title       string
 	currentUser *user.User
 }
@@ -132,6 +133,14 @@ func (s *Site) ProfilePicture(id string) (dlurl string) {
 	}
 
 	return dlurl
+}
+
+func (s *Site) SetRoute(rt route.Route) {
+	s.rt = rt
+}
+
+func (s *Site) GetRoute() route.Route {
+	return s.rt
 }
 
 func (s *Site) Title() string {

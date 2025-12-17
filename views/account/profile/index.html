@@ -2,15 +2,35 @@
   <div class="title-bar">
     <div class="title-bar-text">{{$.Site.Title}}</div>
   </div>
-  <div class="window-body">
+  <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
+    {{ $user := .Data.Get "user"}}
     <form method="post"
           action="{{$.Site.GetFormAction "update"}}"
           enctype="multipart/form-data"
           class="">
       <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-      {{$.Form.Input "file" "profile_picture" "" true "accept" "image/*"}}
-      <button type="submit" class="affirmative" title="{{$._.T "save"}}">{{$._.T "update"}}</button>
+      <!------ Profile Picture ------>
+      <fieldset class="profile-picture margin padding">
+        <legend>{{$._.T "profile_picture"}}</legend>
+        <img class="picture lowered"
+             src="{{$.Site.ProfilePicture $user.ProfilePicture}}">
+        {{$.Form.Input "file" "profile_picture" "" true "accept" "image/*"}}
+      </fieldset>
+      <!------ Signature       ------>
+      <fieldset class="signature margin padding">
+        <legend>{{$._.T "signature"}}</legend>
+        <label>{{$._.T "preview_noun"}}:</label>
+        <div class="padding lowered signature-preview">{{safeHTML $user.SignatureHTML}}</div>
+        <textarea name="signature_text"
+                  cols="72"
+                  rows="12"
+                  wrap="soft"
+                  placeholder="{{ $._.T "signature_placeholder" }}">{{$user.SignatureText}}</textarea>
+      </fieldset>
+      <div class="actions margin flex-row justify-end gap">
+        <button type="submit" class="affirmative" title="{{$._.T "update"}}">{{$._.T "update"}}</button>
+      </div>
     </form>
   </div>
 </div>

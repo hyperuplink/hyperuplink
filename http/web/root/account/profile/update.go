@@ -13,7 +13,8 @@ import (
 )
 
 type ProfileUpdateForm struct {
-	ProfilePicture *multipart.FileHeader `form:"profile_picture" validate:"required"`
+	ProfilePicture *multipart.FileHeader `form:"profile_picture" validate:""`
+	SignatureText  string                `form:"signature_text" validate:"max=256"`
 }
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
@@ -44,48 +45,55 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	profilePictureMultipartFile, err := frm.ProfilePicture.Open()
+	if frm.ProfilePicture != nil && frm.ProfilePicture.Filename != "" {
+		profilePictureMultipartFile, err := frm.ProfilePicture.Open()
+		if ret, rerr := req.RespondOnError(err); ret == true {
+			return rerr
+		}
+
+		profilePictureFile, profilePictureFileName, err := r.Runtime.Magick.ConvertProfilePicture(
+			profilePictureMultipartFile,
+			"webp", // TODO: Get .webp from format configured in System
+		)
+		if ret, rerr := req.RespondOnError(err); ret == true {
+			profilePictureMultipartFile.Close()
+			return rerr
+		}
+
+		profilePictureID := shortuuid.New()
+
+		// TODO: Get provider ID from System
+		// TODO: Get path from System
+		// TODO: Get .webp from format configured in System
+		err = r.Runtime.Storage.StoreFile(
+			"profile-pictures",
+			profilePictureFile,
+			"profile-pictures/"+profilePictureID+".webp",
+		)
+		if ret, rerr := req.RespondOnError(err); ret == true {
+			return rerr
+		}
+
+		profilePictureFile.Close()
+		if profilePictureFileName != "" {
+			os.Remove(profilePictureFileName)
+		}
+
+		// oldProfilePicutreID := usr.ProfilePicture
+		usr.ProfilePicture = profilePictureID
+		// TODO: Delete oldProfilePicutreID
+	}
+
+	usr.SignatureText = frm.SignatureText
+	usr.SignatureHTML, err = r.Runtime.Markdown.Convert(usr.SignatureText)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
-
-	profilePictureFile, profilePictureFileName, err := r.Runtime.Magick.ConvertProfilePicture(
-		profilePictureMultipartFile,
-		"webp", // TODO: Get .webp from format configured in System
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		profilePictureMultipartFile.Close()
-		return rerr
-	}
-
-	profilePictureID := shortuuid.New()
-
-	// TODO: Get provider ID from System
-	// TODO: Get path from System
-	// TODO: Get .webp from format configured in System
-	err = r.Runtime.Storage.StoreFile(
-		"profile-pictures",
-		profilePictureFile,
-		"profile-pictures/"+profilePictureID+".webp",
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	profilePictureFile.Close()
-	if profilePictureFileName != "" {
-		os.Remove(profilePictureFileName)
-	}
-
-	// oldProfilePicutreID := usr.ProfilePicture
-	usr.ProfilePicture = profilePictureID
 
 	err = r.Runtime.Repositories.User.Update(usr)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
-
-	// TODO: Delete oldProfilePicutreID
 
 	return req.RedirectToRoute(myRoute)
 }

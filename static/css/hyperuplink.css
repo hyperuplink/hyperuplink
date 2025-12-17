@@ -433,3 +433,24 @@ a.button {
 .social .button.x {
   background: linear-gradient(to left, #000000, #ddd);
 }
+
+/*** root_account_profile *****************************************************/
+
+.root_account_profile fieldset.profile-picture .picture {
+  max-width: 256px;
+  max-height: 256px;
+}
+
+.root_account_profile fieldset.profile-picture label {
+  margin: var(--margin) 0px;
+  display: block;
+}
+
+.root_account_profile fieldset.signature .signature-preview {
+  margin: var(--margin) 0px;
+  max-height: 160px;
+  overflow: hidden;
+}
+.root_account_profile fieldset.signature textarea {
+  width: 100%;
+}

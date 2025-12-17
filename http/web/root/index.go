@@ -68,7 +68,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		common.QueryOptions{
 			OrderBy: "updated_at",
 			Order:   common.Descending,
-			Limit:   10,
+			Limit:   5,
 		},
 	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
