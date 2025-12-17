@@ -289,8 +289,44 @@ a.button {
   font-size: var(--font-size-text);
 }
 
-.text ul {
-  margin-left: 20px;
+.text h1,
+.text h2,
+.text h3,
+.text h4,
+.text h5,
+.text h6 {
+  margin: var(--margin) 0px;
+  border-bottom: var(--border-brightness-08) 1px dashed;
+}
+
+.text h1:not(:first-child),
+.text h2:not(:first-child),
+.text h3:not(:first-child),
+.text h4:not(:first-child),
+.text h5:not(:first-child),
+.text h6:not(:first-child) {
+  margin: calc(var(--margin) * 4) 0px var(--margin) 0px;
+}
+
+.text ul,
+.text ol {
+  margin: var(--margin) 0px;
+  list-style-position: inside;
+}
+
+.text ul li,
+.text ol li {
+  display: list-item;
+}
+
+.text ul li > p,
+.text ol li > p {
+  display: inline-block;
+  margin: 0;
+}
+
+.text pre {
+  margin: var(--margin) 0px;
 }
 
 .text blockquote {
@@ -298,12 +334,55 @@ a.button {
   color: var(--text-quote);
 }
 
+.text > blockquote {
+  margin-top: var(--margin);
+  margin-bottom: var(--margin);
+}
+
+/* blockquote > blockquote { */
+/*   margin-left: var(--margin); */
+/* } */
+
 .text blockquote > p {
   margin: 0;
 }
 
-.text blockquote > p::before {
+/* TODO: Any way to make the indentation automatic? */
+.text > blockquote > p::before {
   content: "> ";
+}
+
+.text > blockquote > blockquote > p::before {
+  content: ">> ";
+}
+
+.text > blockquote > blockquote > blockquote > p::before {
+  content: ">>> ";
+}
+
+.text > blockquote > blockquote > blockquote > blockquote > p::before {
+  content: ">>>> ";
+}
+/* END TODO */
+
+.text hr {
+  margin: var(--margin) 0px;
+  border-bottom: var(--border-brightness-08) 1px dashed;
+}
+
+.text table {
+  margin: var(--margin) 0px;
+  width: 100%;
+  border: 1px solid var(--border-brightness-15);
+  border-right-color: var(--border-brightness-08);
+  border-bottom-color: var(--border-brightness-08);
+}
+
+.text table th,
+.text table td {
+  border: 1px solid var(--border-brightness-08);
+  border-right-color: var(--border-brightness-15);
+  border-bottom-color: var(--border-brightness-15);
 }
 
 @media (max-width: 600px) {

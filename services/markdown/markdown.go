@@ -6,6 +6,7 @@ import (
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
+	"github.com/yuin/goldmark/extension"
 )
 
 type Markdown struct {
@@ -17,6 +18,9 @@ func New() (*Markdown, error) {
 
 	md.md = goldmark.New(
 		goldmark.WithExtensions(
+			extension.Strikethrough,
+			extension.TaskList,
+			extension.NewTable(),
 			highlighting.NewHighlighting(
 				// https://xyproto.github.io/splash/docs/
 				highlighting.WithStyle("xcode"),
