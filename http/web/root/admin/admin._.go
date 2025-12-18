@@ -4,6 +4,9 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/root/admin/board"
+	"github.com/mrusme/hyperuplink/http/web/root/admin/comms"
+	"github.com/mrusme/hyperuplink/http/web/root/admin/logs"
+	"github.com/mrusme/hyperuplink/http/web/root/admin/users"
 	"github.com/mrusme/hyperuplink/runtime"
 )
 
@@ -23,9 +26,23 @@ func New(
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
+		base.Get("", r.Index).Name("index")
+
 		adminBoardRoute, err := board.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
 		r.Routes = append(r.Routes, adminBoardRoute)
+
+		adminCommsRoute, err := comms.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, adminCommsRoute)
+
+		adminLogsRoute, err := logs.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, adminLogsRoute)
+
+		adminUsersRoute, err := users.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, adminUsersRoute)
 	}, r.Path+".")
 
 	return r, nil
