@@ -1,0 +1,17 @@
+<div class="margin window active">
+  <div class="title-bar">
+    <div class="title-bar-text">{{$.Site.Title}}</div>
+  </div>
+  <div class="window-body {{$.Site.GetRoute.AsID}}">
+    {{ template "views/layouts/partials/flash" . }}
+    {{ $user := .Data.Get "user"}}
+    <form method="post"
+          action="{{$.Site.GetFormAction "update"}}"
+          enctype="multipart/form-data"
+          class="">
+      <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+      <!-- TODO -->
+    </form>
+  </div>
+</div>
+

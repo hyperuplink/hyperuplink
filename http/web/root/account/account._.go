@@ -3,6 +3,7 @@ package account
 import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
+	"github.com/mrusme/hyperuplink/http/web/root/account/password"
 	"github.com/mrusme/hyperuplink/http/web/root/account/profile"
 	"github.com/mrusme/hyperuplink/http/web/root/account/settings"
 	"github.com/mrusme/hyperuplink/runtime"
@@ -33,6 +34,10 @@ func New(
 		accountSettingsRoute, err := settings.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
 		r.Routes = append(r.Routes, accountSettingsRoute)
+
+		accountPasswordRoute, err := password.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, accountPasswordRoute)
 	}, r.Path+".")
 
 	return r, nil
