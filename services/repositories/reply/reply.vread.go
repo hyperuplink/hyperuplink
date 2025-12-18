@@ -18,7 +18,7 @@ func (repo *Repository) VAllCountForTopicUUID(
 	qoc.Limit = 0
 	qoc.Page = 0
 	rows, err = repo.db.Query(qoc.Query(
-		`SELECT COUNT(id) AS total_posts FROM vreplies WHERE topic_id = $1`,
+		`SELECT COUNT(id) AS total FROM vreplies WHERE topic_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
 			HasDeleted: true,
@@ -34,7 +34,7 @@ func (repo *Repository) VAllCountForTopicUUID(
 	if err != nil {
 		return total, repo.db.ConvertError(err)
 	}
-	total = pag["total_posts"].(int64)
+	total = pag["total"].(int64)
 
 	return total, nil
 }

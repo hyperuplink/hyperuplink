@@ -1,9 +1,13 @@
 package forums
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
+	"github.com/mrusme/hyperuplink/http/web/helpers"
 	"github.com/mrusme/hyperuplink/http/web/request"
+	"github.com/mrusme/hyperuplink/http/web/request/site"
 	"github.com/mrusme/hyperuplink/models/user"
 	"github.com/mrusme/hyperuplink/models/vforum"
 	"github.com/mrusme/hyperuplink/models/vtopic"
@@ -42,17 +46,32 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 	req.UpdateParentTitle(fum.CategoryName)
 	req.SetData("forum", fum)
 
+	var activePage int
+	var total int64
+	var perPage int = req.System.GetTopicsPerPage()
+	var limit int = perPage
+
+	activePage, err = strconv.Atoi(c.Query("page", "1"))
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
 	var tops *[]vtopic.VTopic
-	tops, err = r.Runtime.Repositories.Topic.VAllForForumUUID(
+	tops, total, err = r.Runtime.Repositories.Topic.VAllForForumUUID(
 		fum.ID,
 		common.QueryOptions{
 			OrderBy: "updated_at",
 			Order:   common.Descending,
+			Limit:   limit,
+			Page:    activePage,
 		},
 	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
+
+	pages := helpers.GetNumberOfPages(total, perPage)
+	req.Site.SetPager(site.NewPager(pages, perPage, activePage))
 
 	req.SetData("topics", tops)
 

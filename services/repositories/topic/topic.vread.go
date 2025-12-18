@@ -7,6 +7,38 @@ import (
 	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
 
+func (repo *Repository) VAllCountForForumUUID(
+	id uuid.UUID,
+	qo common.QueryOptions,
+) (total int64, err error) {
+	var rows pgx.Rows
+
+	qoc := qo
+	qoc.OrderBy = ""
+	qoc.Limit = 0
+	qoc.Page = 0
+	rows, err = repo.db.Query(qoc.Query(
+		`SELECT COUNT(id) AS total FROM vtopics WHERE forum_id = $1`,
+		common.QueryCapabilities{
+			HasSpammed: true,
+			HasDeleted: true,
+		}),
+		id,
+	)
+	if err != nil {
+		return total, repo.db.ConvertError(err)
+	}
+
+	var pag map[string]any
+	pag, err = pgx.CollectOneRow(rows, pgx.RowToMap)
+	if err != nil {
+		return total, repo.db.ConvertError(err)
+	}
+	total = pag["total"].(int64)
+
+	return total, nil
+}
+
 func (repo *Repository) VAll(
 	qo common.QueryOptions,
 ) (model *[]vtopic.VTopic, err error) {
@@ -32,9 +64,11 @@ func (repo *Repository) VAll(
 func (repo *Repository) VAllForForumUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
-) (model *[]vtopic.VTopic, err error) {
+) (model *[]vtopic.VTopic, total int64, err error) {
 	var rows pgx.Rows
 	var mod []vtopic.VTopic
+
+	total, err = repo.VAllCountForForumUUID(id, qo)
 
 	rows, err = repo.db.Query(qo.Query(
 		`SELECT * FROM vtopics WHERE forum_id = $1`,
@@ -45,22 +79,22 @@ func (repo *Repository) VAllForForumUUID(
 		id,
 	)
 	if err != nil {
-		return nil, repo.db.ConvertError(err)
+		return nil, 0, repo.db.ConvertError(err)
 	}
 
 	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[vtopic.VTopic])
 
-	return &mod, repo.db.ConvertError(err)
+	return &mod, total, repo.db.ConvertError(err)
 }
 
 func (repo *Repository) VAllForForumID(
 	id string,
 	qo common.QueryOptions,
-) (model *[]vtopic.VTopic, err error) {
+) (model *[]vtopic.VTopic, total int64, err error) {
 	var uuID uuid.UUID
 
 	if uuID, err = uuid.Parse(id); err != nil {
-		return nil, repo.db.ConvertError(err)
+		return nil, 0, repo.db.ConvertError(err)
 	}
 
 	return repo.VAllForForumUUID(uuID, qo)

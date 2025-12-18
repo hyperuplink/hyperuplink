@@ -30,7 +30,9 @@
       {{ range $idx_topic, $topic := $topics }}
       <tr role="option">
         <td>
-          <a href="{{$site.GetRelRoot}}_{{$topic.CategorySlug}}/{{$topic.ForumSlug}}/{{$topic.Slug}}" title="" class="icon big">
+          <a href="{{$site.GetRelRoot}}_{{$topic.CategorySlug}}/{{$topic.ForumSlug}}/{{$topic.Slug}}"
+             title=""
+             class="icon big">
             <img src="{{$site.GetRelRoot}}static/icons/post.png">
             <div class="icon-label">
               <div>{{$topic.Name}}</div>
@@ -46,3 +48,4 @@
     </tbody>
   </table>
 </div>
+{{ template "views/layouts/partials/pagination" dict "Site" .Site }}
