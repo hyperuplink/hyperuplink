@@ -24,7 +24,7 @@ func New(
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
-		base.Get("", r.Show).Name("show")
+		base.Get("", r.Index).Name("index")
 
 		accountProfileRoute, err := profile.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
@@ -48,24 +48,4 @@ func (r *Route) GetPath() string {
 
 func (r *Route) GetEnv() *route.Environment {
 	return r.Env
-}
-
-func (r *Route) Index(c fiber.Ctx) error {
-	return c.SendString("I'm an INDEX request!")
-}
-
-func (r *Route) Show(c fiber.Ctx) error {
-	return c.SendString("I'm a SHOW request!")
-}
-
-func (r *Route) Create(c fiber.Ctx) error {
-	return c.SendString("I'm a CREATE request!")
-}
-
-func (r *Route) Update(c fiber.Ctx) error {
-	return c.SendString("I'm a UPDATE request!")
-}
-
-func (r *Route) Destroy(c fiber.Ctx) error {
-	return c.SendString("I'm a DESTROY request!")
 }
