@@ -36,6 +36,9 @@ func New(
 	)
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
+		base.Get("/",
+			r.Index).Name("index")
+
 		base.Get("/"+route.For("SessionSignin").Pathname(),
 			r.SignInShow).Name("signin.show")
 		base.Post("/"+route.For("SessionSignin").Pathname(),

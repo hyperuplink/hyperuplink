@@ -90,12 +90,12 @@ func (m *Menu) FileMenu(forRole user.Role) []MenuItem {
 		{
 			Label: m.T("rss"),
 			Title: m.T("rss"),
-			Href:  route.For("current").AsURL()+"?format=rss", // TODO: Implement current route
+			Href:  route.For("current").AsURL() + "?format=rss", // TODO: Implement current route
 		},
 		{
 			Label: m.T("print"),
 			Title: m.T("print"),
-			Href:  route.For("current").AsURL()+"?format=print", // TODO: Implement current route
+			Href:  route.For("current").AsURL() + "?format=print", // TODO: Implement current route
 		},
 		{
 			IsSeparator: true,
@@ -300,14 +300,14 @@ func (m *Menu) ViewMenu(forRole user.Role) []MenuItem {
 							Checked:    true,
 							Label:      m.T("light"),
 							Title:      m.T("light"),
-							Href:       route.For("SessionSettings").AsURL() + "?mode=light",
+							Href:       route.For("Session").AsURL() + "?mode=light",
 						},
 						{
 							IsCheckbox: true,
 							Checked:    false,
 							Label:      m.T("dark"),
 							Title:      m.T("dark"),
-							Href:       route.For("SessionSettings").AsURL() + "?mode=dark",
+							Href:       route.For("Session").AsURL() + "?mode=dark",
 						},
 					},
 				},
@@ -319,21 +319,21 @@ func (m *Menu) ViewMenu(forRole user.Role) []MenuItem {
 					Checked:    true,
 					Label:      m.T("banner"),
 					Title:      m.T("banner"),
-					Href:       route.For("SessionSettings").AsURL() + "?banner=false",
+					Href:       route.For("Session").AsURL() + "?banner=false",
 				},
 				{
 					IsCheckbox: true,
 					Checked:    true,
 					Label:      m.T("footer"),
 					Title:      m.T("footer"),
-					Href:       route.For("SessionSettings").AsURL() + "?footer=false",
+					Href:       route.For("Session").AsURL() + "?footer=false",
 				},
 				{
 					IsCheckbox: true,
 					Checked:    true,
 					Label:      m.T("profile_pictures"),
 					Title:      m.T("profile_pictures"),
-					Href:       route.For("SessionSettings").AsURL() + "?profile_pictures=false",
+					Href:       route.For("Session").AsURL() + "?profile_pictures=false",
 				},
 			},
 		},

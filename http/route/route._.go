@@ -46,7 +46,6 @@ var Routes map[string]Route = map[string]Route{
 	"Session":                 {hierarchy: []string{"root", "session"}, noBreadcrumb: true},
 	"SessionConfirm":          {hierarchy: []string{"root", "session", "confirm"}},
 	"SessionConfirmResend":    {hierarchy: []string{"root", "session", "confirm", "resend"}},
-	"SessionSettings":         {hierarchy: []string{"root", "session", "settings"}},
 	"SessionSignin":           {hierarchy: []string{"root", "session", "signin"}},
 	"SessionSignout":          {hierarchy: []string{"root", "session", "signout"}},
 	"SessionSignup":           {hierarchy: []string{"root", "session", "signup"}},

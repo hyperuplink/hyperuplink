@@ -259,6 +259,15 @@ func (req *Request) redirect(url string) (err error) {
 	return redir.To(url)
 }
 
+func (req *Request) redirectOnError(err error, url string) (bool, error) {
+	if err == nil {
+		return false, nil
+	}
+
+	req.Flash.SetError(err)
+	return true, req.redirect(url)
+}
+
 func (req *Request) RedirectToRouteID(id string) error {
 	return req.redirect(fmt.Sprintf("%s%s",
 		req.relRoot,
@@ -266,8 +275,22 @@ func (req *Request) RedirectToRouteID(id string) error {
 	))
 }
 
+func (req *Request) RedirectToRouteIDOnError(err error, id string) (bool, error) {
+	return req.redirectOnError(err, fmt.Sprintf("%s%s",
+		req.relRoot,
+		route.For(id).AsURL(),
+	))
+}
+
 func (req *Request) RedirectToRoute(r route.Route) error {
 	return req.redirect(fmt.Sprintf("%s%s",
+		req.relRoot,
+		r.AsURL(),
+	))
+}
+
+func (req *Request) RedirectToRouteOnError(err error, r route.Route) (bool, error) {
+	return req.redirectOnError(err, fmt.Sprintf("%s%s",
 		req.relRoot,
 		r.AsURL(),
 	))
@@ -299,6 +322,17 @@ func (req *Request) RedirectTo(path string) error {
 	))
 }
 
+func (req *Request) RedirectToOnError(err error, path string) (bool, error) {
+	return req.redirectOnError(err, fmt.Sprintf("%s%s",
+		req.relRoot,
+		path,
+	))
+}
+
 func (req *Request) RedirectToRoot() error {
 	return req.RedirectTo("")
+}
+
+func (req *Request) RedirectToRootOnError(err error) (bool, error) {
+	return req.RedirectToOnError(err, "")
 }
