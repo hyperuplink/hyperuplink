@@ -12,6 +12,7 @@ func GetPaths(c fiber.Ctx) (
 	absPath string,
 	relRoot string,
 ) {
+	origURL := c.OriginalURL()
 	cR := c.Route()
 	absPath = cR.Path
 	splitAbsPath := strings.Split(absPath, "/")
@@ -22,6 +23,10 @@ func GetPaths(c fiber.Ctx) (
 		pathName = ""
 	}
 	parts := lenSplitAbsPath - 1
+
+	if strings.HasSuffix(origURL, "/") {
+		parts++
+	}
 
 	relRoot = "./"
 	for i := 1; i < parts; i++ {
