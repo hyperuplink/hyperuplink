@@ -5,12 +5,27 @@
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
     {{ $user := .Data.Get "user"}}
+    {{ $timezones := .Data.Get "timezones"}}
     <form method="post"
           action="{{$.Site.GetFormAction "update"}}"
           enctype="multipart/form-data"
           class="">
       <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-      <!-- TODO -->
+      <div class="dropdown">
+        <select name="timezone" size="1">
+          {{ range $timezone_idx, $timezone := $timezones }}
+          <option value="{{$timezone}}"
+                  {{ if eq $user.Timezone $timezone }}
+                  selected
+                  {{ end }}>{{$timezone | replace "_" " "}}
+          </option>
+          {{ end }}
+        </select>
+        <div class="dropdown-button"></div>
+      </div>
+      <div class="actions margin flex-row justify-end gap">
+        <button type="submit" class="affirmative" title="{{$._.T "update"}}">{{$._.T "update"}}</button>
+      </div>
     </form>
   </div>
 </div>

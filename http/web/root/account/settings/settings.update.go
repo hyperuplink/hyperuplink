@@ -10,7 +10,7 @@ import (
 )
 
 type SettingsUpdateForm struct {
-	SignatureText string `form:"signature_text" validate:"max=256"`
+	Timezone string `form:"timezone" validate:"required,timezone"`
 }
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
@@ -40,11 +40,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	usr.SignatureText = frm.SignatureText
-	usr.SignatureHTML, err = r.Runtime.Markdown.Convert(usr.SignatureText)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
+	usr.Timezone = frm.Timezone
 
 	err = r.Runtime.Repositories.User.Update(usr)
 	if ret, rerr := req.RespondOnError(err); ret == true {

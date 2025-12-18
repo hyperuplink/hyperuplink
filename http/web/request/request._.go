@@ -110,6 +110,7 @@ func New(
 	}
 	req.Site.SetRoute(req.rt)
 	req.Site.SetTitle(req.In.Ts(title))
+	req.Site.SetTimezone(req.Session.GetCurrentUserTimezone())
 
 	var parentRoute route.Route = req.rt
 	for parentRoute.Len() > 1 {

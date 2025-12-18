@@ -12,6 +12,7 @@ CREATE TABLE users (
   email_confirmation_sent_at TIMESTAMP DEFAULT NULL,
   email_confirmed_at TIMESTAMP DEFAULT NULL,
   language VARCHAR(2) DEFAULT 'en',
+  timezone TEXT DEFAULT 'UTC',
   otp_enabled BOOLEAN DEFAULT FALSE,
   otp_secret VARCHAR(32) DEFAULT '',
   otp_timestep SMALLINT DEFAULT 0,

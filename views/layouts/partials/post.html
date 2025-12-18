@@ -3,7 +3,7 @@
 {{ $session := get $dict "Session"}}
 {{ $_ := get $dict "_"}}
 {{ $post := get $dict "post"}}
-<div class="raised padding margin post flex-row">
+<div class="raised padding margin post flex-row gap">
   <fieldset class="profile padding">
     <img class="picture lowered"
          src="{{$site.ProfilePicture $post.AuthorProfilePicture}}">
@@ -19,12 +19,17 @@
   </fieldset>
   <div class="content flex-column">
     <div class="text">{{ safeHTML $post.HTML }}</div>
-    <div class="actions flex-row justify-end gap">
-      {{ if $session.IsLoggedIn }}
-      <a class="button danger" href="" title="{{$_.T "report_post"}}">!</a>
-      <a class="button"
-         href="{{$site.GetPathname}}?page={{$site.GetPager.ActivePage}}&reply={{$post.ID}}#reply"
-         title="{{$_.T "reply_to_post"}}">@</a>
+    <div class="actions flex-row space-between gap">
+      <div class="left-side">
+        <div class="timestamp button disabled">{{ $site.DateTime $post.CreatedAt}}</div>
+      </div>
+      <div class="right-side flex-row space-between gap">
+        {{ if $session.IsLoggedIn }}
+        <a class="button danger" href="" title="{{$_.T "report_post"}}">!</a>
+        <a class="button"
+           href="{{$site.GetPathname}}?page={{$site.GetPager.ActivePage}}&reply={{$post.ID}}#reply"
+           title="{{$_.T "reply_to_post"}}">@</a>
+      </div>
       {{ end }}
     </div>
   </div>

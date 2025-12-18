@@ -130,6 +130,11 @@ pre {
   justify-content: flex-end;
 }
 
+.flex-row.space-between,
+.flex-column.space-between {
+  justify-content: space-between;
+}
+
 .grow {
   flex-grow: 1;
 }
@@ -151,12 +156,14 @@ pre {
   grid-column-gap: var(--spacing);
 }
 
-.checkbox-row, .radio-row {
+.checkbox-row,
+.radio-row {
   display: flex;
   align-items: center;
 }
 
-.checkbox-row label, .radio-row label {
+.checkbox-row label,
+.radio-row label {
   padding-left: var(--spacing);
 }
 
@@ -179,42 +186,41 @@ pre {
   flex-grow: 1;
 }
 
-[role=menu],
-[role=menubar] {
+[role="menu"],
+[role="menubar"] {
   user-select: none;
   list-style-type: none;
   display: flex;
   white-space: nowrap;
 }
 
-[role=menu] {
+[role="menu"] {
   flex-direction: column;
 }
 
-[role=menu] li,
-[role=menubar] li {
+[role="menu"] li,
+[role="menubar"] li {
   position: relative;
   text-overflow: ellipsis;
   cursor: default;
 }
 
-[role=menu] li > ul,
-[role=menu] li > .menu,
-[role=menubar] li > ul,
-[role=menubar] li > .menu {
+[role="menu"] li > ul,
+[role="menu"] li > .menu,
+[role="menubar"] li > ul,
+[role="menubar"] li > .menu {
   position: absolute;
   z-index: 1;
   display: none;
 }
 
-[role=menu] li:focus-within > ul,
-[role=menu] li:focus-within > .menu,
-[role=menubar] li:focus-within > ul,
-[role=menubar] li:focus-within > .menu {
+[role="menu"] li:focus-within > ul,
+[role="menu"] li:focus-within > .menu,
+[role="menubar"] li:focus-within > ul,
+[role="menubar"] li:focus-within > .menu {
   display: block;
 }
 
 .list [role="option"] {
   user-select: none;
 }
-

@@ -40,3 +40,10 @@ func (s *Session) CurrentUserHasAdminRole() bool {
 	}
 	return false
 }
+
+func (s *Session) GetCurrentUserTimezone() string {
+	if s.currentUser != nil {
+		return s.currentUser.Timezone
+	}
+	return "UTC"
+}

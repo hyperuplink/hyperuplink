@@ -18,22 +18,23 @@ func (repo *Repository) Update(model *user.User) (err error) {
 		,email_confirmation_sent_at = $10
 		,email_confirmed_at =         $11
 		,language =                   $12
-		,otp_enabled =                $13
-		,otp_secret =                 $14
-		,otp_timestep =               $15
-		,sign_in_last_at =            $16
-		,sign_in_failed_attempts =    $17
-		,sign_in_locked_at =          $18
-		,sign_in_unlock_token =       $19
-		,profile_picture =            $20
-		,signature_text =             $21
-		,signature_html =             $22
-		,created_at =                 $23
-		,updated_at =                 $24
-		,confirmed_at =               $25
-		,banned_at =                  $26
-		,deleted_at =                 $27
-		WHERE id =                    $28`,
+		,timezone =                   $13
+		,otp_enabled =                $14
+		,otp_secret =                 $15
+		,otp_timestep =               $16
+		,sign_in_last_at =            $17
+		,sign_in_failed_attempts =    $18
+		,sign_in_locked_at =          $19
+		,sign_in_unlock_token =       $20
+		,profile_picture =            $21
+		,signature_text =             $22
+		,signature_html =             $23
+		,created_at =                 $24
+		,updated_at =                 $25
+		,confirmed_at =               $26
+		,banned_at =                  $27
+		,deleted_at =                 $28
+		WHERE id =                    $29`,
 		model.Username,
 		model.Role,
 		model.MemberOf,
@@ -46,6 +47,7 @@ func (repo *Repository) Update(model *user.User) (err error) {
 		model.EmailConfirmationSentAt,
 		model.EmailConfirmedAt,
 		model.Language,
+		model.Timezone,
 		model.OTPEnabled,
 		model.OTPSecret,
 		model.OTPTimestep,

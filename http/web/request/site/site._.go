@@ -11,7 +11,6 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/helpers"
-	"github.com/mrusme/hyperuplink/models/user"
 )
 
 type Site struct {
@@ -23,9 +22,9 @@ type Site struct {
 	relRoot  string
 	pager    *Pager
 
-	rt          route.Route
-	title       string
-	currentUser *user.User
+	rt       route.Route
+	title    string
+	timezone *time.Location
 }
 
 func New(r route.IRouteController, c fiber.Ctx) *Site {
@@ -37,6 +36,8 @@ func New(r route.IRouteController, c fiber.Ctx) *Site {
 	s.pager = NewPager(1, 1, 1)
 
 	s.pathName, s.absPath, s.relRoot = helpers.GetPaths(s.c)
+
+	s.SetTimezone("UTC")
 
 	return s
 }
@@ -158,13 +159,20 @@ func (s *Site) SetTitle(title string) {
 	s.r.GetEnv().Title = title
 }
 
+func (s *Site) SetTimezone(tz string) (err error) {
+	if s.timezone, err = time.LoadLocation(tz); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (s *Site) Date(ts pgtype.Timestamp) (date string) {
 	if ts.Valid == false {
 		return "-"
 	}
 
-	// TODO: Make it user configurable
-	return ts.Time.Format("2006-01-02")
+	return ts.Time.In(s.timezone).Format("2006-01-02")
 }
 
 func (s *Site) DateTime(ts pgtype.Timestamp) (timedate string) {
@@ -172,7 +180,5 @@ func (s *Site) DateTime(ts pgtype.Timestamp) (timedate string) {
 		return "-"
 	}
 
-	// TODO: Make it user configurable
-	// TODO: Handle user timezone
-	return ts.Time.Format("2006-01-02, 15:04 MST")
+	return ts.Time.In(s.timezone).Format("2006-01-02, 15:04 MST")
 }

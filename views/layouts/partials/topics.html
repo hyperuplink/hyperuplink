@@ -36,7 +36,7 @@
             <img src="{{$site.GetRelRoot}}static/icons/post.png">
             <div class="icon-label">
               <div>{{$topic.Name}}</div>
-              <div class="icon-sublabel">by {{$topic.AuthorUsername}} on {{$topic.CreatedAt.Time}}</div>
+              <div class="icon-sublabel">by {{$topic.AuthorUsername}} on {{$site.DateTime $topic.CreatedAt}}</div>
             </div>
           </a>
         </td>

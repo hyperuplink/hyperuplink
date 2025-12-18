@@ -244,15 +244,6 @@ a.button {
   margin-top: auto;
 }
 
-.post > .content > .actions > .button {
-}
-
-.post > .content > .actions > .button > img {
-  width: 18px;
-  height: 18px;
-  margin: 4px auto;
-}
-
 .pagination {
   flex-wrap: wrap;
   margin-top: 16px;
