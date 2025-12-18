@@ -40,6 +40,8 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	req.Menu.SetCategoryForumSlugs(top.CategorySlug, top.ForumSlug)
+
 	req.UpdateTitle(top.Name)
 	req.UpdateParentHref(req.HrefTo(route.For("CategoriesForums").Fill(
 		map[string]string{

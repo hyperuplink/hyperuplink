@@ -1,3 +1,5 @@
+{{ $select_category_slug := .Data.Get "select_category_slug"}}
+{{ $select_forum_slug := .Data.Get "select_forum_slug"}}
 {{ $categories_forums := .Data.Get "categories_forums"}}
 {{ $forum := .Data.Get "forum"}}
 {{ $topic := .Data.Get "topic"}}
@@ -19,24 +21,29 @@
     <div id="newpost" class="newpost">
       <form method="post" action="{{$.Site.GetFormAction}}" class="">
         <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+        {{ if $forum }}
+        <input type="hidden" name="forum_id" value="{{$forum.ID}}">
+        {{ end }}
         {{ template "views/layouts/partials/editor" dict "Site" .Site "Form" .Form "_" ._ "hasSubject" true }}
         <div class="attributes margin">
           <div class="flex-row gap">
-            {{ if not $forum }}
             <div class="flex-column">
               <label>{{$._.T "forum"}}</label>
               <div class="dropdown">
-                <select name="forum_id" size="1">
+                <select name="forum_id" size="1" {{ if $forum }}disabled=""{{ end }}>
                   {{ range $idx_category_forums, $category_forums := $categories_forums }}
                   {{ range $idx_category_forum, $category_forum := $category_forums.Forums }}
-                  <option value="{{$category_forum.ID}}">{{$category_forums.Category.Name}}/{{$category_forum.Name}}</option>
+                  <option value="{{$category_forum.ID}}"
+                          {{ if and (eq $select_category_slug $category_forums.Category.Slug) (eq $select_forum_slug $category_forum.Slug) }}
+                          selected
+                          {{ end }}>{{$category_forums.Category.Name}}/{{$category_forum.Name}}
+                  </option>
                   {{ end }}
                   {{ end }}
                 </select>
                 <div class="dropdown-button"></div>
               </div>
             </div>
-            {{ end }}
           </div>
         </div>
         <div class="actions flex-row justify-end gap padding">

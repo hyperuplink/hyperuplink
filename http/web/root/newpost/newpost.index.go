@@ -31,46 +31,50 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	var category_slug string = c.Query("category")
 	var forum_slug string = c.Query("forum")
 	var topic_slug string = c.Query("topic")
 	var reply_id string = c.Query("reply")
 
-	if forum_slug == "" {
+	if category_slug != "" && forum_slug != "" {
+		req.SetData("select_category_slug", category_slug)
+		req.SetData("select_forum_slug", forum_slug)
+	}
 
-		var cats *[]category.Category
-		cats, err = r.Runtime.Repositories.Category.All(common.QueryOptions{
-			OrderBy: "position",
-			Order:   common.Ascending,
-		})
-		if ret, rerr := req.RespondOnError(err); ret == true {
-			return rerr
+	var cats *[]category.Category
+	cats, err = r.Runtime.Repositories.Category.All(common.QueryOptions{
+		OrderBy: "position",
+		Order:   common.Ascending,
+	})
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	var fums *[]forum.Forum
+	fums, err = r.Runtime.Repositories.Forum.All(common.QueryOptions{
+		OrderBy: "position",
+		Order:   common.Ascending,
+	})
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	var catsfums []CategoryWithForums
+	for _, cat := range *cats {
+		catfum := CategoryWithForums{
+			Category: cat,
 		}
-
-		var fums *[]forum.Forum
-		fums, err = r.Runtime.Repositories.Forum.All(common.QueryOptions{
-			OrderBy: "position",
-			Order:   common.Ascending,
-		})
-		if ret, rerr := req.RespondOnError(err); ret == true {
-			return rerr
-		}
-
-		var catsfums []CategoryWithForums
-		for _, cat := range *cats {
-			catfum := CategoryWithForums{
-				Category: cat,
+		for _, fum := range *fums {
+			if fum.CategoryID == cat.ID {
+				catfum.Forums = append(catfum.Forums, fum)
 			}
-			for _, fum := range *fums {
-				if fum.CategoryID == cat.ID {
-					catfum.Forums = append(catfum.Forums, fum)
-				}
-			}
-			catsfums = append(catsfums, catfum)
 		}
+		catsfums = append(catsfums, catfum)
+	}
 
-		req.SetData("categories_forums", catsfums)
-	} else {
+	req.SetData("categories_forums", catsfums)
 
+	if forum_slug != "" {
 		var fum *vforum.VForum
 		fum, err = r.Runtime.Repositories.Forum.VGetBySlug(
 			forum_slug,

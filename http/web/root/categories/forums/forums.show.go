@@ -35,6 +35,8 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	req.Menu.SetCategoryForumSlugs(fum.CategorySlug, fum.Slug)
+
 	req.UpdateTitle(fum.Name)
 	req.UpdateParentHref(req.HrefTo("_" + fum.CategorySlug))
 	req.UpdateParentTitle(fum.CategoryName)

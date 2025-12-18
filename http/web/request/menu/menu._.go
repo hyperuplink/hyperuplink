@@ -1,15 +1,19 @@
 package menu
 
 import (
+	"fmt"
+
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/models/user"
 )
 
 type Menu struct {
-	menuItems       []MenuItem
-	footerMenuItems []MenuItem
-	role            user.Role
-	i18n            func(msg string) string
+	menuItems           []MenuItem
+	footerMenuItems     []MenuItem
+	role                user.Role
+	i18n                func(msg string) string
+	currentCategorySlug string
+	currentForumSlug    string
 }
 
 type MenuItem struct {
@@ -38,6 +42,12 @@ func (m *Menu) SetI18n(fn func(msg string) string) {
 	m.i18n = fn
 }
 
+func (m *Menu) SetCategoryForumSlugs(catSlug, forumSlug string) {
+	m.currentCategorySlug = catSlug
+	m.currentForumSlug = forumSlug
+	m.generate()
+}
+
 func (m *Menu) T(msg string) string {
 	return m.i18n(msg)
 }
@@ -58,12 +68,18 @@ func (m *Menu) generate() {
 func (m *Menu) FileMenu(forRole user.Role) []MenuItem {
 	var subItems []MenuItem
 
+	newpostUrl := route.For("New").AsURL()
+	if m.currentCategorySlug != "" && m.currentCategorySlug != "" {
+		newpostUrl = fmt.Sprintf("%s?category=%s&forum=%s",
+			newpostUrl, m.currentCategorySlug, m.currentForumSlug)
+	}
+
 	subItems = []MenuItem{
 		{
 			Disabled: (forRole == user.GuestRole),
 			Label:    m.T("new"),
 			Title:    m.T("new"),
-			Href:     route.For("New").AsURL(),
+			Href:     newpostUrl,
 		},
 		// TODO: Implement Open for recently viewed posts
 		// {
