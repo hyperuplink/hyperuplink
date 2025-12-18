@@ -11,7 +11,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	myRoute := route.For("User")
 	req := request.New(r, c, myRoute,
 		[]string{"base"}, "user/index",
-		myRoute.AsTitle())
+		"")
 
 	if ret, rerr := req.AccessControl(
 		user.GuestRole, // TODO: Maybe remove!
@@ -21,7 +21,8 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	// var username string = c.Query("user")
+	var username string = c.Params("user")
+	req.UpdateTitle("~" + username)
 
 	// var fum *vforum.VForum
 	// fum, err = r.Runtime.Repositories.Forum.VGetBySlug(
