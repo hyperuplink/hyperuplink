@@ -23,6 +23,9 @@ TrustProxies       = []
 ReduceMemoryUsage  = false
 ServerHeader       = ""
 
+[Users]
+PromoteAdmin = ["dummy1@example.com"]
+
 [[Target]]
 ID = "notifications"
 Type = "email"

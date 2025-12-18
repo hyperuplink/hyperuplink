@@ -2,6 +2,8 @@ package session
 
 import (
 	"reflect"
+	"slices"
+	"strings"
 
 	"github.com/gofiber/fiber/v3"
 
@@ -61,6 +63,11 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 	usr.Email = frm.Email
 	usr.SetEmailForConfirmation(frm.Email)
 	usr.Language = req.In.Lang()
+
+	promoteAdmin := r.Runtime.Config.UsersPromoteAdmin()
+	if slices.Index(promoteAdmin, strings.ToLower(usr.Email)) > -1 {
+		usr.Role = user.AdminRole
+	}
 
 	err = usr.SetPassword(frm.Password)
 	if ret, rerr := req.RespondOnError(err); ret == true {
