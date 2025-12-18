@@ -24,6 +24,8 @@ func New(
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
+		base.Get("", r.Index).Name("index")
+
 		adminBoardCategoriesRoute, err := categories.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
 		r.Routes = append(r.Routes, adminBoardCategoriesRoute)
