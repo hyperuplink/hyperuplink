@@ -24,7 +24,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		myRoute.AsTitle())
 
 	if ret, rerr := req.AccessControl(
-		user.UserRole, // TODO: Remove!
+		user.UserRole,
 		user.AdminRole,
 	); ret {
 		return rerr

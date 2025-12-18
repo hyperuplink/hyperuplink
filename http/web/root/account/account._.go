@@ -6,6 +6,7 @@ import (
 	"github.com/mrusme/hyperuplink/http/web/root/account/password"
 	"github.com/mrusme/hyperuplink/http/web/root/account/profile"
 	"github.com/mrusme/hyperuplink/http/web/root/account/settings"
+	"github.com/mrusme/hyperuplink/http/web/root/account/twofactor"
 	"github.com/mrusme/hyperuplink/runtime"
 )
 
@@ -38,6 +39,10 @@ func New(
 		accountPasswordRoute, err := password.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
 		r.Routes = append(r.Routes, accountPasswordRoute)
+
+		accountTwofactorRoute, err := twofactor.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, accountTwofactorRoute)
 	}, r.Path+".")
 
 	return r, nil

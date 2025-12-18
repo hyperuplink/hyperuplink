@@ -1,4 +1,4 @@
-package settings
+package twofactor
 
 import (
 	"reflect"
@@ -9,12 +9,12 @@ import (
 	"github.com/mrusme/hyperuplink/models/user"
 )
 
-type SettingsUpdateForm struct {
+type TwofactorUpdateForm struct {
 	SignatureText string `form:"signature_text" validate:"max=256"`
 }
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
-	myRoute := route.For("AccountSettings")
+	myRoute := route.For("AccountTwofactor")
 	req := request.New(r, c, myRoute,
 		[]string{"base"}, myRoute.AsURL()+"/index",
 		myRoute.AsTitle())
@@ -26,7 +26,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(SettingsUpdateForm)
+	frm := new(TwofactorUpdateForm)
 
 	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
 		return req.RedirectToRoute(myRoute)
