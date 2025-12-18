@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/root/account/profile"
+	"github.com/mrusme/hyperuplink/http/web/root/account/settings"
 	"github.com/mrusme/hyperuplink/runtime"
 )
 
@@ -23,15 +24,15 @@ func New(
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
-		base.Get("/", r.Show).Name("show")
-		base.Post("/", r.Create).Name("create")
-		base.Put("/:id", r.Update).Name("update")
-		base.Patch("/:id", r.Update).Name("update")
-		base.Delete("/:id", r.Destroy).Name("destroy")
+		base.Get("", r.Show).Name("show")
 
 		accountProfileRoute, err := profile.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
 		r.Routes = append(r.Routes, accountProfileRoute)
+
+		accountSettingsRoute, err := settings.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, accountSettingsRoute)
 	}, r.Path+".")
 
 	return r, nil

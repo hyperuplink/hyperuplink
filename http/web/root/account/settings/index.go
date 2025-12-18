@@ -1,4 +1,4 @@
-package profile
+package settings
 
 import (
 	"github.com/gofiber/fiber/v3"
@@ -8,7 +8,7 @@ import (
 )
 
 func (r *Route) Index(c fiber.Ctx) (err error) {
-	myRoute := route.For("AccountProfile")
+	myRoute := route.For("AccountSettings")
 	req := request.New(r, c, myRoute,
 		[]string{"base"}, myRoute.AsURL()+"/index",
 		myRoute.AsTitle())

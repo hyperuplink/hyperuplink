@@ -24,8 +24,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		myRoute.AsTitle())
 
 	if ret, rerr := req.AccessControl(
-		user.GuestRole, // TODO: Remove!
-		user.UserRole,  // TODO: Remove!
+		user.UserRole, // TODO: Remove!
 		user.AdminRole,
 	); ret {
 		return rerr
@@ -40,7 +39,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 	r.Runtime.Debug("form", frm)
 
 	var usr *user.User
-	usr, err = r.getUser(req)
+	usr, err = req.GetUser()
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
