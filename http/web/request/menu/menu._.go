@@ -265,17 +265,12 @@ func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 								Href:  route.For("AdminBoardProfiles").AsURL(),
 							},
 							{
-								Label: m.T(route.For("AdminBoardSignatures").AsTitle()),
-								Title: m.T(route.For("AdminBoardSignatures").AsTitle()),
-								Href:  route.For("AdminBoardSignatures").AsURL(),
-							},
-							{
 								IsSeparator: true,
 							},
 							{
-								Label: m.T(route.For("AdminBoardTheme").AsTitle()),
-								Title: m.T(route.For("AdminBoardTheme").AsTitle()),
-								Href:  route.For("AdminBoardTheme").AsURL(),
+								Label: m.T(route.For("AdminBoardThemes").AsTitle()),
+								Title: m.T(route.For("AdminBoardThemes").AsTitle()),
+								Href:  route.For("AdminBoardThemes").AsURL(),
 							},
 						},
 					},
@@ -291,9 +286,9 @@ func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 						IsSeparator: true,
 					},
 					{
-						Label: m.T(route.For("AdminLog").AsTitle()),
-						Title: m.T(route.For("AdminLog").AsTitle()),
-						Href:  route.For("AdminLog").AsURL(),
+						Label: m.T(route.For("AdminLogs").AsTitle()),
+						Title: m.T(route.For("AdminLogs").AsTitle()),
+						Href:  route.For("AdminLogs").AsURL(),
 					},
 				},
 			},

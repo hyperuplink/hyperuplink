@@ -3,6 +3,8 @@ package comms
 import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
+	"github.com/mrusme/hyperuplink/http/web/root/admin/comms/email"
+	"github.com/mrusme/hyperuplink/http/web/root/admin/comms/xmpp"
 	"github.com/mrusme/hyperuplink/runtime"
 )
 
@@ -23,6 +25,14 @@ func New(
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
 		base.Get("", r.Index).Name("index")
+
+		adminCommsEmailRoute, err := email.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, adminCommsEmailRoute)
+
+		adminCommsXmppRoute, err := xmpp.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, adminCommsXmppRoute)
 	}, r.Path+".")
 
 	return r, nil

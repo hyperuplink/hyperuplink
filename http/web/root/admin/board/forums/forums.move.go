@@ -22,8 +22,6 @@ func (r *Route) MoveUp(c fiber.Ctx) (err error) {
 		myRoute.AsTitle())
 
 	if ret, rerr := req.AccessControl(
-		user.GuestRole, // TODO: Remove!
-		user.UserRole,  // TODO: Remove!
 		user.AdminRole,
 	); ret {
 		return rerr
@@ -55,8 +53,6 @@ func (r *Route) MoveDown(c fiber.Ctx) (err error) {
 		myRoute.AsTitle())
 
 	if ret, rerr := req.AccessControl(
-		user.GuestRole, // TODO: Remove!
-		user.UserRole,  // TODO: Remove!
 		user.AdminRole,
 	); ret {
 		return rerr

@@ -1,4 +1,4 @@
-package forums
+package attachments
 
 import (
 	"github.com/gofiber/fiber/v3"
@@ -18,16 +18,11 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = route.For("AdminBoardForums").Pathname()
+	r.Path = route.For("AdminBoardAttachments").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
 		base.Get("", r.Index).Name("index")
-		base.Post("", r.Create).Name("create")
-		base.Post("update", r.Update).Name("update")
-		base.Post("moveup", r.MoveUp).Name("moveup")
-		base.Post("movedown", r.MoveDown).Name("movedown")
-		base.Post("destroy", r.Destroy).Name("destroy")
 	}, r.Path+".")
 
 	return r, nil
@@ -44,3 +39,4 @@ func (r *Route) GetPath() string {
 func (r *Route) GetEnv() *route.Environment {
 	return r.Env
 }
+
