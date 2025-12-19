@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
+	"github.com/lithammer/shortuuid/v4"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/topic"
@@ -41,6 +42,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 	r.Runtime.Debug("form", frm)
 
 	top := new(topic.Topic)
+	top.ShortID = shortuuid.New()
 	top.Name = frm.Name
 	top.SetSlugFromName()
 	top.ForumID, err = uuid.Parse(frm.ForumID)

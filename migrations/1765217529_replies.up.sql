@@ -1,5 +1,6 @@
 CREATE TABLE replies (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  short_id TEXT NOT NULL,
   topic_id UUID NOT NULL,
   reply_id UUID DEFAULT NULL,
   author_id UUID NOT NULL,
@@ -21,6 +22,7 @@ CREATE TABLE replies (
   ) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE INDEX idx_replies_short_id ON replies (short_id);
 CREATE INDEX idx_replies_topics_id ON replies (topic_id);
 CREATE INDEX idx_replies_replies_id ON replies (reply_id);
 CREATE INDEX idx_replies_users_id ON replies (author_id);

@@ -7,7 +7,8 @@ import (
 
 func (repo *Repository) Create(model *topic.Topic) (rowID uuid.UUID, err error) {
 	err = repo.db.QueryRow(`INSERT INTO topics (
-		 name
+		short_id
+		,name
 		,slug
 		,forum_id
 		,author_id
@@ -29,10 +30,12 @@ func (repo *Repository) Create(model *topic.Topic) (rowID uuid.UUID, err error) 
 		,$7
 		,$8
 		,$9
-		,NOW()
-		,NOW()
 		,$10
+		,NOW()
+		,NOW()
+		,$11
 	) RETURNING id`,
+		model.ShortID,
 		model.Name,
 		model.Slug,
 		model.ForumID,
@@ -42,6 +45,8 @@ func (repo *Repository) Create(model *topic.Topic) (rowID uuid.UUID, err error) 
 		model.Text,
 		model.HTML,
 		model.PollOptions,
+		// CreatedAt
+		// UpdatedAt
 		model.EndedAt,
 	).Scan(&rowID)
 	return rowID, repo.db.ConvertError(err)

@@ -36,7 +36,7 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 			Limit: 1,
 		},
 	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
+	if ret, rerr := req.RedirectToRootOnError(err); ret == true {
 		return rerr
 	}
 
@@ -100,12 +100,12 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 
 	replyTo := c.Query("reply", "")
 	if replyTo != "" {
-		if top.ID.String() == replyTo {
+		if top.ShortID == replyTo {
 			req.SetData("reply_to", top)
 			req.SetData("reply_to_type", "topic")
 		} else {
 			for _, rep := range *reps {
-				if rep.ID.String() == replyTo {
+				if rep.ShortID == replyTo {
 					req.SetData("reply_to", rep)
 					req.SetData("reply_to_type", "reply")
 				}

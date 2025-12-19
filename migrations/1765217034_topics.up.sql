@@ -1,5 +1,6 @@
 CREATE TABLE topics (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  short_id TEXT NOT NULL,
   name VARCHAR(78),
   slug VARCHAR(78),
   forum_id UUID NOT NULL,
@@ -30,5 +31,6 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_topics_slug ON topics (
   slug, forum_id
 ) WHERE deleted_at IS NULL;
 
+CREATE INDEX idx_topics_short_id ON topics (short_id);
 CREATE INDEX idx_topics_forums_id ON topics (forum_id);
 CREATE INDEX idx_topics_users_id ON topics (author_id);

@@ -3,6 +3,7 @@
 {{ $session := get $dict "Session"}}
 {{ $_ := get $dict "_"}}
 {{ $post := get $dict "post"}}
+{{ if $post }}
 <div class="raised padding margin post flex-row gap">
   <fieldset class="profile padding">
     <img class="picture lowered"
@@ -30,10 +31,11 @@
         {{ if $session.IsLoggedIn }}
         <a class="button danger" href="" title="{{$_.T "report_post"}}">!</a>
         <a class="button"
-           href="{{$site.GetPathname}}?page={{$site.GetPager.ActivePage}}&reply={{$post.ID}}#reply"
+           href="{{$site.GetPathname}}?page={{$site.GetPager.ActivePage}}&reply={{$post.ShortID}}#reply"
            title="{{$_.T "reply_to_post"}}">@</a>
         {{ end }}
       </div>
     </div>
   </div>
 </div>
+{{ end }}

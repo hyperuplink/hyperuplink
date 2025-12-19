@@ -6,7 +6,8 @@ import (
 )
 
 type Reply struct {
-	ID uuid.UUID `json:"id"`
+	ID      uuid.UUID `json:"id"`
+	ShortID string    `json:"short_id"`
 
 	TopicID  uuid.UUID     `json:"topic_id"`
 	ReplyID  uuid.NullUUID `json:"reply_id"`

@@ -8,7 +8,7 @@ import (
 type PostEventType string
 
 const (
-	Flag         PostEventType = "flag"
+	Report       PostEventType = "report"
 	PollVote     PostEventType = "pollvote"
 	AnswerVote   PostEventType = "answervote"
 	RSVPResponse PostEventType = "rsvpresponse"
@@ -19,6 +19,14 @@ type PostEventTarget string
 const (
 	Topic PostEventTarget = "topic"
 	Reply PostEventTarget = "reply"
+)
+
+type ReportType int
+
+const (
+	Spam       ReportType = 0
+	Misconduct ReportType = 1
+	Illegal    ReportType = 2
 )
 
 type RSVPResponseType int

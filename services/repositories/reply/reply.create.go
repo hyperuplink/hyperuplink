@@ -7,7 +7,8 @@ import (
 
 func (repo *Repository) Create(model *reply.Reply) (rowID uuid.UUID, err error) {
 	err = repo.db.QueryRow(`INSERT INTO replies (
-		topic_id
+		short_id
+		,topic_id
 		,reply_id
 		,author_id
 		,text
@@ -20,9 +21,11 @@ func (repo *Repository) Create(model *reply.Reply) (rowID uuid.UUID, err error) 
 		,$3
 		,$4
 		,$5
+		,$6
 		,NOW()
 		,NOW()
 		) RETURNING id`,
+		model.ShortID,
 		model.TopicID,
 		model.ReplyID,
 		model.AuthorID,

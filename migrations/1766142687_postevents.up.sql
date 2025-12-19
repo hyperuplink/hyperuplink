@@ -1,6 +1,6 @@
 CREATE TABLE postevents (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  type VARCHAR(16) NOT NULL, -- "flag", "pollvote", "answervote", "rsvpresponse"
+  type VARCHAR(16) NOT NULL,
   author_id UUID NOT NULL,
   target VARCHAR(16) NOT NULL,
   topic_id UUID DEFAULT NULL,
@@ -18,7 +18,6 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_postevents_type ON postevents (
   type, author_id, target, topic_id, reply_id
 ) WHERE deleted_at IS NULL;
 
-CREATE INDEX idx_postevents_type ON postevents (type);
 CREATE INDEX idx_postevents_author_id ON postevents (author_id);
 CREATE INDEX idx_postevents_target ON postevents (target);
 CREATE INDEX idx_postevents_topic_id ON postevents (topic_id);

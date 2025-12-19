@@ -20,7 +20,7 @@ CREATE TABLE users (
   sign_in_failed_attempts SMALLINT DEFAULT 0,
   sign_in_locked_at TIMESTAMP DEFAULT NULL,
   sign_in_unlock_token VARCHAR(32) DEFAULT '',
-  profile_picture VARCHAR(32) DEFAULT '',
+  profile_picture TEXT DEFAULT '',
   signature_text VARCHAR(256) DEFAULT '',
   signature_html TEXT DEFAULT '',
   created_at TIMESTAMP DEFAULT now(),

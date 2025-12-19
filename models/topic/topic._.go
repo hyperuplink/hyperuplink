@@ -15,9 +15,10 @@ const (
 )
 
 type Topic struct {
-	ID   uuid.UUID `json:"id"`
-	Name string    `json:"name"`
-	Slug string    `json:"slug"`
+	ID      uuid.UUID `json:"id"`
+	ShortID string    `json:"short_id"`
+	Name    string    `json:"name"`
+	Slug    string    `json:"slug"`
 
 	ForumID  uuid.UUID `json:"forum_id"`
 	AuthorID uuid.UUID `json:"author_id"`
