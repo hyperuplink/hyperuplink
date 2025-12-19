@@ -10,22 +10,22 @@
           enctype="multipart/form-data"
           class="">
       <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-      <div class="flex-row flex-wrap gap">
+      <div class="flex-row flex-wrap gap margin">
         <!------ Profile Picture ------>
-        <fieldset class="flex-column grow profile-picture margin padding">
+        <fieldset class="flex-column profile-picture padding">
           <legend>{{$._.T "profile_picture"}}</legend>
           <img class="picture lowered"
                src="{{$.Site.ProfilePicture $user.ProfilePicture}}">
           {{$.Form.Input "file" "profile_picture" "" true "accept" "image/*"}}
         </fieldset>
         <!------ Signature       ------>
-        <fieldset class="flex-column grow signature margin padding">
+        <fieldset class="flex-column grow signature padding">
           <legend>{{$._.T "signature"}}</legend>
           <label>{{$._.T "preview_noun"}}:</label>
           <div class="padding lowered signature-preview">{{ safeHTML $user.SignatureHTML }}</div>
+          <label>{{$._.T "signature"}}:</label>
           <textarea name="signature_text"
-                    cols="72"
-                    rows="12"
+                    rows="6"
                     wrap="soft"
                     placeholder="{{ $._.T "signature_placeholder" }}">{{$user.SignatureText}}</textarea>
         </fieldset>

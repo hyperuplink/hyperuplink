@@ -459,6 +459,10 @@ a.button {
   max-height: 256px;
 }
 
+.root_account_profile fieldset.profile-picture input {
+  max-width: 252px;
+}
+
 .root_account_profile fieldset.profile-picture label {
   margin: var(--margin) 0px;
   display: block;
@@ -466,9 +470,13 @@ a.button {
 
 .root_account_profile fieldset.signature .signature-preview {
   margin: var(--margin) 0px;
-  max-height: 160px;
+  min-height: 164px;
+  max-height: 164px;
   overflow: hidden;
 }
 .root_account_profile fieldset.signature textarea {
+  margin: var(--margin) 0px;
+  font-family: var(--font-text);
+  font-size: var(--font-size-text);
   width: 100%;
 }
