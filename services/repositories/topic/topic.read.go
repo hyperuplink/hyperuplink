@@ -7,7 +7,9 @@ import (
 	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
 
-func (repo *Repository) All(qo common.QueryOptions) (model *[]topic.Topic, err error) {
+func (repo *Repository) All(
+	qo common.QueryOptions,
+) (model *[]topic.Topic, err error) {
 	var rows pgx.Rows
 	var mod []topic.Topic
 

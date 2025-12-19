@@ -5,22 +5,6 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-type Kind string
-
-const (
-	Regular Kind = "regular"
-	Vote    Kind = "vote"
-	RSVP    Kind = "rsvp"
-)
-
-type RSVPResponse int
-
-const (
-	Yes   RSVPResponse = 0
-	No    RSVPResponse = 1
-	Maybe RSVPResponse = 2
-)
-
 type Reply struct {
 	ID uuid.UUID `json:"id"`
 
@@ -28,11 +12,8 @@ type Reply struct {
 	ReplyID  uuid.NullUUID `json:"reply_id"`
 	AuthorID uuid.UUID     `json:"author_id"`
 
-	Kind         Kind         `json:"kind"`
-	Text         string       `json:"text"`
-	HTML         string       `json:"html"`
-	PollVote     int          `json:"poll_vote"`
-	RSVPResponse RSVPResponse `json:"rsvp_response"`
+	Text string `json:"text"`
+	HTML string `json:"html"`
 
 	CreatedAt   pgtype.Timestamp `json:"created_at"`
 	UpdatedAt   pgtype.Timestamp `json:"updated_at"`

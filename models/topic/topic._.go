@@ -8,9 +8,10 @@ import (
 type Kind string
 
 const (
-	Regular Kind = "regular"
-	Poll    Kind = "poll"
-	RSVP    Kind = "rsvp"
+	Regular  Kind = "regular"
+	Question Kind = "question"
+	Poll     Kind = "poll"
+	RSVP     Kind = "rsvp"
 )
 
 type Topic struct {

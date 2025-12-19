@@ -5,6 +5,7 @@ import (
 	"github.com/mrusme/hyperuplink/services/repositories/category"
 	"github.com/mrusme/hyperuplink/services/repositories/forum"
 	"github.com/mrusme/hyperuplink/services/repositories/permission"
+	"github.com/mrusme/hyperuplink/services/repositories/postevent"
 	"github.com/mrusme/hyperuplink/services/repositories/reply"
 	"github.com/mrusme/hyperuplink/services/repositories/setting"
 	"github.com/mrusme/hyperuplink/services/repositories/topic"
@@ -22,6 +23,7 @@ type Repositories struct {
 	Topic      *topic.Repository
 	Reply      *reply.Repository
 	Permission *permission.Repository
+	PostEvent  *postevent.Repository
 }
 
 func New(
@@ -78,6 +80,12 @@ func New(
 	}
 	repos.Permission = permissionRepo
 
+	var posteventRepo *postevent.Repository
+	if posteventRepo, err = postevent.New(repos.db); err != nil {
+		return nil, err
+	}
+	repos.PostEvent = posteventRepo
+
 	return repos, nil
 }
 
@@ -114,10 +122,18 @@ func (repos *Repositories) Startup() (err error) {
 		return err
 	}
 
+	if err = repos.PostEvent.Startup(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func (repos *Repositories) Shutdown() (err error) {
+	if err = repos.PostEvent.Shutdown(); err != nil {
+		return err
+	}
+
 	if err = repos.Permission.Shutdown(); err != nil {
 		return err
 	}

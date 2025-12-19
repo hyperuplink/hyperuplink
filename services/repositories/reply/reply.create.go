@@ -10,11 +10,8 @@ func (repo *Repository) Create(model *reply.Reply) (rowID uuid.UUID, err error) 
 		topic_id
 		,reply_id
 		,author_id
-		,kind
 		,text
 		,html
-		,poll_vote
-		,rsvp_response
 		,created_at
 		,updated_at
 	) VALUES (
@@ -23,20 +20,14 @@ func (repo *Repository) Create(model *reply.Reply) (rowID uuid.UUID, err error) 
 		,$3
 		,$4
 		,$5
-		,$6
-		,$7
-		,$8
 		,NOW()
 		,NOW()
 		) RETURNING id`,
 		model.TopicID,
 		model.ReplyID,
 		model.AuthorID,
-		model.Kind,
 		model.Text,
 		model.HTML,
-		model.PollVote,
-		model.RSVPResponse,
 	).Scan(&rowID)
 	return rowID, repo.db.ConvertError(err)
 }
