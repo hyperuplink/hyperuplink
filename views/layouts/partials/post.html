@@ -18,10 +18,13 @@
     <div class="joined">{{ $_.T "joined"}}: {{$site.Date $post.AuthorJoinedAt}}</div>
   </fieldset>
   <div class="content flex-column">
-    <div class="text">{{ safeHTML $post.HTML }}</div>
+    <div class="text markdown">{{ safeHTML $post.HTML }}</div>
+    {{ if not (eq $post.AuthorSignatureHTML "") }}
+    <div class="signature markdown">{{ safeHTML $post.AuthorSignatureHTML }}</div>
+    {{ end }}
     <div class="actions flex-row space-between gap">
       <div class="left-side">
-        <div class="timestamp button disabled">{{ $site.DateTime $post.CreatedAt}}</div>
+        <div class="timestamp lowered">{{ $site.DateTime $post.CreatedAt}}</div>
       </div>
       <div class="right-side flex-row space-between gap">
         {{ if $session.IsLoggedIn }}
@@ -29,8 +32,8 @@
         <a class="button"
            href="{{$site.GetPathname}}?page={{$site.GetPager.ActivePage}}&reply={{$post.ID}}#reply"
            title="{{$_.T "reply_to_post"}}">@</a>
+        {{ end }}
       </div>
-      {{ end }}
     </div>
   </div>
 </div>

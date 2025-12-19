@@ -84,9 +84,13 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 	}
 
 	usr.SignatureText = frm.SignatureText
-	usr.SignatureHTML, err = r.Runtime.Markdown.Convert(usr.SignatureText)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
+	if usr.SignatureText == "" {
+		usr.SignatureHTML = ""
+	} else {
+		usr.SignatureHTML, err = r.Runtime.Markdown.Convert(usr.SignatureText)
+		if ret, rerr := req.RespondOnError(err); ret == true {
+			return rerr
+		}
 	}
 
 	err = r.Runtime.Repositories.User.Update(usr)

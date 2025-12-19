@@ -237,11 +237,29 @@ a.button {
 }
 
 .post > .content > .text {
-  margin: 4px 8px;
+  margin: 4px var(--margin);
+  min-height: 186px;
+}
+
+.post > .content > .signature {
+  margin: 4px var(--margin);
+  color: var(--border-brightness-08);
+  border-top: var(--border-brightness-08) 1px dashed;
+  max-height: 160px;
+  overflow: hidden;
 }
 
 .post > .content > .actions {
   margin-top: auto;
+}
+
+.post > .content > .actions > .left-side {
+  width: 100%;
+}
+
+.post > .content > .actions > .left-side > .timestamp {
+  color: var(--disabled-fg);
+  padding: 2px var(--margin);
 }
 
 .pagination {
@@ -275,57 +293,57 @@ a.button {
 /*   padding: 4px 14px; */
 /* } */
 
-.text {
+.markdown {
   font-family: var(--font-text);
   font-size: var(--font-size-text);
 }
 
-.text h1,
-.text h2,
-.text h3,
-.text h4,
-.text h5,
-.text h6 {
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
   margin: var(--margin) 0px;
   border-bottom: var(--border-brightness-08) 1px dashed;
 }
 
-.text h1:not(:first-child),
-.text h2:not(:first-child),
-.text h3:not(:first-child),
-.text h4:not(:first-child),
-.text h5:not(:first-child),
-.text h6:not(:first-child) {
+.markdown h1:not(:first-child),
+.markdown h2:not(:first-child),
+.markdown h3:not(:first-child),
+.markdown h4:not(:first-child),
+.markdown h5:not(:first-child),
+.markdown h6:not(:first-child) {
   margin: calc(var(--margin) * 4) 0px var(--margin) 0px;
 }
 
-.text ul,
-.text ol {
+.markdown ul,
+.markdown ol {
   margin: var(--margin) 0px;
   list-style-position: inside;
 }
 
-.text ul li,
-.text ol li {
+.markdown ul li,
+.markdown ol li {
   display: list-item;
 }
 
-.text ul li > p,
-.text ol li > p {
+.markdown ul li > p,
+.markdown ol li > p {
   display: inline-block;
   margin: 0;
 }
 
-.text pre {
+.markdown pre {
   margin: var(--margin) 0px;
 }
 
-.text blockquote {
+.markdown blockquote {
   font-style: italic;
   color: var(--text-quote);
 }
 
-.text > blockquote {
+.markdown > blockquote {
   margin-top: var(--margin);
   margin-bottom: var(--margin);
 }
@@ -334,34 +352,34 @@ a.button {
 /*   margin-left: var(--margin); */
 /* } */
 
-.text blockquote > p {
+.markdown blockquote > p {
   margin: 0;
 }
 
 /* TODO: Any way to make the indentation automatic? */
-.text > blockquote > p::before {
+.markdown > blockquote > p::before {
   content: "> ";
 }
 
-.text > blockquote > blockquote > p::before {
+.markdown > blockquote > blockquote > p::before {
   content: ">> ";
 }
 
-.text > blockquote > blockquote > blockquote > p::before {
+.markdown > blockquote > blockquote > blockquote > p::before {
   content: ">>> ";
 }
 
-.text > blockquote > blockquote > blockquote > blockquote > p::before {
+.markdown > blockquote > blockquote > blockquote > blockquote > p::before {
   content: ">>>> ";
 }
 /* END TODO */
 
-.text hr {
+.markdown hr {
   margin: var(--margin) 0px;
   border-bottom: var(--border-brightness-08) 1px dashed;
 }
 
-.text table {
+.markdown table {
   margin: var(--margin) 0px;
   width: 100%;
   border: 1px solid var(--border-brightness-15);
@@ -369,8 +387,8 @@ a.button {
   border-bottom-color: var(--border-brightness-08);
 }
 
-.text table th,
-.text table td {
+.markdown table th,
+.markdown table td {
   border: 1px solid var(--border-brightness-08);
   border-right-color: var(--border-brightness-15);
   border-bottom-color: var(--border-brightness-15);
