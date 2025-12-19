@@ -394,6 +394,15 @@ a.button {
   border-bottom-color: var(--border-brightness-15);
 }
 
+.button-block > .button {
+  display: block;
+  margin: var(--margin) 0;
+}
+
+.button-block > hr {
+  border-bottom: var(--border-brightness-08) 1px dashed;
+}
+
 @media (max-width: 600px) {
   .no-mobile {
     display: none;

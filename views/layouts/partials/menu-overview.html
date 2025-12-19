@@ -1,0 +1,22 @@
+{{ $dict := . }}
+{{ $site := get $dict "Site"}}
+{{ $menu := get $dict "Menu"}}
+{{ range $menu }}
+{{ if .IsSeparator }}
+<hr>
+{{ else if .Href }}
+<a class="button {{ if .Disabled }}disabled{{ end }}"
+   {{ if not .Disabled }}
+   href="{{$site.HrefTo .Href}}"
+   {{ end }}
+   title="{{.Title}}">
+  {{ if .IsCheckbox }}
+  {{.Checked}}
+  {{ end }}
+  {{ safeHTML .Label }}
+</a>
+{{ end }}
+{{ if gt (len .SubItems) 0 }}
+{{ template "views/layouts/partials/menu-overview" dict "Site" $site "Menu" .SubItems }}
+{{ end }}
+{{ end }}

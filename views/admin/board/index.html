@@ -4,12 +4,9 @@
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
-    <form method="post"
-          action="{{$.Site.GetFormAction "update"}}"
-          enctype="multipart/form-data"
-          class="">
-      <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-      <!-- TODO -->
-    </form>
+    <div class="button-block margin">
+      {{$menu := ($.Menu.AdminBoardMenu $.Session.GetCurrentUserRole)}}
+      {{ template "views/layouts/partials/menu-overview" dict "Site" .Site "Menu" $menu }}
+    </div>
   </div>
 </div>

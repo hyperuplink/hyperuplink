@@ -199,6 +199,78 @@ func (m *Menu) AccountMenu(forRole user.Role) []MenuItem {
 	}
 }
 
+func (m *Menu) AdminBoardMenu(forRole user.Role) []MenuItem {
+	if forRole == user.AdminRole {
+		return []MenuItem{
+			{
+				Label: m.T("board_settings"),
+				SubItems: []MenuItem{
+					{
+						Label: m.T(route.For("AdminBoardCategories").AsTitle()),
+						Title: m.T(route.For("AdminBoardCategories").AsTitle()),
+						Href:  route.For("AdminBoardCategories").AsURL(),
+					},
+					{
+						Label: m.T(route.For("AdminBoardForums").AsTitle()),
+						Title: m.T(route.For("AdminBoardForums").AsTitle()),
+						Href:  route.For("AdminBoardForums").AsURL(),
+					},
+					{
+						IsSeparator: true,
+					},
+					{
+						Label: m.T(route.For("AdminBoardTopics").AsTitle()),
+						Title: m.T(route.For("AdminBoardTopics").AsTitle()),
+						Href:  route.For("AdminBoardTopics").AsURL(),
+					},
+					{
+						Label: m.T(route.For("AdminBoardAttachments").AsTitle()),
+						Title: m.T(route.For("AdminBoardAttachments").AsTitle()),
+						Href:  route.For("AdminBoardAttachments").AsURL(),
+					},
+					{
+						Label: m.T(route.For("AdminBoardProfiles").AsTitle()),
+						Title: m.T(route.For("AdminBoardProfiles").AsTitle()),
+						Href:  route.For("AdminBoardProfiles").AsURL(),
+					},
+					{
+						IsSeparator: true,
+					},
+					{
+						Label: m.T(route.For("AdminBoardThemes").AsTitle()),
+						Title: m.T(route.For("AdminBoardThemes").AsTitle()),
+						Href:  route.For("AdminBoardThemes").AsURL(),
+					},
+				},
+			},
+		}
+	}
+	return []MenuItem{}
+}
+
+func (m *Menu) AdminCommsMenu(forRole user.Role) []MenuItem {
+	if forRole == user.AdminRole {
+		return []MenuItem{
+			{
+				Label: m.T("communication"),
+				SubItems: []MenuItem{
+					{
+						Label: m.T(route.For("AdminCommsEmail").AsTitle()),
+						Title: m.T(route.For("AdminCommsEmail").AsTitle()),
+						Href:  route.For("AdminCommsEmail").AsURL(),
+					},
+					{
+						Label: m.T(route.For("AdminCommsXmpp").AsTitle()),
+						Title: m.T(route.For("AdminCommsXmpp").AsTitle()),
+						Href:  route.For("AdminCommsXmpp").AsURL(),
+					},
+				},
+			},
+		}
+	}
+	return []MenuItem{}
+}
+
 func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 	if forRole == user.AdminRole {
 		return []MenuItem{
@@ -215,65 +287,11 @@ func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 						Title: m.T(route.For("AdminAuth").AsTitle()),
 						Href:  route.For("AdminAuth").AsURL(),
 					},
-					{
-						Label: m.T("communication"),
-						SubItems: []MenuItem{
-							{
-								Label: m.T(route.For("AdminCommsEmail").AsTitle()),
-								Title: m.T(route.For("AdminCommsEmail").AsTitle()),
-								Href:  route.For("AdminCommsEmail").AsURL(),
-							},
-							{
-								Label: m.T(route.For("AdminCommsXmpp").AsTitle()),
-								Title: m.T(route.For("AdminCommsXmpp").AsTitle()),
-								Href:  route.For("AdminCommsXmpp").AsURL(),
-							},
-						},
-					},
+					m.AdminCommsMenu(forRole)[0],
 					{
 						IsSeparator: true,
 					},
-					{
-						Label: m.T("board_settings"),
-						SubItems: []MenuItem{
-							{
-								Label: m.T(route.For("AdminBoardCategories").AsTitle()),
-								Title: m.T(route.For("AdminBoardCategories").AsTitle()),
-								Href:  route.For("AdminBoardCategories").AsURL(),
-							},
-							{
-								Label: m.T(route.For("AdminBoardForums").AsTitle()),
-								Title: m.T(route.For("AdminBoardForums").AsTitle()),
-								Href:  route.For("AdminBoardForums").AsURL(),
-							},
-							{
-								IsSeparator: true,
-							},
-							{
-								Label: m.T(route.For("AdminBoardTopics").AsTitle()),
-								Title: m.T(route.For("AdminBoardTopics").AsTitle()),
-								Href:  route.For("AdminBoardTopics").AsURL(),
-							},
-							{
-								Label: m.T(route.For("AdminBoardAttachments").AsTitle()),
-								Title: m.T(route.For("AdminBoardAttachments").AsTitle()),
-								Href:  route.For("AdminBoardAttachments").AsURL(),
-							},
-							{
-								Label: m.T(route.For("AdminBoardProfiles").AsTitle()),
-								Title: m.T(route.For("AdminBoardProfiles").AsTitle()),
-								Href:  route.For("AdminBoardProfiles").AsURL(),
-							},
-							{
-								IsSeparator: true,
-							},
-							{
-								Label: m.T(route.For("AdminBoardThemes").AsTitle()),
-								Title: m.T(route.For("AdminBoardThemes").AsTitle()),
-								Href:  route.For("AdminBoardThemes").AsURL(),
-							},
-						},
-					},
+					m.AdminBoardMenu(forRole)[0],
 					{
 						IsSeparator: true,
 					},

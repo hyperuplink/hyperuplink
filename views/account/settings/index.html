@@ -11,17 +11,22 @@
           enctype="multipart/form-data"
           class="">
       <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-      <div class="dropdown">
-        <select name="timezone" size="1">
-          {{ range $timezone_idx, $timezone := $timezones }}
-          <option value="{{$timezone}}"
-                  {{ if eq $user.Timezone $timezone }}
-                  selected
-                  {{ end }}>{{$timezone | replace "_" " "}}
-          </option>
-          {{ end }}
-        </select>
-        <div class="dropdown-button"></div>
+      <div class="flex-row gap margin">
+        <div class="flex-column grow">
+          <label for="timezone">{{$._.T "timezone_noun"}}</label>
+          <div class="dropdown">
+            <select name="timezone" size="1">
+              {{ range $timezone_idx, $timezone := $timezones }}
+              <option value="{{$timezone}}"
+                      {{ if eq $user.Timezone $timezone }}
+                      selected
+                      {{ end }}>{{$timezone | replace "_" " "}}
+              </option>
+              {{ end }}
+            </select>
+            <div class="dropdown-button"></div>
+          </div>
+        </div>
       </div>
       <div class="actions margin flex-row justify-end gap">
         <button type="submit" class="affirmative" title="{{$._.T "update"}}">{{$._.T "update"}}</button>
