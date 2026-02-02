@@ -30,8 +30,6 @@ type Topic struct {
 	HTML        string   `json:"html"`
 	PollOptions []string `json:"poll_options"`
 
-	Views int64 `json:"views"`
-
 	CreatedAt   pgtype.Timestamp `json:"created_at"`
 	UpdatedAt   pgtype.Timestamp `json:"updated_at"`
 	EndedAt     pgtype.Timestamp `json:"ended_at"`

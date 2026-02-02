@@ -11,7 +11,6 @@ CREATE TABLE topics (
   text TEXT NOT NULL,
   html TEXT NOT NULL,
   poll_options VARCHAR(78) [],
-  views BIGINT DEFAULT 0,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   ended_at TIMESTAMP DEFAULT NULL,

@@ -9,6 +9,10 @@ SELECT
      FROM replies r
      WHERE r.topic_id = t.id) AS "last_reply_at",
 
+    COALESCE((SELECT COUNT(*)
+      FROM postevents p
+      WHERE p.type = 'view' AND p.target = 'topic' AND p.topic_id = t.id), 0) AS views,
+
     u.username AS author_username,
     u.role AS author_role,
     u.member_of AS author_member_of,
@@ -55,3 +59,12 @@ CREATE TRIGGER refresh_vtopics
 CREATE TRIGGER refresh_vtopics
  AFTER INSERT ON replies
  FOR EACH STATEMENT EXECUTE PROCEDURE refresh_vtopics();
+
+-- We could enable this to refresh vtopics every time postevents changes, in
+-- case a "view" event was added. However, this could lead to **a lot** of
+-- refreshing. Updates to the views field aren't usually *that* important, so
+-- it is probably okay to not trigger a refresh for every new postevent.
+--
+-- CREATE TRIGGER refresh_vtopics
+--  AFTER INSERT ON postevents
+--  FOR EACH STATEMENT EXECUTE PROCEDURE refresh_vtopics();

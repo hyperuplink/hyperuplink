@@ -8,6 +8,8 @@ import (
 type VTopic struct {
 	topic.Topic
 
+	Views int64 `json:"views"`
+
 	CategoryName string `json:"category_name"`
 	CategorySlug string `json:"category_slug"`
 

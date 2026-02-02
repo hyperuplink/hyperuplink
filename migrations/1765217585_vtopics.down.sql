@@ -1,3 +1,4 @@
+-- DROP TRIGGER IF EXISTS refresh_vtopics ON postevents;
 DROP TRIGGER IF EXISTS refresh_vtopics ON replies;
 DROP TRIGGER IF EXISTS refresh_vtopics ON topics;
 DROP TRIGGER IF EXISTS refresh_vtopics ON forums;
