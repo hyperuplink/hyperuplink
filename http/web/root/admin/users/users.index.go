@@ -5,6 +5,7 @@ import (
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/user"
+	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
 
 func (r *Route) Index(c fiber.Ctx) (err error) {
@@ -18,6 +19,19 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	); ret {
 		return rerr
 	}
+
+	var users *[]user.User
+	users, err = r.Runtime.Repositories.User.All(common.QueryOptions{
+		WithBanned:  true,
+		WithDeleted: true,
+		OrderBy:     "created_at",
+		Order:       common.Descending,
+	})
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	req.SetData("users", users)
 
 	return req.Respond()
 }

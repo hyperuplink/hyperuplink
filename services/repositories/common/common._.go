@@ -34,11 +34,7 @@ func (qo QueryOptions) Query(
 	query string,
 	qc QueryCapabilities,
 ) (q string) {
-	if strings.Index(query, "WHERE") == -1 {
-		q = fmt.Sprintf("%s WHERE ", query)
-	} else {
-		q = fmt.Sprintf("%s AND ", query)
-	}
+	q = query
 
 	var wheres []string
 
@@ -53,6 +49,12 @@ func (qo QueryOptions) Query(
 	}
 
 	if len(wheres) > 0 {
+		if strings.Index(query, "WHERE") == -1 {
+			q = fmt.Sprintf("%s WHERE ", query)
+		} else {
+			q = fmt.Sprintf("%s AND ", query)
+		}
+
 		q = fmt.Sprintf("%s %s", q, strings.Join(wheres, " AND "))
 	}
 

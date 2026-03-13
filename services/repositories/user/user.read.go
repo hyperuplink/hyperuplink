@@ -7,6 +7,28 @@ import (
 	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
 
+func (repo *Repository) All(
+	qo common.QueryOptions,
+) (model *[]user.User, err error) {
+	var rows pgx.Rows
+	var mod []user.User
+
+	rows, err = repo.db.Query(qo.Query(
+		`SELECT * FROM users`,
+		common.QueryCapabilities{
+			HasBanned:  true,
+			HasDeleted: true,
+		}),
+	)
+	if err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+
+	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[user.User])
+
+	return &mod, repo.db.ConvertError(err)
+}
+
 func (repo *Repository) GetByUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,

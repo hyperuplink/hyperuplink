@@ -188,6 +188,18 @@ a.button {
   background-color: var(--debug) !important;
 }
 
+.unconfirmed {
+  color: var(--disabled-fg);
+}
+
+.banned {
+  color: var(--highlight);
+}
+
+.deleted {
+  color: var(--danger);
+}
+
 .window.authentication {
   max-width: 380px;
   margin: var(--margin) auto;
