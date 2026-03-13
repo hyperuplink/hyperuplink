@@ -4,13 +4,16 @@ import (
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/user"
 )
 
 type PasswordUpdateForm struct {
-	SignatureText string `form:"signature_text" validate:"max=256"`
+	CurrentPassword   string `form:"current_password" validate:"required,min=8,max=64"`
+	NewPassword       string `form:"new_password" validate:"required,min=8,max=64"`
+	NewPasswordRepeat string `form:"new_password_repeat" validate:"required,eqcsfield=NewPassword"`
 }
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
@@ -40,8 +43,17 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	usr.SignatureText = frm.SignatureText
-	usr.SignatureHTML, err = r.Runtime.Markdown.Convert(usr.SignatureText)
+	var match bool
+	if match, _, err = usr.CheckPassword(frm.CurrentPassword); !match {
+		if err == nil {
+			err = errs.ErrPasswordWrong
+		}
+	}
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	err = usr.SetPassword(frm.NewPassword)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
@@ -51,5 +63,6 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	req.Flash.SetInfo(req.In.Ts("password_updated"))
 	return req.RedirectToRoute(myRoute)
 }

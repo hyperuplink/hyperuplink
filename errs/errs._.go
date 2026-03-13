@@ -9,6 +9,9 @@ var (
 	ErrUserIDNotFound error = errors.New(
 		"User ID not found",
 	)
+	ErrPasswordWrong error = errors.New(
+		"err_password_wrong",
+	)
 	ErrConfigTypeUnsupported error = errors.New(
 		"Config type unsupported",
 	)
