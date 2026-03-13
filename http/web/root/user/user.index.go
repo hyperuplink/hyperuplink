@@ -5,6 +5,7 @@ import (
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/user"
+	"github.com/mrusme/hyperuplink/services/repositories/common"
 )
 
 func (r *Route) Index(c fiber.Ctx) (err error) {
@@ -24,20 +25,48 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	var username string = c.Params("user")
 	req.UpdateTitle("~" + username)
 
-	// var fum *vforum.VForum
-	// fum, err = r.Runtime.Repositories.Forum.VGetBySlug(
-	// 	forum_slug,
-	// 	common.QueryOptions{
-	// 		Limit: 1,
-	// 	},
-	// )
-	// if ret, rerr := req.RespondOnError(err); ret == true {
-	// 	return rerr
-	// }
-	//
-	// req.SetData("forum", fum)
+	usr, err := r.Runtime.Repositories.User.GetByUsername(
+		username,
+		common.QueryOptions{
+			WithBanned:  false,
+			WithSpammed: false,
+			WithDeleted: false,
+			Limit:       1,
+		},
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
 
-	// req.UpdateTitle(fum.Name)
+	req.SetData("user", usr)
+
+	topics, err := r.Runtime.Repositories.Topic.VAllForAuthorUUID(
+		usr.ID,
+		common.QueryOptions{
+			OrderBy: "created_at",
+			Order:   common.Descending,
+			Limit:   10,
+		},
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	req.SetData("topics", topics)
+
+	replies, err := r.Runtime.Repositories.Reply.VAllWithTopicForAuthorUUID(
+		usr.ID,
+		common.QueryOptions{
+			OrderBy: "created_at",
+			Order:   common.Descending,
+			Limit:   10,
+		},
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	req.SetData("replies", replies)
 
 	return req.Respond()
 }

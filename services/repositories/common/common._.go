@@ -24,6 +24,7 @@ type QueryOptions struct {
 }
 
 type QueryCapabilities struct {
+	Table      string
 	HasBanned  bool
 	HasSpammed bool
 	HasDeleted bool
@@ -42,13 +43,13 @@ func (qo QueryOptions) Query(
 	var wheres []string
 
 	if qc.HasBanned && qo.WithBanned == false {
-		wheres = append(wheres, "banned_at IS NULL")
+		wheres = append(wheres, qo.getColumn("banned_at", "IS NULL", qc))
 	}
 	if qc.HasSpammed && qo.WithSpammed == false {
-		wheres = append(wheres, "spammed_at IS NULL")
+		wheres = append(wheres, qo.getColumn("spammed_at", "IS NULL", qc))
 	}
 	if qc.HasDeleted && qo.WithDeleted == false {
-		wheres = append(wheres, "deleted_at IS NULL")
+		wheres = append(wheres, qo.getColumn("deleted_at", "IS NULL", qc))
 	}
 
 	if len(wheres) > 0 {
@@ -70,4 +71,18 @@ func (qo QueryOptions) Query(
 	}
 
 	return q
+}
+
+func (qo QueryOptions) getColumn(
+	name string,
+	val string,
+	qc QueryCapabilities,
+) (column string) {
+	column = name
+	if qc.Table != "" {
+		column = qc.Table + "." + name
+	}
+	column += " " + val
+
+	return column
 }

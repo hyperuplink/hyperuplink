@@ -1,0 +1,105 @@
+<div class="margin window active">
+  <div class="title-bar">
+    <div class="title-bar-text">{{$.Site.Title}}</div>
+  </div>
+  <div class="window-body {{$.Site.GetRoute.AsID}}">
+    {{ template "views/layouts/partials/flash" . }}
+    {{ $user := .Data.Get "user"}}
+    {{ $topics := .Data.Get "topics"}}
+    {{ $replies := .Data.Get "replies"}}
+    <div class="flex-row flex-wrap gap margin">
+      <!------ Profile ------>
+      <fieldset class="flex-column padding" style="min-width: 200px;">
+        <legend>{{$user.Username}}</legend>
+        <div class="flex-column gap">
+          <img class="picture lowered"
+               src="{{$.Site.ProfilePicture $user.ProfilePicture}}">
+          <div class="role">{{ $._.T (nospace (cat $user.Role "_role")) }}</div>
+          <div class="units">
+            {{ range $user.MemberOf }}
+            <div class="unit">{{ title . }}</div>
+            {{ end }}
+          </div>
+          <div class="joined">{{ $._.T "joined"}}: {{$.Site.Date $user.CreatedAt}}</div>
+          {{ if not (eq $user.SignatureHTML "") }}
+          <div class="signature markdown lowered padding">{{ safeHTML $user.SignatureHTML }}</div>
+          {{ end }}
+        </div>
+      </fieldset>
+      <div class="flex-column grow gap">
+        <!------ Recent Topics ------>
+        <fieldset class="flex-column padding">
+          <legend>{{$._.T "recent_topics"}}</legend>
+          <div class="list" role="listbox">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">{{$._.T "subject"}}</th>
+                  <th class="no-mobile"
+                      scope="col"
+                      style="text-align: right;
+                             width: 140px">{{$._.T "updated_adjective"}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{ range $topics }}
+                <tr role="option">
+                  <td>
+                    <a href="{{$.Site.GetRelRoot}}_{{.CategorySlug}}/{{.ForumSlug}}/{{.Slug}}"
+                       title="{{.Name}}"
+                       class="icon">
+                      <img src="{{$.Site.GetRelRoot}}static/icons/post.png">
+                      <div class="icon-label">{{.Name}}</div>
+                    </a>
+                  </td>
+                  <td class="no-mobile" style="text-align: right;">{{$.Site.DateTime .CreatedAt}}</td>
+                </tr>
+                {{ else }}
+                <tr>
+                  <td colspan="2">{{$._.T "no_topics"}}</td>
+                </tr>
+                {{ end }}
+              </tbody>
+            </table>
+          </div>
+        </fieldset>
+        <!------ Recent Replies ------>
+        <fieldset class="flex-column padding">
+          <legend>{{$._.T "recent_replies"}}</legend>
+          <div class="list" role="listbox">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">{{$._.T "text"}}</th>
+                  <th class="no-mobile"
+                      scope="col"
+                      style="text-align: right;
+                             width: 140px">{{$._.T "updated_adjective"}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{ range $replies }}
+                <tr role="option">
+                  <td>
+                    <a href="{{$.Site.GetRelRoot}}_{{.CategorySlug}}/{{.ForumSlug}}/{{.TopicSlug}}#{{.ShortID}}"
+                       title="{{.TopicName}}"
+                       class="icon">
+                      <img src="{{$.Site.GetRelRoot}}static/icons/post.png">
+                      <div class="icon-label">{{ trunc 64 .Text }}</div>
+                    </a>
+                  </td>
+                  <td class="no-mobile" style="text-align: right;">{{$.Site.DateTime .CreatedAt}}</td>
+                </tr>
+                {{ else }}
+                <tr>
+                  <td colspan="2">{{$._.T "no_replies"}}</td>
+                </tr>
+                {{ end }}
+              </tbody>
+            </table>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</div>

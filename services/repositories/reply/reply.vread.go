@@ -77,3 +77,37 @@ func (repo *Repository) VAllForTopicID(
 
 	return repo.VAllForTopicUUID(uuID, qo)
 }
+
+func (repo *Repository) VAllWithTopicForAuthorUUID(
+	id uuid.UUID,
+	qo common.QueryOptions,
+) (model *[]vreply.VReplyWithTopic, err error) {
+	var rows pgx.Rows
+	var mod []vreply.VReplyWithTopic
+
+	rows, err = repo.db.Query(qo.Query(
+		`SELECT vr.*,
+			t.name AS topic_name,
+			t.slug AS topic_slug,
+			f.slug AS forum_slug,
+			c.slug AS category_slug
+		FROM vreplies vr
+		LEFT JOIN topics t ON t.id = vr.topic_id
+		LEFT JOIN forums f ON f.id = t.forum_id
+		LEFT JOIN categories c ON c.id = f.category_id
+		WHERE vr.author_id = $1`,
+		common.QueryCapabilities{
+			Table:      "vr",
+			HasSpammed: true,
+			HasDeleted: true,
+		}),
+		id,
+	)
+	if err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+
+	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[vreply.VReplyWithTopic])
+
+	return &mod, repo.db.ConvertError(err)
+}

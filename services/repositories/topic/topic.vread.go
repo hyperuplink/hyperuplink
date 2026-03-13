@@ -171,3 +171,27 @@ func (repo *Repository) VGetBySlugs(
 
 	return &mod, repo.db.ConvertError(err)
 }
+
+func (repo *Repository) VAllForAuthorUUID(
+	id uuid.UUID,
+	qo common.QueryOptions,
+) (model *[]vtopic.VTopic, err error) {
+	var rows pgx.Rows
+	var mod []vtopic.VTopic
+
+	rows, err = repo.db.Query(qo.Query(
+		`SELECT * FROM vtopics WHERE author_id = $1`,
+		common.QueryCapabilities{
+			HasSpammed: true,
+			HasDeleted: true,
+		}),
+		id,
+	)
+	if err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+
+	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[vtopic.VTopic])
+
+	return &mod, repo.db.ConvertError(err)
+}
