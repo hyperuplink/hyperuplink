@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"github.com/mrusme/hyperuplink/services/config"
 	"github.com/mrusme/hyperuplink/services/database"
 	"github.com/mrusme/hyperuplink/services/repositories/category"
 	"github.com/mrusme/hyperuplink/services/repositories/forum"
@@ -30,12 +31,13 @@ type Repositories struct {
 
 func New(
 	db *database.Database,
+	cfg *config.Config,
 ) (repos *Repositories, err error) {
 	repos = new(Repositories)
 	repos.db = db
 
 	var settingRepo *setting.Repository
-	if settingRepo, err = setting.New(repos.db); err != nil {
+	if settingRepo, err = setting.New(repos.db, cfg); err != nil {
 		return nil, err
 	}
 	repos.Setting = settingRepo

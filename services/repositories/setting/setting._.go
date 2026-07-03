@@ -2,16 +2,19 @@ package setting
 
 import (
 	"github.com/mrusme/hyperuplink/models/setting"
+	"github.com/mrusme/hyperuplink/services/config"
 	"github.com/mrusme/hyperuplink/services/database"
 )
 
 type Repository struct {
-	db *database.Database
+	db  *database.Database
+	cfg *config.Config
 }
 
-func New(db *database.Database) (*Repository, error) {
+func New(db *database.Database, cfg *config.Config) (*Repository, error) {
 	repo := new(Repository)
 	repo.db = db
+	repo.cfg = cfg
 
 	return repo, nil
 }
@@ -59,6 +62,27 @@ func (repo *Repository) Startup() (err error) {
 		}
 		if _, err = Create(repo, settingProfiles); err != nil {
 			return err
+		}
+	} else if settingProfiles.JSONValue.PictureStorageProviderID != "" {
+		var storages config.Storages
+		if storages, err = repo.cfg.Storages(); err != nil {
+			return err
+		}
+
+		exists := false
+		for _, storage := range storages {
+			if storage.ID == settingProfiles.JSONValue.PictureStorageProviderID {
+				exists = true
+				break
+			}
+		}
+
+		if !exists {
+			settingProfiles.JSONValue.EnablePicture = false
+			settingProfiles.JSONValue.PictureStorageProviderID = ""
+			if err = Update(repo, settingProfiles); err != nil {
+				return err
+			}
 		}
 	}
 

@@ -93,7 +93,7 @@ func New(cfgstr string) (rt *Runtime, err error) {
 	}
 
 	rt.Debug("new", "repositories")
-	if rt.Repositories, err = repositories.New(rt.Database); err != nil {
+	if rt.Repositories, err = repositories.New(rt.Database, rt.Config); err != nil {
 		rt.Error("status", "error", "error", err)
 		return nil, err
 	}
