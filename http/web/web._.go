@@ -137,9 +137,14 @@ func (srv *Web) loadMiddlewares() error {
 		return err
 	}
 
+	// In development mode cookies are served over plain HTTP, so the "Secure"
+	// (HTTPS-only) flag must be disabled or the session/CSRF cookies would never
+	// be sent back by the browser (or curl)
+	secureCookies := srv.rt.IsDevelopmentMode() == false
+
 	sessConfig := session.Config{
 		Storage:         storage,
-		CookieSecure:    true,           // HTTPS only
+		CookieSecure:    secureCookies,  // HTTPS only (disabled in development)
 		CookieHTTPOnly:  true,           // Prevent XSS
 		CookieSameSite:  "Lax",          // CSRF protection
 		IdleTimeout:     6 * time.Hour,  // Session timeout
@@ -155,8 +160,8 @@ func (srv *Web) loadMiddlewares() error {
 
 	srv.app.Use(csrf.New(csrf.Config{
 		CookieName:            "__hyperuplink_csrf",
-		CookieSecure:          true,
-		CookieHTTPOnly:        true, // Needs to be 'false' to allow JS to access tokens
+		CookieSecure:          secureCookies, // HTTPS only (disabled in development)
+		CookieHTTPOnly:        true,          // Needs to be 'false' to allow JS to access tokens
 		CookieSameSite:        "Lax",
 		CookieSessionOnly:     true,
 		Extractor:             extractors.FromForm("_csrf"),
