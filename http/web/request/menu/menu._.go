@@ -69,7 +69,7 @@ func (m *Menu) FileMenu(forRole user.Role) []MenuItem {
 	var subItems []MenuItem
 
 	newpostUrl := route.For("New").AsURL()
-	if m.currentCategorySlug != "" && m.currentCategorySlug != "" {
+	if m.currentCategorySlug != "" && m.currentForumSlug != "" {
 		newpostUrl = fmt.Sprintf("%s?category=%s&forum=%s",
 			newpostUrl, m.currentCategorySlug, m.currentForumSlug)
 	}

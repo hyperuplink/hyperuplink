@@ -2,6 +2,7 @@ package common
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 )
 
@@ -9,8 +10,10 @@ type QueryOrder string
 
 const (
 	Ascending  QueryOrder = "ASC"
-	Descending            = "DESC"
+	Descending QueryOrder = "DESC"
 )
+
+var validIdentifier = regexp.MustCompile(`^[a-z_][a-z0-9_]*(\.[a-z_][a-z0-9_]*)?$`)
 
 type QueryOptions struct {
 	Limit       int
@@ -58,11 +61,12 @@ func (qo QueryOptions) Query(
 		q = fmt.Sprintf("%s %s", q, strings.Join(wheres, " AND "))
 	}
 
-	if qo.OrderBy != "" {
-		if qo.Order == "" {
-			qo.Order = Descending
+	if qo.OrderBy != "" && validIdentifier.MatchString(qo.OrderBy) {
+		order := qo.Order
+		if order != Ascending && order != Descending {
+			order = Descending
 		}
-		q = fmt.Sprintf("%s ORDER BY %s %s", q, qo.OrderBy, string(qo.Order))
+		q = fmt.Sprintf("%s ORDER BY %s %s", q, qo.OrderBy, string(order))
 	}
 
 	if qo.Limit > 0 {
@@ -81,7 +85,7 @@ func (qo QueryOptions) getColumn(
 	qc QueryCapabilities,
 ) (column string) {
 	column = name
-	if qc.Table != "" {
+	if qc.Table != "" && validIdentifier.MatchString(qc.Table) {
 		column = qc.Table + "." + name
 	}
 	column += " " + val
