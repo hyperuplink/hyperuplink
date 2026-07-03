@@ -1,0 +1,43 @@
+{{ $dict := . }}
+{{ $site := get $dict "Site"}}
+{{ $_ := get $dict "_"}}
+{{ $results := get $dict "Results"}}
+{{ $perPage := get $dict "PerPage"}}
+{{ $extra := dict }}
+{{ if hasKey $dict "Extra" }}{{ $extra = get $dict "Extra" }}{{ end }}
+<div class="list" role="listbox">
+	<table class="detailed">
+		<thead>
+			<tr>
+				<th scope="col">{{$_.T "search_col_result"}}</th>
+				<th class="no-mobile" scope="col" style="text-align: right;
+                   width: 80px">{{$_.T "search_col_type"}}</th>
+				<th class="no-mobile" scope="col" style="text-align: right;
+                   width: 140px">{{$_.T "search_col_date"}}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{ range $idx, $r := $results }}
+			<tr role="option">
+				<td>
+					<a href="{{$site.GetRelRoot}}_{{$r.CategorySlug}}/{{$r.ForumSlug}}/{{$r.TopicSlug}}{{ if $r.IsReply }}?page={{$r.PageWithin $perPage}}#post-{{$r.ReplyShortID}}{{ end }}" title="{{$r.TopicName}}" class="icon big">
+						<img src="{{$site.GetRelRoot}}static/icons/post.png">
+						<div class="icon-label">
+							<div>{{$r.TopicName}}</div>
+							<div class="icon-sublabel">
+								{{ if $r.IsReply }}{{$_.T "search_reply_by"}}{{ else }}{{$_.T "search_topic_by"}}{{ end }}
+								{{$r.AuthorUsername}} &middot; {{$site.DateTime $r.CreatedAt}}
+							</div>
+						</div>
+					</a>
+				</td>
+				<td class="no-mobile" style="text-align: right;">
+					{{ if $r.IsReply }}{{$_.T "search_kind_reply"}}{{ else }}{{$_.T "search_kind_topic"}}{{ end }}
+				</td>
+				<td class="no-mobile" style="text-align: right;">{{$site.DateTime $r.CreatedAt}}</td>
+			</tr>
+			{{ end }}
+		</tbody>
+	</table>
+</div>
+{{ template "views/layouts/partials/pagination" dict "Site" $site "Extra" $extra }}

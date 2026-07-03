@@ -1,13 +1,17 @@
 {{ $dict := . }}
 {{ $site := get $dict "Site"}}
+{{/*
+"$extra" is an optional map of query params (e.g. a search term) to
+preserve across page links.
+Each value is interpolated in URL-query context so html/template
+percent-encodes it correctly.
+*/}}
+{{ $extra := dict }}
+{{ if hasKey $dict "Extra" }}{{ $extra = get $dict "Extra" }}{{ end }}
 {{ $pager := $site.GetPager}}
 {{ $pgv := $pager.GetView}}
 <div class="pagination flex-row justify-center gap margin">
-  {{ range $i, $pv := $pgv }}
-  <a class="button {{ if eq $pv.Active true }}active{{ end }} {{ if eq $pv.Disabled true }}disabled{{ end }}"
-     {{ if eq $pv.Disabled false }}
-     href="?page={{$pv.Page}}"
-     {{ end }}
-     title="{{ safeHTML $pv.Label }}">{{ safeHTML $pv.Label }}</a>
-  {{ end }}
+	{{ range $i, $pv := $pgv }}
+	<a class="button {{ if eq $pv.Active true }}active{{ end }} {{ if eq $pv.Disabled true }}disabled{{ end }}" {{ if eq $pv.Disabled false }} href="?{{ range $k, $v := $extra }}{{ $k }}={{ $v }}&{{ end }}page={{$pv.Page}}" {{ end }} title="{{ safeHTML $pv.Label }}">{{ safeHTML $pv.Label }}</a>
+	{{ end }}
 </div>

@@ -3,6 +3,8 @@
 {{ $_ := get $dict "_"}}
 {{ $forum := get $dict "Forum"}}
 {{ $topics := get $dict "Topics"}}
+{{ $extra := dict }}
+{{ if hasKey $dict "Extra" }}{{ $extra = get $dict "Extra" }}{{ end }}
 <div class="list" role="listbox">
   <table class="detailed">
     <thead>
@@ -48,4 +50,4 @@
     </tbody>
   </table>
 </div>
-{{ template "views/layouts/partials/pagination" dict "Site" .Site }}
+{{ template "views/layouts/partials/pagination" dict "Site" .Site "Extra" $extra }}
