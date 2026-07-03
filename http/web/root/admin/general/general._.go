@@ -23,6 +23,7 @@ func New(
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
 		base.Get("", r.Index).Name("index")
+		base.Post("/update", r.Update).Name("update")
 	}, r.Path+".")
 
 	return r, nil

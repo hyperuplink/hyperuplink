@@ -6,10 +6,37 @@
     {{ template "views/layouts/partials/flash" . }}
     <form method="post"
           action="{{$.Site.GetFormAction "update"}}"
-          enctype="multipart/form-data"
           class="">
       <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-      <!-- TODO -->
+      <div class="margin">
+        <div class="fieldrow flex-row flex-wrap gap">
+          <div class="field flex-column grow">
+            <label for="name">{{$._.T "name"}}:</label>
+            <input type="text" id="name" name="name" class="input"
+                   value="{{$.System.Name}}" maxlength="255" required>
+          </div>
+          <div class="field flex-column grow">
+            <label for="base_url">{{$._.T "base_url"}}:</label>
+            <input type="url" id="base_url" name="base_url" class="input"
+                   value="{{$.System.BaseURL}}" maxlength="255" required>
+          </div>
+        </div>
+        <div class="fieldrow flex-row flex-wrap gap">
+          <div class="field flex-column grow">
+            <label for="topics_per_page">{{$._.T "topics_per_page"}}:</label>
+            <input type="number" id="topics_per_page" name="topics_per_page" class="input"
+                   value="{{$.System.GetTopicsPerPage}}" min="1" max="200" required>
+          </div>
+          <div class="field flex-column grow">
+            <label for="posts_per_page">{{$._.T "posts_per_page"}}:</label>
+            <input type="number" id="posts_per_page" name="posts_per_page" class="input"
+                   value="{{$.System.GetPostsPerPage}}" min="1" max="200" required>
+          </div>
+        </div>
+      </div>
+      <div class="actions margin flex-row justify-end gap">
+        <button type="submit" class="affirmative" title="{{$._.T "update"}}">{{$._.T "update"}}</button>
+      </div>
     </form>
   </div>
 </div>
