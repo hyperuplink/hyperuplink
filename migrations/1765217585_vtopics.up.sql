@@ -68,3 +68,12 @@ CREATE TRIGGER refresh_vtopics
 -- CREATE TRIGGER refresh_vtopics
 --  AFTER INSERT ON postevents
 --  FOR EACH STATEMENT EXECUTE PROCEDURE refresh_vtopics();
+
+-- IMPORTANT: the tsvector expression below MUST stay identical to the one used
+-- by the search query in services/repositories/topic/topic.vsearch.go,
+-- otherwise the planner cannot use this index.
+CREATE INDEX IF NOT EXISTS idx_vtopics_fts ON vtopics
+USING gin (
+  to_tsvector('english', coalesce(name, '') || ' ' || coalesce(text, ''))
+);
+

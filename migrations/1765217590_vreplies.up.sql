@@ -28,3 +28,10 @@ CREATE TRIGGER refresh_vreplies
  AFTER INSERT ON replies
  FOR EACH STATEMENT EXECUTE PROCEDURE refresh_vreplies();
 
+-- IMPORTANT: the tsvector expression below MUST stay identical to the reply
+-- predicate in services/repositories/search/search.query.go,
+-- otherwise the planner cannot use this index.
+CREATE INDEX IF NOT EXISTS idx_vreplies_fts ON vreplies
+USING gin (
+  to_tsvector('english', coalesce(text, ''))
+);
