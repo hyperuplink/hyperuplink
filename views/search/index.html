@@ -1,15 +1,52 @@
+{{ $query := .Data.Get "query" }}
+{{ $author := .Data.Get "author" }}
+{{ $results := .Data.Get "results" }}
+{{ $total := .Data.Get "total" }}
+{{ $perPage := .Data.Get "posts_per_page" }}
 <div class="margin window active">
-  <div class="title-bar">
-    <div class="title-bar-text">{{$.Site.Title}}</div>
-  </div>
-  <div class="window-body {{$.Site.GetRoute.AsID}}">
-    {{ template "views/layouts/partials/flash" . }}
-    <form method="post"
-          action="{{$.Site.GetFormAction "update"}}"
-          enctype="multipart/form-data"
-          class="">
-      <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-      <!-- TODO -->
-    </form>
-  </div>
+	<div class="title-bar">
+		<div class="title-bar-text">{{$.Site.Title}}</div>
+	</div>
+	<div class="window-body {{$.Site.GetRoute.AsID}}">
+		{{ template "views/layouts/partials/flash" . }}
+		<form method="post" action="{{$.Site.GetFormAction}}" class="search margin">
+			<input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+			<div class="fieldrow flex-row gap">
+				<input type="search" name="q" value="{{ $query }}" class="input grow" placeholder="{{ $._.Ts `search_placeholder` }}" autofocus>
+				<button type="submit" class="button primary">{{ $._.T `search_verb` }}</button>
+			</div>
+			<div class="fieldrow flex-row flex-wrap gap">
+				<span>{{ $._.T `search_fields_label` }}:</span>
+				<span class="checkbox-row">
+					<input type="checkbox" id="f_title" name="f_title" value="1" {{ if .Data.Get `f_title` }}checked{{ end }}>
+					<label for="f_title">{{ $._.T `search_field_title` }}</label>
+				</span>
+				<span class="checkbox-row">
+					<input type="checkbox" id="f_body" name="f_body" value="1" {{ if .Data.Get `f_body` }}checked{{ end }}>
+					<label for="f_body">{{ $._.T `search_field_topic` }}</label>
+				</span>
+				<span class="checkbox-row">
+					<input type="checkbox" id="f_replies" name="f_replies" value="1" {{ if .Data.Get `f_replies` }}checked{{ end }}>
+					<label for="f_replies">{{ $._.T `search_field_replies` }}</label>
+				</span>
+				<span class="checkbox-row">
+					<input type="checkbox" id="f_attachments" name="f_attachments" value="1" {{ if .Data.Get `f_attachments` }}checked{{ end }}>
+					<label for="f_attachments">{{ $._.T `search_field_attachments` }}</label>
+				</span>
+			</div>
+			<div class="fieldrow flex-row gap">
+				<label for="author">{{ $._.T `search_author` }}:</label>
+				<input type="text" id="author" name="author" value="{{ $author }}" class="input" placeholder="{{ $._.Ts `search_author_placeholder` }}">
+			</div>
+		</form>
+
+		{{ if $query }}
+		{{ if gt $total 0 }}
+		<div class="margin">{{ $._.T `search_results_for` }} &ldquo;{{ $query }}&rdquo; ({{ $total }})</div>
+		{{ template "views/layouts/partials/searchresults" dict "Site" .Site "_" ._ "Results" $results "PerPage" $perPage "Extra" (.Data.Get "pagination_extra") }}
+		{{ else }}
+		<div class="margin">{{ $._.T `search_no_results` }}</div>
+		{{ end }}
+		{{ end }}
+	</div>
 </div>
