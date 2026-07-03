@@ -24,7 +24,6 @@ func New() (in *Intnat, err error) {
 			"es",
 			"fr",
 			"it",
-			"jp",
 			"ro",
 		),
 		i18n.WithUnmarshaler(toml.Unmarshal),
