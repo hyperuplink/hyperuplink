@@ -4,12 +4,52 @@
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
+    {{ $settingProfiles := .Data.Get "setting_profiles" }}
+    {{ $storage_ids := .Data.Get "storage_ids" }}
     <form method="post"
           action="{{$.Site.GetFormAction "update"}}"
-          enctype="multipart/form-data"
           class="">
       <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-      <!-- TODO -->
+      <div class="margin flex-column gap">
+        <span class="checkbox-row">
+          <input type="checkbox" id="enable_picture" name="enable_picture" value="1"
+                 {{ if $settingProfiles.EnablePicture }}checked{{ end }}>
+          <label for="enable_picture">{{$._.T "enable_picture"}}</label>
+        </span>
+        <div class="fieldrow flex-row flex-wrap gap">
+          <div class="field flex-column">
+            <label for="picture_format">{{$._.T "picture_format"}}:</label>
+            <div class="dropdown">
+              <select id="picture_format" name="picture_format" size="1">
+                {{ range $format := (list "webp" "png" "jpg") }}
+                <option value="{{$format}}" {{ if eq $settingProfiles.PictureFormat $format }}selected{{ end }}>{{$format}}</option>
+                {{ end }}
+              </select>
+              <div class="dropdown-button"></div>
+            </div>
+          </div>
+          <div class="field flex-column grow">
+            <label for="picture_storage_provider_id">{{$._.T "picture_storage_provider_id"}}:</label>
+            <div class="dropdown">
+              <select id="picture_storage_provider_id" name="picture_storage_provider_id" size="1">
+                <option value="">{{$._.T "none"}}</option>
+                {{ range $id := $storage_ids }}
+                <option value="{{$id}}" {{ if eq $settingProfiles.PictureStorageProviderID $id }}selected{{ end }}>{{$id}}</option>
+                {{ end }}
+              </select>
+              <div class="dropdown-button"></div>
+            </div>
+          </div>
+        </div>
+        <div class="field flex-column grow">
+          <label for="picture_storage_path">{{$._.T "picture_storage_path"}}:</label>
+          <input type="text" id="picture_storage_path" name="picture_storage_path" class="input"
+                 value="{{$settingProfiles.PictureStoragePath}}" maxlength="255">
+        </div>
+      </div>
+      <div class="actions margin flex-row justify-end gap">
+        <button type="submit" class="affirmative" title="{{$._.T "update"}}">{{$._.T "update"}}</button>
+      </div>
     </form>
   </div>
 </div>

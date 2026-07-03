@@ -46,6 +46,22 @@ func (repo *Repository) Startup() (err error) {
 		}
 	}
 
+	var settingProfiles *setting.Setting[setting.Profiles]
+
+	if settingProfiles, err = GetByID[setting.Profiles](repo, "profiles"); err != nil {
+		settingProfiles = new(setting.Setting[setting.Profiles])
+		settingProfiles.ID = "profiles"
+		settingProfiles.JSONValue = setting.Profiles{
+			EnablePicture:            false,
+			PictureFormat:            "webp",
+			PictureStorageProviderID: "",
+			PictureStoragePath:       "profile-pictures",
+		}
+		if _, err = Create(repo, settingProfiles); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 

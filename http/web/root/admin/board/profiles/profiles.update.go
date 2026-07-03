@@ -1,0 +1,82 @@
+package profiles
+
+import (
+	"errors"
+	"reflect"
+
+	"github.com/gofiber/fiber/v3"
+	"github.com/mrusme/hyperuplink/http/route"
+	"github.com/mrusme/hyperuplink/http/web/request"
+	"github.com/mrusme/hyperuplink/models/setting"
+	"github.com/mrusme/hyperuplink/models/user"
+	settingRepo "github.com/mrusme/hyperuplink/services/repositories/setting"
+)
+
+type ProfilesUpdateForm struct {
+	EnablePicture            bool   `form:"enable_picture"`
+	PictureFormat            string `form:"picture_format" validate:"required,oneof=webp png jpg"`
+	PictureStorageProviderID string `form:"picture_storage_provider_id" validate:"required_if=EnablePicture true,max=64"`
+	PictureStoragePath       string `form:"picture_storage_path" validate:"omitempty,max=255"`
+}
+
+func (r *Route) Update(c fiber.Ctx) (err error) {
+	myRoute := route.For("AdminBoardProfiles")
+	req := request.New(r, c, myRoute,
+		[]string{"base"}, myRoute.AsURL()+"/index",
+		myRoute.AsTitle())
+
+	if ret, rerr := req.AccessControl(
+		user.AdminRole,
+	); ret {
+		return rerr
+	}
+
+	frm := new(ProfilesUpdateForm)
+
+	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+		return req.RedirectToRoute(myRoute)
+	}
+
+	r.Runtime.Debug("form", frm)
+
+	storages, err := r.Runtime.Config.Storages()
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	valid := frm.PictureStorageProviderID == ""
+	for _, storage := range storages {
+		if storage.ID == frm.PictureStorageProviderID {
+			valid = true
+			break
+		}
+	}
+	if !valid {
+		req.Flash.SetError(errors.New("invalid_storage_provider"))
+		return req.RedirectToRoute(myRoute)
+	}
+
+	var settingProfiles *setting.Setting[setting.Profiles]
+	settingProfiles, err = settingRepo.GetByID[setting.Profiles](
+		r.Runtime.Repositories.Setting,
+		"profiles",
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	settingProfiles.JSONValue.EnablePicture = frm.EnablePicture
+	settingProfiles.JSONValue.PictureFormat = frm.PictureFormat
+	settingProfiles.JSONValue.PictureStorageProviderID = frm.PictureStorageProviderID
+	settingProfiles.JSONValue.PictureStoragePath = frm.PictureStoragePath
+
+	err = settingRepo.Update[setting.Profiles](
+		r.Runtime.Repositories.Setting,
+		settingProfiles,
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	return req.RedirectToRoute(myRoute)
+}

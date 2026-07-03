@@ -5,12 +5,14 @@
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
     {{ $user := .Data.Get "user"}}
+    {{ $settingProfiles := .Data.Get "setting_profiles"}}
     <form method="post"
           action="{{$.Site.GetFormAction "update"}}"
           enctype="multipart/form-data"
           class="">
       <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
       <div class="flex-row flex-wrap gap margin">
+        {{ if $settingProfiles.EnablePicture }}
         <!------ Profile Picture ------>
         <fieldset class="flex-column profile-picture padding">
           <legend>{{$._.T "profile_picture"}}</legend>
@@ -18,6 +20,7 @@
                src="{{$.Site.ProfilePicture $user.ProfilePicture}}">
           {{$.Form.Input "file" "profile_picture" "" true "accept" "image/*"}}
         </fieldset>
+        {{ end }}
         <!------ Signature       ------>
         <fieldset class="flex-column grow signature padding">
           <legend>{{$._.T "signature"}}</legend>

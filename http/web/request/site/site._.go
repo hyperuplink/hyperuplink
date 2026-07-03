@@ -11,6 +11,8 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/helpers"
+	"github.com/mrusme/hyperuplink/models/setting"
+	settingRepo "github.com/mrusme/hyperuplink/services/repositories/setting"
 )
 
 type Site struct {
@@ -123,12 +125,23 @@ func (s *Site) ProfilePicture(id string) (dlurl string) {
 		return staticPicture
 	}
 
-	// TODO: Get provider ID from System
-	// TODO: Get path from System
-	// TODO: Get .webp from format configured in System
+	var settingProfiles *setting.Setting[setting.Profiles]
+	settingProfiles, err = settingRepo.GetByID[setting.Profiles](
+		s.r.GetRuntime().Repositories.Setting,
+		"profiles",
+	)
+	if err != nil {
+		return staticPicture
+	}
+	profiles := settingProfiles.JSONValue
+
+	if !profiles.EnablePicture || profiles.PictureStorageProviderID == "" {
+		return staticPicture
+	}
+
 	if dlurl, err = s.r.GetRuntime().Storage.GetFileDownloadURL(
-		"profile-pictures",
-		"profile-pictures/"+id+".webp",
+		profiles.PictureStorageProviderID,
+		profiles.PictureStoragePath+"/"+id+"."+profiles.PictureFormat,
 	); err != nil {
 		return staticPicture
 	}

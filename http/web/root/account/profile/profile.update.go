@@ -9,7 +9,9 @@ import (
 	"github.com/lithammer/shortuuid/v4"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
+	"github.com/mrusme/hyperuplink/models/setting"
 	"github.com/mrusme/hyperuplink/models/user"
+	settingRepo "github.com/mrusme/hyperuplink/services/repositories/setting"
 )
 
 type ProfileUpdateForm struct {
@@ -45,42 +47,51 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 	}
 
 	if frm.ProfilePicture != nil && frm.ProfilePicture.Filename != "" {
-		profilePictureMultipartFile, err := frm.ProfilePicture.Open()
-		if ret, rerr := req.RespondOnError(err); ret == true {
-			return rerr
-		}
-
-		profilePictureFile, profilePictureFileName, err := r.Runtime.Magick.ConvertProfilePicture(
-			profilePictureMultipartFile,
-			"webp", // TODO: Get .webp from format configured in System
-		)
-		if ret, rerr := req.RespondOnError(err); ret == true {
-			profilePictureMultipartFile.Close()
-			return rerr
-		}
-
-		profilePictureID := shortuuid.New()
-
-		// TODO: Get provider ID from System
-		// TODO: Get path from System
-		// TODO: Get .webp from format configured in System
-		err = r.Runtime.Storage.StoreFile(
-			"profile-pictures",
-			profilePictureFile,
-			"profile-pictures/"+profilePictureID+".webp",
+		var settingProfiles *setting.Setting[setting.Profiles]
+		settingProfiles, err = settingRepo.GetByID[setting.Profiles](
+			r.Runtime.Repositories.Setting,
+			"profiles",
 		)
 		if ret, rerr := req.RespondOnError(err); ret == true {
 			return rerr
 		}
+		profiles := settingProfiles.JSONValue
 
-		profilePictureFile.Close()
-		if profilePictureFileName != "" {
-			os.Remove(profilePictureFileName)
+		if profiles.EnablePicture {
+			profilePictureMultipartFile, err := frm.ProfilePicture.Open()
+			if ret, rerr := req.RespondOnError(err); ret == true {
+				return rerr
+			}
+
+			profilePictureFile, profilePictureFileName, err := r.Runtime.Magick.ConvertProfilePicture(
+				profilePictureMultipartFile,
+				profiles.PictureFormat,
+			)
+			if ret, rerr := req.RespondOnError(err); ret == true {
+				profilePictureMultipartFile.Close()
+				return rerr
+			}
+
+			profilePictureID := shortuuid.New()
+
+			err = r.Runtime.Storage.StoreFile(
+				profiles.PictureStorageProviderID,
+				profilePictureFile,
+				profiles.PictureStoragePath+"/"+profilePictureID+"."+profiles.PictureFormat,
+			)
+			if ret, rerr := req.RespondOnError(err); ret == true {
+				return rerr
+			}
+
+			profilePictureFile.Close()
+			if profilePictureFileName != "" {
+				os.Remove(profilePictureFileName)
+			}
+
+			// oldProfilePicutreID := usr.ProfilePicture
+			usr.ProfilePicture = profilePictureID
+			// TODO: Delete oldProfilePicutreID
 		}
-
-		// oldProfilePicutreID := usr.ProfilePicture
-		usr.ProfilePicture = profilePictureID
-		// TODO: Delete oldProfilePicutreID
 	}
 
 	usr.SignatureText = frm.SignatureText
