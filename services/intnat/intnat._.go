@@ -13,10 +13,10 @@ type Intnat struct {
 	Locales *embed.FS
 }
 
-func New() (*Intnat, error) {
-	in := new(Intnat)
+func New() (in *Intnat, err error) {
+	in = new(Intnat)
 
-	in.Bundle = i18n.NewBundle(
+	in.Bundle, err = i18n.NewBundle(
 		i18n.WithDefaultLocale("en"),
 		i18n.WithLocales(
 			"de",
@@ -30,7 +30,7 @@ func New() (*Intnat, error) {
 		i18n.WithUnmarshaler(toml.Unmarshal),
 	)
 
-	return in, nil
+	return in, err
 }
 
 func (in *Intnat) SetLocales(embedLocales *embed.FS) (err error) {
