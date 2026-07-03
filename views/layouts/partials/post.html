@@ -4,7 +4,7 @@
 {{ $_ := get $dict "_"}}
 {{ $post := get $dict "post"}}
 {{ if $post }}
-<div class="raised padding margin post flex-row gap">
+<div id="post-{{$post.ShortID}}" class="raised padding margin post flex-row gap">
   <fieldset class="profile padding">
     <img class="picture lowered"
          src="{{$site.ProfilePicture $post.AuthorProfilePicture}}">
