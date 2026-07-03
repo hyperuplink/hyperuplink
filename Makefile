@@ -1,4 +1,4 @@
-.PHONY: all help test build db\:drop db\:dump db\:restore
+.PHONY: all help test build db\:drop db\:dump db\:restore db\:refresh run
 PWD := $(shell pwd)
 GOPATH := $(shell go env GOPATH)
 
