@@ -31,6 +31,21 @@ func (repo *Repository) Startup() (err error) {
 		}
 	}
 
+	var settingTopics *setting.Setting[setting.Topics]
+
+	if settingTopics, err = GetByID[setting.Topics](repo, "topics"); err != nil {
+		settingTopics = new(setting.Setting[setting.Topics])
+		settingTopics.ID = "topics"
+		settingTopics.JSONValue = setting.Topics{
+			AllowKindQuestion: true,
+			AllowKindPoll:     true,
+			AllowKindRSVP:     true,
+		}
+		if _, err = Create(repo, settingTopics); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 

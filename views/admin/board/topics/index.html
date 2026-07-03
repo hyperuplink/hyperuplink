@@ -4,12 +4,31 @@
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
+    {{ $topics := .Data.Get "topics" }}
     <form method="post"
           action="{{$.Site.GetFormAction "update"}}"
-          enctype="multipart/form-data"
           class="">
       <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-      <!-- TODO -->
+      <div class="margin flex-column gap">
+        <span class="checkbox-row">
+          <input type="checkbox" id="allow_kind_question" name="allow_kind_question" value="1"
+                 {{ if $topics.AllowKindQuestion }}checked{{ end }}>
+          <label for="allow_kind_question">{{$._.T "allow_kind_question"}}</label>
+        </span>
+        <span class="checkbox-row">
+          <input type="checkbox" id="allow_kind_poll" name="allow_kind_poll" value="1"
+                 {{ if $topics.AllowKindPoll }}checked{{ end }}>
+          <label for="allow_kind_poll">{{$._.T "allow_kind_poll"}}</label>
+        </span>
+        <span class="checkbox-row">
+          <input type="checkbox" id="allow_kind_rsvp" name="allow_kind_rsvp" value="1"
+                 {{ if $topics.AllowKindRSVP }}checked{{ end }}>
+          <label for="allow_kind_rsvp">{{$._.T "allow_kind_rsvp"}}</label>
+        </span>
+      </div>
+      <div class="actions margin flex-row justify-end gap">
+        <button type="submit" class="affirmative" title="{{$._.T "update"}}">{{$._.T "update"}}</button>
+      </div>
     </form>
   </div>
 </div>

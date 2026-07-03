@@ -1,5 +1,7 @@
 package setting
 
 type Topics struct {
-	AllowUserEdits bool `json:"allow_user_edits"`
+	AllowKindQuestion bool `json:"allow_kind_question"`
+	AllowKindPoll     bool `json:"allow_kind_poll"`
+	AllowKindRSVP     bool `json:"allow_kind_rsvp"`
 }
