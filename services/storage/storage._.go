@@ -15,7 +15,7 @@ type IStorage interface {
 	Shutdown() error
 	StoreFile(src io.ReadSeeker, dest string) error
 	StoreFileName(src string, dest string) error
-	GetFileDownloadURL(dest string) (string, error)
+	GetFileDownloadURL(dest string) (string, bool, error)
 }
 
 type Storage struct {
@@ -92,9 +92,9 @@ func (str *Storage) StoreFileName(
 func (str *Storage) GetFileDownloadURL(
 	providerID string,
 	dest string,
-) (dlurl string, err error) {
+) (dlurl string, abs bool, err error) {
 	if _, ok := str.providers[providerID]; !ok {
-		return dlurl, errs.ErrStorageIDNotFound
+		return dlurl, false, errs.ErrStorageIDNotFound
 	}
 
 	return str.providers[providerID].GetFileDownloadURL(dest)

@@ -113,19 +113,23 @@ func (st *S3) StoreFile(src io.ReadSeeker, dest string) (err error) {
 	return err
 }
 
-func (st *S3) GetFileDownloadURL(dest string) (dlurl string, err error) {
+func (st *S3) GetFileDownloadURL(dest string) (
+	dlurl string,
+	abs bool,
+	err error,
+) {
 	if dest == "" {
-		return dlurl, errs.ErrFilePathInvalid
+		return dlurl, false, errs.ErrFilePathInvalid
 	}
 
 	if st.cfg.S3.PublicDownload {
-		return fmt.Sprintf("%s/%s", st.cfg.S3.PublicURL, dest), nil
+		return fmt.Sprintf("%s/%s", st.cfg.S3.PublicURL, dest), true, nil
 	}
 
 	if st.cfg.S3.PresignedDownload {
 		var bucket, objKey string
 		if bucket, objKey, _, err = st.getBucketObjectFile(dest); err != nil {
-			return dlurl, err
+			return dlurl, false, err
 		}
 
 		dlurl = st.client.GeneratePresignedURL(simples3.PresignedInput{
@@ -135,11 +139,11 @@ func (st *S3) GetFileDownloadURL(dest string) (dlurl string, err error) {
 			ExpirySeconds: 60, // TODO: Make configurable
 		})
 
-		return dlurl, nil
+		return dlurl, true, nil
 	}
 
 	// TODO: If neither public nor presigned downloads are possible, download the
 	// file temporarily into Redis and provide a temporary download URL that lets
 	// the client get it through a special Route. Set a TTL in Redis.
-	return dlurl, errs.ErrNotImplemented
+	return dlurl, false, errs.ErrNotImplemented
 }

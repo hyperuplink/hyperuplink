@@ -294,8 +294,43 @@ func (srv *Web) loadRoutes() (err error) {
 	}
 	srv.app.Get("/static*", stic)
 
+	if err = srv.loadStorageRoutes(); err != nil {
+		return err
+	}
+
 	if srv.r, err = root.New(srv.rt, srv.app); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (srv *Web) loadStorageRoutes() (err error) {
+	storages, err := srv.rt.Config.Storages()
+	if err != nil {
+		return err
+	}
+	for _, storageCfg := range storages {
+		if strings.ToLower(storageCfg.Type) != "local" {
+			continue
+		}
+		if storageCfg.Local.Path == "" || storageCfg.Local.PublicURI == "" {
+			continue
+		}
+		if route.CollidesWithRoute(storageCfg.Local.PublicURI) {
+			return fmt.Errorf(
+				"local storage %q PublicURI %q collides with a route",
+				storageCfg.ID,
+				storageCfg.Local.PublicURI,
+			)
+		}
+		srv.app.Get(storageCfg.Local.PublicURI+"*", static.New(
+			storageCfg.Local.Path,
+			static.Config{
+				Browse:        false,
+				CacheDuration: 10 * time.Second, // TODO: Make configurable
+			},
+		))
 	}
 
 	return nil

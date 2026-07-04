@@ -89,10 +89,14 @@ func (st *Local) StoreFile(src io.ReadSeeker, dest string) (err error) {
 	return err
 }
 
-func (st *Local) GetFileDownloadURL(dest string) (dlurl string, err error) {
+func (st *Local) GetFileDownloadURL(dest string) (
+	dlurl string,
+	abs bool,
+	err error,
+) {
 	if dest == "" {
-		return dlurl, errs.ErrFilePathInvalid
+		return dlurl, false, errs.ErrFilePathInvalid
 	}
 
-	return fmt.Sprintf("%s/%s", st.cfg.Local.PublicURI, dest), nil
+	return fmt.Sprintf("%s/%s", st.cfg.Local.PublicURI, dest), false, nil
 }

@@ -119,6 +119,7 @@ func (s *Site) CSS(name string) string {
 
 func (s *Site) ProfilePicture(id string) (dlurl string) {
 	var err error
+	var abs bool
 	var staticPicture string = s.StaticFile("images/avatar.jpg")
 
 	if id == "" {
@@ -139,11 +140,15 @@ func (s *Site) ProfilePicture(id string) (dlurl string) {
 		return staticPicture
 	}
 
-	if dlurl, err = s.r.GetRuntime().Storage.GetFileDownloadURL(
+	if dlurl, abs, err = s.r.GetRuntime().Storage.GetFileDownloadURL(
 		profiles.PictureStorageProviderID,
 		profiles.PictureStoragePath+"/"+id+"."+profiles.PictureFormat,
 	); err != nil {
 		return staticPicture
+	}
+
+	if abs == false {
+		dlurl = s.HrefTo(strings.TrimPrefix(dlurl, "/"))
 	}
 
 	return dlurl

@@ -51,3 +51,9 @@ S3.SecretKey = "minioadmin"
 S3.PublicURL = "http://localhost:9000"
 S3.PublicDownload = true
 S3.PresignedDownload = false
+
+[[Storage]]
+ID = "local-storage"
+Type = "Local"
+Local.Path = "/tmp/www"
+Local.PublicURI = "/media"
