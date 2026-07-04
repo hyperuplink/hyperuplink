@@ -167,3 +167,36 @@ func For(id string) (r Route) {
 
 	return r
 }
+
+func CollidesWithRoute(path string) bool {
+	seg := strings.TrimPrefix(path, "/")
+	if idx := strings.Index(seg, "/"); idx > -1 {
+		seg = seg[:idx]
+	}
+	seg = strings.ToLower(seg)
+	if seg == "" {
+		return true
+	}
+
+	for _, r := range Routes {
+		if r.Len() < 2 {
+			continue
+		}
+
+		top := strings.ToLower(r.hierarchy[1])
+		cidx := strings.Index(top, ":")
+		if cidx == -1 {
+			if seg == top {
+				return true
+			}
+			continue
+		}
+
+		prefix := top[:cidx]
+		if prefix == "" || strings.HasPrefix(seg, prefix) {
+			return true
+		}
+	}
+
+	return false
+}
