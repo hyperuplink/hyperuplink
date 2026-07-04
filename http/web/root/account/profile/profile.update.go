@@ -1,10 +1,13 @@
 package profile
 
 import (
+	"errors"
+	"io"
 	"mime/multipart"
 	"os"
 	"reflect"
 
+	"github.com/gabriel-vasile/mimetype"
 	"github.com/gofiber/fiber/v3"
 	"github.com/lithammer/shortuuid/v4"
 	"github.com/mrusme/hyperuplink/http/route"
@@ -58,9 +61,37 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		profiles := settingProfiles.JSONValue
 
 		if profiles.EnablePicture {
+			if frm.ProfilePicture.Size > profiles.GetPictureMaxSize() {
+				req.Flash.SetError(errors.New("picture_too_large"))
+				return req.RedirectToRoute(myRoute)
+			}
+
 			profilePictureMultipartFile, err := frm.ProfilePicture.Open()
 			if ret, rerr := req.RespondOnError(err); ret == true {
 				return rerr
+			}
+
+			mtype, err := mimetype.DetectReader(profilePictureMultipartFile)
+			if ret, rerr := req.RespondOnError(err); ret == true {
+				profilePictureMultipartFile.Close()
+				return rerr
+			}
+			if _, err = profilePictureMultipartFile.Seek(0, io.SeekStart); err != nil {
+				profilePictureMultipartFile.Close()
+				return req.RespondError(err)
+			}
+
+			allowed := false
+			for _, format := range profiles.PictureUploadFormats {
+				if mtype.Is(format) {
+					allowed = true
+					break
+				}
+			}
+			if !allowed {
+				profilePictureMultipartFile.Close()
+				req.Flash.SetError(errors.New("picture_format_not_allowed"))
+				return req.RedirectToRoute(myRoute)
 			}
 
 			profilePictureFile, profilePictureFileName, err := r.Runtime.Magick.ConvertProfilePicture(

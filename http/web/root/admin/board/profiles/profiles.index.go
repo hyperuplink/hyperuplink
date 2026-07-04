@@ -42,6 +42,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 
 	req.SetData("setting_profiles", &settingProfiles.JSONValue)
 	req.SetData("storage_ids", storageIDs)
+	req.SetData("upload_format_options", setting.PictureUploadFormatOptions)
 
 	return req.Respond()
 }

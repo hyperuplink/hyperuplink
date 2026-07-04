@@ -13,10 +13,12 @@ import (
 )
 
 type ProfilesUpdateForm struct {
-	EnablePicture            bool   `form:"enable_picture"`
-	PictureFormat            string `form:"picture_format" validate:"required,oneof=webp png jpg"`
-	PictureStorageProviderID string `form:"picture_storage_provider_id" validate:"required_if=EnablePicture true,max=64"`
-	PictureStoragePath       string `form:"picture_storage_path" validate:"omitempty,max=255"`
+	EnablePicture            bool     `form:"enable_picture"`
+	PictureUploadFormats     []string `form:"upload_formats" validate:"required_if=EnablePicture true,dive,oneof=image/gif image/jpeg image/png image/webp"`
+	PictureFormat            string   `form:"picture_format" validate:"required,oneof=webp png jpg"`
+	PictureMaxSize           int64    `form:"picture_max_size" validate:"required,min=1"`
+	PictureStorageProviderID string   `form:"picture_storage_provider_id" validate:"required_if=EnablePicture true,max=64"`
+	PictureStoragePath       string   `form:"picture_storage_path" validate:"omitempty,max=255"`
 }
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
@@ -66,7 +68,9 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 	}
 
 	settingProfiles.JSONValue.EnablePicture = frm.EnablePicture
+	settingProfiles.JSONValue.PictureUploadFormats = frm.PictureUploadFormats
 	settingProfiles.JSONValue.PictureFormat = frm.PictureFormat
+	settingProfiles.JSONValue.PictureMaxSize = frm.PictureMaxSize
 	settingProfiles.JSONValue.PictureStorageProviderID = frm.PictureStorageProviderID
 	settingProfiles.JSONValue.PictureStoragePath = frm.PictureStoragePath
 

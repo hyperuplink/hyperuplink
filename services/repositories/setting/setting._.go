@@ -56,7 +56,9 @@ func (repo *Repository) Startup() (err error) {
 		settingProfiles.ID = "profiles"
 		settingProfiles.JSONValue = setting.Profiles{
 			EnablePicture:            false,
+			PictureUploadFormats:     setting.PictureUploadFormatOptions,
 			PictureFormat:            "webp",
+			PictureMaxSize:           setting.DEFAULT_PICTURE_MAX_SIZE,
 			PictureStorageProviderID: "",
 			PictureStoragePath:       "profile-pictures",
 		}
