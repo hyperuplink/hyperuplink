@@ -6,6 +6,7 @@ import (
 
 	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/services/config"
+	"github.com/mrusme/hyperuplink/services/storage/local"
 	"github.com/mrusme/hyperuplink/services/storage/s3"
 )
 
@@ -32,6 +33,10 @@ func New(cfg config.Storages) (str *Storage, err error) {
 		switch strings.ToLower(cfg.Type) {
 		case "s3":
 			if str.providers[cfg.ID], err = s3.New(cfg); err != nil {
+				return nil, err
+			}
+		case "local":
+			if str.providers[cfg.ID], err = local.New(cfg); err != nil {
 				return nil, err
 			}
 		default:
