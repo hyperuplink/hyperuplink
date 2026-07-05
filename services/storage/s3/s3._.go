@@ -147,3 +147,19 @@ func (st *S3) GetFileDownloadURL(dest string) (
 	// the client get it through a special Route. Set a TTL in Redis.
 	return dlurl, false, errs.ErrNotImplemented
 }
+
+func (st *S3) DeleteFile(dest string) (err error) {
+	if dest == "" {
+		return errs.ErrFilePathInvalid
+	}
+
+	var bucket, objKey string
+	if bucket, objKey, _, err = st.getBucketObjectFile(dest); err != nil {
+		return err
+	}
+
+	return st.client.FileDelete(simples3.DeleteInput{
+		Bucket:    bucket,
+		ObjectKey: objKey,
+	})
+}

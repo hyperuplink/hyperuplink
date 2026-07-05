@@ -5,8 +5,12 @@
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
     {{ $settingSystem := .Data.Get "setting_system" }}
+    {{ $settingTheme := .Data.Get "setting_theme" }}
     {{ $themes := .Data.Get "themes" }}
     {{ $colorschemes := .Data.Get "colorschemes" }}
+    {{ $storage_ids := .Data.Get "storage_ids" }}
+    {{ $banner := $.Site.CustomBanner }}
+    {{ $favicon := $.Site.CustomFavicon }}
     <form method="post"
           action="{{$.Site.GetFormAction "update"}}"
           class="">
@@ -34,10 +38,85 @@
             <div class="dropdown-button"></div>
           </div>
         </div>
+        <div class="field flex-column grow">
+          <label for="theme_storage_provider_id">{{$._.T "theme_storage_provider_id"}}:</label>
+          <div class="dropdown">
+            <select id="theme_storage_provider_id" name="theme_storage_provider_id" size="1">
+              <option value="">{{$._.T "none"}}</option>
+              {{ range $id := $storage_ids }}
+              <option value="{{$id}}" {{ if eq $settingTheme.ThemeStorageProviderID $id }}selected{{ end }}>{{$id}}</option>
+              {{ end }}
+            </select>
+            <div class="dropdown-button"></div>
+          </div>
+        </div>
+        <div class="field flex-column grow">
+          <label for="theme_storage_path">{{$._.T "theme_storage_path"}}:</label>
+          <input type="text" id="theme_storage_path" name="theme_storage_path" class="input"
+                 value="{{$settingTheme.ThemeStoragePath}}" maxlength="255">
+        </div>
       </div>
       <div class="actions margin flex-row justify-end gap">
         <button type="submit" class="affirmative" title="{{$._.T "update"}}">{{$._.T "update"}}</button>
       </div>
     </form>
+    <div class="field flex-column grow margin">
+      <label>{{$._.T "custom_banner"}}:</label>
+      {{ if $banner }}
+      <img class="picture lowered" src="{{$banner}}" alt="{{$._.T "custom_banner"}}">
+      <form method="post"
+            action="{{$.Site.GetFormAction "banner/remove"}}"
+            class="">
+        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+        <div class="actions flex-row justify-end gap">
+          <button type="submit" class="danger" title="{{$._.T "remove_banner"}}">{{$._.T "remove_banner"}}</button>
+        </div>
+      </form>
+      {{ else if $settingTheme.ThemeStorageProviderID }}
+      <form method="post"
+            action="{{$.Site.GetFormAction "banner"}}"
+            enctype="multipart/form-data"
+            class="">
+        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+        <div class="fieldrow flex-row flex-wrap gap">
+          <input type="file" id="custom_banner" name="custom_banner" class="input grow" accept="image/*">
+        </div>
+        <div class="actions flex-row justify-end gap">
+          <button type="submit" class="affirmative" title="{{$._.T "upload_banner"}}">{{$._.T "upload_banner"}}</button>
+        </div>
+      </form>
+      {{ else }}
+      <small>{{$._.T "custom_banner_storage_hint"}}</small>
+      {{ end }}
+    </div>
+    <div class="field flex-column grow margin">
+      <label>{{$._.T "custom_favicon"}}:</label>
+      {{ if $favicon }}
+      <img class="picture lowered" src="{{$favicon}}" alt="{{$._.T "custom_favicon"}}">
+      <form method="post"
+            action="{{$.Site.GetFormAction "favicon/remove"}}"
+            class="">
+        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+        <div class="actions flex-row justify-end gap">
+          <button type="submit" class="danger" title="{{$._.T "remove_favicon"}}">{{$._.T "remove_favicon"}}</button>
+        </div>
+      </form>
+      {{ else if $settingTheme.ThemeStorageProviderID }}
+      <form method="post"
+            action="{{$.Site.GetFormAction "favicon"}}"
+            enctype="multipart/form-data"
+            class="">
+        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+        <div class="fieldrow flex-row flex-wrap gap">
+          <input type="file" id="custom_favicon" name="custom_favicon" class="input grow" accept="image/*">
+        </div>
+        <div class="actions flex-row justify-end gap">
+          <button type="submit" class="affirmative" title="{{$._.T "upload_favicon"}}">{{$._.T "upload_favicon"}}</button>
+        </div>
+      </form>
+      {{ else }}
+      <small>{{$._.T "custom_favicon_storage_hint"}}</small>
+      {{ end }}
+    </div>
   </div>
 </div>

@@ -24,6 +24,10 @@ func New(
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
 		base.Get("", r.Index).Name("index")
 		base.Post("/update", r.Update).Name("update")
+		base.Post("/banner", r.BannerUpload).Name("banner")
+		base.Post("/banner/remove", r.BannerRemove).Name("banner.remove")
+		base.Post("/favicon", r.FaviconUpload).Name("favicon")
+		base.Post("/favicon/remove", r.FaviconRemove).Name("favicon.remove")
 	}, r.Path+".")
 
 	return r, nil

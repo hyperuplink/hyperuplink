@@ -129,6 +129,43 @@ func (repo *Repository) Startup() (err error) {
 		}
 	}
 
+	var settingTheme *setting.Setting[setting.Theme]
+
+	if settingTheme, err = GetByID[setting.Theme](repo, "theme"); err != nil {
+		settingTheme = new(setting.Setting[setting.Theme])
+		settingTheme.ID = "theme"
+		settingTheme.JSONValue = setting.Theme{
+			ThemeStorageProviderID: "",
+			ThemeStoragePath:       "theme",
+			CustomBanner:           "",
+			CustomFavicon:          "",
+		}
+		if _, err = Create(repo, settingTheme); err != nil {
+			return err
+		}
+	} else if settingTheme.JSONValue.ThemeStorageProviderID != "" {
+		var storages config.Storages
+		if storages, err = repo.cfg.Storages(); err != nil {
+			return err
+		}
+
+		exists := false
+		for _, storage := range storages {
+			if storage.ID == settingTheme.JSONValue.ThemeStorageProviderID {
+				exists = true
+				break
+			}
+		}
+
+		if !exists {
+			settingTheme.JSONValue.ThemeStorageProviderID = ""
+			settingTheme.JSONValue.CustomBanner = ""
+			if err = Update(repo, settingTheme); err != nil {
+				return err
+			}
+		}
+	}
+
 	return nil
 }
 

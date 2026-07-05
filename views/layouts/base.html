@@ -3,12 +3,24 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{ $favicon := .Site.CustomFavicon }}
+    <link rel="icon" href="{{ if $favicon }}{{ $favicon }}{{ else }}{{ .Site.StaticFile "images/favicon.gif" }}{{ end }}">
     <link rel="stylesheet" href="{{.Site.StaticFile "css/reset.css"}}" />
     <link rel="stylesheet" href="{{.Site.StaticFile (printf "themes/%s/theme.css" .System.GetTheme)}}" />
     <link rel="stylesheet" href="{{.Site.StaticFile "css/layout.css"}}" />
     <link rel="stylesheet" href="{{.Site.StaticFile (printf "colorschemes/%s/colorscheme.css" .System.GetColorscheme)}}" />
     <link rel="stylesheet" href="{{.Site.StaticFile "css/hyperuplink.css"}}" />
     <title>{{.Site.TitleFull .System.Name}}</title>
+    <meta property="og:site_name" content="{{.System.Name}}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{.Site.TitleFull .System.Name}}">
+    <meta property="og:url" content="{{.Site.CanonicalURL .System.BaseURL}}">
+    <meta property="og:image" content="{{.Site.OGImageURL .System.BaseURL}}">
+    <meta property="og:image:alt" content="{{.System.Name}}">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{.Site.TitleFull .System.Name}}">
+    <meta name="twitter:image" content="{{.Site.OGImageURL .System.BaseURL}}">
   </head>
   <body class="flex-column use-preferred-font">
     <div class="desktop grow">

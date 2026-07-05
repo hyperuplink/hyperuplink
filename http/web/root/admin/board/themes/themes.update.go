@@ -15,8 +15,10 @@ import (
 )
 
 type ThemesUpdateForm struct {
-	Theme       string `form:"theme" validate:"required"`
-	Colorscheme string `form:"colorscheme" validate:"required"`
+	Theme                  string `form:"theme" validate:"required"`
+	Colorscheme            string `form:"colorscheme" validate:"required"`
+	ThemeStorageProviderID string `form:"theme_storage_provider_id" validate:"omitempty,max=64"`
+	ThemeStoragePath       string `form:"theme_storage_path" validate:"omitempty,max=255"`
 }
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
@@ -57,6 +59,23 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return req.RedirectToRoute(myRoute)
 	}
 
+	storages, err := r.Runtime.Config.Storages()
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	valid := frm.ThemeStorageProviderID == ""
+	for _, storage := range storages {
+		if storage.ID == frm.ThemeStorageProviderID {
+			valid = true
+			break
+		}
+	}
+	if !valid {
+		req.Flash.SetError(errors.New("invalid_storage_provider"))
+		return req.RedirectToRoute(myRoute)
+	}
+
 	var settingSystem *setting.Setting[setting.System]
 	settingSystem, err = settingRepo.GetByID[setting.System](
 		r.Runtime.Repositories.Setting,
@@ -72,6 +91,26 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 	err = settingRepo.Update[setting.System](
 		r.Runtime.Repositories.Setting,
 		settingSystem,
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	var settingTheme *setting.Setting[setting.Theme]
+	settingTheme, err = settingRepo.GetByID[setting.Theme](
+		r.Runtime.Repositories.Setting,
+		"theme",
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	settingTheme.JSONValue.ThemeStorageProviderID = frm.ThemeStorageProviderID
+	settingTheme.JSONValue.ThemeStoragePath = frm.ThemeStoragePath
+
+	err = settingRepo.Update[setting.Theme](
+		r.Runtime.Repositories.Setting,
+		settingTheme,
 	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr

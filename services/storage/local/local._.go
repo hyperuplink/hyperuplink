@@ -100,3 +100,16 @@ func (st *Local) GetFileDownloadURL(dest string) (
 
 	return fmt.Sprintf("%s/%s", st.cfg.Local.PublicURI, dest), false, nil
 }
+
+func (st *Local) DeleteFile(dest string) (err error) {
+	if dest == "" {
+		return errs.ErrFilePathInvalid
+	}
+
+	var fullPath string
+	if fullPath, err = st.resolvePath(dest); err != nil {
+		return err
+	}
+
+	return os.Remove(fullPath)
+}

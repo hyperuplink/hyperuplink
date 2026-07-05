@@ -31,6 +31,15 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	var settingTheme *setting.Setting[setting.Theme]
+	settingTheme, err = settingRepo.GetByID[setting.Theme](
+		r.Runtime.Repositories.Setting,
+		"theme",
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
 	themes, err := helpers.GetThemes(r.Runtime)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
@@ -41,9 +50,21 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	storages, err := r.Runtime.Config.Storages()
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	var storageIDs []string
+	for _, storage := range storages {
+		storageIDs = append(storageIDs, storage.ID)
+	}
+
 	req.SetData("setting_system", &settingSystem.JSONValue)
+	req.SetData("setting_theme", &settingTheme.JSONValue)
 	req.SetData("themes", themes)
 	req.SetData("colorschemes", colorschemes)
+	req.SetData("storage_ids", storageIDs)
 
 	return req.Respond()
 }
