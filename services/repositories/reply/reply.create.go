@@ -13,6 +13,7 @@ func (repo *Repository) Create(model *reply.Reply) (rowID uuid.UUID, err error) 
 		,author_id
 		,text
 		,html
+		,attachment_ids
 		,created_at
 		,updated_at
 	) VALUES (
@@ -22,6 +23,7 @@ func (repo *Repository) Create(model *reply.Reply) (rowID uuid.UUID, err error) 
 		,$4
 		,$5
 		,$6
+		,$7
 		,NOW()
 		,NOW()
 		) RETURNING id`,
@@ -31,6 +33,7 @@ func (repo *Repository) Create(model *reply.Reply) (rowID uuid.UUID, err error) 
 		model.AuthorID,
 		model.Text,
 		model.HTML,
+		model.AttachmentIDs,
 	).Scan(&rowID)
 	return rowID, repo.db.ConvertError(err)
 }

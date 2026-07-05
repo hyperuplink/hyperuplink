@@ -52,4 +52,8 @@
   {{ end }}
   <label for="text">{{ $_.T "text"}}:</label>
   <textarea name="text" cols="72" rows="12" wrap="soft" placeholder="{{ $_.T "editor_placeholder" }}">{{$text}}</textarea>
+  <div class="field flex-column">
+    <label for="attachments">{{ $_.T "attachments"}}:</label>
+    <input type="file" id="attachments" name="attachments" multiple>
+  </div>
 </div>

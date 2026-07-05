@@ -6,6 +6,7 @@ CREATE TABLE replies (
   author_id UUID NOT NULL,
   text TEXT NOT NULL,
   html TEXT NOT NULL,
+  attachment_ids UUID [] DEFAULT NULL,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   moderated_at TIMESTAMP DEFAULT NULL,
@@ -26,3 +27,7 @@ CREATE INDEX idx_replies_short_id ON replies (short_id);
 CREATE INDEX idx_replies_topics_id ON replies (topic_id);
 CREATE INDEX idx_replies_replies_id ON replies (reply_id);
 CREATE INDEX idx_replies_users_id ON replies (author_id);
+
+CREATE TRIGGER trg_replies_attachment_ids
+  BEFORE INSERT OR UPDATE OF attachment_ids ON replies
+  FOR EACH ROW EXECUTE FUNCTION check_attachment_ids();

@@ -11,6 +11,7 @@ CREATE TABLE topics (
   text TEXT NOT NULL,
   html TEXT NOT NULL,
   poll_options VARCHAR(78) [],
+  attachment_ids UUID [] DEFAULT NULL,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   ended_at TIMESTAMP DEFAULT NULL,
@@ -33,3 +34,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_topics_slug ON topics (
 CREATE INDEX idx_topics_short_id ON topics (short_id);
 CREATE INDEX idx_topics_forums_id ON topics (forum_id);
 CREATE INDEX idx_topics_users_id ON topics (author_id);
+
+CREATE TRIGGER trg_topics_attachment_ids
+  BEFORE INSERT OR UPDATE OF attachment_ids ON topics
+  FOR EACH ROW EXECUTE FUNCTION check_attachment_ids();

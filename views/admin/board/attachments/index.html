@@ -58,6 +58,14 @@
                  placeholder="/usr/bin/clamscan %ATTACHMENT%">
           <small>{{$._.T "on_upload_hook_hint"}}</small>
         </div>
+        <div class="field flex-column">
+          <span class="checkbox-row">
+            <input type="checkbox" id="inline_image_display" name="inline_image_display" value="1"
+                   {{ if $settingAttachments.InlineImageDisplay }}checked{{ end }}>
+            <label for="inline_image_display">{{$._.T "inline_image_display"}}</label>
+          </span>
+          <small>{{$._.T "inline_image_display_hint"}}</small>
+        </div>
       </div>
       <div class="actions margin flex-row justify-end gap">
         <button type="submit" class="affirmative" title="{{$._.T "update"}}">{{$._.T "update"}}</button>

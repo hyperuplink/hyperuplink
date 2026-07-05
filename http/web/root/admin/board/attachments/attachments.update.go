@@ -14,12 +14,13 @@ import (
 )
 
 type AttachmentsUpdateForm struct {
-	EnableAttachments bool     `form:"enable_attachments"`
-	UploadFormats     []string `form:"upload_formats" validate:"required_if=EnableAttachments true"`
-	MaxSize           int64    `form:"max_size" validate:"required,min=1"`
-	StorageProviderID string   `form:"storage_provider_id" validate:"required_if=EnableAttachments true,max=64"`
-	StoragePath       string   `form:"storage_path" validate:"omitempty,max=255"`
-	OnUploadHook      string   `form:"on_upload_hook" validate:"omitempty,max=1024"`
+	EnableAttachments  bool     `form:"enable_attachments"`
+	UploadFormats      []string `form:"upload_formats" validate:"required_if=EnableAttachments true"`
+	MaxSize            int64    `form:"max_size" validate:"required,min=1"`
+	StorageProviderID  string   `form:"storage_provider_id" validate:"required_if=EnableAttachments true,max=64"`
+	StoragePath        string   `form:"storage_path" validate:"omitempty,max=255"`
+	OnUploadHook       string   `form:"on_upload_hook" validate:"omitempty,max=1024"`
+	InlineImageDisplay bool     `form:"inline_image_display"`
 }
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
@@ -81,6 +82,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 	settingAttachments.JSONValue.StorageProviderID = frm.StorageProviderID
 	settingAttachments.JSONValue.StoragePath = frm.StoragePath
 	settingAttachments.JSONValue.OnUploadHook = frm.OnUploadHook
+	settingAttachments.JSONValue.InlineImageDisplay = frm.InlineImageDisplay
 
 	err = settingRepo.Update[setting.Attachments](
 		r.Runtime.Repositories.Setting,

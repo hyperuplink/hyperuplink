@@ -13,11 +13,18 @@ func (s *Session) GetCurrentUserUsername() string {
 	return ""
 }
 
+func (s *Session) GetCurrentUserID() string {
+	if s.currentUser != nil {
+		return s.currentUser.ID.String()
+	}
+	return ""
+}
+
 func (s *Session) GetCurrentUserRole() user.Role {
 	if s.currentUser != nil {
 		return s.currentUser.Role
 	}
-	return "guest"
+	return user.GuestRole
 }
 
 func (s *Session) CurrentUserHasGuestRole() bool {
@@ -28,14 +35,21 @@ func (s *Session) CurrentUserHasGuestRole() bool {
 }
 
 func (s *Session) CurrentUserHasUserRole() bool {
-	if s.currentUser != nil && s.currentUser.Role == "user" {
+	if s.currentUser != nil && s.currentUser.Role == user.UserRole {
+		return true
+	}
+	return false
+}
+
+func (s *Session) CurrentUserHasModRole() bool {
+	if s.currentUser != nil && s.currentUser.Role == user.ModRole {
 		return true
 	}
 	return false
 }
 
 func (s *Session) CurrentUserHasAdminRole() bool {
-	if s.currentUser != nil && s.currentUser.Role == "admin" {
+	if s.currentUser != nil && s.currentUser.Role == user.AdminRole {
 		return true
 	}
 	return false

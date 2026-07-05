@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/lithammer/shortuuid/v4"
 	"github.com/mrusme/hyperuplink/http/route"
+	"github.com/mrusme/hyperuplink/http/web/helpers"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/topic"
 	"github.com/mrusme/hyperuplink/models/user"
@@ -58,6 +59,13 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		return rerr
 	}
 	// top.PollOptions =
+
+	top.AttachmentIDs, err = helpers.ProcessAttachments(r.Runtime, c, top.AuthorID)
+	if err != nil {
+		req.Flash.SetError(err)
+		return req.RedirectToRoute(myRoute)
+	}
+
 	_, err = r.Runtime.Repositories.Topic.Create(top)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr

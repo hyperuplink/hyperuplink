@@ -3,6 +3,7 @@ package repositories
 import (
 	"github.com/mrusme/hyperuplink/services/config"
 	"github.com/mrusme/hyperuplink/services/database"
+	"github.com/mrusme/hyperuplink/services/repositories/attachment"
 	"github.com/mrusme/hyperuplink/services/repositories/category"
 	"github.com/mrusme/hyperuplink/services/repositories/forum"
 	"github.com/mrusme/hyperuplink/services/repositories/permission"
@@ -24,6 +25,7 @@ type Repositories struct {
 	Forum      *forum.Repository
 	Topic      *topic.Repository
 	Reply      *reply.Repository
+	Attachment *attachment.Repository
 	Permission *permission.Repository
 	PostEvent  *postevent.Repository
 	Search     *search.Repository
@@ -78,6 +80,12 @@ func New(
 	}
 	repos.Reply = replyRepo
 
+	var attachmentRepo *attachment.Repository
+	if attachmentRepo, err = attachment.New(repos.db); err != nil {
+		return nil, err
+	}
+	repos.Attachment = attachmentRepo
+
 	var permissionRepo *permission.Repository
 	if permissionRepo, err = permission.New(repos.db); err != nil {
 		return nil, err
@@ -128,6 +136,10 @@ func (repos *Repositories) Startup() (err error) {
 		return err
 	}
 
+	if err = repos.Attachment.Startup(); err != nil {
+		return err
+	}
+
 	if err = repos.Permission.Startup(); err != nil {
 		return err
 	}
@@ -153,6 +165,10 @@ func (repos *Repositories) Shutdown() (err error) {
 	}
 
 	if err = repos.Permission.Shutdown(); err != nil {
+		return err
+	}
+
+	if err = repos.Attachment.Shutdown(); err != nil {
 		return err
 	}
 

@@ -16,6 +16,8 @@ type Reply struct {
 	Text string `json:"text"`
 	HTML string `json:"html"`
 
+	AttachmentIDs []uuid.UUID `json:"attachment_ids"`
+
 	CreatedAt   pgtype.Timestamp `json:"created_at"`
 	UpdatedAt   pgtype.Timestamp `json:"updated_at"`
 	ModeratedAt pgtype.Timestamp `json:"moderated_at"`

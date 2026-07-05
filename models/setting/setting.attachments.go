@@ -30,12 +30,13 @@ var AttachmentUploadFormatOptions = []string{
 }
 
 type Attachments struct {
-	EnableAttachments bool     `json:"enable_attachments"`
-	UploadFormats     []string `json:"upload_formats"` // Options: image/gif, image/jpeg, image/png, image/webp, application/json, application/pdf, application/zip, audio/mpeg, audio/vorbis, video/mp4, text/plain, text/csv, text/html
-	MaxSize           int64    `json:"max_size"`       // in byte
-	StorageProviderID string   `json:"storage_provider_id"`
-	StoragePath       string   `json:"storage_path"`
-	OnUploadHook      string   `json:"on_upload_hook"`
+	EnableAttachments  bool     `json:"enable_attachments"`
+	UploadFormats      []string `json:"upload_formats"` // Options: image/gif, image/jpeg, image/png, image/webp, application/json, application/pdf, application/zip, audio/mpeg, audio/vorbis, video/mp4, text/plain, text/csv, text/html
+	MaxSize            int64    `json:"max_size"`       // in byte
+	StorageProviderID  string   `json:"storage_provider_id"`
+	StoragePath        string   `json:"storage_path"`
+	OnUploadHook       string   `json:"on_upload_hook"`
+	InlineImageDisplay bool     `json:"inline_image_display"` // a.k.a. "Image Board" mode
 }
 
 func (a *Attachments) GetMaxSize() (size int64) {
@@ -46,10 +47,10 @@ func (a *Attachments) GetMaxSize() (size int64) {
 	return a.MaxSize
 }
 
-func (a *Attachments) RunOnUploadHook(attachmentPath string) (err error) {
+func (a *Attachments) RunOnUploadHook(attachmentPath string) (output string, err error) {
 	hook := strings.TrimSpace(a.OnUploadHook)
 	if hook == "" {
-		return nil
+		return "", nil
 	}
 
 	fields := strings.Fields(hook)
@@ -58,5 +59,6 @@ func (a *Attachments) RunOnUploadHook(attachmentPath string) (err error) {
 	}
 
 	cmd := exec.Command(fields[0], fields[1:]...)
-	return cmd.Run()
+	out, err := cmd.CombinedOutput()
+	return string(out), err
 }

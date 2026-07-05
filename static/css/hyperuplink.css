@@ -253,6 +253,26 @@ a.button {
   min-height: 186px;
 }
 
+.post > .content > .attachments {
+  display: block;
+  margin: 4px var(--margin);
+}
+
+.post > .content > .attachments > .attachment {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.post > .content > .attachments > .attachment > a > .attachment-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.post > .content > .attachments > .attachment > .attachment-row {
+  align-items: center;
+}
+
 .post > .content > .signature {
   margin: 4px var(--margin);
   color: var(--border-brightness-08);

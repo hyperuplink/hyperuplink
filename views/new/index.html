@@ -19,7 +19,7 @@
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
     <div id="newpost" class="newpost">
-      <form method="post" action="{{$.Site.GetFormAction}}" class="">
+      <form method="post" action="{{$.Site.GetFormAction}}" enctype="multipart/form-data" class="">
         <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
         {{ if $forum }}
         <input type="hidden" name="forum_id" value="{{$forum.ID}}">

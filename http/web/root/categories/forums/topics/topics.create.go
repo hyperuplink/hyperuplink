@@ -78,6 +78,19 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
+
+	rep.AttachmentIDs, err = helpers.ProcessAttachments(r.Runtime, c, rep.AuthorID)
+	if err != nil {
+		req.Flash.SetError(err)
+		return req.RedirectToRoute(myRoute.Fill(
+			map[string]string{
+				"categories": c.Params("categories"),
+				"forums":     c.Params("forums"),
+				"topics":     c.Params("topics"),
+			},
+		))
+	}
+
 	_, err = r.Runtime.Repositories.Reply.Create(rep)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr

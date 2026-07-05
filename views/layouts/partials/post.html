@@ -20,6 +20,38 @@
   </fieldset>
   <div class="content flex-column">
     <div class="text markdown">{{ safeHTML $post.HTML }}</div>
+    {{ $attachments := $site.Attachments $post.AttachmentIDs }}
+    {{ if $attachments }}
+    {{ $currentUserID := $session.GetCurrentUserID }}
+    {{ $canModerate := (or $session.CurrentUserHasModRole $session.CurrentUserHasAdminRole) }}
+    <div class="attachments">
+      {{ range $attachment := $attachments }}
+      <div class="attachment">
+        {{ if $attachment.Inline }}
+        <a href="{{$attachment.URL}}" title="{{$attachment.Filename}}">
+          <img class="attachment-image" src="{{$attachment.URL}}" alt="{{$attachment.Filename}}">
+        </a>
+        {{ end }}
+        <div class="attachment-row flex-row space-between gap">
+          {{ if $attachment.Inline }}
+          <span class="attachment-filename">{{$attachment.Filename}}</span>
+          {{ else }}
+          <a href="{{$attachment.URL}}" title="{{$attachment.Filename}}">{{$attachment.Filename}}</a>
+          {{ end }}
+          <div class="attachment-actions flex-row gap justify-end">
+            {{ if and (ne $currentUserID "") (eq $currentUserID $attachment.AuthorID) }}
+            <a class="button danger" href="" title="{{$_.T "delete"}}">{{$_.T "delete"}}</a>
+            {{ end }}
+            {{ if $canModerate }}
+            <a class="button" href="" title="{{$_.T "moderate_verb"}}">{{$_.T "moderate_verb"}}</a>
+            <a class="button" href="" title="{{$_.T "spam_verb"}}">{{$_.T "spam_verb"}}</a>
+            {{ end }}
+          </div>
+        </div>
+      </div>
+      {{ end }}
+    </div>
+    {{ end }}
     {{ if not (eq $post.AuthorSignatureHTML "") }}
     <div class="signature markdown">{{ safeHTML $post.AuthorSignatureHTML }}</div>
     {{ end }}
