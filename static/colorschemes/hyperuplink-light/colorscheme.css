@@ -1,13 +1,4 @@
 :root {
-  --font-regular: "ChiKareGo2";
-  --font-size-regular: 16px;
-
-  --font-monospace: "ChiKareGo2";
-  --font-size-monospace: 16px;
-
-  --font-text: "Gohu";
-  --font-size-text: 14px;
-
   --desktop-bg: url("../../images/background-light.gif") top left repeat;
 
   --window-bg: var(--surface-12);

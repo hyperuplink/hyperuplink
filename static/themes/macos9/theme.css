@@ -7,6 +7,17 @@
  * for easier styling and implementation of a dark theme. The modifications were
  * made as part of Hyperuplink and are licensed under the project's license.
  */
+:root {
+  --font-regular: "ChiKareGo2";
+  --font-size-regular: 16px;
+
+  --font-monospace: "ChiKareGo2";
+  --font-size-monospace: 16px;
+
+  --font-text: "Gohu";
+  --font-size-text: 14px;
+}
+
 body {
   background-color: var(--primary-0);
   color: var(--window-fg);
