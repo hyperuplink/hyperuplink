@@ -1,0 +1,168 @@
+:root {
+  --desktop-bg: url("../../images/background-light.gif") top left repeat;
+  --workspace-bg: var(--surface-15);
+
+  --button-dark: var(--surface-06);
+  --button-light: var(--surface-15);
+  --border: var(--border-brightness-00);
+  --window-frame: var(--surface-11);
+  --window-frame-active: var(--window-frame);
+  --menu-bg: var(--surface-15);
+  --menu-fg: var(--surface-00);
+  --scrollbar-bg: var(--window-bg);
+
+  --window-bg: var(--surface-12);
+  --window-fg: var(--surface-00);
+  --lightest: var(--surface-15);
+  --lighter: var(--surface-14);
+  --light: var(--surface-13);
+  --medium: var(--window-bg);
+  --dark: var(--surface-05);
+  --darker: var(--surface-04);
+  --darkest: var(--surface-00);
+  --button-bg: var(--window-bg);
+  --button-fg: var(--window-fg);
+  --input-bg: var(--surface-15);
+  --input-fg: var(--surface-00);
+  --title-bar-bg: var(--dark);
+  --title-bar-fg: var(--medium);
+  --title-bar-active-bg: var(--surface-04);
+  --title-bar-active-fg: var(--surface-00);
+  --selection-bg: var(--primary-5);
+  --selection-fg: var(--surface-00);
+  --selection-inverse: var(--highlight);
+
+  --field-bg: var(--surface-15);
+  --field-fg: var(--surface-00);
+  --disabled: var(--surface-09);
+  --disabled-fg: var(--border-brightness-10-1);
+
+  --surface-15: #f9f5d7;
+  --surface-14: #fbf1c7;
+  --surface-13: #ebdbb2;
+  --surface-12: #d5c4a1;
+  --surface-11: #bdae93;
+  --surface-10: #a89984;
+  --surface-09: #928374;
+  --surface-08: #87796c;
+  --surface-07: #7c6f64;
+  --surface-06: #665c54;
+  --surface-05: #504945;
+  --surface-04: #3c3836;
+  --surface-03: #272727;
+  --surface-02: #171717;
+  --surface-01: #0c0c0c;
+  --surface-00: #000000;
+
+  --border-brightness-15: #f9f5d7;
+  --border-brightness-14: #fbf1c7;
+  --border-brightness-13: #ebdbb2;
+  --border-brightness-12: #d5c4a1;
+  --border-brightness-11: #bdae93;
+  --border-brightness-10-1: #b3a48c;
+  --border-brightness-10: #a89984;
+  --border-brightness-09: #928374;
+  --border-brightness-08: #87796c;
+  --border-brightness-07: #7c6f64;
+  --border-brightness-06: #665c54;
+  --border-brightness-05: #504945;
+  --border-brightness-04: #3c3836;
+  --border-brightness-03: #272727;
+  --border-brightness-02: #171717;
+  --border-brightness-01: #0c0c0c;
+  --border-brightness-00: #000000;
+
+  --primary-6: #fad1b6;
+  --primary-5: #f49456;
+  --primary-4: #d65d0e;
+  --primary-3: #c34c09;
+  --primary-2: #af3a03;
+  --primary-1: #4b1901;
+  --primary-0: #000000;
+
+  --affirmative: #689d6a;
+  --highlight: #d79921;
+  --danger: #fb4934;
+  --warn: #b57614;
+  --info: #afeeee;
+  --debug: #b0c4de;
+
+  --text-quote: #427b58;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --desktop-bg: url("../../images/background-dark.gif") top left repeat;
+    --workspace-bg: var(--surface-15);
+
+    --button-dark: var(--surface-15);
+    --button-light: var(--surface-06);
+    --border: var(--border-brightness-00);
+    --window-frame: var(--surface-11);
+    --window-frame-active: var(--window-frame);
+    --menu-bg: var(--surface-15);
+    --menu-fg: var(--surface-00);
+    --scrollbar-bg: var(--window-bg);
+
+    --window-bg: var(--surface-12);
+    --window-fg: var(--surface-00);
+    --lightest: var(--surface-04);
+    --lighter: var(--surface-05);
+    --light: var(--surface-06);
+    --medium: var(--window-bg);
+    --dark: var(--surface-13);
+    --darker: var(--surface-14);
+    --darkest: var(--surface-15);
+    --button-bg: var(--window-bg);
+    --button-fg: var(--window-fg);
+    --input-bg: var(--surface-15);
+    --input-fg: var(--surface-00);
+    --title-bar-bg: var(--dark);
+    --title-bar-fg: var(--medium);
+    --title-bar-active-bg: var(--surface-04);
+    --title-bar-active-fg: var(--surface-00);
+    --selection-bg: var(--primary-5);
+    --selection-fg: var(--surface-00);
+    --selection-inverse: var(--highlight);
+
+    --field-bg: var(--surface-15);
+    --field-fg: var(--surface-00);
+    --disabled: var(--surface-09);
+    --disabled-fg: var(--border-brightness-10-1);
+
+    --surface-00: #f9f5d7;
+    --surface-01: #faf3cf;
+    --surface-02: #fbf1c7;
+    --surface-03: #ebdbb2;
+    --surface-04: #d5c4a1;
+    --surface-05: #bdae93;
+    --surface-06: #a89984;
+    --surface-07: #928374;
+    --surface-08: #87796c;
+    --surface-09: #7c6f64;
+    --surface-10: #665c54;
+    --surface-11: #504945;
+    --surface-12: #3c3836;
+    --surface-13: #272727;
+    --surface-14: #171717;
+    --surface-15: #000000;
+
+    --border-brightness-15: #f9f5d7;
+    --border-brightness-14: #fbf1c7;
+    --border-brightness-13: #ebdbb2;
+    --border-brightness-12: #d5c4a1;
+    --border-brightness-11: #bdae93;
+    --border-brightness-10-1: #b3a48c;
+    --border-brightness-10: #a89984;
+    --border-brightness-09: #928374;
+    --border-brightness-08: #87796c;
+    --border-brightness-07: #7c6f64;
+    --border-brightness-06: #665c54;
+    --border-brightness-05: #504945;
+    --border-brightness-04: #3c3836;
+    --border-brightness-03: #272727;
+    --border-brightness-02: #171717;
+    --border-brightness-01: #0c0c0c;
+    --border-brightness-00: #000000;
+  }
+}
