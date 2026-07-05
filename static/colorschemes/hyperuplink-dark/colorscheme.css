@@ -2,8 +2,8 @@
   --desktop-bg: url("../../images/background-dark.gif") top left repeat;
   --workspace-bg: var(--surface-15);
 
-  --button-dark: var(--surface-06);
-  --button-light: var(--surface-15);
+  --button-dark: var(--surface-15);
+  --button-light: var(--surface-06);
   --border: var(--border-brightness-00);
   --window-frame: var(--surface-11);
   --window-frame-active: var(--window-frame);
@@ -13,13 +13,13 @@
 
   --window-bg: var(--surface-12);
   --window-fg: var(--surface-00);
-  --lightest: var(--surface-09);
-  --lighter: var(--surface-10);
-  --light: var(--surface-11);
+  --lightest: var(--surface-04);
+  --lighter: var(--surface-05);
+  --light: var(--surface-06);
   --medium: var(--window-bg);
   --dark: var(--surface-13);
   --darker: var(--surface-14);
-  --darkest: var(--surface-00);
+  --darkest: var(--surface-15);
   --button-bg: var(--window-bg);
   --button-fg: var(--window-fg);
   --input-bg: var(--surface-15);
