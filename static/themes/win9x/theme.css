@@ -1,26 +1,5 @@
 :root {
   --preferred-font: "Microsoft Sans Serif";
-  --desktop-bg: #008080;
-  --window-bg: #c0c0c0;
-  --window-fg: #000000;
-  --lightest: #ffffff;
-  --lighter: #e0e0e0;
-  --light: #dfdfdf;
-  --medium: var(--window-bg);
-  --dark: #808080;
-  --darker: #404040;
-  --darkest: #000000;
-  --button-bg: var(--window-bg);
-  --button-fg: var(--window-fg);
-  --input-bg: #ffffff;
-  --input-fg: #000000;
-  --title-bar-bg: var(--dark);
-  --title-bar-fg: var(--medium);
-  --title-bar-active-bg: #000080;
-  --title-bar-active-fg: #ffffff;
-  --selection-bg: #000080;
-  --selection-fg: #ffffff;
-  --selection-inverse: #ffff7f;
 }
 
 body {

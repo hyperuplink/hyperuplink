@@ -9,7 +9,28 @@
   --font-size-text: 14px;
 
   --desktop-bg: url("../../images/background-dark.gif") top left repeat;
+
+  --window-bg: var(--surface-12);
   --window-fg: #ffffff;
+  --lightest: var(--surface-09);
+  --lighter: var(--surface-10);
+  --light: var(--surface-11);
+  --medium: var(--window-bg);
+  --dark: var(--surface-13);
+  --darker: var(--surface-14);
+  --darkest: #000000;
+  --button-bg: var(--window-bg);
+  --button-fg: var(--window-fg);
+  --input-bg: #ffffff;
+  --input-fg: #000000;
+  --title-bar-bg: var(--dark);
+  --title-bar-fg: var(--medium);
+  --title-bar-active-bg: var(--surface-14);
+  --title-bar-active-fg: #ffffff;
+  --selection-bg: var(--surface-04);
+  --selection-fg: #ffffff;
+  --selection-inverse: var(--highlight);
+
   --field-bg: #000;
   --field-fg: #fff;
   --disabled-fg: #97c3d2;
