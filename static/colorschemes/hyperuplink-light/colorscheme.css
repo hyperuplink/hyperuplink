@@ -1,30 +1,41 @@
 :root {
   --desktop-bg: url("../../images/background-light.gif") top left repeat;
+  --workspace-bg: var(--surface-15);
+
+  --button-dark: var(--surface-06);
+  --button-light: var(--surface-15);
+  --border: var(--border-brightness-00);
+  --window-frame: var(--surface-11);
+  --window-frame-active: var(--window-frame);
+  --menu-bg: var(--surface-15);
+  --menu-fg: var(--surface-00);
+  --scrollbar-bg: var(--window-bg);
 
   --window-bg: var(--surface-12);
-  --window-fg: #000000;
+  --window-fg: var(--surface-00);
   --lightest: var(--surface-15);
   --lighter: var(--surface-14);
   --light: var(--surface-13);
   --medium: var(--window-bg);
   --dark: var(--surface-05);
   --darker: var(--surface-04);
-  --darkest: #000000;
+  --darkest: var(--surface-00);
   --button-bg: var(--window-bg);
   --button-fg: var(--window-fg);
-  --input-bg: #ffffff;
-  --input-fg: #000000;
+  --input-bg: var(--surface-15);
+  --input-fg: var(--surface-00);
   --title-bar-bg: var(--dark);
   --title-bar-fg: var(--medium);
   --title-bar-active-bg: var(--surface-04);
-  --title-bar-active-fg: #ffffff;
-  --selection-bg: var(--surface-04);
-  --selection-fg: #ffffff;
+  --title-bar-active-fg: var(--surface-00);
+  --selection-bg: var(--primary-5);
+  --selection-fg: var(--surface-00);
   --selection-inverse: var(--highlight);
 
-  --field-bg: #fff;
-  --field-fg: #000;
-  --disabled-fg: #97c3d2;
+  --field-bg: var(--surface-15);
+  --field-fg: var(--surface-00);
+  --disabled: var(--surface-09);
+  --disabled-fg: var(--border-brightness-10-1);
 
   --surface-15: #ffffff;
   --surface-14: #f0f5f8;
@@ -37,6 +48,7 @@
   --surface-06: #2c687c;
   --surface-05: #245767;
   --surface-04: #1d4552;
+  --surface-00: #000000;
 
   --border-brightness-15: #ffffff;
   --border-brightness-14: #f0f5f8;
@@ -62,9 +74,6 @@
   --primary-2: #80204d;
   --primary-1: #33001a;
   --primary-0: #000000;
-
-  --selection-bg: var(--primary-5);
-  --selection-fg: #000;
 
   --affirmative: #8fbc8f;
   --highlight: #efc71d;

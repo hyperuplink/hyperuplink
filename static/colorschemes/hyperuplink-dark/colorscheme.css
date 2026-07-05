@@ -1,30 +1,41 @@
 :root {
   --desktop-bg: url("../../images/background-dark.gif") top left repeat;
+  --workspace-bg: var(--surface-15);
+
+  --button-dark: var(--surface-06);
+  --button-light: var(--surface-15);
+  --border: var(--border-brightness-00);
+  --window-frame: var(--surface-11);
+  --window-frame-active: var(--window-frame);
+  --menu-bg: var(--surface-15);
+  --menu-fg: var(--surface-00);
+  --scrollbar-bg: var(--window-bg);
 
   --window-bg: var(--surface-12);
-  --window-fg: #ffffff;
+  --window-fg: var(--surface-00);
   --lightest: var(--surface-09);
   --lighter: var(--surface-10);
   --light: var(--surface-11);
   --medium: var(--window-bg);
   --dark: var(--surface-13);
   --darker: var(--surface-14);
-  --darkest: #000000;
+  --darkest: var(--surface-00);
   --button-bg: var(--window-bg);
   --button-fg: var(--window-fg);
-  --input-bg: #ffffff;
-  --input-fg: #000000;
+  --input-bg: var(--surface-15);
+  --input-fg: var(--surface-00);
   --title-bar-bg: var(--dark);
   --title-bar-fg: var(--medium);
-  --title-bar-active-bg: var(--surface-14);
-  --title-bar-active-fg: #ffffff;
-  --selection-bg: var(--surface-04);
-  --selection-fg: #ffffff;
+  --title-bar-active-bg: var(--surface-04);
+  --title-bar-active-fg: var(--surface-00);
+  --selection-bg: var(--primary-5);
+  --selection-fg: var(--surface-00);
   --selection-inverse: var(--highlight);
 
-  --field-bg: #000;
-  --field-fg: #fff;
-  --disabled-fg: #97c3d2;
+  --field-bg: var(--surface-15);
+  --field-fg: var(--surface-00);
+  --disabled: var(--surface-09);
+  --disabled-fg: var(--border-brightness-10-1);
 
   --surface-15: #040707;
   --surface-14: #0c1416;
@@ -37,6 +48,7 @@
   --surface-06: #46707f;
   --surface-05: #4e7d8e;
   --surface-04: #568a9d;
+  --surface-00: #ffffff;
 
   --border-brightness-15: #9ebeca;
   --border-brightness-14: #8fb4c2;
@@ -62,9 +74,6 @@
   --primary-2: #e680a6;
   --primary-1: #f2bfd1;
   --primary-0: #f9e6ef;
-
-  --selection-bg: var(--primary-5);
-  --selection-fg: #000;
 
   --affirmative: #2e8b57;
   --highlight: #efc71d;
