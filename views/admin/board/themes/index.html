@@ -4,7 +4,6 @@
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
-    {{ $settingSystem := .Data.Get "setting_system" }}
     {{ $settingTheme := .Data.Get "setting_theme" }}
     {{ $themes := .Data.Get "themes" }}
     {{ $colorschemes := .Data.Get "colorschemes" }}
@@ -21,7 +20,7 @@
           <div class="dropdown">
             <select id="theme" name="theme" size="1">
               {{ range $t := $themes }}
-              <option value="{{$t}}" {{ if eq $settingSystem.GetTheme $t }}selected{{ end }}>{{$t}}</option>
+              <option value="{{$t}}" {{ if eq $settingTheme.GetTheme $t }}selected{{ end }}>{{$t}}</option>
               {{ end }}
             </select>
             <div class="dropdown-button"></div>
@@ -32,7 +31,7 @@
           <div class="dropdown">
             <select id="colorscheme" name="colorscheme" size="1">
               {{ range $c := $colorschemes }}
-              <option value="{{$c}}" {{ if eq $settingSystem.GetColorscheme $c }}selected{{ end }}>{{$c}}</option>
+              <option value="{{$c}}" {{ if eq $settingTheme.GetColorscheme $c }}selected{{ end }}>{{$c}}</option>
               {{ end }}
             </select>
             <div class="dropdown-button"></div>

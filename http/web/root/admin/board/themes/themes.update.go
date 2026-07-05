@@ -76,26 +76,6 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	var settingSystem *setting.Setting[setting.System]
-	settingSystem, err = settingRepo.GetByID[setting.System](
-		r.Runtime.Repositories.Setting,
-		"system",
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	settingSystem.JSONValue.Theme = frm.Theme
-	settingSystem.JSONValue.Colorscheme = frm.Colorscheme
-
-	err = settingRepo.Update[setting.System](
-		r.Runtime.Repositories.Setting,
-		settingSystem,
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
 	var settingTheme *setting.Setting[setting.Theme]
 	settingTheme, err = settingRepo.GetByID[setting.Theme](
 		r.Runtime.Repositories.Setting,
@@ -105,6 +85,8 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	settingTheme.JSONValue.Theme = frm.Theme
+	settingTheme.JSONValue.Colorscheme = frm.Colorscheme
 	settingTheme.JSONValue.ThemeStorageProviderID = frm.ThemeStorageProviderID
 	settingTheme.JSONValue.ThemeStoragePath = frm.ThemeStoragePath
 

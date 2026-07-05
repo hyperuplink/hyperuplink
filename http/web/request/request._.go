@@ -38,6 +38,7 @@ type Request struct {
 	In      *in.Internationalization
 	Data    *data.Data
 	System  *setting.System
+	Theme   *setting.Theme
 	absPath string
 	relRoot string
 }
@@ -76,6 +77,15 @@ func New(
 		req.r.GetRuntime().Error("error", err)
 	}
 	req.System = &settingSystem.JSONValue
+
+	settingTheme, err := settingRepo.GetByID[setting.Theme](
+		req.r.GetRuntime().Repositories.Setting,
+		"theme",
+	)
+	if err != nil {
+		req.r.GetRuntime().Error("error", err)
+	}
+	req.Theme = &settingTheme.JSONValue
 
 	_, req.absPath, req.relRoot = helpers.GetPaths(req.c)
 
@@ -223,6 +233,7 @@ func (req *Request) RespondWithView(layouts []string, view string) error {
 		"Form":        req.Form,
 		"Data":        req.Data,
 		"System":      req.System,
+		"Theme":       req.Theme,
 	}, layoutsFull...)
 }
 

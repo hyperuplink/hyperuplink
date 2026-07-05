@@ -6,9 +6,9 @@
     {{ $favicon := .Site.CustomFavicon }}
     <link rel="icon" href="{{ if $favicon }}{{ $favicon }}{{ else }}{{ .Site.StaticFile "images/favicon.gif" }}{{ end }}">
     <link rel="stylesheet" href="{{.Site.StaticFile "css/reset.css"}}" />
-    <link rel="stylesheet" href="{{.Site.StaticFile (printf "themes/%s/theme.css" .System.GetTheme)}}" />
+    <link rel="stylesheet" href="{{.Site.StaticFile (printf "themes/%s/theme.css" .Theme.GetTheme)}}" />
     <link rel="stylesheet" href="{{.Site.StaticFile "css/layout.css"}}" />
-    <link rel="stylesheet" href="{{.Site.StaticFile (printf "colorschemes/%s/colorscheme.css" .System.GetColorscheme)}}" />
+    <link rel="stylesheet" href="{{.Site.StaticFile (printf "colorschemes/%s/colorscheme.css" .Theme.GetColorscheme)}}" />
     <link rel="stylesheet" href="{{.Site.StaticFile "css/hyperuplink.css"}}" />
     <title>{{.Site.TitleFull .System.Name}}</title>
     <meta property="og:site_name" content="{{.System.Name}}">

@@ -26,10 +26,8 @@ func (repo *Repository) Startup() (err error) {
 		settingSystem = new(setting.Setting[setting.System])
 		settingSystem.ID = "system"
 		settingSystem.JSONValue = setting.System{
-			Name:        "Hyperuplink",
-			BaseURL:     "http://localhost:3000",
-			Theme:       setting.DEFAULT_THEME,
-			Colorscheme: setting.DEFAULT_COLORSCHEME,
+			Name:    "Hyperuplink",
+			BaseURL: "http://localhost:3000",
 		}
 		if _, err = Create(repo, settingSystem); err != nil {
 			return err
@@ -135,6 +133,8 @@ func (repo *Repository) Startup() (err error) {
 		settingTheme = new(setting.Setting[setting.Theme])
 		settingTheme.ID = "theme"
 		settingTheme.JSONValue = setting.Theme{
+			Theme:                  setting.DEFAULT_THEME,
+			Colorscheme:            setting.DEFAULT_COLORSCHEME,
 			ThemeStorageProviderID: "",
 			ThemeStoragePath:       "theme",
 			CustomBanner:           "",

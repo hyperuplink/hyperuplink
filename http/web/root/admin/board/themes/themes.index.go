@@ -22,15 +22,6 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var settingSystem *setting.Setting[setting.System]
-	settingSystem, err = settingRepo.GetByID[setting.System](
-		r.Runtime.Repositories.Setting,
-		"system",
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
 	var settingTheme *setting.Setting[setting.Theme]
 	settingTheme, err = settingRepo.GetByID[setting.Theme](
 		r.Runtime.Repositories.Setting,
@@ -60,7 +51,6 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		storageIDs = append(storageIDs, storage.ID)
 	}
 
-	req.SetData("setting_system", &settingSystem.JSONValue)
 	req.SetData("setting_theme", &settingTheme.JSONValue)
 	req.SetData("themes", themes)
 	req.SetData("colorschemes", colorschemes)
