@@ -1,0 +1,67 @@
+<div class="margin window active">
+  <div class="title-bar">
+    <div class="title-bar-text">{{$.Site.Title}}</div>
+  </div>
+  <div class="window-body {{$.Site.GetRoute.AsID}}">
+    {{ template "views/layouts/partials/flash" . }}
+    {{ $settingAttachments := .Data.Get "setting_attachments" }}
+    {{ $storage_ids := .Data.Get "storage_ids" }}
+    {{ $upload_format_options := .Data.Get "upload_format_options" }}
+    <form method="post"
+          action="{{$.Site.GetFormAction "update"}}"
+          class="">
+      <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+      <div class="margin flex-column gap">
+        <span class="checkbox-row">
+          <input type="checkbox" id="enable_attachments" name="enable_attachments" value="1"
+                 {{ if $settingAttachments.EnableAttachments }}checked{{ end }}>
+          <label for="enable_attachments">{{$._.T "enable_attachments"}}</label>
+        </span>
+        <div class="field flex-column">
+          <label>{{$._.T "attachment_upload_formats"}}:</label>
+          <div class="fieldrow flex-row flex-wrap gap">
+            {{ range $format := $upload_format_options }}
+            <span class="checkbox-row">
+              <input type="checkbox" id="upload_format_{{$format}}" name="upload_formats" value="{{$format}}"
+                     {{ if has $format $settingAttachments.UploadFormats }}checked{{ end }}>
+              <label for="upload_format_{{$format}}">{{$format}}</label>
+            </span>
+            {{ end }}
+          </div>
+        </div>
+        <div class="field flex-column grow">
+          <label for="storage_provider_id">{{$._.T "attachment_storage_provider_id"}}:</label>
+          <div class="dropdown">
+            <select id="storage_provider_id" name="storage_provider_id" size="1">
+              <option value="">{{$._.T "none"}}</option>
+              {{ range $id := $storage_ids }}
+              <option value="{{$id}}" {{ if eq $settingAttachments.StorageProviderID $id }}selected{{ end }}>{{$id}}</option>
+              {{ end }}
+            </select>
+            <div class="dropdown-button"></div>
+          </div>
+        </div>
+        <div class="field flex-column grow">
+          <label for="storage_path">{{$._.T "attachment_storage_path"}}:</label>
+          <input type="text" id="storage_path" name="storage_path" class="input"
+                 value="{{$settingAttachments.StoragePath}}" maxlength="255">
+        </div>
+        <div class="field flex-column grow">
+          <label for="max_size">{{$._.T "attachment_max_size"}}:</label>
+          <input type="number" id="max_size" name="max_size" class="input"
+                 value="{{$settingAttachments.GetMaxSize}}" min="1">
+        </div>
+        <div class="field flex-column grow">
+          <label for="on_upload_hook">{{$._.T "on_upload_hook"}}:</label>
+          <input type="text" id="on_upload_hook" name="on_upload_hook" class="input"
+                 value="{{$settingAttachments.OnUploadHook}}" maxlength="1024"
+                 placeholder="/usr/bin/clamscan %ATTACHMENT%">
+          <small>{{$._.T "on_upload_hook_hint"}}</small>
+        </div>
+      </div>
+      <div class="actions margin flex-row justify-end gap">
+        <button type="submit" class="affirmative" title="{{$._.T "update"}}">{{$._.T "update"}}</button>
+      </div>
+    </form>
+  </div>
+</div>

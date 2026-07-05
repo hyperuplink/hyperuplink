@@ -90,6 +90,45 @@ func (repo *Repository) Startup() (err error) {
 		}
 	}
 
+	var settingAttachments *setting.Setting[setting.Attachments]
+
+	if settingAttachments, err = GetByID[setting.Attachments](repo, "attachments"); err != nil {
+		settingAttachments = new(setting.Setting[setting.Attachments])
+		settingAttachments.ID = "attachments"
+		settingAttachments.JSONValue = setting.Attachments{
+			EnableAttachments: false,
+			UploadFormats:     setting.AttachmentUploadFormatOptions,
+			MaxSize:           setting.DEFAULT_ATTACHMENT_MAX_SIZE,
+			StorageProviderID: "",
+			StoragePath:       "attachments",
+			OnUploadHook:      "",
+		}
+		if _, err = Create(repo, settingAttachments); err != nil {
+			return err
+		}
+	} else if settingAttachments.JSONValue.StorageProviderID != "" {
+		var storages config.Storages
+		if storages, err = repo.cfg.Storages(); err != nil {
+			return err
+		}
+
+		exists := false
+		for _, storage := range storages {
+			if storage.ID == settingAttachments.JSONValue.StorageProviderID {
+				exists = true
+				break
+			}
+		}
+
+		if !exists {
+			settingAttachments.JSONValue.EnableAttachments = false
+			settingAttachments.JSONValue.StorageProviderID = ""
+			if err = Update(repo, settingAttachments); err != nil {
+				return err
+			}
+		}
+	}
+
 	return nil
 }
 
