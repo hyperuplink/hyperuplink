@@ -11,6 +11,3 @@
 .DS_Store
 /dummy.sql
 
-# TODO: Remove
-/static/css/theme2.css
-/static/css/theme3.css
