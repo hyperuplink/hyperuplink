@@ -533,25 +533,25 @@ legend {
 }
 
 ::-webkit-scrollbar-button:vertical:decrement {
-  background-image: url(../icons/arrow-up.svg);
+  background-image: url(icons/arrow-up.svg);
   background-position: 3px 5px;
   background-repeat: no-repeat;
 }
 
 ::-webkit-scrollbar-button:vertical:increment {
-  background-image: url(../icons/arrow-down.svg);
+  background-image: url(icons/arrow-down.svg);
   background-position: 3px 5px;
   background-repeat: no-repeat;
 }
 
 ::-webkit-scrollbar-button:horizontal:decrement {
-  background-image: url(../icons/arrow-left.svg);
+  background-image: url(icons/arrow-left.svg);
   background-position: 4px 3px;
   background-repeat: no-repeat;
 }
 
 ::-webkit-scrollbar-button:horizontal:increment {
-  background-image: url(../icons/arrow-right.svg);
+  background-image: url(icons/arrow-right.svg);
   background-position: 4px 3px;
   background-repeat: no-repeat;
 }
@@ -917,9 +917,9 @@ select[size]:not([size="1"]):focus > option:checked {
   display: block;
   width: 7px;
   height: 10px;
-  -webkit-mask-image: url(../icons/dropdown.svg);
+  -webkit-mask-image: url(icons/dropdown.svg);
   -webkit-mask-repeat: no-repeat;
-  mask-image: url(../icons/dropdown.svg);
+  mask-image: url(icons/dropdown.svg);
   mask-repeat: no-repeat;
   background: currentColor;
 }
@@ -1581,10 +1581,10 @@ progress:not([value])::-webkit-progress-value {
   width: 9px;
   height: 8px;
   background: currentColor;
-  -webkit-mask-image: url(../icons/checkmark.svg);
+  -webkit-mask-image: url(icons/checkmark.svg);
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-size: 7px 7px;
-  mask-image: url(../icons/checkmark.svg);
+  mask-image: url(icons/checkmark.svg);
   mask-repeat: no-repeat;
   mask-size: 9px 8px;
 }
@@ -1597,11 +1597,11 @@ progress:not([value])::-webkit-progress-value {
   bottom: 0;
   width: 6px;
   background: currentColor;
-  -webkit-mask-image: url(../icons/menu-right.svg);
+  -webkit-mask-image: url(icons/menu-right.svg);
   -webkit-mask-size: 6px 11px;
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center center;
-  mask-image: url(../icons/menu-right.svg);
+  mask-image: url(icons/menu-right.svg);
   mask-size: 6px 11px;
   mask-repeat: no-repeat;
   mask-position: center center;
@@ -1668,7 +1668,7 @@ progress:not([value])::-webkit-progress-value {
 .tabs > menu > button::before {
   display: block;
   content: "";
-  background: url(../icons/tab.svg);
+  background: url(icons/tab.svg);
   background-position: top left;
   background-repeat: no-repeat;
   width: 14px;
@@ -1679,7 +1679,7 @@ progress:not([value])::-webkit-progress-value {
 .tabs > menu > button::after {
   display: block;
   content: "";
-  background: url(../icons/tab.svg);
+  background: url(icons/tab.svg);
   background-position: top right;
   background-repeat: no-repeat;
   width: 14px;
@@ -1697,7 +1697,7 @@ progress:not([value])::-webkit-progress-value {
 
 .tabs > menu > button:not([aria-selected="true"]):active::before,
 .tabs > menu > button:not([aria-selected="true"]):active::after {
-  background-image: url(../icons/tab-active.svg);
+  background-image: url(icons/tab-active.svg);
 }
 
 .tabs > menu > button[aria-selected="true"] {
@@ -1712,7 +1712,7 @@ progress:not([value])::-webkit-progress-value {
 }
 .tabs > menu > button[aria-selected="true"]::before,
 .tabs > menu > button[aria-selected="true"]::after {
-  background-image: url(../icons/tab-selected.svg);
+  background-image: url(icons/tab-selected.svg);
   height: 25px;
 }
 
@@ -1885,9 +1885,9 @@ progress:not([value])::-webkit-progress-value {
   content: "";
   display: block;
   background-color: var(--primary-4);
-  background-image: url(../icons/expandcollapse.svg);
-  -webkit-mask-image: url(../icons/expandcollapse-mask.svg);
-  mask-image: url(../icons/expandcollapse-mask.svg);
+  background-image: url(icons/expandcollapse.svg);
+  -webkit-mask-image: url(icons/expandcollapse-mask.svg);
+  mask-image: url(icons/expandcollapse-mask.svg);
   width: 12px;
   height: 12px;
   position: absolute;

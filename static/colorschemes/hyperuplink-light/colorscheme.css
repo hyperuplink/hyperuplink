@@ -8,7 +8,7 @@
   --font-text: "Gohu";
   --font-size-text: 14px;
 
-  --desktop-bg: url("../images/background-light.gif") top left repeat;
+  --desktop-bg: url("../../images/background-light.gif") top left repeat;
   --window-fg: #000000;
   --field-bg: #fff;
   --field-fg: #000;

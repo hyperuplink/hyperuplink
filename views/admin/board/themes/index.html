@@ -4,12 +4,40 @@
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
+    {{ $settingSystem := .Data.Get "setting_system" }}
+    {{ $themes := .Data.Get "themes" }}
+    {{ $colorschemes := .Data.Get "colorschemes" }}
     <form method="post"
           action="{{$.Site.GetFormAction "update"}}"
-          enctype="multipart/form-data"
           class="">
       <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-      <!-- TODO -->
+      <div class="margin flex-column gap">
+        <div class="field flex-column grow">
+          <label for="theme">{{$._.T "theme"}}:</label>
+          <div class="dropdown">
+            <select id="theme" name="theme" size="1">
+              {{ range $t := $themes }}
+              <option value="{{$t}}" {{ if eq $settingSystem.GetTheme $t }}selected{{ end }}>{{$t}}</option>
+              {{ end }}
+            </select>
+            <div class="dropdown-button"></div>
+          </div>
+        </div>
+        <div class="field flex-column grow">
+          <label for="colorscheme">{{$._.T "colorscheme"}}:</label>
+          <div class="dropdown">
+            <select id="colorscheme" name="colorscheme" size="1">
+              {{ range $c := $colorschemes }}
+              <option value="{{$c}}" {{ if eq $settingSystem.GetColorscheme $c }}selected{{ end }}>{{$c}}</option>
+              {{ end }}
+            </select>
+            <div class="dropdown-button"></div>
+          </div>
+        </div>
+      </div>
+      <div class="actions margin flex-row justify-end gap">
+        <button type="submit" class="affirmative" title="{{$._.T "update"}}">{{$._.T "update"}}</button>
+      </div>
     </form>
   </div>
 </div>
