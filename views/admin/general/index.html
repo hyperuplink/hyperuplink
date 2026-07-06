@@ -35,6 +35,20 @@
         </div>
       </div>
       {{ $general := .Data.Get "setting_general" }}
+      <div class="margin fieldrow flex-row flex-wrap gap">
+        <div class="field flex-column justify-end">
+          <span class="checkbox-row">
+            <input type="checkbox" id="enable_quit" name="enable_quit" value="1"
+                   {{ if $general.EnableQuit }}checked{{ end }}>
+            <label for="enable_quit">{{$._.T "enable_quit"}}</label>
+          </span>
+        </div>
+        <div class="field flex-column grow">
+          <label for="quit_url">{{$._.T "link"}}:</label>
+          <input type="url" id="quit_url" name="quit_url" class="input"
+                 value="{{$general.QuitURL}}" maxlength="255">
+        </div>
+      </div>
       {{ $tabs := list
         (dict "ID" "about" "TitleKey" "about" "Checked" true
               "EnableName" "enable_about" "EnableOn" $general.EnableAbout

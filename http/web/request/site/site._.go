@@ -2,6 +2,7 @@ package site
 
 import (
 	"fmt"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -92,6 +93,9 @@ func (s *Site) GetCSRFToken() string {
 }
 
 func (s *Site) HrefTo(path string) string {
+	if u, err := url.Parse(path); err == nil && u.IsAbs() {
+		return path
+	}
 	return fmt.Sprintf("%s%s", s.GetRelRoot(), path)
 }
 

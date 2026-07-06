@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mrusme/hyperuplink/http/route"
+	"github.com/mrusme/hyperuplink/models/setting"
 	"github.com/mrusme/hyperuplink/models/user"
 )
 
@@ -14,10 +15,7 @@ type Menu struct {
 	i18n                func(msg string) string
 	currentCategorySlug string
 	currentForumSlug    string
-	enableAbout         bool
-	enableContact       bool
-	enablePrivacyPolicy bool
-	enableTerms         bool
+	general             setting.General
 }
 
 type MenuItem struct {
@@ -46,11 +44,8 @@ func (m *Menu) SetI18n(fn func(msg string) string) {
 	m.i18n = fn
 }
 
-func (m *Menu) SetGeneral(about, contact, privacyPolicy, terms bool) {
-	m.enableAbout = about
-	m.enableContact = contact
-	m.enablePrivacyPolicy = privacyPolicy
-	m.enableTerms = terms
+func (m *Menu) SetGeneral(general setting.General) {
+	m.general = general
 	m.generate()
 }
 
@@ -125,14 +120,19 @@ func (m *Menu) FileMenu(forRole user.Role) []MenuItem {
 			Title: m.T("print"),
 			Href:  route.For("current").AsURL() + "?format=print", // TODO: Implement current route
 		},
-		{
-			IsSeparator: true,
-		},
-		{
-			Label: m.T("quit"),
-			Title: m.T("quit"),
-			Href:  "",
-		},
+	}
+
+	if m.general.EnableQuit {
+		subItems = append(subItems,
+			MenuItem{
+				IsSeparator: true,
+			},
+			MenuItem{
+				Label: m.T("quit"),
+				Title: m.T("quit"),
+				Href:  m.general.QuitURL,
+			},
+		)
 	}
 
 	return []MenuItem{
@@ -390,23 +390,23 @@ func (m *Menu) HelpMenu(forRole user.Role) []MenuItem {
 		},
 	}
 
-	if m.enableTerms || m.enablePrivacyPolicy || m.enableContact {
+	if m.general.EnableTerms || m.general.EnablePrivacyPolicy || m.general.EnableContact {
 		subItems = append(subItems, MenuItem{IsSeparator: true})
-		if m.enableTerms {
+		if m.general.EnableTerms {
 			subItems = append(subItems, MenuItem{
 				Label: m.T(route.For("DocsTerms").AsTitle()),
 				Title: m.T(route.For("DocsTerms").AsTitle()),
 				Href:  route.For("DocsTerms").AsURL(),
 			})
 		}
-		if m.enablePrivacyPolicy {
+		if m.general.EnablePrivacyPolicy {
 			subItems = append(subItems, MenuItem{
 				Label: m.T(route.For("DocsPrivacy").AsTitle()),
 				Title: m.T(route.For("DocsPrivacy").AsTitle()),
 				Href:  route.For("DocsPrivacy").AsURL(),
 			})
 		}
-		if m.enableContact {
+		if m.general.EnableContact {
 			subItems = append(subItems, MenuItem{
 				Label: m.T(route.For("DocsContact").AsTitle()),
 				Title: m.T(route.For("DocsContact").AsTitle()),
@@ -415,7 +415,7 @@ func (m *Menu) HelpMenu(forRole user.Role) []MenuItem {
 		}
 	}
 
-	if m.enableAbout {
+	if m.general.EnableAbout {
 		subItems = append(subItems, MenuItem{IsSeparator: true})
 		subItems = append(subItems, MenuItem{
 			Label: m.T(route.For("DocsAbout").AsTitle()),
@@ -435,21 +435,21 @@ func (m *Menu) HelpMenu(forRole user.Role) []MenuItem {
 func (m *Menu) FooterMenu(forRole user.Role) []MenuItem {
 	var items []MenuItem
 
-	if m.enableTerms {
+	if m.general.EnableTerms {
 		items = append(items, MenuItem{
 			Label: m.T(route.For("DocsTerms").AsTitle()),
 			Title: m.T(route.For("DocsTerms").AsTitle()),
 			Href:  route.For("DocsTerms").AsURL(),
 		})
 	}
-	if m.enablePrivacyPolicy {
+	if m.general.EnablePrivacyPolicy {
 		items = append(items, MenuItem{
 			Label: m.T(route.For("DocsPrivacy").AsTitle()),
 			Title: m.T(route.For("DocsPrivacy").AsTitle()),
 			Href:  route.For("DocsPrivacy").AsURL(),
 		})
 	}
-	if m.enableContact {
+	if m.general.EnableContact {
 		items = append(items, MenuItem{
 			Label: m.T(route.For("DocsContact").AsTitle()),
 			Title: m.T(route.For("DocsContact").AsTitle()),

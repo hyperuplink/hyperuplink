@@ -121,12 +121,7 @@ func New(
 	}
 
 	req.Menu.SetI18n(req.In.Ts)
-	req.Menu.SetGeneral(
-		settingGeneral.JSONValue.EnableAbout,
-		settingGeneral.JSONValue.EnableContact,
-		settingGeneral.JSONValue.EnablePrivacyPolicy,
-		settingGeneral.JSONValue.EnableTerms,
-	)
+	req.Menu.SetGeneral(settingGeneral.JSONValue)
 	req.Menu.SetRole(req.Session.GetCurrentUserRole())
 
 	if title == "" {

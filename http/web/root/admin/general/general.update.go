@@ -28,6 +28,9 @@ type GeneralUpdateForm struct {
 
 	EnableTerms bool   `form:"enable_terms"`
 	Terms       string `form:"terms" validate:"required_if=EnableTerms true"`
+
+	EnableQuit bool   `form:"enable_quit"`
+	QuitURL    string `form:"quit_url" validate:"required_if=EnableQuit true,omitempty,url,max=255"`
 }
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
@@ -89,6 +92,8 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 	settingGeneral.JSONValue.PrivacyPolicy = frm.PrivacyPolicy
 	settingGeneral.JSONValue.EnableTerms = frm.EnableTerms
 	settingGeneral.JSONValue.Terms = frm.Terms
+	settingGeneral.JSONValue.EnableQuit = frm.EnableQuit
+	settingGeneral.JSONValue.QuitURL = frm.QuitURL
 
 	err = settingRepo.Update[setting.General](
 		r.Runtime.Repositories.Setting,
