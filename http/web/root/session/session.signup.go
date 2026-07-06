@@ -106,13 +106,17 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 	r.Runtime.Error("sc", sc)
 
 	err = r.Runtime.Dispatch.SignupConfirmation(
-		"notifications", // TODO: Replace with System.EmailTarget
+		"notifications", // TODO: Replace with setting.CommsEmail
 		sc,
 	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
 
-	req.Flash.SetInfo(req.In.Ts("signup_success"))
+	if usr.Role == user.AdminRole {
+		req.Flash.SetInfo(req.In.Ts("signup_success_admin") + " " + usr.EmailConfirmationToken)
+	} else {
+		req.Flash.SetInfo(req.In.Ts("signup_success"))
+	}
 	return req.RedirectToRouteID("SessionConfirm")
 }

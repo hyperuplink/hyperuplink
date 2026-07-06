@@ -44,8 +44,16 @@ func (f *Flash) SetError(err error) {
 	f.flashes[string(ErrorFlash)] = err.Error()
 }
 
+func (f *Flash) SetWarn(warn string) {
+	f.flashes[string(WarnFlash)] = warn
+}
+
 func (f *Flash) SetInfo(info string) {
 	f.flashes[string(InfoFlash)] = info
+}
+
+func (f *Flash) SetDebug(dbg string) {
+	f.flashes[string(DebugFlash)] = dbg
 }
 
 func (f *Flash) All() (flashes map[string]string) {
