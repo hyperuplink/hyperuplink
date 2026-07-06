@@ -3,7 +3,6 @@
     <div class="title-bar-text">{{$.Site.Title}}</div>
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
-    {{ template "views/layouts/partials/flash" . }}
     {{ $settingCommsXMPP := .Data.Get "setting_comms_xmpp" }}
     {{ $xmppTargets := .Data.Get "xmpp_targets" }}
     {{ $selectedTarget := .Data.Get "selected_target" }}

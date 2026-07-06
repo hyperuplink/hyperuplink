@@ -7,7 +7,6 @@
     <div class="title-bar-text">{{$.Site.Title}}</div>
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
-    {{ template "views/layouts/partials/flash" . }}
     <!-- POST -->
     {{ if eq $.Site.GetPager.ActivePage 1 }}
     {{ template "views/layouts/partials/post" dict "Site" $.Site "Session" $.Session "_" $._ "post" $topic }}

@@ -77,7 +77,13 @@ func (f *Flash) errors() (errs []string) {
 
 func (f *Flash) Errors() (errs []string) {
 	errs = f.errors()
-	f.Clear()
+	for key := range f.flashes {
+		if key != string(DebugFlash) &&
+			key != string(InfoFlash) &&
+			key != string(WarnFlash) {
+			delete(f.flashes, key)
+		}
+	}
 	return errs
 }
 
@@ -93,19 +99,19 @@ func (f *Flash) Get(flashType FlashType) (s string) {
 
 func (f *Flash) Debug() (s string) {
 	s = f.Get(DebugFlash)
-	f.Clear()
+	delete(f.flashes, string(DebugFlash))
 	return s
 }
 
 func (f *Flash) Info() (s string) {
 	s = f.Get(InfoFlash)
-	f.Clear()
+	delete(f.flashes, string(InfoFlash))
 	return s
 }
 
 func (f *Flash) Warn() (s string) {
 	s = f.Get(WarnFlash)
-	f.Clear()
+	delete(f.flashes, string(WarnFlash))
 	return s
 }
 

@@ -8,7 +8,6 @@
 		<div class="title-bar-text">{{$.Site.Title}}</div>
 	</div>
 	<div class="window-body {{$.Site.GetRoute.AsID}}">
-		{{ template "views/layouts/partials/flash" . }}
 		<form method="post" action="{{$.Site.GetFormAction}}" class="search margin">
 			<input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
 			<div class="fieldrow flex-row gap">

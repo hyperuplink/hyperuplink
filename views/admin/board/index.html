@@ -3,7 +3,6 @@
     <div class="title-bar-text">{{$.Site.Title}}</div>
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
-    {{ template "views/layouts/partials/flash" . }}
     <div class="button-block margin">
       {{$menu := ($.Menu.AdminBoardMenu $.Session.GetCurrentUserRole)}}
       {{ template "views/layouts/partials/menu-overview" dict "Site" .Site "Menu" $menu }}

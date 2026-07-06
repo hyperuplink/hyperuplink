@@ -3,7 +3,6 @@
     <div class="title-bar-text">{{$.Site.Title}}</div>
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
-    {{ template "views/layouts/partials/flash" . }}
     {{ $users := .Data.Get "users"}}
     {{ range $users }}
     {{ $isSelf := eq .Username $.Session.GetCurrentUserUsername }}

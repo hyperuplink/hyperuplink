@@ -3,7 +3,6 @@
     <div class="title-bar-text">{{.Site.Title}}</div>
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
-    {{ template "views/layouts/partials/flash" . }}
     {{ $categories_forums := .Data.Get "categories_forums"}}
     {{ range $categories_idx, $item := $categories_forums }}
     {{$category := $item.Category}}
