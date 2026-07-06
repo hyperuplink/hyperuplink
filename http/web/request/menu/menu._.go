@@ -14,6 +14,10 @@ type Menu struct {
 	i18n                func(msg string) string
 	currentCategorySlug string
 	currentForumSlug    string
+	enableAbout         bool
+	enableContact       bool
+	enablePrivacyPolicy bool
+	enableTerms         bool
 }
 
 type MenuItem struct {
@@ -40,6 +44,14 @@ func (m *Menu) SetRole(role user.Role) {
 
 func (m *Menu) SetI18n(fn func(msg string) string) {
 	m.i18n = fn
+}
+
+func (m *Menu) SetGeneral(about, contact, privacyPolicy, terms bool) {
+	m.enableAbout = about
+	m.enableContact = contact
+	m.enablePrivacyPolicy = privacyPolicy
+	m.enableTerms = terms
+	m.generate()
 }
 
 func (m *Menu) SetCategoryForumSlugs(catSlug, forumSlug string) {
@@ -370,64 +382,82 @@ func (m *Menu) ViewMenu(forRole user.Role) []MenuItem {
 }
 
 func (m *Menu) HelpMenu(forRole user.Role) []MenuItem {
+	subItems := []MenuItem{
+		{
+			Label: m.T(route.For("DocsManual").AsTitle()),
+			Title: m.T(route.For("DocsManual").AsTitle()),
+			Href:  route.For("DocsManual").AsURL(),
+		},
+	}
+
+	if m.enableTerms || m.enablePrivacyPolicy || m.enableContact {
+		subItems = append(subItems, MenuItem{IsSeparator: true})
+		if m.enableTerms {
+			subItems = append(subItems, MenuItem{
+				Label: m.T(route.For("DocsTerms").AsTitle()),
+				Title: m.T(route.For("DocsTerms").AsTitle()),
+				Href:  route.For("DocsTerms").AsURL(),
+			})
+		}
+		if m.enablePrivacyPolicy {
+			subItems = append(subItems, MenuItem{
+				Label: m.T(route.For("DocsPrivacy").AsTitle()),
+				Title: m.T(route.For("DocsPrivacy").AsTitle()),
+				Href:  route.For("DocsPrivacy").AsURL(),
+			})
+		}
+		if m.enableContact {
+			subItems = append(subItems, MenuItem{
+				Label: m.T(route.For("DocsContact").AsTitle()),
+				Title: m.T(route.For("DocsContact").AsTitle()),
+				Href:  route.For("DocsContact").AsURL(),
+			})
+		}
+	}
+
+	if m.enableAbout {
+		subItems = append(subItems, MenuItem{IsSeparator: true})
+		subItems = append(subItems, MenuItem{
+			Label: m.T(route.For("DocsAbout").AsTitle()),
+			Title: m.T(route.For("DocsAbout").AsTitle()),
+			Href:  route.For("DocsAbout").AsURL(),
+		})
+	}
+
 	return []MenuItem{
 		{
-			Label: m.T("_h_elp"),
-			SubItems: []MenuItem{
-				{
-					Label: m.T(route.For("DocsManual").AsTitle()),
-					Title: m.T(route.For("DocsManual").AsTitle()),
-					Href:  route.For("DocsManual").AsURL(),
-				},
-				{
-					IsSeparator: true,
-				},
-				{
-					Label: m.T(route.For("DocsTerms").AsTitle()),
-					Title: m.T(route.For("DocsTerms").AsTitle()),
-					Href:  route.For("DocsTerms").AsURL(),
-				},
-				{
-					Label: m.T(route.For("DocsPrivacy").AsTitle()),
-					Title: m.T(route.For("DocsPrivacy").AsTitle()),
-					Href:  route.For("DocsPrivacy").AsURL(),
-				},
-				{
-					Label: m.T(route.For("DocsContact").AsTitle()),
-					Title: m.T(route.For("DocsContact").AsTitle()),
-					Href:  route.For("DocsContact").AsURL(),
-				},
-				{
-					IsSeparator: true,
-				},
-				{
-					Label: m.T(route.For("DocsAbout").AsTitle()),
-					Title: m.T(route.For("DocsAbout").AsTitle()),
-					Href:  route.For("DocsAbout").AsURL(),
-				},
-			},
+			Label:    m.T("_h_elp"),
+			SubItems: subItems,
 		},
 	}
 }
 
 func (m *Menu) FooterMenu(forRole user.Role) []MenuItem {
-	return []MenuItem{
-		{
+	var items []MenuItem
+
+	if m.enableTerms {
+		items = append(items, MenuItem{
 			Label: m.T(route.For("DocsTerms").AsTitle()),
 			Title: m.T(route.For("DocsTerms").AsTitle()),
 			Href:  route.For("DocsTerms").AsURL(),
-		},
-		{
+		})
+	}
+	if m.enablePrivacyPolicy {
+		items = append(items, MenuItem{
 			Label: m.T(route.For("DocsPrivacy").AsTitle()),
 			Title: m.T(route.For("DocsPrivacy").AsTitle()),
 			Href:  route.For("DocsPrivacy").AsURL(),
-		},
-		{
+		})
+	}
+	if m.enableContact {
+		items = append(items, MenuItem{
 			Label: m.T(route.For("DocsContact").AsTitle()),
 			Title: m.T(route.For("DocsContact").AsTitle()),
 			Href:  route.For("DocsContact").AsURL(),
-		},
+		})
 	}
+
+	return items
 }
 
 func (m *Menu) Get() []MenuItem {

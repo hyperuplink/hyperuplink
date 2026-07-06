@@ -87,6 +87,14 @@ func New(
 	}
 	req.Theme = &settingTheme.JSONValue
 
+	settingGeneral, err := settingRepo.GetByID[setting.General](
+		req.r.GetRuntime().Repositories.Setting,
+		"general",
+	)
+	if err != nil {
+		req.r.GetRuntime().Error("error", err)
+	}
+
 	_, req.absPath, req.relRoot = helpers.GetPaths(req.c)
 
 	if userID, ok := req.Session.GetUserID(); ok {
@@ -113,6 +121,12 @@ func New(
 	}
 
 	req.Menu.SetI18n(req.In.Ts)
+	req.Menu.SetGeneral(
+		settingGeneral.JSONValue.EnableAbout,
+		settingGeneral.JSONValue.EnableContact,
+		settingGeneral.JSONValue.EnablePrivacyPolicy,
+		settingGeneral.JSONValue.EnableTerms,
+	)
 	req.Menu.SetRole(req.Session.GetCurrentUserRole())
 
 	if title == "" {
