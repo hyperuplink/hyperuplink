@@ -5,6 +5,7 @@ import (
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/root/docs/about"
 	"github.com/mrusme/hyperuplink/http/web/root/docs/contact"
+	"github.com/mrusme/hyperuplink/http/web/root/docs/manual"
 	"github.com/mrusme/hyperuplink/http/web/root/docs/privacy"
 	"github.com/mrusme/hyperuplink/http/web/root/docs/terms"
 	"github.com/mrusme/hyperuplink/runtime"
@@ -33,6 +34,10 @@ func New(
 		docsContactRoute, err := contact.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
 		r.Routes = append(r.Routes, docsContactRoute)
+
+		docsManualRoute, err := manual.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, docsManualRoute)
 
 		docsPrivacyRoute, err := privacy.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)

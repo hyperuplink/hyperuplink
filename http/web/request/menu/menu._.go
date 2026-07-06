@@ -386,7 +386,7 @@ func (m *Menu) HelpMenu(forRole user.Role) []MenuItem {
 		{
 			Label: m.T(route.For("DocsManual").AsTitle()),
 			Title: m.T(route.For("DocsManual").AsTitle()),
-			Href:  route.For("DocsManual").AsURL(),
+			Href:  route.For("DocsManual").AsURL() + "/",
 		},
 	}
 
