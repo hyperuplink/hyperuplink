@@ -10,6 +10,7 @@
     {{ $storage_ids := .Data.Get "storage_ids" }}
     {{ $banner := $.Site.CustomBanner }}
     {{ $favicon := $.Site.CustomFavicon }}
+    {{ $background := $.Site.CustomBackground }}
     <form method="post"
           action="{{$.Site.GetFormAction "update"}}"
           class="">
@@ -115,6 +116,35 @@
       </form>
       {{ else }}
       <small>{{$._.T "custom_favicon_storage_hint"}}</small>
+      {{ end }}
+    </div>
+    <div class="field flex-column grow margin">
+      <label>{{$._.T "custom_background"}}:</label>
+      {{ if $background }}
+      <img class="picture lowered" src="{{$background}}" alt="{{$._.T "custom_background"}}">
+      <form method="post"
+            action="{{$.Site.GetFormAction "background/remove"}}"
+            class="">
+        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+        <div class="actions flex-row justify-end gap">
+          <button type="submit" class="danger" title="{{$._.T "remove_background"}}">{{$._.T "remove_background"}}</button>
+        </div>
+      </form>
+      {{ else if $settingTheme.ThemeStorageProviderID }}
+      <form method="post"
+            action="{{$.Site.GetFormAction "background"}}"
+            enctype="multipart/form-data"
+            class="">
+        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+        <div class="fieldrow flex-row flex-wrap gap">
+          <input type="file" id="custom_background" name="custom_background" class="input grow" accept="image/*">
+        </div>
+        <div class="actions flex-row justify-end gap">
+          <button type="submit" class="affirmative" title="{{$._.T "upload_background"}}">{{$._.T "upload_background"}}</button>
+        </div>
+      </form>
+      {{ else }}
+      <small>{{$._.T "custom_background_storage_hint"}}</small>
       {{ end }}
     </div>
   </div>

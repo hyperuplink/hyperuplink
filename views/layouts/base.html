@@ -10,6 +10,14 @@
     <link rel="stylesheet" href="{{.Site.StaticFile "css/layout.css"}}" />
     <link rel="stylesheet" href="{{.Site.StaticFile (printf "colorschemes/%s/colorscheme.css" .Theme.GetColorscheme)}}" />
     <link rel="stylesheet" href="{{.Site.StaticFile "css/hyperuplink.css"}}" />
+    {{ $background := .Site.CustomBackgroundURL .System.BaseURL }}
+    {{ if $background }}
+    <style>
+      :root {
+        --desktop-bg: url("{{ $background }}") top left repeat;
+      }
+    </style>
+    {{ end }}
     <title>{{.Site.TitleFull .System.Name}}</title>
     <meta property="og:site_name" content="{{.System.Name}}">
     <meta property="og:type" content="website">

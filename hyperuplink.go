@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"syscall"
 
 	"github.com/mrusme/hyperuplink/http"
 	"github.com/mrusme/hyperuplink/runtime"
@@ -101,8 +102,8 @@ func main() {
 
 	go wrk.Run()
 
-	quit := make(chan os.Signal)
-	signal.Notify(quit, os.Interrupt)
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 	<-quit
 
 	web.Shutdown()

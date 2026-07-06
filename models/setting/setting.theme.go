@@ -12,6 +12,7 @@ type Theme struct {
 	ThemeStoragePath       string `json:"theme_storage_path"`
 	CustomBanner           string `json:"custom_banner"`
 	CustomFavicon          string `json:"custom_favicon"`
+	CustomBackground       string `json:"custom_background"`
 }
 
 func (t *Theme) GetTheme() (theme string) {

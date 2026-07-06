@@ -28,6 +28,8 @@ func New(
 		base.Post("/banner/remove", r.BannerRemove).Name("banner.remove")
 		base.Post("/favicon", r.FaviconUpload).Name("favicon")
 		base.Post("/favicon/remove", r.FaviconRemove).Name("favicon.remove")
+		base.Post("/background", r.BackgroundUpload).Name("background")
+		base.Post("/background/remove", r.BackgroundRemove).Name("background.remove")
 	}, r.Path+".")
 
 	return r, nil

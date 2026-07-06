@@ -80,6 +80,50 @@ func (s *Site) CustomFavicon() (dlurl string) {
 	return dlurl
 }
 
+func (s *Site) customBackgroundURL() (dlurl string, abs bool, ok bool) {
+	theme, ok := s.themeSetting()
+	if !ok || theme.CustomBackground == "" || theme.ThemeStorageProviderID == "" {
+		return "", false, false
+	}
+
+	var err error
+	if dlurl, abs, err = s.r.GetRuntime().Storage.GetFileDownloadURL(
+		theme.ThemeStorageProviderID,
+		path.Join(theme.ThemeStoragePath, theme.CustomBackground),
+	); err != nil {
+		return "", false, false
+	}
+
+	return dlurl, abs, true
+}
+
+func (s *Site) CustomBackground() (dlurl string) {
+	dlurl, abs, ok := s.customBackgroundURL()
+	if !ok {
+		return ""
+	}
+
+	if !abs {
+		dlurl = s.HrefTo(strings.TrimPrefix(dlurl, "/"))
+	}
+
+	return dlurl
+}
+
+func (s *Site) CustomBackgroundURL(baseURL string) string {
+	dlurl, abs, ok := s.customBackgroundURL()
+	if !ok {
+		return ""
+	}
+
+	if abs {
+		return dlurl
+	}
+
+	base := strings.TrimRight(baseURL, "/")
+	return base + "/" + strings.TrimPrefix(dlurl, "/")
+}
+
 func (s *Site) BannerImageURL() string {
 	if banner := s.CustomBanner(); banner != "" {
 		return banner
