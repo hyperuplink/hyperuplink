@@ -1,9 +1,9 @@
 package http
 
 import (
-	"github.com/mrusme/hyperuplink/errs"
-	"github.com/mrusme/hyperuplink/http/web"
-	"github.com/mrusme/hyperuplink/runtime"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
+	"xn--gckvb8fzb.com/hyperuplink/http/web"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 type InterfaceType int

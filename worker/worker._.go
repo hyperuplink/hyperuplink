@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 
 	"github.com/hibiken/asynq"
-	"github.com/mrusme/hyperuplink/models/asyncjob"
-	"github.com/mrusme/hyperuplink/runtime"
-	"github.com/mrusme/hyperuplink/services/config"
-	"github.com/mrusme/hyperuplink/worker/targets"
+	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
+	"xn--gckvb8fzb.com/hyperuplink/services/config"
+	"xn--gckvb8fzb.com/hyperuplink/worker/targets"
 )
 
 type Worker struct {

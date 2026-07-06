@@ -29,11 +29,11 @@ import (
 
 	"github.com/gofiber/storage/redis/v3"
 	html "github.com/gofiber/template/html/v3"
-	"github.com/mrusme/hyperuplink/errs"
-	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/root"
-	"github.com/mrusme/hyperuplink/runtime"
 	slogfiber "github.com/samber/slog-fiber"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 const (

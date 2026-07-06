@@ -1,4 +1,4 @@
-module github.com/mrusme/hyperuplink
+module xn--gckvb8fzb.com/hyperuplink
 
 go 1.26.4
 

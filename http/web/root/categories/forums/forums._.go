@@ -2,9 +2,9 @@ package forums
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/root/categories/forums/topics"
-	"github.com/mrusme/hyperuplink/runtime"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/categories/forums/topics"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 type Route struct {

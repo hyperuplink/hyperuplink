@@ -3,10 +3,10 @@ package session
 import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/markbates/goth"
-	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/root/session/confirm"
-	"github.com/mrusme/hyperuplink/http/web/root/session/provider"
-	"github.com/mrusme/hyperuplink/runtime"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/session/confirm"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/session/provider"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
 
 	"github.com/markbates/goth/providers/github"
 )

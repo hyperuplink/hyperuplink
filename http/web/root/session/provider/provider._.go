@@ -2,9 +2,9 @@ package provider
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/runtime"
 	goth_fiber "github.com/shareed2k/goth_fiber/v2"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 type Route struct {

@@ -2,16 +2,16 @@ package root
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/root/account"
-	"github.com/mrusme/hyperuplink/http/web/root/admin"
-	"github.com/mrusme/hyperuplink/http/web/root/categories"
-	"github.com/mrusme/hyperuplink/http/web/root/docs"
-	"github.com/mrusme/hyperuplink/http/web/root/newpost"
-	"github.com/mrusme/hyperuplink/http/web/root/search"
-	"github.com/mrusme/hyperuplink/http/web/root/session"
-	"github.com/mrusme/hyperuplink/http/web/root/user"
-	"github.com/mrusme/hyperuplink/runtime"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/account"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/categories"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/docs"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/newpost"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/search"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/session"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/user"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 type Route struct {

@@ -4,7 +4,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/session"
 	"github.com/google/uuid"
-	"github.com/mrusme/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 type Session struct {

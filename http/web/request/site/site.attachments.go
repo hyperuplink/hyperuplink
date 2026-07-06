@@ -5,9 +5,9 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	"github.com/mrusme/hyperuplink/models/setting"
-	"github.com/mrusme/hyperuplink/services/repositories/common"
-	settingRepo "github.com/mrusme/hyperuplink/services/repositories/setting"
+	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
+	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
 type AttachmentView struct {

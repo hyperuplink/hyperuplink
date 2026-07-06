@@ -3,7 +3,7 @@ package user
 import (
 	"time"
 
-	"github.com/mrusme/hyperuplink/errs"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
 )
 
 func (m *User) SetEmailConfirmationSentAt(t time.Time) {

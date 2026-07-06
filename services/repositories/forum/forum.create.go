@@ -2,7 +2,7 @@ package forum
 
 import (
 	"github.com/google/uuid"
-	"github.com/mrusme/hyperuplink/models/forum"
+	"xn--gckvb8fzb.com/hyperuplink/models/forum"
 )
 
 func (repo *Repository) Create(model *forum.Forum) (rowID uuid.UUID, err error) {

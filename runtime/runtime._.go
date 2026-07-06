@@ -10,14 +10,14 @@ import (
 	runt "runtime"
 	"strings"
 
-	"github.com/mrusme/hyperuplink/services/config"
-	"github.com/mrusme/hyperuplink/services/database"
-	"github.com/mrusme/hyperuplink/services/dispatch"
-	"github.com/mrusme/hyperuplink/services/intnat"
-	"github.com/mrusme/hyperuplink/services/magick"
-	"github.com/mrusme/hyperuplink/services/markdown"
-	"github.com/mrusme/hyperuplink/services/repositories"
-	"github.com/mrusme/hyperuplink/services/storage"
+	"xn--gckvb8fzb.com/hyperuplink/services/config"
+	"xn--gckvb8fzb.com/hyperuplink/services/database"
+	"xn--gckvb8fzb.com/hyperuplink/services/dispatch"
+	"xn--gckvb8fzb.com/hyperuplink/services/intnat"
+	"xn--gckvb8fzb.com/hyperuplink/services/magick"
+	"xn--gckvb8fzb.com/hyperuplink/services/markdown"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories"
+	"xn--gckvb8fzb.com/hyperuplink/services/storage"
 )
 
 var (

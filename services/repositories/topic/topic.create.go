@@ -2,7 +2,7 @@ package topic
 
 import (
 	"github.com/google/uuid"
-	"github.com/mrusme/hyperuplink/models/topic"
+	"xn--gckvb8fzb.com/hyperuplink/models/topic"
 )
 
 func (repo *Repository) Create(model *topic.Topic) (rowID uuid.UUID, err error) {

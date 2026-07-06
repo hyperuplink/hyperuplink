@@ -2,7 +2,7 @@ package vreply
 
 import (
 	"github.com/jackc/pgx/v5/pgtype"
-	"github.com/mrusme/hyperuplink/models/reply"
+	"xn--gckvb8fzb.com/hyperuplink/models/reply"
 )
 
 type VReply struct {

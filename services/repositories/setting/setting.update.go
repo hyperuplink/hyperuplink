@@ -1,7 +1,7 @@
 package setting
 
 import (
-	"github.com/mrusme/hyperuplink/models/setting"
+	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 )
 
 func Update[T any](

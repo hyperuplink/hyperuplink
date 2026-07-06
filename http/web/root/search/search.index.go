@@ -5,13 +5,13 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/helpers"
-	"github.com/mrusme/hyperuplink/http/web/request"
-	"github.com/mrusme/hyperuplink/http/web/request/site"
-	"github.com/mrusme/hyperuplink/models/user"
-	"github.com/mrusme/hyperuplink/models/vsearchresult"
-	searchrepo "github.com/mrusme/hyperuplink/services/repositories/search"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/helpers"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/request/site"
+	"xn--gckvb8fzb.com/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/models/vsearchresult"
+	searchrepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/search"
 )
 
 func (r *Route) Index(c fiber.Ctx) (err error) {

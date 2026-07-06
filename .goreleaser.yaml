@@ -5,7 +5,7 @@ builds:
     env:
       - CGO_ENABLED=0
     ldflags:
-      - -s -w -X github.com/mrusme/hyperuplink/runtime.Version={{.Version}} -X github.com/mrusme/hyperuplink/runtime.Commit={{.Commit}} -X github.com/mrusme/hyperuplink/runtime.Date={{.Date}}
+      - -s -w -X xn--gckvb8fzb.com/hyperuplink/runtime.Version={{.Version}} -X xn--gckvb8fzb.com/hyperuplink/runtime.Commit={{.Commit}} -X xn--gckvb8fzb.com/hyperuplink/runtime.Date={{.Date}}
     goos:
       - darwin
       - dragonfly

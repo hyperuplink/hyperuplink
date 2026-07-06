@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mrusme/hyperuplink/errs"
 	"golang.org/x/crypto/argon2"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
 )
 
 type PasswordParams struct {

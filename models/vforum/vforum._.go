@@ -2,7 +2,7 @@ package vforum
 
 import (
 	"github.com/jackc/pgx/v5/pgtype"
-	"github.com/mrusme/hyperuplink/models/forum"
+	"xn--gckvb8fzb.com/hyperuplink/models/forum"
 )
 
 type VForum struct {

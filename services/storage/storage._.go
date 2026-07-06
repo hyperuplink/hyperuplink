@@ -4,10 +4,10 @@ import (
 	"io"
 	"strings"
 
-	"github.com/mrusme/hyperuplink/errs"
-	"github.com/mrusme/hyperuplink/services/config"
-	"github.com/mrusme/hyperuplink/services/storage/local"
-	"github.com/mrusme/hyperuplink/services/storage/s3"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
+	"xn--gckvb8fzb.com/hyperuplink/services/config"
+	"xn--gckvb8fzb.com/hyperuplink/services/storage/local"
+	"xn--gckvb8fzb.com/hyperuplink/services/storage/s3"
 )
 
 type IStorage interface {

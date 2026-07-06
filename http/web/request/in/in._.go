@@ -6,7 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/kaptinlin/go-i18n"
-	"github.com/mrusme/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
 )
 
 type Internationalization struct {

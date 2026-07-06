@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/hibiken/asynq"
-	"github.com/mrusme/hyperuplink/models/asyncjob"
-	"github.com/mrusme/hyperuplink/services/config"
+	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob"
+	"xn--gckvb8fzb.com/hyperuplink/services/config"
 )
 
 type Dispatch struct {

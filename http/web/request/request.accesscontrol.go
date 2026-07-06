@@ -3,9 +3,9 @@ package request
 import (
 	"slices"
 
-	"github.com/mrusme/hyperuplink/errs"
-	"github.com/mrusme/hyperuplink/models/user"
-	"github.com/mrusme/hyperuplink/services/repositories/common"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
+	"xn--gckvb8fzb.com/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func (req *Request) AccessControl(roles ...user.Role) (mustReturn bool, err error) {

@@ -1,9 +1,9 @@
 package setting
 
 import (
-	"github.com/mrusme/hyperuplink/models/setting"
-	"github.com/mrusme/hyperuplink/services/config"
-	"github.com/mrusme/hyperuplink/services/database"
+	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	"xn--gckvb8fzb.com/hyperuplink/services/config"
+	"xn--gckvb8fzb.com/hyperuplink/services/database"
 )
 
 type Repository struct {

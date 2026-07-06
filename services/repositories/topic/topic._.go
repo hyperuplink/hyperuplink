@@ -1,7 +1,7 @@
 package topic
 
 import (
-	"github.com/mrusme/hyperuplink/services/database"
+	"xn--gckvb8fzb.com/hyperuplink/services/database"
 )
 
 type Repository struct {
@@ -22,4 +22,3 @@ func (repo *Repository) Startup() (err error) {
 func (repo *Repository) Shutdown() error {
 	return nil
 }
-

@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/mrusme/hyperuplink/runtime"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
 
 	"github.com/gofiber/fiber/v3"
 )

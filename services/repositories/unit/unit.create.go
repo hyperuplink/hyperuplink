@@ -1,7 +1,7 @@
 package unit
 
 import (
-	"github.com/mrusme/hyperuplink/models/unit"
+	"xn--gckvb8fzb.com/hyperuplink/models/unit"
 )
 
 func (repo *Repository) Create(model *unit.Unit) (rowID string, err error) {

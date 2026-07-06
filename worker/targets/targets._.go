@@ -3,11 +3,11 @@ package targets
 import (
 	"fmt"
 
-	"github.com/mrusme/hyperuplink/errs"
-	"github.com/mrusme/hyperuplink/models/asyncjob"
-	"github.com/mrusme/hyperuplink/runtime"
-	"github.com/mrusme/hyperuplink/services/config"
-	"github.com/mrusme/hyperuplink/worker/targets/email"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
+	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
+	"xn--gckvb8fzb.com/hyperuplink/services/config"
+	"xn--gckvb8fzb.com/hyperuplink/worker/targets/email"
 )
 
 type ITarget interface {

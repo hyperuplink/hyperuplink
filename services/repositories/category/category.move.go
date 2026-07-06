@@ -1,7 +1,7 @@
 package category
 
 import (
-	"github.com/mrusme/hyperuplink/models/category"
+	"xn--gckvb8fzb.com/hyperuplink/models/category"
 )
 
 func (repo *Repository) MoveUp(model *category.Category) (err error) {

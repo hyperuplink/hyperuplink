@@ -2,7 +2,7 @@ package attachment
 
 import (
 	"github.com/google/uuid"
-	"github.com/mrusme/hyperuplink/models/attachment"
+	"xn--gckvb8fzb.com/hyperuplink/models/attachment"
 )
 
 func (repo *Repository) Create(model *attachment.Attachment) (rowID uuid.UUID, err error) {

@@ -2,10 +2,10 @@ package session
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/request"
-	"github.com/mrusme/hyperuplink/models/user"
 	goth_fiber "github.com/shareed2k/goth_fiber/v2"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 func (r *Route) SignOutShow(c fiber.Ctx) (err error) {

@@ -8,10 +8,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/mrusme/hyperuplink/http"
-	"github.com/mrusme/hyperuplink/runtime"
-	"github.com/mrusme/hyperuplink/tools/localegen"
-	"github.com/mrusme/hyperuplink/worker"
+	"xn--gckvb8fzb.com/hyperuplink/http"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
+	"xn--gckvb8fzb.com/hyperuplink/tools/localegen"
+	"xn--gckvb8fzb.com/hyperuplink/worker"
 )
 
 //go:embed migrations/*.sql

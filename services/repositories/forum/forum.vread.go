@@ -3,8 +3,8 @@ package forum
 import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	"github.com/mrusme/hyperuplink/models/vforum"
-	"github.com/mrusme/hyperuplink/services/repositories/common"
+	"xn--gckvb8fzb.com/hyperuplink/models/vforum"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func (repo *Repository) VAll(qo common.QueryOptions) (model *[]vforum.VForum, err error) {

@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"slices"
 
-	"github.com/mrusme/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
 )
 
 var SUPPORTED_EXTS []string = []string{

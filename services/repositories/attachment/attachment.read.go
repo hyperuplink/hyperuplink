@@ -3,8 +3,8 @@ package attachment
 import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	"github.com/mrusme/hyperuplink/models/attachment"
-	"github.com/mrusme/hyperuplink/services/repositories/common"
+	"xn--gckvb8fzb.com/hyperuplink/models/attachment"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func (repo *Repository) GetByUUID(

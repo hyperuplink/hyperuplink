@@ -2,7 +2,7 @@ package setting
 
 import (
 	"github.com/jackc/pgx/v5"
-	"github.com/mrusme/hyperuplink/models/setting"
+	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 )
 
 func GetByID[T any](

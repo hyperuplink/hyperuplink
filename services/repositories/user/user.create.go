@@ -2,7 +2,7 @@ package user
 
 import (
 	"github.com/google/uuid"
-	"github.com/mrusme/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {

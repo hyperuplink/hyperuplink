@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/mrusme/hyperuplink/errs"
-	"github.com/mrusme/hyperuplink/services/config"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
+	"xn--gckvb8fzb.com/hyperuplink/services/config"
 )
 
 type Local struct {

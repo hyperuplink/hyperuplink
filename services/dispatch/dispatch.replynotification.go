@@ -1,8 +1,8 @@
 package dispatch
 
 import (
-	"github.com/mrusme/hyperuplink/models/asyncjob"
-	"github.com/mrusme/hyperuplink/models/asyncjob/notification/replynotification"
+	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob"
+	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob/notification/replynotification"
 )
 
 func (disp *Dispatch) ReplyNotifications(

@@ -5,9 +5,9 @@ import (
 	"html/template"
 	"reflect"
 
-	"github.com/mrusme/hyperuplink/errs"
-	"github.com/mrusme/hyperuplink/http/web/request/flash"
-	"github.com/mrusme/hyperuplink/http/web/request/in"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/request/flash"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/request/in"
 )
 
 type Form struct {

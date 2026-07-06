@@ -3,8 +3,8 @@ package reply
 import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	"github.com/mrusme/hyperuplink/models/reply"
-	"github.com/mrusme/hyperuplink/services/repositories/common"
+	"xn--gckvb8fzb.com/hyperuplink/models/reply"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func (repo *Repository) AllForTopicUUID(

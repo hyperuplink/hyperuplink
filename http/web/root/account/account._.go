@@ -2,12 +2,12 @@ package account
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/root/account/password"
-	"github.com/mrusme/hyperuplink/http/web/root/account/profile"
-	"github.com/mrusme/hyperuplink/http/web/root/account/settings"
-	"github.com/mrusme/hyperuplink/http/web/root/account/twofactor"
-	"github.com/mrusme/hyperuplink/runtime"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/account/password"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/account/profile"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/account/settings"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/account/twofactor"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 type Route struct {

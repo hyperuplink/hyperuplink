@@ -2,8 +2,8 @@ package user
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/runtime"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 type Route struct {
@@ -39,4 +39,3 @@ func (r *Route) GetPath() string {
 func (r *Route) GetEnv() *route.Environment {
 	return r.Env
 }
-

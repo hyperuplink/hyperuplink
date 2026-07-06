@@ -4,8 +4,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
-	"github.com/mrusme/hyperuplink/models/permission"
-	"github.com/mrusme/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/models/permission"
+	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 func (repo *Repository) All() (model *[]permission.Permission, err error) {

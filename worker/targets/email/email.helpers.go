@@ -6,8 +6,8 @@ import (
 	"strings"
 	texttemplate "text/template"
 
-	"github.com/mrusme/hyperuplink/models/asyncjob"
 	"github.com/wneessen/go-mail"
+	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob"
 )
 
 type TmplCacheItem struct {

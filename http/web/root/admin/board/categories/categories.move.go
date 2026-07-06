@@ -5,10 +5,10 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
-	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/request"
-	"github.com/mrusme/hyperuplink/models/category"
-	"github.com/mrusme/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	"xn--gckvb8fzb.com/hyperuplink/models/category"
+	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 type CategoryMoveForm struct {

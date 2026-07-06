@@ -1,19 +1,19 @@
 package repositories
 
 import (
-	"github.com/mrusme/hyperuplink/services/config"
-	"github.com/mrusme/hyperuplink/services/database"
-	"github.com/mrusme/hyperuplink/services/repositories/attachment"
-	"github.com/mrusme/hyperuplink/services/repositories/category"
-	"github.com/mrusme/hyperuplink/services/repositories/forum"
-	"github.com/mrusme/hyperuplink/services/repositories/permission"
-	"github.com/mrusme/hyperuplink/services/repositories/postevent"
-	"github.com/mrusme/hyperuplink/services/repositories/reply"
-	"github.com/mrusme/hyperuplink/services/repositories/search"
-	"github.com/mrusme/hyperuplink/services/repositories/setting"
-	"github.com/mrusme/hyperuplink/services/repositories/topic"
-	"github.com/mrusme/hyperuplink/services/repositories/unit"
-	"github.com/mrusme/hyperuplink/services/repositories/user"
+	"xn--gckvb8fzb.com/hyperuplink/services/config"
+	"xn--gckvb8fzb.com/hyperuplink/services/database"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/attachment"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/category"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/forum"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/permission"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/postevent"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/reply"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/search"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/topic"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/unit"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/user"
 )
 
 type Repositories struct {

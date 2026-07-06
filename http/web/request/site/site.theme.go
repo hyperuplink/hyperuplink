@@ -4,8 +4,8 @@ import (
 	"path"
 	"strings"
 
-	"github.com/mrusme/hyperuplink/models/setting"
-	settingRepo "github.com/mrusme/hyperuplink/services/repositories/setting"
+	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
 func (s *Site) themeSetting() (theme *setting.Theme, ok bool) {

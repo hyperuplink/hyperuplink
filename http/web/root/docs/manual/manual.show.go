@@ -6,10 +6,10 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/request"
-	"github.com/mrusme/hyperuplink/http/web/request/bcn"
-	"github.com/mrusme/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/request/bcn"
+	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 func (r *Route) Show(c fiber.Ctx) (err error) {

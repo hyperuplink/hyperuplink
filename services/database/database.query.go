@@ -9,7 +9,7 @@ import (
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/mrusme/hyperuplink/errs"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
 )
 
 func (db *Database) Exec(sql string, args ...any) (pgconn.CommandTag, error) {

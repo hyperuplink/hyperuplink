@@ -2,7 +2,7 @@ package permission
 
 import (
 	"github.com/google/uuid"
-	"github.com/mrusme/hyperuplink/models/permission"
+	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 )
 
 func (repo *Repository) Create(model *permission.Permission) (rowID uuid.UUID, err error) {

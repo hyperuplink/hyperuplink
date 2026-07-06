@@ -2,13 +2,13 @@ package docs
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/root/docs/about"
-	"github.com/mrusme/hyperuplink/http/web/root/docs/contact"
-	"github.com/mrusme/hyperuplink/http/web/root/docs/manual"
-	"github.com/mrusme/hyperuplink/http/web/root/docs/privacy"
-	"github.com/mrusme/hyperuplink/http/web/root/docs/terms"
-	"github.com/mrusme/hyperuplink/runtime"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/docs/about"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/docs/contact"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/docs/manual"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/docs/privacy"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/docs/terms"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 type Route struct {

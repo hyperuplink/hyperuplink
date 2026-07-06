@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/jackc/pgx/v5"
-	"github.com/mrusme/hyperuplink/models/vsearchresult"
+	"xn--gckvb8fzb.com/hyperuplink/models/vsearchresult"
 )
 
 type Options struct {

@@ -1,7 +1,7 @@
 package forum
 
 import (
-	"github.com/mrusme/hyperuplink/models/forum"
+	"xn--gckvb8fzb.com/hyperuplink/models/forum"
 )
 
 func (repo *Repository) Delete(model *forum.Forum) (err error) {

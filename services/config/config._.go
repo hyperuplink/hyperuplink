@@ -5,7 +5,7 @@ import (
 
 	"github.com/knadh/koanf/parsers/toml/v2"
 	"github.com/knadh/koanf/providers/file"
-	"github.com/mrusme/hyperuplink/errs"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
 
 	"github.com/knadh/koanf/v2"
 )

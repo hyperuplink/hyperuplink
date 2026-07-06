@@ -4,12 +4,12 @@ import (
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/mrusme/hyperuplink/errs"
-	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/request"
-	"github.com/mrusme/hyperuplink/models/user"
-	"github.com/mrusme/hyperuplink/runtime"
-	"github.com/mrusme/hyperuplink/services/repositories/common"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	"xn--gckvb8fzb.com/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 type Route struct {

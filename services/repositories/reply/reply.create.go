@@ -2,7 +2,7 @@ package reply
 
 import (
 	"github.com/google/uuid"
-	"github.com/mrusme/hyperuplink/models/reply"
+	"xn--gckvb8fzb.com/hyperuplink/models/reply"
 )
 
 func (repo *Repository) Create(model *reply.Reply) (rowID uuid.UUID, err error) {

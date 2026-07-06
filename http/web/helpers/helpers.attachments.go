@@ -12,11 +12,11 @@ import (
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
-	"github.com/mrusme/hyperuplink/errs"
-	"github.com/mrusme/hyperuplink/models/attachment"
-	"github.com/mrusme/hyperuplink/models/setting"
-	"github.com/mrusme/hyperuplink/runtime"
-	settingRepo "github.com/mrusme/hyperuplink/services/repositories/setting"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
+	"xn--gckvb8fzb.com/hyperuplink/models/attachment"
+	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
+	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
 const AttachmentsFormField = "attachments"

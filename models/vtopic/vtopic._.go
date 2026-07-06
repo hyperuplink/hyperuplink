@@ -2,7 +2,7 @@ package vtopic
 
 import (
 	"github.com/jackc/pgx/v5/pgtype"
-	"github.com/mrusme/hyperuplink/models/topic"
+	"xn--gckvb8fzb.com/hyperuplink/models/topic"
 )
 
 type VTopic struct {

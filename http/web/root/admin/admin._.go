@@ -2,14 +2,14 @@ package admin
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/root/admin/auth"
-	"github.com/mrusme/hyperuplink/http/web/root/admin/board"
-	"github.com/mrusme/hyperuplink/http/web/root/admin/comms"
-	"github.com/mrusme/hyperuplink/http/web/root/admin/general"
-	"github.com/mrusme/hyperuplink/http/web/root/admin/logs"
-	"github.com/mrusme/hyperuplink/http/web/root/admin/users"
-	"github.com/mrusme/hyperuplink/runtime"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/auth"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/board"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/comms"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/general"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/logs"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/users"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 type Route struct {

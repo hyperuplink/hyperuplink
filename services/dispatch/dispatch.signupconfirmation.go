@@ -1,8 +1,8 @@
 package dispatch
 
 import (
-	"github.com/mrusme/hyperuplink/models/asyncjob"
-	"github.com/mrusme/hyperuplink/models/asyncjob/confirmation/signupconfirmation"
+	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob"
+	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob/confirmation/signupconfirmation"
 )
 
 func (disp *Dispatch) SignupConfirmations(

@@ -1,6 +1,6 @@
 package session
 
-import "github.com/mrusme/hyperuplink/models/user"
+import "xn--gckvb8fzb.com/hyperuplink/models/user"
 
 func (s *Session) SetCurrentUser(u *user.User) {
 	s.currentUser = u

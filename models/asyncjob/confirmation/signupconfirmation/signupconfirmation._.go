@@ -3,9 +3,9 @@ package signupconfirmation
 import (
 	"fmt"
 
-	"github.com/mrusme/hyperuplink/models/asyncjob/common"
-	"github.com/mrusme/hyperuplink/models/setting"
-	"github.com/mrusme/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob/common"
+	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 type SignupConfirmation struct {

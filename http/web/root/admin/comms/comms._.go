@@ -2,10 +2,10 @@ package comms
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/root/admin/comms/email"
-	"github.com/mrusme/hyperuplink/http/web/root/admin/comms/xmpp"
-	"github.com/mrusme/hyperuplink/runtime"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/comms/email"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/comms/xmpp"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 type Route struct {

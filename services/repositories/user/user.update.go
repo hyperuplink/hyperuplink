@@ -1,7 +1,7 @@
 package user
 
 import (
-	"github.com/mrusme/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 func (repo *Repository) Update(model *user.User) (err error) {

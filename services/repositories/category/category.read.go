@@ -2,8 +2,8 @@ package category
 
 import (
 	"github.com/jackc/pgx/v5"
-	"github.com/mrusme/hyperuplink/models/category"
-	"github.com/mrusme/hyperuplink/services/repositories/common"
+	"xn--gckvb8fzb.com/hyperuplink/models/category"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func (repo *Repository) All(

@@ -1,8 +1,8 @@
 package common
 
 import (
-	"github.com/mrusme/hyperuplink/models/setting"
-	"github.com/mrusme/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 type Recipient struct {

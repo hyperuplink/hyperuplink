@@ -1,7 +1,7 @@
 package postevent
 
 import (
-	"github.com/mrusme/hyperuplink/models/postevent"
+	"xn--gckvb8fzb.com/hyperuplink/models/postevent"
 )
 
 func (repo *Repository) Create(model *postevent.PostEvent) (rowID string, err error) {

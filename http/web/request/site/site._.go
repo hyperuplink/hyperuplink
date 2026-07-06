@@ -10,10 +10,10 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/csrf"
 	"github.com/jackc/pgx/v5/pgtype"
-	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/helpers"
-	"github.com/mrusme/hyperuplink/models/setting"
-	settingRepo "github.com/mrusme/hyperuplink/services/repositories/setting"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/helpers"
+	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
 type Site struct {

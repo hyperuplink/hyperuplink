@@ -5,7 +5,7 @@ import (
 	"reflect"
 
 	"github.com/google/uuid"
-	"github.com/mrusme/hyperuplink/errs"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
 )
 
 type JobType string

@@ -1,9 +1,9 @@
 package email
 
 import (
-	"github.com/mrusme/hyperuplink/models/asyncjob"
-	"github.com/mrusme/hyperuplink/models/asyncjob/confirmation/signupconfirmation"
 	"github.com/wneessen/go-mail"
+	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob"
+	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob/confirmation/signupconfirmation"
 )
 
 func (t *Email) ExecuteConfirmationSignup(

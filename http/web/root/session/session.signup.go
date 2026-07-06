@@ -7,12 +7,12 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 
-	"github.com/mrusme/hyperuplink/http/route"
-	"github.com/mrusme/hyperuplink/http/web/request"
-	"github.com/mrusme/hyperuplink/models/asyncjob/confirmation/signupconfirmation"
-	"github.com/mrusme/hyperuplink/models/setting"
-	"github.com/mrusme/hyperuplink/models/user"
-	repoSetting "github.com/mrusme/hyperuplink/services/repositories/setting"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob/confirmation/signupconfirmation"
+	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	"xn--gckvb8fzb.com/hyperuplink/models/user"
+	repoSetting "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
 type SignUpForm struct {
