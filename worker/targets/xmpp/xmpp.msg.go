@@ -1,11 +1,13 @@
 package xmpp
 
 import (
+	"strings"
 	texttemplate "text/template"
 )
 
 type Msg struct {
-	to string
+	to   string
+	body string
 }
 
 func NewMsg() (msg *Msg) {
@@ -18,11 +20,14 @@ func (msg *Msg) To(to string) {
 }
 
 func (msg *Msg) SetBodyTextTemplate(tpl *texttemplate.Template, data interface{}) (err error) {
-	// TODO: Implement
+	var sb strings.Builder
+	if err = tpl.Execute(&sb, data); err != nil {
+		return err
+	}
+	msg.body = sb.String()
 	return nil
 }
 
-func (msg *Msg) ToString()(string) {
-	// TODO: Implement
-	return ""
+func (msg *Msg) ToString() string {
+	return msg.body
 }
