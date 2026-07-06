@@ -16,6 +16,18 @@ type GeneralUpdateForm struct {
 	BaseURL       string `form:"base_url" validate:"required,url,max=255"`
 	TopicsPerPage int    `form:"topics_per_page" validate:"required,min=1,max=200"`
 	PostsPerPage  int    `form:"posts_per_page" validate:"required,min=1,max=200"`
+
+	EnableAbout bool   `form:"enable_about"`
+	About       string `form:"about" validate:"required_if=EnableAbout true"`
+
+	EnableContact bool   `form:"enable_contact"`
+	Contact       string `form:"contact" validate:"required_if=EnableContact true"`
+
+	EnablePrivacyPolicy bool   `form:"enable_privacy_policy"`
+	PrivacyPolicy       string `form:"privacy_policy" validate:"required_if=EnablePrivacyPolicy true"`
+
+	EnableTerms bool   `form:"enable_terms"`
+	Terms       string `form:"terms" validate:"required_if=EnableTerms true"`
 }
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
@@ -55,6 +67,32 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 	err = settingRepo.Update[setting.System](
 		r.Runtime.Repositories.Setting,
 		settingSystem,
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	var settingGeneral *setting.Setting[setting.General]
+	settingGeneral, err = settingRepo.GetByID[setting.General](
+		r.Runtime.Repositories.Setting,
+		"general",
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	settingGeneral.JSONValue.EnableAbout = frm.EnableAbout
+	settingGeneral.JSONValue.About = frm.About
+	settingGeneral.JSONValue.EnableContact = frm.EnableContact
+	settingGeneral.JSONValue.Contact = frm.Contact
+	settingGeneral.JSONValue.EnablePrivacyPolicy = frm.EnablePrivacyPolicy
+	settingGeneral.JSONValue.PrivacyPolicy = frm.PrivacyPolicy
+	settingGeneral.JSONValue.EnableTerms = frm.EnableTerms
+	settingGeneral.JSONValue.Terms = frm.Terms
+
+	err = settingRepo.Update[setting.General](
+		r.Runtime.Repositories.Setting,
+		settingGeneral,
 	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr

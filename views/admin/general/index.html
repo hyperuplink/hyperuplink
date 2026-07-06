@@ -34,6 +34,24 @@
           </div>
         </div>
       </div>
+      {{ $general := .Data.Get "setting_general" }}
+      {{ $tabs := list
+        (dict "ID" "about" "TitleKey" "about" "Checked" true
+              "EnableName" "enable_about" "EnableOn" $general.EnableAbout
+              "TextName" "about" "TextValue" $general.About)
+        (dict "ID" "contact" "TitleKey" "contact" "Checked" false
+              "EnableName" "enable_contact" "EnableOn" $general.EnableContact
+              "TextName" "contact" "TextValue" $general.Contact)
+        (dict "ID" "privacy_policy" "TitleKey" "privacy_policy" "Checked" false
+              "EnableName" "enable_privacy_policy" "EnableOn" $general.EnablePrivacyPolicy
+              "TextName" "privacy_policy" "TextValue" $general.PrivacyPolicy)
+        (dict "ID" "terms" "TitleKey" "terms" "Checked" false
+              "EnableName" "enable_terms" "EnableOn" $general.EnableTerms
+              "TextName" "terms" "TextValue" $general.Terms)
+      }}
+      <div class="margin">
+        {{ template "views/layouts/partials/tabs" dict "Group" "general-tabs" "I18n" $._ "Tabs" $tabs }}
+      </div>
       <div class="actions margin flex-row justify-end gap">
         <button type="submit" class="affirmative" title="{{$._.T "update"}}">{{$._.T "update"}}</button>
       </div>

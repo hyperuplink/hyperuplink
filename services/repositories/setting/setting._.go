@@ -34,6 +34,17 @@ func (repo *Repository) Startup() (err error) {
 		}
 	}
 
+	var settingGeneral *setting.Setting[setting.General]
+
+	if settingGeneral, err = GetByID[setting.General](repo, "general"); err != nil {
+		settingGeneral = new(setting.Setting[setting.General])
+		settingGeneral.ID = "general"
+		settingGeneral.JSONValue = setting.General{}
+		if _, err = Create(repo, settingGeneral); err != nil {
+			return err
+		}
+	}
+
 	var settingTopics *setting.Setting[setting.Topics]
 
 	if settingTopics, err = GetByID[setting.Topics](repo, "topics"); err != nil {

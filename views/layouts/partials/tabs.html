@@ -1,0 +1,25 @@
+{{ $dict := . }}
+{{ $group := get $dict "Group" }}
+{{ $i18n := get $dict "I18n" }}
+{{ $tabs := get $dict "Tabs" }}
+<div class="tabs-nojs">
+	{{ range $tab := $tabs }}
+	<div class="tab">
+		<input class="tab-radio" type="radio" name="{{ $group }}" id="{{ $group }}-{{ $tab.ID }}" value="{{ $tab.ID }}" {{ if $tab.Checked }}checked{{ end }}>
+		<label class="tab-label" for="{{ $group }}-{{ $tab.ID }}">{{ $i18n.T $tab.TitleKey }}</label>
+		<div class="tab-panel">
+			<div class="margin flex-column gap">
+				<span class="checkbox-row">
+					<input type="checkbox" id="{{ $tab.EnableName }}" name="{{ $tab.EnableName }}" value="1" {{ if $tab.EnableOn }}checked{{ end }}>
+					<label for="{{ $tab.EnableName }}">{{ $i18n.T "enable" }}</label>
+				</span>
+				<div class="field flex-column grow">
+					<label for="{{ $tab.TextName }}">{{ $i18n.T $tab.TitleKey }}:</label>
+					<textarea id="{{ $tab.TextName }}" name="{{ $tab.TextName }}" class="input tab-textarea" rows="12">{{ $tab.TextValue }}</textarea>
+					<small>{{ $i18n.T "content_markdown_hint" }}</small>
+				</div>
+			</div>
+		</div>
+	</div>
+	{{ end }}
+</div>
