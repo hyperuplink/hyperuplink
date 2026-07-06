@@ -16,7 +16,6 @@ func GetPaths(c fiber.Ctx) (
 	absPath string,
 	relRoot string,
 ) {
-	origURL := c.OriginalURL()
 	cR := c.Route()
 	absPath = cR.Path
 	splitAbsPath := strings.Split(absPath, "/")
@@ -26,14 +25,18 @@ func GetPaths(c fiber.Ctx) (
 	} else {
 		pathName = ""
 	}
-	parts := lenSplitAbsPath - 1
 
-	if strings.HasSuffix(origURL, "/") {
-		parts++
+	reqPath := c.Path()
+	depth := 0
+	if trimmed := strings.Trim(reqPath, "/"); trimmed != "" {
+		depth = strings.Count(trimmed, "/") + 1
+	}
+	if depth > 0 && !strings.HasSuffix(reqPath, "/") {
+		depth--
 	}
 
 	relRoot = "./"
-	for i := 1; i < parts; i++ {
+	for i := 0; i < depth; i++ {
 		relRoot += "../"
 	}
 
