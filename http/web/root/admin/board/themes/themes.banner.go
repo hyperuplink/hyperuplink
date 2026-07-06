@@ -1,7 +1,6 @@
 package themes
 
 import (
-	"errors"
 	"io"
 	"mime/multipart"
 	"path"
@@ -11,6 +10,7 @@ import (
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/gofiber/fiber/v3"
 	"github.com/lithammer/shortuuid/v4"
+	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/setting"
@@ -41,7 +41,7 @@ func (r *Route) BannerUpload(c fiber.Ctx) (err error) {
 	}
 
 	if frm.CustomBanner == nil || frm.CustomBanner.Filename == "" {
-		req.Flash.SetError(errors.New("banner_upload_failed"))
+		req.Flash.SetError(errs.ErrBannerUploadFailed)
 		return req.RedirectToRoute(myRoute)
 	}
 
@@ -56,12 +56,12 @@ func (r *Route) BannerUpload(c fiber.Ctx) (err error) {
 	theme := settingTheme.JSONValue
 
 	if theme.ThemeStorageProviderID == "" {
-		req.Flash.SetError(errors.New("theme_storage_not_configured"))
+		req.Flash.SetError(errs.ErrThemeStorageNotConfigured)
 		return req.RedirectToRoute(myRoute)
 	}
 
 	if theme.CustomBanner != "" {
-		req.Flash.SetError(errors.New("banner_already_set"))
+		req.Flash.SetError(errs.ErrBannerAlreadySet)
 		return req.RedirectToRoute(myRoute)
 	}
 
@@ -78,7 +78,7 @@ func (r *Route) BannerUpload(c fiber.Ctx) (err error) {
 		}
 	}
 	if !valid {
-		req.Flash.SetError(errors.New("invalid_storage_provider"))
+		req.Flash.SetError(errs.ErrInvalidStorageProvider)
 		return req.RedirectToRoute(myRoute)
 	}
 
@@ -97,7 +97,7 @@ func (r *Route) BannerUpload(c fiber.Ctx) (err error) {
 	}
 
 	if !strings.HasPrefix(mtype.String(), "image/") {
-		req.Flash.SetError(errors.New("banner_format_not_allowed"))
+		req.Flash.SetError(errs.ErrBannerFormatNotAllowed)
 		return req.RedirectToRoute(myRoute)
 	}
 

@@ -9,6 +9,7 @@ import (
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/mrusme/hyperuplink/errs"
 )
 
 func (db *Database) Exec(sql string, args ...any) (pgconn.CommandTag, error) {
@@ -43,13 +44,13 @@ func (db *Database) ConvertError(err error) error {
 	}
 
 	if errors.Is(err, pgx.ErrNoRows) {
-		return errors.New("no_rows")
+		return errs.ErrNoRows
 	}
 
 	if errors.As(err, &pgErr) {
 		switch pgErr.Code {
 		case pgerrcode.UniqueViolation:
-			return errors.New(fmt.Sprintf("unique_violation_on_%s", pgErr.ConstraintName))
+			return fmt.Errorf("%w_%s", errs.ErrUniqueViolationOn, pgErr.ConstraintName)
 		default:
 			return err
 		}

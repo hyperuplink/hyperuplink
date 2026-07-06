@@ -1,8 +1,9 @@
 package user
 
 import (
-	"errors"
 	"time"
+
+	"github.com/mrusme/hyperuplink/errs"
 )
 
 func (m *User) SetEmailConfirmationSentAt(t time.Time) {
@@ -55,7 +56,7 @@ func (m *User) ConfirmEmail(token string) error {
 	now := time.Now()
 
 	if m.EmailConfirmationToken != token {
-		return errors.New("email_confirmation_token_wrong")
+		return errs.ErrEmailConfirmationTokenWrong
 	}
 
 	m.Email = m.EmailUnconfirmed

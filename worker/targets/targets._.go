@@ -1,7 +1,7 @@
 package targets
 
 import (
-	"errors"
+	"fmt"
 
 	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/models/asyncjob"
@@ -39,7 +39,7 @@ func NewTarget(
 	// case "xmpp":
 	// 	t, err = xmpp.New(rt, def)
 	default:
-		return nil, errors.New("No such target type: " + def.Type)
+		return nil, fmt.Errorf("%w: %s", errs.ErrNoSuchTargetType, def.Type)
 	}
 	if err != nil {
 		return nil, err

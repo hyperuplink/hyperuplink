@@ -1,10 +1,10 @@
 package profiles
 
 import (
-	"errors"
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/setting"
@@ -54,7 +54,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		}
 	}
 	if !valid {
-		req.Flash.SetError(errors.New("invalid_storage_provider"))
+		req.Flash.SetError(errs.ErrInvalidStorageProvider)
 		return req.RedirectToRoute(myRoute)
 	}
 

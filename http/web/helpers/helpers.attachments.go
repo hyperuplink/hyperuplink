@@ -3,7 +3,6 @@ package helpers
 import (
 	"crypto/sha512"
 	"encoding/hex"
-	"errors"
 	"io"
 	"mime/multipart"
 	"os"
@@ -13,6 +12,7 @@ import (
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
+	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/models/attachment"
 	"github.com/mrusme/hyperuplink/models/setting"
 	"github.com/mrusme/hyperuplink/runtime"
@@ -69,33 +69,33 @@ func processAttachment(
 	fh *multipart.FileHeader,
 ) (id uuid.UUID, err error) {
 	if fh.Size > attachments.GetMaxSize() {
-		return uuid.Nil, errors.New("attachment_too_large")
+		return uuid.Nil, errs.ErrAttachmentTooLarge
 	}
 
 	src, err := fh.Open()
 	if err != nil {
-		return uuid.Nil, errors.New("attachment_upload_failed")
+		return uuid.Nil, errs.ErrAttachmentUploadFailed
 	}
 	defer src.Close()
 
 	tmp, err := os.CreateTemp("", "hyperuplink-attachment-*")
 	if err != nil {
-		return uuid.Nil, errors.New("attachment_upload_failed")
+		return uuid.Nil, errs.ErrAttachmentUploadFailed
 	}
 	tmpPath := tmp.Name()
 	defer os.Remove(tmpPath)
 
 	if _, err = io.Copy(tmp, src); err != nil {
 		tmp.Close()
-		return uuid.Nil, errors.New("attachment_upload_failed")
+		return uuid.Nil, errs.ErrAttachmentUploadFailed
 	}
 	if err = tmp.Close(); err != nil {
-		return uuid.Nil, errors.New("attachment_upload_failed")
+		return uuid.Nil, errs.ErrAttachmentUploadFailed
 	}
 
 	mtype, err := mimetype.DetectFile(tmpPath)
 	if err != nil {
-		return uuid.Nil, errors.New("attachment_upload_failed")
+		return uuid.Nil, errs.ErrAttachmentUploadFailed
 	}
 
 	allowed := false
@@ -106,17 +106,17 @@ func processAttachment(
 		}
 	}
 	if !allowed {
-		return uuid.Nil, errors.New("attachment_format_not_allowed")
+		return uuid.Nil, errs.ErrAttachmentFormatNotAllowed
 	}
 
 	output, herr := attachments.RunOnUploadHook(tmpPath)
 	if herr != nil {
-		return uuid.Nil, errors.New("attachment_hook_failed")
+		return uuid.Nil, errs.ErrAttachmentHookFailed
 	}
 
 	var checksum string
 	if checksum, err = checksumFile(tmpPath); err != nil {
-		return uuid.Nil, errors.New("attachment_upload_failed")
+		return uuid.Nil, errs.ErrAttachmentUploadFailed
 	}
 
 	att := &attachment.Attachment{
@@ -128,14 +128,14 @@ func processAttachment(
 	}
 	if id, err = rt.Repositories.Attachment.Create(att); err != nil {
 		if strings.HasPrefix(err.Error(), "unique_violation") {
-			return uuid.Nil, errors.New("attachment_duplicate")
+			return uuid.Nil, errs.ErrAttachmentDuplicate
 		}
-		return uuid.Nil, errors.New("attachment_upload_failed")
+		return uuid.Nil, errs.ErrAttachmentUploadFailed
 	}
 
 	f, err := os.Open(tmpPath)
 	if err != nil {
-		return uuid.Nil, errors.New("attachment_upload_failed")
+		return uuid.Nil, errs.ErrAttachmentUploadFailed
 	}
 	defer f.Close()
 
@@ -144,7 +144,7 @@ func processAttachment(
 		f,
 		path.Join(attachments.StoragePath, id.String()),
 	); err != nil {
-		return uuid.Nil, errors.New("attachment_upload_failed")
+		return uuid.Nil, errs.ErrAttachmentUploadFailed
 	}
 
 	return id, nil

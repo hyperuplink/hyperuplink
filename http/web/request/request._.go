@@ -1,13 +1,13 @@
 package request
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
+	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/helpers"
 	"github.com/mrusme/hyperuplink/http/web/request/bcn"
@@ -197,11 +197,12 @@ func (req *Request) ValidateForm(f any, t reflect.Type) bool {
 					break
 				}
 
-				errmap[formTag] = errors.New(fmt.Sprintf(
-					"validation_%s_%s",
+				errmap[formTag] = fmt.Errorf(
+					"%w_%s_%s",
+					errs.ErrValidation,
 					strings.ToLower(e.Field()),
 					e.Tag(),
-				))
+				)
 			}
 
 			req.Flash.SetErrorsMap(errmap)

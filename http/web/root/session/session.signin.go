@@ -1,10 +1,10 @@
 package session
 
 import (
-	"errors"
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/user"
@@ -67,7 +67,7 @@ func (r *Route) SignInCreate(c fiber.Ctx) (err error) {
 	var match bool = false
 	if match, _, err = usr.CheckPassword(frm.Password); !match {
 		if err == nil {
-			err = errors.New("username_password_wrong")
+			err = errs.ErrUsernamePasswordWrong
 		}
 	}
 	if ret, rerr := req.RespondOnError(err); ret == true {

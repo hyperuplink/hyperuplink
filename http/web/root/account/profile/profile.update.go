@@ -1,7 +1,6 @@
 package profile
 
 import (
-	"errors"
 	"io"
 	"mime/multipart"
 	"os"
@@ -10,6 +9,7 @@ import (
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/gofiber/fiber/v3"
 	"github.com/lithammer/shortuuid/v4"
+	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/setting"
@@ -62,7 +62,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 
 		if profiles.EnablePicture {
 			if frm.ProfilePicture.Size > profiles.GetPictureMaxSize() {
-				req.Flash.SetError(errors.New("picture_too_large"))
+				req.Flash.SetError(errs.ErrPictureTooLarge)
 				return req.RedirectToRoute(myRoute)
 			}
 
@@ -90,7 +90,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 			}
 			if !allowed {
 				profilePictureMultipartFile.Close()
-				req.Flash.SetError(errors.New("picture_format_not_allowed"))
+				req.Flash.SetError(errs.ErrPictureFormatNotAllowed)
 				return req.RedirectToRoute(myRoute)
 			}
 

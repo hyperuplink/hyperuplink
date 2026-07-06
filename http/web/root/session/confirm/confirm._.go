@@ -1,10 +1,10 @@
 package confirm
 
 import (
-	"errors"
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
 	"github.com/mrusme/hyperuplink/models/user"
@@ -123,7 +123,7 @@ func (r *Route) ConfirmCreate(c fiber.Ctx) (err error) {
 
 	if usr.EmailConfirmationToken != frm.Token {
 		req.Form.Set(frm)
-		return req.RespondError(errors.New("email_confirmation_token_wrong"))
+		return req.RespondError(errs.ErrEmailConfirmationTokenWrong)
 	}
 
 	if err := req.Session.Set("local", usr.ID.String()); err != nil {

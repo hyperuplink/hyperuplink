@@ -1,11 +1,11 @@
 package themes
 
 import (
-	"errors"
 	"reflect"
 	"slices"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/mrusme/hyperuplink/errs"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/helpers"
 	"github.com/mrusme/hyperuplink/http/web/request"
@@ -46,7 +46,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 	if !slices.Contains(themes, frm.Theme) {
-		req.Flash.SetError(errors.New("invalid_theme"))
+		req.Flash.SetError(errs.ErrInvalidTheme)
 		return req.RedirectToRoute(myRoute)
 	}
 
@@ -55,7 +55,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 	if !slices.Contains(colorschemes, frm.Colorscheme) {
-		req.Flash.SetError(errors.New("invalid_colorscheme"))
+		req.Flash.SetError(errs.ErrInvalidColorscheme)
 		return req.RedirectToRoute(myRoute)
 	}
 
@@ -72,7 +72,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		}
 	}
 	if !valid {
-		req.Flash.SetError(errors.New("invalid_storage_provider"))
+		req.Flash.SetError(errs.ErrInvalidStorageProvider)
 		return req.RedirectToRoute(myRoute)
 	}
 
