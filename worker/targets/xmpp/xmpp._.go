@@ -1,0 +1,94 @@
+package xmpp
+
+import (
+	"crypto/tls"
+	"strings"
+
+	"xn--gckvb8fzb.com/hyperuplink/errs"
+	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
+	"xn--gckvb8fzb.com/hyperuplink/services/config"
+
+	goxmpp "github.com/xmppo/go-xmpp"
+)
+
+type XMPP struct {
+	rt        *runtime.Runtime
+	def       config.Target
+	tmplCache TmplCache
+
+	jabberOpts goxmpp.Options
+	jabber     *goxmpp.Client
+}
+
+type Args struct{}
+
+func New(
+	rt *runtime.Runtime,
+	def config.Target,
+) (t *XMPP, err error) {
+	t = new(XMPP)
+
+	t.rt = rt
+	t.def = def
+	t.tmplCache = make(TmplCache)
+
+	return t, nil
+}
+
+func (t *XMPP) Load() error {
+	t.rt.Info("load target", "xmpp")
+	t.rt.Debug("config", t.def)
+
+	xmppServer := t.def.XMPP.Server
+	xmppTLS := t.def.XMPP.TLS
+	xmppUsername := t.def.XMPP.Username
+	xmppPassword := t.def.XMPP.Password
+
+	goxmpp.DefaultConfig = &tls.Config{
+		ServerName:         strings.Split(xmppServer, ":")[0],
+		InsecureSkipVerify: false,
+	}
+
+	t.jabberOpts = goxmpp.Options{
+		Host:                xmppServer,
+		User:                xmppUsername,
+		Password:            xmppPassword,
+		NoTLS:               true,
+		StartTLS:            xmppTLS,
+		Debug:               t.rt.IsDevelopmentMode(),
+		Session:             true,
+		Status:              "chat",
+		StatusMessage:       "", // TODO: Maybe set site title?
+		PeriodicServerPings: true,
+	}
+
+	return nil
+}
+
+func (t *XMPP) Run() error {
+	t.rt.Info("run target", "xmpp")
+	return t.reconnect()
+}
+
+func (t *XMPP) Shutdown() error {
+	t.rt.Info("shutdown target", "xmpp")
+	return nil
+}
+
+func (t *XMPP) Execute(
+	job asyncjob.AsyncJob,
+) (err error) {
+	t.rt.Info("execute target", "xmpp")
+
+	args := new(Args)
+
+	switch job.Type {
+	case asyncjob.Confirmation:
+		return t.ExecuteConfirmation(job, args)
+	case asyncjob.Notification:
+		return t.ExecuteNotification(job, args)
+	default:
+		return errs.ErrJobTypeInvalid
+	}
+}

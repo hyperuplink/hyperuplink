@@ -4,6 +4,7 @@ type Target struct {
 	ID    string      `koanf:"ID"`
 	Type  string      `koanf:"Type"`
 	Email TargetEmail `koanf:"Email,omitempty"`
+	XMPP  TargetXMPP  `koanf:"XMPP,omitempty"`
 }
 
 type TargetEmail struct {
@@ -16,6 +17,13 @@ type TargetEmail struct {
 		Email string
 		Name  string
 	}
+}
+
+type TargetXMPP struct {
+	Server   string
+	TLS      bool
+	Username string
+	Password string
 }
 
 type Targets []Target

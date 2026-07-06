@@ -8,6 +8,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/services/config"
 	"xn--gckvb8fzb.com/hyperuplink/worker/targets/email"
+	"xn--gckvb8fzb.com/hyperuplink/worker/targets/xmpp"
 )
 
 type ITarget interface {
@@ -36,8 +37,8 @@ func NewTarget(
 	switch def.Type {
 	case "email":
 		t, err = email.New(rt, def)
-	// case "xmpp":
-	// 	t, err = xmpp.New(rt, def)
+	case "xmpp":
+		t, err = xmpp.New(rt, def)
 	default:
 		return nil, fmt.Errorf("%w: %s", errs.ErrNoSuchTargetType, def.Type)
 	}
