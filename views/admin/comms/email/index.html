@@ -4,12 +4,58 @@
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
+    {{ $settingCommsEmail := .Data.Get "setting_comms_email" }}
+    {{ $emailTargets := .Data.Get "email_targets" }}
+    {{ $selectedTarget := .Data.Get "selected_target" }}
     <form method="post"
           action="{{$.Site.GetFormAction "update"}}"
-          enctype="multipart/form-data"
           class="">
       <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-      <!-- TODO -->
+      <div class="margin flex-column gap">
+        <div class="field flex-column grow">
+          <label for="target_id">{{$._.T "email_target"}}:</label>
+          <div class="dropdown">
+            <select id="target_id" name="target_id" size="1">
+              <option value="">{{$._.T "none"}}</option>
+              {{ range $target := $emailTargets }}
+              <option value="{{$target.ID}}" {{ if eq $settingCommsEmail.TargetID $target.ID }}selected{{ end }}>{{$target.ID}}</option>
+              {{ end }}
+            </select>
+            <div class="dropdown-button"></div>
+          </div>
+        </div>
+        {{ if $selectedTarget }}
+        <fieldset class="padding">
+          <legend>{{$._.T "configuration"}}:</legend>
+          <div class="grid gap config-grid align-center">
+            <label for="smtp_server">{{$._.T "smtp_server"}}:</label>
+            <input type="text" id="smtp_server" class="input"
+                   value="{{$selectedTarget.Email.SMTPServer}}" readonly>
+            <label for="smtp_auth_type">{{$._.T "smtp_auth_type"}}:</label>
+            <input type="text" id="smtp_auth_type" class="input"
+                   value="{{$selectedTarget.Email.SMTPAuthType}}" readonly>
+            <label for="smtp_tls_policy">{{$._.T "smtp_tls_policy"}}:</label>
+            <input type="text" id="smtp_tls_policy" class="input"
+                   value="{{$selectedTarget.Email.SMTPTLSPolicy}}" readonly>
+            <label for="smtp_username">{{$._.T "smtp_username"}}:</label>
+            <input type="text" id="smtp_username" class="input"
+                   value="{{$selectedTarget.Email.SMTPUsername}}" readonly>
+            <label for="smtp_password">{{$._.T "smtp_password"}}:</label>
+            <input type="password" id="smtp_password" class="input"
+                   value="hunter2" readonly>
+            <label for="from_email">{{$._.T "from_email"}}:</label>
+            <input type="text" id="from_email" class="input"
+                   value="{{$selectedTarget.Email.From.Email}}" readonly>
+            <label for="from_name">{{$._.T "from_name"}}:</label>
+            <input type="text" id="from_name" class="input"
+                   value="{{$selectedTarget.Email.From.Name}}" readonly>
+          </div>
+        </fieldset>
+        {{ end }}
+      </div>
+      <div class="actions margin flex-row justify-end gap">
+        <button type="submit" class="affirmative" title="{{$._.T "update"}}">{{$._.T "update"}}</button>
+      </div>
     </form>
   </div>
 </div>

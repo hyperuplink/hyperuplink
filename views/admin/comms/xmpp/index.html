@@ -4,12 +4,49 @@
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
+    {{ $settingCommsXMPP := .Data.Get "setting_comms_xmpp" }}
+    {{ $xmppTargets := .Data.Get "xmpp_targets" }}
+    {{ $selectedTarget := .Data.Get "selected_target" }}
     <form method="post"
           action="{{$.Site.GetFormAction "update"}}"
-          enctype="multipart/form-data"
           class="">
       <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-      <!-- TODO -->
+      <div class="margin flex-column gap">
+        <div class="field flex-column grow">
+          <label for="target_id">{{$._.T "xmpp_target"}}:</label>
+          <div class="dropdown">
+            <select id="target_id" name="target_id" size="1">
+              <option value="">{{$._.T "none"}}</option>
+              {{ range $target := $xmppTargets }}
+              <option value="{{$target.ID}}" {{ if eq $settingCommsXMPP.TargetID $target.ID }}selected{{ end }}>{{$target.ID}}</option>
+              {{ end }}
+            </select>
+            <div class="dropdown-button"></div>
+          </div>
+        </div>
+        {{ if $selectedTarget }}
+        <fieldset class="padding">
+          <legend>{{$._.T "configuration"}}:</legend>
+          <div class="grid gap config-grid align-center">
+            <label for="xmpp_server">{{$._.T "xmpp_server"}}:</label>
+            <input type="text" id="xmpp_server" class="input"
+                   value="{{$selectedTarget.XMPP.Server}}" readonly>
+            <label for="xmpp_tls">{{$._.T "xmpp_tls"}}:</label>
+            <input type="text" id="xmpp_tls" class="input"
+                   value="{{$selectedTarget.XMPP.TLS}}" readonly>
+            <label for="xmpp_username">{{$._.T "xmpp_username"}}:</label>
+            <input type="text" id="xmpp_username" class="input"
+                   value="{{$selectedTarget.XMPP.Username}}" readonly>
+            <label for="xmpp_password">{{$._.T "xmpp_password"}}:</label>
+            <input type="password" id="xmpp_password" class="input"
+                   value="hunter2" readonly>
+          </div>
+        </fieldset>
+        {{ end }}
+      </div>
+      <div class="actions margin flex-row justify-end gap">
+        <button type="submit" class="affirmative" title="{{$._.T "update"}}">{{$._.T "update"}}</button>
+      </div>
     </form>
   </div>
 </div>

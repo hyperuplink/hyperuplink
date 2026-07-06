@@ -87,6 +87,11 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	settingCommsEmail, err := repoSetting.GetByID[setting.CommsEmail](r.Runtime.Repositories.Setting, "comms_email")
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
 	// Send confirmation email
 	sc, err := signupconfirmation.New(
 		&settingSystem.JSONValue,
@@ -106,7 +111,7 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 	r.Runtime.Error("sc", sc)
 
 	err = r.Runtime.Dispatch.SignupConfirmation(
-		"notifications", // TODO: Replace with setting.CommsEmail
+		settingCommsEmail.JSONValue.TargetID,
 		sc,
 	)
 	if ret, rerr := req.RespondOnError(err); ret == true {

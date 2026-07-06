@@ -589,3 +589,10 @@ a.button {
   font-size: var(--font-size-text);
   width: 100%;
 }
+
+/*** root_admin_comms_email / root_admin_comms_xmpp ***************************/
+
+.root_admin_comms_email .config-grid,
+.root_admin_comms_xmpp .config-grid {
+  grid-template-columns: auto 1fr;
+}

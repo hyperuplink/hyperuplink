@@ -158,21 +158,37 @@ func (t *XMPP) reconnect() error {
 		}
 	}
 
-	t.rt.Debug("connect to server ...", "xmpp",
-		"host", t.jabberOpts.Host)
-	t.jabber, err = t.jabberOpts.NewClient()
-	if err != nil {
-		t.rt.Error("failed to connect", "xmpp",
-			"error", err)
-		return err
+	if t.rt.IsDevelopmentMode() {
+		t.rt.Debug(
+			"service", "xmpp",
+			"pretend", "connect",
+			"host", t.jabberOpts.Host,
+		)
+		return nil
+	} else {
+		t.rt.Debug("connect to server ...", "xmpp",
+			"host", t.jabberOpts.Host)
+		t.jabber, err = t.jabberOpts.NewClient()
+		if err != nil {
+			t.rt.Error("failed to connect", "xmpp",
+				"error", err)
+			return err
+		}
 	}
 
 	return nil
 }
 
 func (t *XMPP) disconnect() error {
-	t.rt.Debug("close existing client", "xmpp")
-	t.jabber.Close()
-
+	if t.rt.IsDevelopmentMode() {
+		t.rt.Debug(
+			"service", "xmpp",
+			"pretend", "disconnect",
+		)
+		return nil
+	} else {
+		t.rt.Debug("close existing client", "xmpp")
+		t.jabber.Close()
+	}
 	return nil
 }

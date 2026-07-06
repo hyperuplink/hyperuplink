@@ -37,9 +37,13 @@ Email.SMTPPassword = "pass"
 Email.From.Email = "reply@example.org"
 Email.From.Name = "Example.org"
 
-# [[Target]]
-# ID = "primary"
-# Type = "xmpp"
+[[Target]]
+ID = "jabber"
+Type = "xmpp"
+XMPP.Server ="jabber.example.org:5222"
+XMPP.TLS = true
+XMPP.Username = "hello@example.org"
+XMPP.Password = "swordfish123"
 
 [[Storage]]
 ID = "profile-pictures"

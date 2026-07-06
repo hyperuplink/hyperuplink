@@ -138,6 +138,74 @@ func (repo *Repository) Startup() (err error) {
 		}
 	}
 
+	var settingCommsEmail *setting.Setting[setting.CommsEmail]
+
+	if settingCommsEmail, err = GetByID[setting.CommsEmail](repo, "comms_email"); err != nil {
+		settingCommsEmail = new(setting.Setting[setting.CommsEmail])
+		settingCommsEmail.ID = "comms_email"
+		settingCommsEmail.JSONValue = setting.CommsEmail{
+			TargetID: "",
+		}
+		if _, err = Create(repo, settingCommsEmail); err != nil {
+			return err
+		}
+	} else if settingCommsEmail.JSONValue.TargetID != "" {
+		var targets config.Targets
+		if targets, err = repo.cfg.Targets(); err != nil {
+			return err
+		}
+
+		exists := false
+		for _, target := range targets {
+			if target.ID == settingCommsEmail.JSONValue.TargetID &&
+				target.Type == "email" {
+				exists = true
+				break
+			}
+		}
+
+		if !exists {
+			settingCommsEmail.JSONValue.TargetID = ""
+			if err = Update(repo, settingCommsEmail); err != nil {
+				return err
+			}
+		}
+	}
+
+	var settingCommsXMPP *setting.Setting[setting.CommsXMPP]
+
+	if settingCommsXMPP, err = GetByID[setting.CommsXMPP](repo, "comms_xmpp"); err != nil {
+		settingCommsXMPP = new(setting.Setting[setting.CommsXMPP])
+		settingCommsXMPP.ID = "comms_xmpp"
+		settingCommsXMPP.JSONValue = setting.CommsXMPP{
+			TargetID: "",
+		}
+		if _, err = Create(repo, settingCommsXMPP); err != nil {
+			return err
+		}
+	} else if settingCommsXMPP.JSONValue.TargetID != "" {
+		var targets config.Targets
+		if targets, err = repo.cfg.Targets(); err != nil {
+			return err
+		}
+
+		exists := false
+		for _, target := range targets {
+			if target.ID == settingCommsXMPP.JSONValue.TargetID &&
+				target.Type == "xmpp" {
+				exists = true
+				break
+			}
+		}
+
+		if !exists {
+			settingCommsXMPP.JSONValue.TargetID = ""
+			if err = Update(repo, settingCommsXMPP); err != nil {
+				return err
+			}
+		}
+	}
+
 	var settingTheme *setting.Setting[setting.Theme]
 
 	if settingTheme, err = GetByID[setting.Theme](repo, "theme"); err != nil {
