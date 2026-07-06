@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mrusme/hyperuplink/http/route"
 	"github.com/mrusme/hyperuplink/http/web/request"
+	"github.com/mrusme/hyperuplink/http/web/request/bcn"
 	"github.com/mrusme/hyperuplink/models/user"
 )
 
@@ -55,7 +56,51 @@ func (r *Route) render(c fiber.Ctx, sub string) (err error) {
 		return rerr
 	}
 
+	r.setSegmentBreadcrumbs(req, myRoute, sub)
+
 	req.SetData("html", html)
 
 	return req.Respond()
+}
+
+func (r *Route) setSegmentBreadcrumbs(
+	req *request.Request,
+	myRoute route.Route,
+	sub string,
+) {
+	var segments []string
+	for _, segment := range strings.Split(strings.Trim(sub, "/"), "/") {
+		if segment != "" {
+			segments = append(segments, segment)
+		}
+	}
+	if len(segments) == 0 {
+		return
+	}
+
+	crumbs := req.BCN.Get()
+	if n := len(crumbs); n > 0 {
+		crumbs[n-1].IsActive = false
+		crumbs[n-1].Href = req.HrefTo(myRoute.AsURL() + "/")
+	}
+
+	acc := myRoute.AsURL()
+	for i, segment := range segments {
+		acc += "/" + segment
+
+		href := ""
+		if i < len(segments)-1 {
+			href = req.HrefTo(acc + "/")
+		}
+
+		label := strings.ToUpper(segment[:1]) + segment[1:]
+		crumbs = append(crumbs, *bcn.NewBreadcrumb(
+			i == len(segments)-1,
+			label,
+			label,
+			href,
+		))
+	}
+
+	req.BCN.Set(crumbs)
 }
