@@ -3,13 +3,73 @@
     <div class="title-bar-text">{{$.Site.Title}}</div>
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
-    {{ $user := .Data.Get "user"}}
-    <form method="post"
-          action="{{$.Site.GetFormAction "update"}}"
-          enctype="multipart/form-data"
-          class="">
-      <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-      <!-- TODO -->
-    </form>
+    {{ $user := .Data.Get "user" }}
+    <div class="flex-column gap margin">
+
+      <fieldset class="flex-column gap padding">
+        <legend>{{$._.T "twofactor_authenticator_app"}}</legend>
+        {{ if $user.OTPEnabled }}
+        <div class="info raised padding">{{$._.T "twofactor_enabled_status"}}</div>
+        <form method="post" action="{{$.Site.GetFormAction "disable"}}">
+          <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+          <div class="fieldrow flex-row flex-wrap gap">
+            <div class="field flex-column grow">
+              {{$.Form.Input "password" "current_password" "" true "autocomplete" "current-password"}}
+              <small>{{$._.T "twofactor_disable_hint"}}</small>
+            </div>
+          </div>
+          <div class="actions margin flex-row justify-end gap">
+            <button type="submit" class="danger" title="{{$._.T "twofactor_disable"}}">{{$._.T "twofactor_disable"}}</button>
+          </div>
+        </form>
+        {{ else }}
+        {{ $enrollment := .Data.Get "enrollment" }}
+        <small>{{$._.T "twofactor_otp_intro"}}</small>
+        <div class="fieldrow flex-row flex-wrap gap">
+          <div class="field flex-column">
+            <label>{{$._.T "twofactor_scan_qr"}}</label>
+            <img class="raised" width="200" height="200"
+                 src="{{ safeURL $enrollment.QRDataURI }}"
+                 alt="{{$._.T "twofactor_authenticator_app"}}">
+          </div>
+          <div class="field flex-column grow">
+            <label for="otp_secret">{{$._.T "twofactor_manual_key"}}</label>
+            <input type="text" id="otp_secret" class="input" readonly
+                   value="{{ $enrollment.Secret }}"
+                   onclick="this.select()">
+            <form method="post" action="{{$.Site.GetFormAction "enable"}}">
+              <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+              <div class="fieldrow flex-row flex-wrap gap">
+                <div class="field flex-column grow">
+                  {{$.Form.Input "text" "otp_code" "" true "inputmode" "numeric" "autocomplete" "one-time-code" "maxlength" "6" "pattern" "[0-9]*" "placeholder" "000000"}}
+                  <small>{{$._.T "twofactor_enter_code_hint"}}</small>
+                </div>
+              </div>
+              <div class="actions margin flex-row justify-end gap">
+                <button type="submit" class="affirmative" title="{{$._.T "twofactor_enable"}}">{{$._.T "twofactor_enable"}}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        {{ end }}
+      </fieldset>
+
+      <fieldset class="flex-column gap padding">
+        <legend>{{$._.T "passkeys"}}</legend>
+        <small>{{$._.T "passkeys_intro"}}</small>
+        <div class="actions margin flex-row justify-end gap">
+          <button type="button" disabled title="{{$._.T "coming_soon"}}">{{$._.T "add_passkey"}}</button>
+        </div>
+      </fieldset>
+
+      <fieldset class="flex-column gap padding">
+        <legend>{{$._.T "hardware_tokens"}}</legend>
+        <small>{{$._.T "hardware_tokens_intro"}}</small>
+        <div class="actions margin flex-row justify-end gap">
+          <button type="button" disabled title="{{$._.T "coming_soon"}}">{{$._.T "add_hardware_token"}}</button>
+        </div>
+      </fieldset>
+
+    </div>
   </div>
 </div>

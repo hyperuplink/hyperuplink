@@ -28,5 +28,22 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 
 	req.SetData("user", usr)
 
+	if !usr.OTPEnabled {
+		pendingURL, _ := req.Session.GetPendingOTPURL()
+
+		var enrollment *user.OTPEnrollment
+		enrollment, err = user.NewOTPEnrollment(
+			req.System.Name,
+			usr.Username,
+			pendingURL,
+		)
+		if ret, rerr := req.RespondOnError(err); ret == true {
+			return rerr
+		}
+
+		req.Session.SetPendingOTPURL(enrollment.URL)
+		req.SetData("enrollment", enrollment)
+	}
+
 	return req.Respond()
 }

@@ -138,4 +138,10 @@ var (
 	ErrNoSuchTargetType error = errors.New(
 		"err_no_such_target_type",
 	)
+	ErrOTPCodeWrong error = errors.New(
+		"err_otp_code_wrong",
+	)
+	ErrOTPSetupExpired error = errors.New(
+		"err_otp_setup_expired",
+	)
 )

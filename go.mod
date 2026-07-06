@@ -23,11 +23,13 @@ require (
 	github.com/lithammer/shortuuid/v4 v4.2.0
 	github.com/markbates/goth v1.82.0
 	github.com/pelletier/go-toml/v2 v2.4.2
+	github.com/pquerna/otp v1.5.0
 	github.com/rhnvrm/simples3 v0.11.1
 	github.com/samber/slog-fiber v1.22.2
 	github.com/shareed2k/goth_fiber/v2 v2.0.4
 	github.com/vgarvardt/pgx-google-uuid/v5 v5.6.0
 	github.com/wneessen/go-mail v0.7.3
+	github.com/xmppo/go-xmpp v0.3.6
 	github.com/yuin/goldmark v1.8.2
 	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc
 	github.com/zlasd/tzloc v1.16.16
@@ -40,6 +42,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.4.0 // indirect
 	github.com/agentable/go-intl v0.2.7 // indirect
 	github.com/andybalholm/brotli v1.2.2 // indirect
+	github.com/boombuler/barcode v1.0.1-0.20190219062509-6c824513bacc // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cockroachdb/apd/v3 v3.2.3 // indirect
 	github.com/dlclark/regexp2/v2 v2.2.1 // indirect
@@ -76,7 +79,6 @@ require (
 	github.com/tinylib/msgp v1.6.4 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.72.0 // indirect
-	github.com/xmppo/go-xmpp v0.3.6 // indirect
 	go.opentelemetry.io/otel v1.44.0 // indirect
 	go.opentelemetry.io/otel/trace v1.44.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
