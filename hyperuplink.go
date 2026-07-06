@@ -29,6 +29,9 @@ var embedLocales embed.FS
 //go:embed templates/*
 var embedTemplates embed.FS
 
+//go:embed docs/*
+var embedDocs embed.FS
+
 var (
 	flagCfgstr    string
 	flagLocalegen bool
@@ -77,6 +80,7 @@ func main() {
 	rt.Embeds["views"] = &embedViews
 	rt.Embeds["locales"] = &embedLocales
 	rt.Embeds["templates"] = &embedTemplates
+	rt.Embeds["docs"] = &embedDocs
 
 	rt.Database.SetMigrations(rt.Embeds["migrations"])
 	rt.Intnat.SetLocales(rt.Embeds["locales"])

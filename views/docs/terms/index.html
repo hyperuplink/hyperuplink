@@ -1,0 +1,8 @@
+<div class="margin window active">
+  <div class="title-bar">
+    <div class="title-bar-text">{{$.Site.Title}}</div>
+  </div>
+  <div class="window-body {{$.Site.GetRoute.AsID}}">
+    <div class="markdown">{{ safeHTML (.Data.Get "html") }}</div>
+  </div>
+</div>
