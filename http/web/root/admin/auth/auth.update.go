@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"reflect"
+
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
@@ -9,7 +11,11 @@ import (
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
-func (r *Route) Index(c fiber.Ctx) (err error) {
+type AuthUpdateForm struct {
+	AddressType int `form:"address_type" validate:"oneof=0 1 2"`
+}
+
+func (r *Route) Update(c fiber.Ctx) (err error) {
 	myRoute := route.For("AdminAuth")
 	req := request.New(r, c, myRoute,
 		[]string{"base"}, myRoute.AsURL()+"/index",
@@ -21,6 +27,14 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	frm := new(AuthUpdateForm)
+
+	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+		return req.RedirectToRoute(myRoute)
+	}
+
+	r.Runtime.Debug("form", frm)
+
 	var settingAuth *setting.Setting[setting.Auth]
 	settingAuth, err = settingRepo.GetByID[setting.Auth](
 		r.Runtime.Repositories.Setting,
@@ -30,7 +44,15 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	req.SetData("setting_auth", &settingAuth.JSONValue)
+	settingAuth.JSONValue.AddressType = setting.AddressType(frm.AddressType)
 
-	return req.Respond()
+	err = settingRepo.Update[setting.Auth](
+		r.Runtime.Repositories.Setting,
+		settingAuth,
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	return req.RedirectToRoute(myRoute)
 }

@@ -70,3 +70,7 @@ func (m *User) ConfirmEmail(token string) error {
 
 	return nil
 }
+
+func (m *User) SetEmailIsJID() {
+	m.EmailIsJID = true
+}

@@ -15,6 +15,7 @@ func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
 		,email_unconfirmed
 		,email_confirmation_token
 		,email_confirmation_sent_at
+		,email_is_jid
 		,language
 		,created_at
 		,updated_at
@@ -28,6 +29,7 @@ func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
 		,$7
 		,$8
 		,$9
+		,$10
 		,NOW()
 		,NOW()
 		) RETURNING id`,
@@ -39,6 +41,7 @@ func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
 		model.EmailUnconfirmed,
 		model.EmailConfirmationToken,
 		model.EmailConfirmationSentAt,
+		model.EmailIsJID,
 		model.Language,
 	).Scan(&rowID)
 	return rowID, repo.db.ConvertError(err)

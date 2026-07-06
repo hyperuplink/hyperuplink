@@ -4,12 +4,27 @@
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
+    {{ $settingAuth := .Data.Get "setting_auth" }}
     <form method="post"
           action="{{$.Site.GetFormAction "update"}}"
-          enctype="multipart/form-data"
           class="">
       <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-      <!-- TODO -->
+      <div class="margin flex-column gap">
+        <div class="field flex-column grow">
+          <label for="address_type">{{$._.T "supported_address_type"}}:</label>
+          <div class="dropdown">
+            <select id="address_type" name="address_type" size="1">
+              <option value="0" {{ if eq $settingAuth.AddressType 0 }}selected{{ end }}>{{$._.T "address_type_email_only"}}</option>
+              <option value="1" {{ if eq $settingAuth.AddressType 1 }}selected{{ end }}>{{$._.T "address_type_jid_only"}}</option>
+              <option value="2" {{ if eq $settingAuth.AddressType 2 }}selected{{ end }}>{{$._.T "address_type_email_and_jid"}}</option>
+            </select>
+            <div class="dropdown-button"></div>
+          </div>
+        </div>
+      </div>
+      <div class="actions margin flex-row justify-end gap">
+        <button type="submit" class="affirmative" title="{{$._.T "update"}}">{{$._.T "update"}}</button>
+      </div>
     </form>
   </div>
 </div>

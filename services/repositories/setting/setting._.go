@@ -206,6 +206,19 @@ func (repo *Repository) Startup() (err error) {
 		}
 	}
 
+	var settingAuth *setting.Setting[setting.Auth]
+
+	if settingAuth, err = GetByID[setting.Auth](repo, "auth"); err != nil {
+		settingAuth = new(setting.Setting[setting.Auth])
+		settingAuth.ID = "auth"
+		settingAuth.JSONValue = setting.Auth{
+			AddressType: setting.EmailOnly,
+		}
+		if _, err = Create(repo, settingAuth); err != nil {
+			return err
+		}
+	}
+
 	var settingTheme *setting.Setting[setting.Theme]
 
 	if settingTheme, err = GetByID[setting.Theme](repo, "theme"); err != nil {

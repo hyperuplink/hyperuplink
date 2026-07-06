@@ -11,6 +11,7 @@ CREATE TABLE users (
   email_confirmation_token VARCHAR(32) DEFAULT '',
   email_confirmation_sent_at TIMESTAMP DEFAULT NULL,
   email_confirmed_at TIMESTAMP DEFAULT NULL,
+  email_is_jid BOOLEAN DEFAULT FALSE,
   language VARCHAR(2) DEFAULT 'en',
   timezone TEXT DEFAULT 'UTC',
   otp_enabled BOOLEAN DEFAULT FALSE,

@@ -4,6 +4,7 @@
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ template "views/layouts/partials/flash" . }}
+    {{ $settingAuth := .Data.Get "setting_auth" }}
     <form method="post">
       <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
       <div class="tabs margin">
@@ -14,9 +15,25 @@
                 {{.Form.Input "text" "username" "" true}}
               </div>
               <div class="field flex-column grow">
-                {{.Form.Input "text" "email" "" true}}
+                {{ if eq $settingAuth.AddressType 1 }}
+                <label for="email">{{._.T "jid"}}</label>
+                {{ else if eq $settingAuth.AddressType 2 }}
+                <label for="email">{{._.T "email_or_jid"}}</label>
+                {{ else }}
+                <label for="email">{{._.T "email"}}</label>
+                {{ end }}
+                {{.Form.Input "text" "email" "" false}}
               </div>
             </div>
+            {{ if eq $settingAuth.AddressType 2 }}
+            <div class="fieldrow flex-row flex-wrap gap">
+              <div class="field flex-row gap">
+                <input type="checkbox" id="email_is_jid" name="email_is_jid" value="true"
+                       {{ if .Form.ValueFor "email_is_jid" }}checked{{ end }}>
+                <label for="email_is_jid">{{._.T "address_is_jid"}}</label>
+              </div>
+            </div>
+            {{ end }}
             <div class="fieldrow flex-row flex-wrap gap">
               <div class="field flex-column grow">
                 {{.Form.Input "password" "password" "" true}}

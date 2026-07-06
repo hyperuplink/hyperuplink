@@ -27,6 +27,7 @@ type User struct {
 	EmailConfirmationToken  string           `json:"email_confirmation_token"`
 	EmailConfirmationSentAt pgtype.Timestamp `json:"email_confirmation_sent_at"`
 	EmailConfirmedAt        pgtype.Timestamp `json:"email_confirmed_at"`
+	EmailIsJID              bool             `json:"email_is_jid"`
 
 	Language string `json:"language"`
 	Timezone string `json:"timezone"`
