@@ -9,6 +9,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/categories"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/docs"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/newpost"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/report"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/search"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/session"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/user"
@@ -60,6 +61,10 @@ func New(
 		searchRoute, err := search.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
 		r.Routes = append(r.Routes, searchRoute)
+
+		reportRoute, err := report.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, reportRoute)
 
 		userRoute, err := user.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)

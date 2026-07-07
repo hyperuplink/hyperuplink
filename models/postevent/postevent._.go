@@ -43,11 +43,24 @@ type PostEvent struct {
 	Type      PostEventType   `json:"type"`
 	AuthorID  uuid.UUID       `json:"author_id"`
 	Target    PostEventTarget `json:"target"`
-	TopicID   uuid.UUID       `json:"topic_id"`
-	ReplyID   uuid.UUID       `json:"reply_id"`
+	TopicID   uuid.NullUUID   `json:"topic_id"`
+	ReplyID   uuid.NullUUID   `json:"reply_id"`
 	Selection int             `json:"selection"`
 
 	CreatedAt pgtype.Timestamp `json:"created_at"`
 	UpdatedAt pgtype.Timestamp `json:"updated_at"`
 	DeletedAt pgtype.Timestamp `json:"deleted_at"`
+}
+
+func (m PostEvent) ReportTypeKey() string {
+	switch ReportType(m.Selection) {
+	case Spam:
+		return "report_type_spam"
+	case Misconduct:
+		return "report_type_misconduct"
+	case Illegal:
+		return "report_type_illegal"
+	default:
+		return ""
+	}
 }

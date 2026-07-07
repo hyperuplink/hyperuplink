@@ -16,7 +16,7 @@ CREATE TABLE postevents (
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_postevents_type ON postevents (
   type, author_id, target, topic_id, reply_id
-) WHERE deleted_at IS NULL;
+) NULLS NOT DISTINCT WHERE deleted_at IS NULL;
 
 CREATE INDEX idx_postevents_author_id ON postevents (author_id);
 CREATE INDEX idx_postevents_target ON postevents (target);

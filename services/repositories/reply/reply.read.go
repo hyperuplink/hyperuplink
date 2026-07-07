@@ -80,3 +80,27 @@ func (repo *Repository) GetByID(
 
 	return repo.GetByUUID(uuID, qo)
 }
+
+func (repo *Repository) GetByShortID(
+	shortID string,
+	qo common.QueryOptions,
+) (model *reply.Reply, err error) {
+	var rows pgx.Rows
+	var mod reply.Reply
+
+	rows, err = repo.db.Query(qo.Query(
+		`SELECT * FROM replies WHERE short_id = $1`,
+		common.QueryCapabilities{
+			HasSpammed: true,
+			HasDeleted: true,
+		}),
+		shortID,
+	)
+	if err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+
+	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[reply.Reply])
+
+	return &mod, repo.db.ConvertError(err)
+}

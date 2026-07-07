@@ -5,6 +5,8 @@
 {{ $post := get $dict "post"}}
 {{ $canWrite := get $dict "canWrite"}}
 {{ $canModerate := get $dict "canModerate"}}
+{{ $target := get $dict "target"}}
+{{ $topicURL := get $dict "topicURL"}}
 {{ if $post }}
 <div id="post-{{$post.ShortID}}" class="raised padding margin post flex-row gap">
   <fieldset class="profile padding">
@@ -62,7 +64,10 @@
       </div>
       <div class="right-side flex-row space-between gap">
         {{ if $session.IsLoggedIn }}
-        <a class="button danger" href="" title="{{$_.T "report_post"}}">!</a>
+        {{ $reportReturn := printf "%s#post-%s" $topicURL $post.ShortID }}
+        <a class="button danger"
+           href="{{$site.GetRelRoot}}report?target={{$target}}&id={{$post.ShortID}}&return={{urlquery $reportReturn}}"
+           title="{{$_.T "report_post"}}">!</a>
         {{ if $canWrite }}
         <a class="button"
            href="{{$site.GetPathname}}?page={{$site.GetPager.ActivePage}}&reply={{$post.ShortID}}#reply"

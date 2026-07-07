@@ -1,0 +1,43 @@
+<div class="margin window active">
+  <div class="title-bar">
+    <div class="title-bar-text">{{$.Site.Title}}</div>
+  </div>
+  <div class="window-body {{$.Site.GetRoute.AsID}}">
+    {{ $reports := .Data.Get "reports" }}
+    {{ if $reports }}
+    <div class="list">
+      <table class="detailed">
+        <thead>
+          <tr>
+            <th scope="col">{{$._.T "reports_col_post"}}</th>
+            <th scope="col">{{$._.T "reports_col_author"}}</th>
+            <th scope="col">{{$._.T "reports_col_reason"}}</th>
+            <th scope="col">{{$._.T "reports_col_reporter"}}</th>
+            <th scope="col" style="text-align: right;">{{$._.T "reports_col_date"}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range $report := $reports }}
+          {{ $targetPath := $report.TargetPath }}
+          <tr>
+            <td>
+              {{ if $targetPath }}
+              <a href="{{$.Site.GetRelRoot}}{{$targetPath}}">{{$report.TargetSnippet}}</a>
+              {{ else }}
+              {{$report.TargetSnippet}}
+              {{ end }}
+            </td>
+            <td>{{$report.TargetAuthorUsername}}</td>
+            <td>{{$._.T $report.ReportTypeKey}}</td>
+            <td>{{$report.AuthorUsername}}</td>
+            <td style="text-align: right;">{{$.Site.Date $report.CreatedAt}}</td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </div>
+    {{ else }}
+    <div class="margin">{{$._.T "no_rows"}}</div>
+    {{ end }}
+  </div>
+</div>

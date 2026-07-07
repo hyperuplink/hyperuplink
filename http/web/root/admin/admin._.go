@@ -9,6 +9,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/general"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/logs"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/permissions"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/reports"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/users"
 	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
@@ -58,6 +59,10 @@ func New(
 		adminPermissionsRoute, err := permissions.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
 		r.Routes = append(r.Routes, adminPermissionsRoute)
+
+		adminReportsRoute, err := reports.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, adminReportsRoute)
 	}, r.Path+".")
 
 	return r, nil

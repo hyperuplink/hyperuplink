@@ -1,0 +1,41 @@
+{{ $target := .Data.Get "target" }}
+{{ $id := .Data.Get "id" }}
+{{ $return := .Data.Get "return" }}
+{{ $post_text := .Data.Get "post_text" }}
+<div class="margin window active">
+  <div class="title-bar">
+    <div class="title-bar-text">{{$.Site.Title}}</div>
+  </div>
+  <div class="window-body {{$.Site.GetRoute.AsID}}">
+    <form method="post"
+          action="{{$.Site.GetFormAction}}"
+          class="flex-column gap padding">
+      <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+      <input type="hidden" name="target" value="{{$target}}">
+      <input type="hidden" name="id" value="{{$id}}">
+      <input type="hidden" name="return" value="{{$return}}">
+      <p>{{$._.T "report_intro"}}</p>
+      {{ if $post_text }}
+      <blockquote class="lowered padding margin">{{$post_text}}</blockquote>
+      {{ end }}
+      <fieldset>
+        <legend>{{$._.T "report_type"}}</legend>
+        <div class="field-row">
+          <input id="report_type_spam" type="radio" name="report_type" value="0" checked>
+          <label for="report_type_spam">{{$._.T "report_type_spam"}}</label>
+        </div>
+        <div class="field-row">
+          <input id="report_type_misconduct" type="radio" name="report_type" value="1">
+          <label for="report_type_misconduct">{{$._.T "report_type_misconduct"}}</label>
+        </div>
+        <div class="field-row">
+          <input id="report_type_illegal" type="radio" name="report_type" value="2">
+          <label for="report_type_illegal">{{$._.T "report_type_illegal"}}</label>
+        </div>
+      </fieldset>
+      <div class="actions flex-row justify-end gap">
+        <button type="submit" class="button danger">{{$._.T "report_submit"}}</button>
+      </div>
+    </form>
+  </div>
+</div>
