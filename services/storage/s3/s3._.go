@@ -148,6 +148,22 @@ func (st *S3) GetFileDownloadURL(dest string) (
 	return dlurl, false, errs.ErrNotImplemented
 }
 
+func (st *S3) GetFile(dest string) (reader io.ReadCloser, err error) {
+	if dest == "" {
+		return nil, errs.ErrFilePathInvalid
+	}
+
+	var bucket, objKey string
+	if bucket, objKey, _, err = st.getBucketObjectFile(dest); err != nil {
+		return nil, err
+	}
+
+	return st.client.FileDownload(simples3.DownloadInput{
+		Bucket:    bucket,
+		ObjectKey: objKey,
+	})
+}
+
 func (st *S3) DeleteFile(dest string) (err error) {
 	if dest == "" {
 		return errs.ErrFilePathInvalid

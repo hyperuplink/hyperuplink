@@ -3,6 +3,8 @@
 {{ $session := get $dict "Session"}}
 {{ $_ := get $dict "_"}}
 {{ $post := get $dict "post"}}
+{{ $canWrite := get $dict "canWrite"}}
+{{ $canModerate := get $dict "canModerate"}}
 {{ if $post }}
 <div id="post-{{$post.ShortID}}" class="raised padding margin post flex-row gap">
   <fieldset class="profile padding">
@@ -23,7 +25,6 @@
     {{ $attachments := $site.Attachments $post.AttachmentIDs }}
     {{ if $attachments }}
     {{ $currentUserID := $session.GetCurrentUserID }}
-    {{ $canModerate := (or $session.CurrentUserHasAdminRole) }}
     <div class="attachments">
       {{ range $attachment := $attachments }}
       <div class="attachment">
@@ -62,9 +63,11 @@
       <div class="right-side flex-row space-between gap">
         {{ if $session.IsLoggedIn }}
         <a class="button danger" href="" title="{{$_.T "report_post"}}">!</a>
+        {{ if $canWrite }}
         <a class="button"
            href="{{$site.GetPathname}}?page={{$site.GetPager.ActivePage}}&reply={{$post.ShortID}}#reply"
            title="{{$_.T "reply_to_post"}}">@</a>
+        {{ end }}
         {{ end }}
       </div>
     </div>

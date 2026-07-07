@@ -35,6 +35,10 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	if !req.Perms().CanReadID(cat.ID) {
+		return req.RedirectToRoot()
+	}
+
 	req.UpdateTitle(cat.Name)
 	req.SetData("category", cat)
 

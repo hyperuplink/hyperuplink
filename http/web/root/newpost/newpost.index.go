@@ -59,8 +59,13 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	perms := req.Perms()
+
 	var catsfums []CategoryWithForums
 	for _, cat := range *cats {
+		if !perms.CanWriteID(cat.ID) {
+			continue
+		}
 		catfum := CategoryWithForums{
 			Category: cat,
 		}
@@ -74,6 +79,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 
 	req.SetData("categories_forums", catsfums)
 
+	var writableTopic *vtopic.VTopic
 	if forum_slug != "" {
 		var fum *vforum.VForum
 		fum, err = r.Runtime.Repositories.Forum.VGetBySlug(
@@ -86,26 +92,29 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 			return rerr
 		}
 
-		req.SetData("forum", fum)
+		if perms.CanWriteSlug(fum.CategorySlug) {
+			req.SetData("forum", fum)
 
-		if topic_slug != "" {
-			var top *vtopic.VTopic
-			top, err = r.Runtime.Repositories.Topic.VGetByForumUUIDSlug(
-				fum.ID,
-				topic_slug,
-				common.QueryOptions{
-					Limit: 1,
-				},
-			)
-			if ret, rerr := req.RespondOnError(err); ret == true {
-				return rerr
+			if topic_slug != "" {
+				var top *vtopic.VTopic
+				top, err = r.Runtime.Repositories.Topic.VGetByForumUUIDSlug(
+					fum.ID,
+					topic_slug,
+					common.QueryOptions{
+						Limit: 1,
+					},
+				)
+				if ret, rerr := req.RespondOnError(err); ret == true {
+					return rerr
+				}
+
+				req.SetData("topic", top)
+				writableTopic = top
 			}
-
-			req.SetData("topic", top)
 		}
 	}
 
-	if reply_id != "" {
+	if reply_id != "" && writableTopic != nil {
 
 		var rep *reply.Reply
 		rep, err = r.Runtime.Repositories.Reply.GetByID(
@@ -118,7 +127,9 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 			return rerr
 		}
 
-		req.SetData("reply", rep)
+		if rep.TopicID == writableTopic.ID {
+			req.SetData("reply", rep)
+		}
 	}
 
 	// req.UpdateTitle(fum.Name)

@@ -1,6 +1,8 @@
 package attachments
 
 import (
+	"strings"
+
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
@@ -36,12 +38,20 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	var storageIDs []string
+	storageIsPublic := false
 	for _, storage := range storages {
 		storageIDs = append(storageIDs, storage.ID)
+
+		if storage.ID == settingAttachments.JSONValue.StorageProviderID &&
+			strings.ToLower(storage.Type) == "s3" &&
+			storage.S3.PublicDownload {
+			storageIsPublic = true
+		}
 	}
 
 	req.SetData("setting_attachments", &settingAttachments.JSONValue)
 	req.SetData("storage_ids", storageIDs)
+	req.SetData("storage_is_public", storageIsPublic)
 	req.SetData("upload_format_options", setting.AttachmentUploadFormatOptions)
 
 	return req.Respond()

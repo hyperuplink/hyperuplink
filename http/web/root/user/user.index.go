@@ -5,6 +5,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/models/vreply"
+	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
@@ -62,7 +64,16 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	req.SetData("topics", topics)
+	perms := req.Perms()
+
+	visibleTopics := []vtopic.VTopic{}
+	for _, top := range *topics {
+		if perms.CanReadSlug(top.CategorySlug) {
+			visibleTopics = append(visibleTopics, top)
+		}
+	}
+
+	req.SetData("topics", &visibleTopics)
 
 	replies, err := r.Runtime.Repositories.Reply.VAllWithTopicForAuthorUUID(
 		usr.ID,
@@ -76,7 +87,14 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	req.SetData("replies", replies)
+	visibleReplies := []vreply.VReplyWithTopic{}
+	for _, rep := range *replies {
+		if perms.CanReadSlug(rep.CategorySlug) {
+			visibleReplies = append(visibleReplies, rep)
+		}
+	}
+
+	req.SetData("replies", &visibleReplies)
 
 	return req.Respond()
 }

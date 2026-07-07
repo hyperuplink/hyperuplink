@@ -48,8 +48,13 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	perms := req.Perms()
+
 	var catsfums []CategoryWithForums
 	for _, cat := range *cats {
+		if !perms.CanReadID(cat.ID) {
+			continue
+		}
 		catfum := CategoryWithForums{
 			Category: cat,
 		}
@@ -75,7 +80,14 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	req.SetData("topics", tops)
+	visibleTops := []vtopic.VTopic{}
+	for _, top := range *tops {
+		if perms.CanReadSlug(top.CategorySlug) {
+			visibleTops = append(visibleTops, top)
+		}
+	}
+
+	req.SetData("topics", &visibleTops)
 
 	return req.Respond()
 }

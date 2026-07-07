@@ -2,6 +2,8 @@
 {{ $replies := .Data.Get "replies"}}
 {{ $reply_to := .Data.Get "reply_to"}}
 {{ $reply_to_type := .Data.Get "reply_to_type"}}
+{{ $canWrite := $.Perms.CanWriteSlug $topic.CategorySlug }}
+{{ $canModerate := $.Perms.CanModerateSlug $topic.CategorySlug }}
 <div class="margin window active">
   <div class="title-bar">
     <div class="title-bar-text">{{$.Site.Title}}</div>
@@ -9,17 +11,17 @@
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     <!-- POST -->
     {{ if eq $.Site.GetPager.ActivePage 1 }}
-    {{ template "views/layouts/partials/post" dict "Site" $.Site "Session" $.Session "_" $._ "post" $topic }}
+    {{ template "views/layouts/partials/post" dict "Site" $.Site "Session" $.Session "_" $._ "post" $topic "canWrite" $canWrite "canModerate" $canModerate }}
     {{ end }}
     {{ range $idx_reply, $reply := $replies }}
     <!-- REPLY -->
-    {{ template "views/layouts/partials/post" dict "Site" $.Site "Session" $.Session "_" $._ "post" $reply }}
+    {{ template "views/layouts/partials/post" dict "Site" $.Site "Session" $.Session "_" $._ "post" $reply "canWrite" $canWrite "canModerate" $canModerate }}
     {{ end }}
     {{ template "views/layouts/partials/pagination" dict "Site" .Site }}
   </div>
 </div>
 <!-- REPLY -->
-{{ if $.Session.IsLoggedIn }}
+{{ if and $.Session.IsLoggedIn $canWrite }}
 {{ $reply_to_id := "" }}
 {{ $reply_to_quote := "" }}
 {{ if $reply_to }}

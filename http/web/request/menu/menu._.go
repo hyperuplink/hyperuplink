@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
@@ -16,6 +17,7 @@ type Menu struct {
 	currentCategorySlug string
 	currentForumSlug    string
 	general             setting.General
+	perms               *permission.Resolution
 }
 
 type MenuItem struct {
@@ -46,6 +48,11 @@ func (m *Menu) SetI18n(fn func(msg string) string) {
 
 func (m *Menu) SetGeneral(general setting.General) {
 	m.general = general
+	m.generate()
+}
+
+func (m *Menu) SetPerms(perms *permission.Resolution) {
+	m.perms = perms
 	m.generate()
 }
 
@@ -81,9 +88,22 @@ func (m *Menu) FileMenu(forRole user.Role) []MenuItem {
 			newpostUrl, m.currentCategorySlug, m.currentForumSlug)
 	}
 
+	// The "New" item is only clickable when the user can actually create a post.
+	// When viewing a specific category/forum, they must be able to write in that
+	// category. Elsewhere (e.g. the site root) they must be able to write in at
+	// least one category, since they can pick a forum on the new-post page.
+	canCreate := forRole != user.GuestRole
+	if canCreate && m.perms != nil {
+		if m.currentCategorySlug != "" {
+			canCreate = m.perms.CanWriteSlug(m.currentCategorySlug)
+		} else {
+			canCreate = m.perms.CanWriteAny()
+		}
+	}
+
 	subItems = []MenuItem{
 		{
-			Disabled: (forRole == user.GuestRole),
+			Disabled: !canCreate,
 			Label:    m.T("new"),
 			Title:    m.T("new"),
 			Href:     newpostUrl,

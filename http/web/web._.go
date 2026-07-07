@@ -33,7 +33,9 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root"
+	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/runtime"
+	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
 const (
@@ -328,16 +330,47 @@ func (srv *Web) loadStorageRoutes() (err error) {
 				storageCfg.Local.PublicURI,
 			)
 		}
-		srv.app.Get(storageCfg.Local.PublicURI+"*", static.New(
+		providerID := storageCfg.ID
+		staticHandler := static.New(
 			storageCfg.Local.Path,
 			static.Config{
 				Browse:        false,
 				CacheDuration: 10 * time.Second, // TODO: Make configurable
 			},
-		))
+		)
+		srv.app.Get(storageCfg.Local.PublicURI+"*", func(c fiber.Ctx) error {
+			if srv.isGatedAttachmentPath(providerID, c.Params("*")) {
+				return c.SendStatus(fiber.StatusNotFound)
+			}
+			return staticHandler(c)
+		})
 	}
 
 	return nil
+}
+
+// isGatedAttachmentPath reports whether a direct static request targets an
+// attachment file. Attachment files are only served through the permission
+// checked /attachment/:id route, so direct access to their storage path must be
+// blocked to prevent bypassing the read permission check by guessing URLs.
+func (srv *Web) isGatedAttachmentPath(providerID, rel string) bool {
+	settingAttachments, err := settingRepo.GetByID[setting.Attachments](
+		srv.rt.Repositories.Setting,
+		"attachments",
+	)
+	if err != nil {
+		return false
+	}
+	att := settingAttachments.JSONValue
+
+	if att.StorageProviderID != providerID || att.StoragePath == "" {
+		return false
+	}
+
+	rel = strings.TrimPrefix(rel, "/")
+	prefix := strings.Trim(att.StoragePath, "/") + "/"
+
+	return strings.HasPrefix(rel, prefix)
 }
 
 func (srv *Web) Startup() (err error) {

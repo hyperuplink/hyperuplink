@@ -18,6 +18,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/menu"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/session"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/site"
+	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
@@ -39,8 +40,22 @@ type Request struct {
 	Data    *data.Data
 	System  *setting.System
 	Theme   *setting.Theme
+	perms   *permission.Resolution
 	absPath string
 	relRoot string
+}
+
+func (req *Request) Perms() *permission.Resolution {
+	if req.perms != nil {
+		return req.perms
+	}
+
+	req.perms = helpers.ResolvePermissions(
+		req.r.GetRuntime(),
+		req.Session.GetCurrentUserRole(),
+		req.Session.GetCurrentUserMemberOf(),
+	)
+	return req.perms
 }
 
 func New(
@@ -123,6 +138,7 @@ func New(
 	req.Menu.SetI18n(req.In.Ts)
 	req.Menu.SetGeneral(settingGeneral.JSONValue)
 	req.Menu.SetRole(req.Session.GetCurrentUserRole())
+	req.Menu.SetPerms(req.Perms())
 
 	if title == "" {
 		title = req.System.Name
@@ -244,6 +260,7 @@ func (req *Request) RespondWithView(layouts []string, view string) error {
 		"Data":        req.Data,
 		"System":      req.System,
 		"Theme":       req.Theme,
+		"Perms":       req.Perms(),
 	}, layoutsFull...)
 }
 

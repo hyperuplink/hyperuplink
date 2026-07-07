@@ -14,6 +14,10 @@ type Options struct {
 	Replies     bool   // reply bodies (replies.text)
 	Attachments bool   // placeholder, attachments not searchable yet
 	Author      string // when non-empty, restrict to this username
+	// AllowedCategorySlugs restricts results to these category slugs. A nil
+	// value means "no restriction" (may read every category), a non-nil but
+	// empty slice means "may read nothing" and yields zero results.
+	AllowedCategorySlugs []string
 }
 
 const topicColumns = `
@@ -60,16 +64,20 @@ const replyBaseWhere = `vr.spammed_at IS NULL AND vr.deleted_at IS NULL
 	AND t.deleted_at IS NULL AND t.spammed_at IS NULL
 	AND f.deleted_at IS NULL AND c.deleted_at IS NULL`
 
-func buildArgs(term string, opts Options) (args []any, authorPh string) {
+func buildArgs(term string, opts Options) (args []any, authorPh string, catPh string) {
 	args = []any{term}
 	if opts.Author != "" {
 		args = append(args, opts.Author)
 		authorPh = fmt.Sprintf("$%d", len(args))
 	}
-	return args, authorPh
+	if opts.AllowedCategorySlugs != nil {
+		args = append(args, opts.AllowedCategorySlugs)
+		catPh = fmt.Sprintf("$%d", len(args))
+	}
+	return args, authorPh, catPh
 }
 
-func branchWheres(opts Options, authorPh string) (topicWhere string, hasTopic bool, replyWhere string, hasReply bool) {
+func branchWheres(opts Options, authorPh string, catPh string) (topicWhere string, hasTopic bool, replyWhere string, hasReply bool) {
 	var cols []string
 	if opts.Title {
 		cols = append(cols, "coalesce(vt.name, '')")
@@ -86,6 +94,9 @@ func branchWheres(opts Options, authorPh string) (topicWhere string, hasTopic bo
 		if authorPh != "" {
 			topicWhere += " AND lower(vt.author_username) = lower(" + authorPh + ")"
 		}
+		if catPh != "" {
+			topicWhere += " AND vt.category_slug = ANY(" + catPh + ")"
+		}
 		hasTopic = true
 	}
 
@@ -95,6 +106,9 @@ func branchWheres(opts Options, authorPh string) (topicWhere string, hasTopic bo
 		if authorPh != "" {
 			replyWhere += " AND lower(vr.author_username) = lower(" + authorPh + ")"
 		}
+		if catPh != "" {
+			replyWhere += " AND c.slug = ANY(" + catPh + ")"
+		}
 		hasReply = true
 	}
 
@@ -102,8 +116,8 @@ func branchWheres(opts Options, authorPh string) (topicWhere string, hasTopic bo
 }
 
 func (repo *Repository) Count(term string, opts Options) (total int64, err error) {
-	args, authorPh := buildArgs(term, opts)
-	topicWhere, hasTopic, replyWhere, hasReply := branchWheres(opts, authorPh)
+	args, authorPh, catPh := buildArgs(term, opts)
+	topicWhere, hasTopic, replyWhere, hasReply := branchWheres(opts, authorPh, catPh)
 	if !hasTopic && !hasReply {
 		return 0, nil
 	}
@@ -150,8 +164,8 @@ func (repo *Repository) Query(
 		return &empty, 0, nil
 	}
 
-	args, authorPh := buildArgs(term, opts)
-	topicWhere, hasTopic, replyWhere, hasReply := branchWheres(opts, authorPh)
+	args, authorPh, catPh := buildArgs(term, opts)
+	topicWhere, hasTopic, replyWhere, hasReply := branchWheres(opts, authorPh, catPh)
 
 	var parts []string
 	if hasTopic {

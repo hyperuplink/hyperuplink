@@ -40,6 +40,10 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	if !req.Perms().CanReadSlug(top.CategorySlug) {
+		return req.RedirectToRoot()
+	}
+
 	req.Menu.SetCategoryForumSlugs(top.CategorySlug, top.ForumSlug)
 
 	req.UpdateTitle(top.Name)

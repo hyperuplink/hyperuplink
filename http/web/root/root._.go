@@ -5,6 +5,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/account"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/attachment"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/categories"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/docs"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/newpost"
@@ -63,6 +64,10 @@ func New(
 		userRoute, err := user.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
 		r.Routes = append(r.Routes, userRoute)
+
+		attachmentRoute, err := attachment.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, attachmentRoute)
 	}, "root.")
 
 	return r, nil

@@ -39,6 +39,9 @@
             </select>
             <div class="dropdown-button"></div>
           </div>
+          {{ if .Data.Get "storage_is_public" }}
+          <div class="warn raised margin padding">{{$._.T "attachment_public_storage_warning"}}</div>
+          {{ end }}
         </div>
         <div class="field flex-column grow">
           <label for="storage_path">{{$._.T "attachment_storage_path"}}:</label>

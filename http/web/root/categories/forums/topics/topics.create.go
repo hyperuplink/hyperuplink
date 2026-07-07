@@ -28,7 +28,6 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		myRoute.AsTitle())
 
 	if ret, rerr := req.AccessControl(
-		user.GuestRole, // TODO: Remove!
 		user.UserRole,
 		user.AdminRole,
 	); ret {
@@ -54,6 +53,24 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 	rep.TopicID, err = uuid.Parse(frm.TopicID)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
+	}
+
+	top, err := r.Runtime.Repositories.Topic.GetByUUID(
+		rep.TopicID,
+		common.QueryOptions{Limit: 1},
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+	fum, err := r.Runtime.Repositories.Forum.GetByUUID(
+		top.ForumID,
+		common.QueryOptions{Limit: 1},
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+	if !req.Perms().CanWriteID(fum.CategoryID) {
+		return req.RedirectToRoot()
 	}
 
 	if frm.ReplyID != "" {

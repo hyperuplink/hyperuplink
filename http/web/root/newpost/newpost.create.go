@@ -50,6 +50,18 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
+
+	fum, err := r.Runtime.Repositories.Forum.GetByUUID(
+		top.ForumID,
+		common.QueryOptions{Limit: 1},
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+	if !req.Perms().CanWriteID(fum.CategoryID) {
+		return req.RedirectToRoot()
+	}
+
 	top.AuthorID, _ = req.Session.GetUserUUID()
 	top.Kind = topic.Regular
 	top.Anonymous = false

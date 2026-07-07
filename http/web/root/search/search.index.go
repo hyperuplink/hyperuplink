@@ -66,11 +66,12 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	results, total, err = r.Runtime.Repositories.Search.Query(
 		query,
 		searchrepo.Options{
-			Title:       fTitle,
-			Body:        fBody,
-			Replies:     fReplies,
-			Attachments: fAttachments,
-			Author:      author,
+			Title:                fTitle,
+			Body:                 fBody,
+			Replies:              fReplies,
+			Attachments:          fAttachments,
+			Author:               author,
+			AllowedCategorySlugs: req.Perms().AllowedReadSlugs(),
 		},
 		resultsPerPage,
 		activePage,

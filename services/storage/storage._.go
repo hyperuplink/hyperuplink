@@ -16,6 +16,7 @@ type IStorage interface {
 	StoreFile(src io.ReadSeeker, dest string) error
 	StoreFileName(src string, dest string) error
 	GetFileDownloadURL(dest string) (string, bool, error)
+	GetFile(dest string) (io.ReadCloser, error)
 	DeleteFile(dest string) error
 }
 
@@ -99,6 +100,17 @@ func (str *Storage) GetFileDownloadURL(
 	}
 
 	return str.providers[providerID].GetFileDownloadURL(dest)
+}
+
+func (str *Storage) GetFile(
+	providerID string,
+	dest string,
+) (reader io.ReadCloser, err error) {
+	if _, ok := str.providers[providerID]; !ok {
+		return nil, errs.ErrStorageIDNotFound
+	}
+
+	return str.providers[providerID].GetFile(dest)
 }
 
 func (str *Storage) DeleteFile(

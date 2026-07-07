@@ -1,11 +1,39 @@
 package attachment
 
 import (
+	"errors"
+
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"xn--gckvb8fzb.com/hyperuplink/models/attachment"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
+
+func (repo *Repository) GetCategoryForAttachment(
+	id uuid.UUID,
+) (categoryID uuid.UUID, found bool, err error) {
+	err = repo.db.QueryRow(`
+		SELECT f.category_id FROM topics t
+		JOIN forums f ON f.id = t.forum_id
+		WHERE $1 = ANY(t.attachment_ids) AND t.deleted_at IS NULL
+		UNION
+		SELECT f.category_id FROM replies r
+		JOIN topics t ON t.id = r.topic_id
+		JOIN forums f ON f.id = t.forum_id
+		WHERE $1 = ANY(r.attachment_ids)
+		AND r.deleted_at IS NULL AND t.deleted_at IS NULL
+		LIMIT 1`,
+		id,
+	).Scan(&categoryID)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return categoryID, false, nil
+		}
+		return categoryID, false, repo.db.ConvertError(err)
+	}
+
+	return categoryID, true, nil
+}
 
 func (repo *Repository) GetByUUID(
 	id uuid.UUID,

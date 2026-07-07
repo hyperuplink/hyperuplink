@@ -1,10 +1,10 @@
 package site
 
 import (
-	"path"
 	"strings"
 
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
@@ -43,16 +43,9 @@ func (s *Site) Attachments(ids []uuid.UUID) (views []AttachmentView) {
 			continue
 		}
 
-		dlurl, abs, uerr := s.r.GetRuntime().Storage.GetFileDownloadURL(
-			attachments.StorageProviderID,
-			path.Join(attachments.StoragePath, id.String()),
-		)
-		if uerr != nil {
-			continue
-		}
-		if !abs {
-			dlurl = s.HrefTo(strings.TrimPrefix(dlurl, "/"))
-		}
+		dlurl := s.HrefTo(route.For("Attachment").Fill(map[string]string{
+			"attachment": id.String(),
+		}).AsURL())
 
 		views = append(views, AttachmentView{
 			ID:       id.String(),

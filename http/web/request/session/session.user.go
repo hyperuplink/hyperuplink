@@ -27,6 +27,13 @@ func (s *Session) GetCurrentUserRole() user.Role {
 	return user.GuestRole
 }
 
+func (s *Session) GetCurrentUserMemberOf() []string {
+	if s.currentUser != nil {
+		return s.currentUser.MemberOf
+	}
+	return nil
+}
+
 func (s *Session) CurrentUserHasGuestRole() bool {
 	if s.currentUser == nil {
 		return true
