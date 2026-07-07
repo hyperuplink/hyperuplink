@@ -64,7 +64,7 @@ func main() {
 		fmt.Printf("Hyper Uplink %s\nCommit: %s\nBuild date: %s\n",
 			runtime.Version,
 			runtime.Commit,
-			runtime.Version,
+			runtime.Date,
 		)
 		os.Exit(0)
 	}
