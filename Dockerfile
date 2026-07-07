@@ -33,7 +33,9 @@ FROM alpine:latest
 
 RUN apk add --no-cache ca-certificates tzdata \
     && addgroup -g 10001 hyperuplink \
-    && adduser -D -H -u 10001 -G hyperuplink hyperuplink
+    && adduser -D -H -u 10001 -G hyperuplink hyperuplink \
+    && mkdir -p /var/lib/hyperuplink/media \
+    && chown -R 10001:10001 /var/lib/hyperuplink
 
 COPY --from=builder /out/hyperuplink /usr/local/bin/hyperuplink
 COPY hyperuplink.toml /etc/hyperuplink.toml
