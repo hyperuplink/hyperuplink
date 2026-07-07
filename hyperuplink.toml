@@ -26,6 +26,12 @@ ServerHeader       = ""
 [Users]
 PromoteAdmin = ["dummy1@example.com"]
 
+[[AuthProvider]]
+Type = "github"
+Key = "XxXXxXXXXxXxXXXXXXXX"
+Secret = "XXxXxXXXxXXXXXXxxXXxXxXXxXXXXXXXxxXxXXXx"
+Scopes = ["read:user", "user:email"]
+
 [[Target]]
 ID = "notifications"
 Type = "email"

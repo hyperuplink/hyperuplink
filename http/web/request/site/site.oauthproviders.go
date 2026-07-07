@@ -1,5 +1,12 @@
 package site
 
+import (
+	"sort"
+	"strings"
+
+	"github.com/markbates/goth"
+)
+
 type OauthProvider struct {
 	Label string
 	Title string
@@ -7,13 +14,44 @@ type OauthProvider struct {
 	Class string
 }
 
-func (s *Site) OauthProviders() []OauthProvider {
-	return []OauthProvider{
-		{
-			Label: "GitHub",
-			Title: "GitHub",
-			Href:  "github",
-			Class: "github",
-		},
+var oauthProviderLabels = map[string]string{
+	"github":   "GitHub",
+	"google":   "Google",
+	"facebook": "Facebook",
+	"reddit":   "Reddit",
+	"slack":    "Slack",
+	"apple":    "Apple",
+	"twitter":  "X",
+	"bsky":     "Bluesky",
+}
+
+func oauthProviderLabel(name string) string {
+	if label, ok := oauthProviderLabels[name]; ok {
+		return label
 	}
+
+	return strings.ToUpper(name[:1]) + name[1:]
+}
+
+func (s *Site) OauthProviders() []OauthProvider {
+	registered := goth.GetProviders()
+
+	names := make([]string, 0, len(registered))
+	for name := range registered {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+
+	providers := make([]OauthProvider, 0, len(names))
+	for _, name := range names {
+		label := oauthProviderLabel(name)
+		providers = append(providers, OauthProvider{
+			Label: label,
+			Title: label,
+			Href:  s.HrefRoute("session", name),
+			Class: name,
+		})
+	}
+
+	return providers
 }

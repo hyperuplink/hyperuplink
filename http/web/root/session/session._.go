@@ -2,13 +2,12 @@ package session
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"github.com/markbates/goth"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/session/confirm"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/session/provider"
+	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/runtime"
-
-	"github.com/markbates/goth/providers/github"
+	repoSetting "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
 type Route struct {
@@ -26,14 +25,19 @@ func New(
 	r.Path = route.For("Session").Pathname()
 	r.Env = route.NewEnv()
 
-	goth.UseProviders(
-		github.New(
-			"key",
-			"secret",
-			"callbackURL",
-			"scope1", "scope2",
-		),
-	)
+	baseURL := ""
+	if settingSystem, serr := repoSetting.GetByID[setting.System](
+		rt.Repositories.Setting,
+		"system",
+	); serr == nil {
+		baseURL = settingSystem.JSONValue.BaseURL
+	} else {
+		rt.Warn("auth_provider", "system setting unavailable", "error", serr)
+	}
+
+	if err := RegisterAuthProviders(rt, baseURL); err != nil {
+		return nil, err
+	}
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
 		base.Get("/",
@@ -52,8 +56,10 @@ func New(
 		base.Get("/"+route.For("SessionSignout").Pathname(),
 			r.SignOutShow).Name("signout.show")
 
-		// base.Get("/tfa", r.TfaShow).Name("tfa.show")
-		// base.Post("/tfa", r.TfaCreate).Name("tfa.create")
+		base.Get("/"+route.For("SessionTwofactor").Pathname(),
+			r.TfaShow).Name("twofactor.show")
+		base.Post("/"+route.For("SessionTwofactor").Pathname(),
+			r.TfaCreate).Name("twofactor.create")
 
 		// base.Get("/forgot", r.ForgotShow).Name("forgot.show")
 		// base.Post("/forgot", r.ForgotCreate).Name("forgot.create")

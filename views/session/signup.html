@@ -48,7 +48,9 @@
         </div>
       </div>
     </form>
+    {{ if .Site.OauthProviders }}
     <div class="margin">{{._.T "sign_up_via_oauth"}}</div>
     {{ template "views/layouts/partials/oauthproviders" . }}
+    {{ end }}
   </div>
 </div>

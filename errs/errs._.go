@@ -144,4 +144,16 @@ var (
 	ErrOTPSetupExpired error = errors.New(
 		"err_otp_setup_expired",
 	)
+	ErrOTPTooManyAttempts error = errors.New(
+		"err_otp_too_many_attempts",
+	)
+	ErrOAuthFailed error = errors.New(
+		"err_oauth_failed",
+	)
+	ErrOAuthNoEmail error = errors.New(
+		"err_oauth_no_email",
+	)
+	ErrOAuthEmailUnverified error = errors.New(
+		"err_oauth_email_unverified",
+	)
 )

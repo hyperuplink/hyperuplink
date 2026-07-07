@@ -98,6 +98,15 @@ func (m *User) decodePassword() (
 	return params, salt, key, nil
 }
 
+func (m *User) SetRandomPassword() error {
+	b, err := m.generateRandomBytes(HashKeyln)
+	if err != nil {
+		return err
+	}
+
+	return m.SetPassword(base64.RawStdEncoding.EncodeToString(b))
+}
+
 func (m *User) SetPassword(password string) error {
 	salt, err := m.generateRandomBytes(HashSaltln)
 	if err != nil {

@@ -74,6 +74,11 @@ func (r *Route) SignInCreate(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	if usr.OTPEnabled {
+		req.Session.SetPending2FA("local", usr.ID.String())
+		return req.RedirectToRoute(route.For("SessionTwofactor"))
+	}
+
 	if err := req.Session.Set("local", usr.ID.String()); err != nil {
 		req.Session.Reset()
 		return req.RespondError(err)

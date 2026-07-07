@@ -14,6 +14,7 @@ type PasswordUpdateForm struct {
 	CurrentPassword   string `form:"current_password" validate:"required,min=8,max=64"`
 	NewPassword       string `form:"new_password" validate:"required,min=8,max=64"`
 	NewPasswordRepeat string `form:"new_password_repeat" validate:"required,eqcsfield=NewPassword"`
+	OTPCode           string `form:"otp_code" validate:"omitempty,numeric,len=6"`
 }
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
@@ -43,11 +44,20 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	req.SetData("user", usr)
+
 	var match bool
 	if match, _, err = usr.CheckPassword(frm.CurrentPassword); !match {
 		if err == nil {
 			err = errs.ErrPasswordWrong
 		}
+	}
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	if usr.OTPEnabled && !user.ValidateOTP(usr.OTPSecret, frm.OTPCode) {
+		err = errs.ErrOTPCodeWrong
 	}
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr

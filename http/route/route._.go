@@ -49,6 +49,7 @@ var Routes map[string]Route = map[string]Route{
 	"SessionSignin":           {hierarchy: []string{"root", "session", "signin"}},
 	"SessionSignout":          {hierarchy: []string{"root", "session", "signout"}},
 	"SessionSignup":           {hierarchy: []string{"root", "session", "signup"}},
+	"SessionTwofactor":        {hierarchy: []string{"root", "session", "twofactor"}},
 	"SessionProvider":         {hierarchy: []string{"root", "session", ":provider"}},
 	"SessionProviderCallback": {hierarchy: []string{"root", "session", ":provider", "callback"}},
 	"User":                    {hierarchy: []string{"root", "~:user"}},

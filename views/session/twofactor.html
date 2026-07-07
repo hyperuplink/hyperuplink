@@ -1,0 +1,21 @@
+<div class="margin window authentication active">
+  <div class="title-bar">
+    <div class="title-bar-text">{{.Site.Title}}</div>
+  </div>
+  <div class="window-body {{$.Site.GetRoute.AsID}}">
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
+      <div class="margin">
+        <div class="margin">{{._.T "twofactor_challenge_intro"}}</div>
+        <div class="fieldrow flex-row flex-wrap gap">
+          <div class="field flex-column grow">
+            {{.Form.Input "text" "otp_code" "" true "inputmode" "numeric" "autocomplete" "one-time-code" "maxlength" "6" "pattern" "[0-9]*" "autofocus" ""}}
+          </div>
+        </div>
+        <div class="actions flex-row gap justify-end">
+          <button type="submit" class="affirmative">{{._.T "verify_verb"}}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

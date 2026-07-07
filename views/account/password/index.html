@@ -24,6 +24,14 @@
               {{$.Form.Input "password" "new_password_repeat" "" true}}
             </div>
           </div>
+          {{ if $user.OTPEnabled }}
+          <div class="fieldrow flex-row flex-wrap gap">
+            <div class="field flex-column grow">
+              {{$.Form.Input "text" "otp_code" "" true "inputmode" "numeric" "autocomplete" "one-time-code" "maxlength" "6" "pattern" "[0-9]*"}}
+              <small>{{$._.T "twofactor_password_change_hint"}}</small>
+            </div>
+          </div>
+          {{ end }}
         </fieldset>
       </div>
       <div class="actions margin flex-row justify-end gap">
