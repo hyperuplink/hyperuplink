@@ -1,0 +1,26 @@
+# Hyperuplink
+
+[Unit]
+Description=Hyperuplink
+Wants=hyperuplink-postgres.service hyperuplink-valkey.service
+After=hyperuplink-postgres.service hyperuplink-valkey.service
+
+[Container]
+ContainerName=hyperuplink
+Image=ghcr.io/mrus/hyperuplink:latest
+AutoUpdate=registry
+Network=hyperuplink.network
+NetworkAlias=hyperuplink
+PublishPort=3000:3000
+UserNS=keep-id:uid=10001,gid=10001
+
+# Edit the host path to wherever you placed hyperuplink.toml. %h expands to the
+# home of the user the unit runs as.
+Volume=%h/.config/hyperuplink/hyperuplink.toml:/etc/hyperuplink.toml:ro,z
+Volume=hyperuplink-media.volume:/var/lib/hyperuplink/media
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target

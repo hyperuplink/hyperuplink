@@ -1,0 +1,26 @@
+# OPTIONAL S3-compatible object storage (MinIO)
+
+[Unit]
+Description=Hyperuplink MinIO (optional S3 storage)
+
+[Container]
+ContainerName=hyperuplink-minio
+Image=quay.io/minio/minio:latest
+Network=hyperuplink.network
+NetworkAlias=minio
+PublishPort=9000:9000
+PublishPort=9001:9001
+Volume=hyperuplink-miniodata.volume:/data
+Environment=MINIO_ROOT_USER=minioadmin
+Environment=MINIO_ROOT_PASSWORD=minioadmin
+Exec=server /data --console-address :9001
+HealthCmd=curl -f http://localhost:9000/minio/health/live
+HealthInterval=10s
+HealthTimeout=5s
+HealthRetries=5
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target

@@ -1,0 +1,12 @@
+# Shared network for the Hyperuplink stack
+#
+# Containers reach each other by the NetworkAlias set in each .container file
+# (postgres, valkey, minio, ...), which is what deploy/hyperuplink.toml
+# points at.
+
+[Unit]
+Description=Hyperuplink container network
+
+[Network]
+NetworkName=hyperuplink
+Driver=bridge

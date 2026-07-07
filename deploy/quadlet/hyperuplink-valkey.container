@@ -1,0 +1,22 @@
+# Valkey (Redis-compatible) for Hyperuplink
+
+[Unit]
+Description=Hyperuplink Valkey store
+
+[Container]
+ContainerName=hyperuplink-valkey
+Image=docker.io/valkey/valkey:8-alpine
+Network=hyperuplink.network
+NetworkAlias=valkey
+Volume=hyperuplink-valkeydata.volume:/data
+Exec=valkey-server --save 60 1 --appendonly yes
+HealthCmd=valkey-cli ping
+HealthInterval=10s
+HealthTimeout=5s
+HealthRetries=5
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target

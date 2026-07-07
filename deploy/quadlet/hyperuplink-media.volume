@@ -1,0 +1,5 @@
+[Unit]
+Description=Hyperuplink media (local file storage)
+
+[Volume]
+VolumeName=hyperuplink-media

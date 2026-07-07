@@ -1,0 +1,27 @@
+# PostgreSQL for Hyperuplink
+#
+# Change POSTGRES_PASSWORD here AND the matching value in the [Database]
+# Connection string in deploy/hyperuplink.toml before exposing this publicly.
+
+[Unit]
+Description=Hyperuplink PostgreSQL database
+
+[Container]
+ContainerName=hyperuplink-postgres
+Image=docker.io/library/postgres:17-alpine
+Network=hyperuplink.network
+NetworkAlias=postgres
+Volume=hyperuplink-pgdata.volume:/var/lib/postgresql/data
+Environment=POSTGRES_USER=hyperuplink
+Environment=POSTGRES_PASSWORD=hyperuplink
+Environment=POSTGRES_DB=hyperuplink
+HealthCmd=pg_isready -U hyperuplink -d hyperuplink
+HealthInterval=10s
+HealthTimeout=5s
+HealthRetries=5
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target

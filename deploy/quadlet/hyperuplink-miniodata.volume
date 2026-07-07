@@ -1,0 +1,5 @@
+[Unit]
+Description=Hyperuplink MinIO data
+
+[Volume]
+VolumeName=hyperuplink-miniodata
