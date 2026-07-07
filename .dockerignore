@@ -3,3 +3,6 @@
 .claude
 dist
 build
+deploy
+docker-compose.yml
+podman-compose.yml
