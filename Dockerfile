@@ -31,7 +31,7 @@ RUN CGO_ENABLED=0 \
 # ---[ RUNTIME ]-------------------------------------------------------------- #
 FROM alpine:latest
 
-RUN apk add --no-cache ca-certificates tzdata \
+RUN apk add --no-cache ca-certificates tzdata imagemagick \
     && addgroup -g 10001 hyperuplink \
     && adduser -D -H -u 10001 -G hyperuplink hyperuplink \
     && mkdir -p /var/lib/hyperuplink/media \
