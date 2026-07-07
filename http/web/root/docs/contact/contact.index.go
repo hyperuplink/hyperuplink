@@ -18,7 +18,6 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	if ret, rerr := req.AccessControl(
 		user.GuestRole,
 		user.UserRole,
-		user.ModRole,
 		user.AdminRole,
 	); ret {
 		return rerr

@@ -31,6 +31,7 @@ var Routes map[string]Route = map[string]Route{
 	"AdminCommsXmpp":          {hierarchy: []string{"root", "admin", "comms", "xmpp"}},
 	"AdminGeneral":            {hierarchy: []string{"root", "admin", "general"}},
 	"AdminLogs":               {hierarchy: []string{"root", "admin", "logs"}},
+	"AdminPermissions":        {hierarchy: []string{"root", "admin", "permissions"}},
 	"AdminUsers":              {hierarchy: []string{"root", "admin", "users"}},
 	"Categories":              {hierarchy: []string{"root", "_:categories"}},
 	"CategoriesForums":        {hierarchy: []string{"root", "_:categories", ":forums"}},

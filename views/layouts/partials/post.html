@@ -23,7 +23,7 @@
     {{ $attachments := $site.Attachments $post.AttachmentIDs }}
     {{ if $attachments }}
     {{ $currentUserID := $session.GetCurrentUserID }}
-    {{ $canModerate := (or $session.CurrentUserHasModRole $session.CurrentUserHasAdminRole) }}
+    {{ $canModerate := (or $session.CurrentUserHasAdminRole) }}
     <div class="attachments">
       {{ range $attachment := $attachments }}
       <div class="attachment">

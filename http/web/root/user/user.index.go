@@ -40,6 +40,16 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 
 	req.SetData("user", usr)
 
+	groups, err := r.Runtime.Repositories.Group.All(common.QueryOptions{
+		OrderBy: "name",
+		Order:   common.Ascending,
+	})
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	req.SetData("groups", groups)
+
 	topics, err := r.Runtime.Repositories.Topic.VAllForAuthorUUID(
 		usr.ID,
 		common.QueryOptions{

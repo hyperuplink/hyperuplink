@@ -1,0 +1,145 @@
+{{ $default := .Data.Get "default_level" }}
+{{ $groups := .Data.Get "groups" }}
+{{ $hasCategories := .Data.Get "has_categories" }}
+<!-- DEFAULT PERMISSION -->
+<div class="margin window active">
+  <div class="title-bar">
+    <div class="title-bar-text">{{$._.T "default_permission"}}</div>
+  </div>
+  <div class="window-body {{$.Site.GetRoute.AsID}}">
+    <div class="raised padding margin post flex-row gap">
+      <form method="post"
+            action="{{$.Site.GetFormAction "apply"}}"
+            class="flex-row grow gap">
+        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+        <input type="hidden" name="group_id" value="">
+        <input type="hidden" name="category_id" value="">
+        <div class="flex-column grow" style="justify-content: center;">
+          <strong>{{$._.T "all_categories"}}</strong>
+        </div>
+        <div class="flex-column grow">
+          <div class="dropdown">
+            <select name="level" size="1">
+              <option value="none" {{ if eq $default "none" }}selected{{ end }}>{{$._.T "level_none"}}</option>
+              <option value="read" {{ if eq $default "read" }}selected{{ end }}>{{$._.T "level_read"}}</option>
+              <option value="read_write" {{ if eq $default "read_write" }}selected{{ end }}>{{$._.T "level_read_write"}}</option>
+              <option value="read_write_moderate" {{ if eq $default "read_write_moderate" }}selected{{ end }}>{{$._.T "level_read_write_moderate"}}</option>
+            </select>
+            <div class="dropdown-button"></div>
+          </div>
+        </div>
+        <div class="flex-column">
+          <button type="submit" class="affirmative" title="{{$._.T "apply"}}">{{$._.T "apply"}}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- GROUPS -->
+<div class="margin window active">
+  <div class="title-bar">
+    <div class="title-bar-text">{{$._.T "groups"}}</div>
+  </div>
+  <div class="window-body {{$.Site.GetRoute.AsID}}">
+    {{ range $group := $groups }}
+    <fieldset class="flex-column padding margin">
+      <legend>{{$group.Name}} ({{$group.ID}})</legend>
+      {{ range $row := $group.Rows }}
+      <!-- PERMISSION ROW -->
+      <div class="raised padding margin post flex-row gap">
+        <form method="post"
+              action="{{$.Site.GetFormAction "apply"}}"
+              class="flex-row grow gap">
+          <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+          <input type="hidden" name="group_id" value="{{$group.ID}}">
+          <input type="hidden" name="category_id" value="{{$row.CategoryID}}">
+          <div class="flex-column grow" style="justify-content: center;">{{$row.CategoryName}}</div>
+          <div class="flex-column grow">
+            <div class="dropdown">
+              <select name="level" size="1">
+                <option value="read" {{ if eq $row.Level "read" }}selected{{ end }}>{{$._.T "level_read"}}</option>
+                <option value="read_write" {{ if eq $row.Level "read_write" }}selected{{ end }}>{{$._.T "level_read_write"}}</option>
+                <option value="read_write_moderate" {{ if eq $row.Level "read_write_moderate" }}selected{{ end }}>{{$._.T "level_read_write_moderate"}}</option>
+              </select>
+              <div class="dropdown-button"></div>
+            </div>
+          </div>
+          <div class="flex-column">
+            <button type="submit" class="affirmative" title="{{$._.T "apply"}}">{{$._.T "apply"}}</button>
+          </div>
+        </form>
+        <form method="post"
+              action="{{$.Site.GetFormAction "remove"}}"
+              class="flex-column">
+          <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+          <input type="hidden" name="group_id" value="{{$group.ID}}">
+          <input type="hidden" name="category_id" value="{{$row.CategoryID}}">
+          <button type="submit" class="danger" title="{{$._.T "delete"}}">&times;</button>
+        </form>
+      </div>
+      <!-- END -->
+      {{ end }}
+      {{ if $group.AddableCats }}
+      <!-- ADD PERMISSION -->
+      <div class="padding margin post flex-row gap">
+        <form method="post"
+              action="{{$.Site.GetFormAction "apply"}}"
+              class="flex-row grow gap">
+          <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+          <input type="hidden" name="group_id" value="{{$group.ID}}">
+          <input type="hidden" name="level" value="read">
+          <div class="flex-column grow">
+            <div class="dropdown">
+              <select name="category_id" size="1">
+                {{ range $cat := $group.AddableCats }}
+                <option value="{{$cat.ID}}">{{$cat.Name}}</option>
+                {{ end }}
+              </select>
+              <div class="dropdown-button"></div>
+            </div>
+          </div>
+          <div class="flex-column">
+            <button type="submit" class="" title="{{$._.T "add_permission"}}">{{$._.T "add_permission"}}</button>
+          </div>
+        </form>
+      </div>
+      <!-- END -->
+      {{ else if not $group.Rows }}
+      <div class="padding">{{ if $hasCategories }}{{$._.T "all_categories_mapped"}}{{ else }}{{$._.T "no_categories"}}{{ end }}</div>
+      {{ end }}
+      <div class="padding margin flex-row justify-end">
+        <form method="post"
+              action="{{$.Site.GetFormAction "group/destroy"}}"
+              class="flex-column">
+          <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+          <input type="hidden" name="id" value="{{$group.ID}}">
+          <button type="submit" class="danger" title="{{$._.T "delete_group"}}">{{$._.T "delete_group"}}</button>
+        </form>
+      </div>
+    </fieldset>
+    {{ else }}
+    <div class="padding margin">{{$._.T "no_groups"}}</div>
+    {{ end }}
+  </div>
+</div>
+<!-- ADD NEW GROUP -->
+<div class="margin window active">
+  <div class="title-bar">
+    <div class="title-bar-text">{{$._.T "add_new_group"}}</div>
+  </div>
+  <div class="window-body">
+    <div class="padding margin post flex-row gap">
+      <form method="post" action="{{$.Site.GetFormAction "group"}}" class="flex-column grow">
+        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+        <div class="flex-row gap">
+          <div class="flex-column grow">{{$.Form.Input "text" "name" "" true}}</div>
+          <div class="flex-column grow">{{$.Form.Input "text" "id" "" true}}</div>
+          <div class="flex-column">
+            <label>&nbsp;</label>
+            <button type="submit" class="affirmative" style="width: 168px;">{{$._.T "add"}}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -6,20 +6,20 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/attachment"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/category"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/forum"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/group"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/permission"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/postevent"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/reply"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/search"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/topic"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/unit"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/user"
 )
 
 type Repositories struct {
 	db         *database.Database
 	Setting    *setting.Repository
-	Unit       *unit.Repository
+	Group      *group.Repository
 	User       *user.Repository
 	Category   *category.Repository
 	Forum      *forum.Repository
@@ -44,11 +44,11 @@ func New(
 	}
 	repos.Setting = settingRepo
 
-	var unitRepo *unit.Repository
-	if unitRepo, err = unit.New(repos.db); err != nil {
+	var groupRepo *group.Repository
+	if groupRepo, err = group.New(repos.db); err != nil {
 		return nil, err
 	}
-	repos.Unit = unitRepo
+	repos.Group = groupRepo
 
 	var userRepo *user.Repository
 	if userRepo, err = user.New(repos.db); err != nil {
@@ -112,7 +112,7 @@ func (repos *Repositories) Startup() (err error) {
 		return err
 	}
 
-	if err = repos.Unit.Startup(); err != nil {
+	if err = repos.Group.Startup(); err != nil {
 		return err
 	}
 
@@ -192,7 +192,7 @@ func (repos *Repositories) Shutdown() (err error) {
 		return err
 	}
 
-	if err = repos.Unit.Shutdown(); err != nil {
+	if err = repos.Group.Shutdown(); err != nil {
 		return err
 	}
 

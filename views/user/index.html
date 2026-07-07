@@ -7,8 +7,9 @@
     {{ $topics := .Data.Get "topics"}}
     {{ $replies := .Data.Get "replies"}}
     <div class="flex-row flex-wrap gap margin">
+      <div class="flex-column gap" style="min-width: 200px;">
       <!------ Profile ------>
-      <fieldset class="flex-column padding" style="min-width: 200px;">
+      <fieldset class="flex-column padding">
         <legend>{{$user.Username}}</legend>
         <div class="flex-column gap">
           <img class="picture lowered"
@@ -25,6 +26,32 @@
           {{ end }}
         </div>
       </fieldset>
+      {{ if $.Session.CurrentUserHasAdminRole }}
+      <!------ Group membership ------>
+      <fieldset class="flex-column padding">
+        <legend>{{$._.T "group_membership"}}</legend>
+        <form method="post"
+              action="{{$.Site.GetFormAction "membership"}}"
+              class="flex-column gap">
+          <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+          {{ range $group := .Data.Get "groups" }}
+          <label class="flex-row gap">
+            <input type="checkbox"
+                   name="member_of"
+                   value="{{$group.ID}}"
+                   {{ if has $group.ID $user.MemberOf }}checked{{ end }}>
+            {{$group.Name}}
+          </label>
+          {{ else }}
+          <div>{{$._.T "no_groups"}}</div>
+          {{ end }}
+          <div class="actions flex-row justify-end">
+            <button type="submit" class="affirmative" title="{{$._.T "save"}}">{{$._.T "save"}}</button>
+          </div>
+        </form>
+      </fieldset>
+      {{ end }}
+      </div>
       <div class="flex-column grow gap">
         <!------ Recent Topics ------>
         <fieldset class="flex-column padding">

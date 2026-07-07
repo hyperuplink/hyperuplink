@@ -41,13 +41,6 @@ func (s *Session) CurrentUserHasUserRole() bool {
 	return false
 }
 
-func (s *Session) CurrentUserHasModRole() bool {
-	if s.currentUser != nil && s.currentUser.Role == user.ModRole {
-		return true
-	}
-	return false
-}
-
 func (s *Session) CurrentUserHasAdminRole() bool {
 	if s.currentUser != nil && s.currentUser.Role == user.AdminRole {
 		return true

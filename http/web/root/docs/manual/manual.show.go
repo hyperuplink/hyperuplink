@@ -38,7 +38,6 @@ func (r *Route) render(c fiber.Ctx, sub string) (err error) {
 	if ret, rerr := req.AccessControl(
 		user.GuestRole,
 		user.UserRole,
-		user.ModRole,
 		user.AdminRole,
 	); ret {
 		return rerr

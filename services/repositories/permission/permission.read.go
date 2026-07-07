@@ -1,11 +1,9 @@
 package permission
 
 import (
-	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
-	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 func (repo *Repository) All() (model *[]permission.Permission, err error) {
@@ -13,8 +11,7 @@ func (repo *Repository) All() (model *[]permission.Permission, err error) {
 	var mod []permission.Permission
 
 	rows, err = repo.db.Query(`SELECT * FROM permissions
-		WHERE deleted_at IS NULL
-		`)
+		WHERE deleted_at IS NULL`)
 	if err != nil {
 		return nil, repo.db.ConvertError(err)
 	}
@@ -24,17 +21,44 @@ func (repo *Repository) All() (model *[]permission.Permission, err error) {
 	return &mod, repo.db.ConvertError(err)
 }
 
-func (repo *Repository) GetByUUID(
-	id uuid.UUID,
+func (repo *Repository) AllForGroup(
+	groupID string,
+) (model *[]permission.Permission, err error) {
+	var rows pgx.Rows
+	var mod []permission.Permission
+
+	rows, err = repo.db.Query(`SELECT * FROM permissions
+		WHERE group_id = $1
+		AND deleted_at IS NULL`,
+		groupID,
+	)
+	if err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+
+	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[permission.Permission])
+
+	return &mod, repo.db.ConvertError(err)
+}
+
+func (repo *Repository) GetDefault() (model *permission.Permission, err error) {
+	return repo.GetFor(pgtype.Text{}, pgtype.UUID{})
+}
+
+func (repo *Repository) GetFor(
+	groupID pgtype.Text,
+	categoryID pgtype.UUID,
 ) (model *permission.Permission, err error) {
 	var rows pgx.Rows
 	var mod permission.Permission
 
 	rows, err = repo.db.Query(`SELECT * FROM permissions
-		WHERE id = $1
+		WHERE group_id IS NOT DISTINCT FROM $1
+		AND category_id IS NOT DISTINCT FROM $2
 		AND deleted_at IS NULL
 		LIMIT 1`,
-		id,
+		groupID,
+		categoryID,
 	)
 	if err != nil {
 		return nil, repo.db.ConvertError(err)
@@ -43,57 +67,4 @@ func (repo *Repository) GetByUUID(
 	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[permission.Permission])
 
 	return &mod, repo.db.ConvertError(err)
-}
-
-func (repo *Repository) GetByID(
-	id string,
-) (model *permission.Permission, err error) {
-	var uuID uuid.UUID
-
-	if uuID, err = uuid.Parse(id); err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
-
-	return repo.GetByUUID(uuID)
-}
-
-func (repo *Repository) GetByRoleUnitForumUUID(
-	role user.Role,
-	unit pgtype.Text,
-	id uuid.UUID,
-) (model *permission.Permission, err error) {
-	var rows pgx.Rows
-	var mod permission.Permission
-
-	rows, err = repo.db.Query(`SELECT * FROM permissions
-		WHERE role = $1
-		AND unit = $2
-		AND forum_id = $3
-		AND deleted_at IS NULL
-		LIMIT 1`,
-		role,
-		unit,
-		id,
-	)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
-
-	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[permission.Permission])
-
-	return &mod, repo.db.ConvertError(err)
-}
-
-func (repo *Repository) GetByRoleUnitForumID(
-	role user.Role,
-	unit pgtype.Text,
-	id string,
-) (model *permission.Permission, err error) {
-	var uuID uuid.UUID
-
-	if uuID, err = uuid.Parse(id); err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
-
-	return repo.GetByRoleUnitForumUUID(role, unit, uuID)
 }

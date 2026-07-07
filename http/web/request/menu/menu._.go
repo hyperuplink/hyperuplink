@@ -313,6 +313,11 @@ func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 						Href:  route.For("AdminUsers").AsURL(),
 					},
 					{
+						Label: m.T(route.For("AdminPermissions").AsTitle()),
+						Title: m.T(route.For("AdminPermissions").AsTitle()),
+						Href:  route.For("AdminPermissions").AsURL(),
+					},
+					{
 						IsSeparator: true,
 					},
 					{

@@ -1,6 +1,11 @@
 package permission
 
 import (
+	"errors"
+
+	"github.com/jackc/pgx/v5/pgtype"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
+	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/services/database"
 )
 
@@ -16,7 +21,12 @@ func New(db *database.Database) (*Repository, error) {
 }
 
 func (repo *Repository) Startup() (err error) {
-	return nil
+	_, err = repo.GetDefault()
+	if errors.Is(err, errs.ErrNoRows) {
+		return repo.Apply(pgtype.Text{}, pgtype.UUID{}, permission.ReadWrite)
+	}
+
+	return err
 }
 
 func (repo *Repository) Shutdown() error {
