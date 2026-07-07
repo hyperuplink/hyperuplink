@@ -1,0 +1,49 @@
+[General]
+Mode = "production"
+
+[Logging]
+Level = "info"
+
+[Redis]
+Addresses = ["valkey:6379"]
+
+[Database]
+Connection = "postgres://hyperuplink:hyperuplink@postgres:5432/hyperuplink?sslmode=disable"
+
+[Server]
+BindIP             = "0.0.0.0"
+Port               = 3000
+BodyLimit          = 67108864
+Concurrency        = 262144
+ProxyHeader        = "" # set to "X-Forwarded-For" behind a reverse proxy
+EnableIPValidation = false
+TrustProxy         = false
+TrustLoopback      = true
+TrustProxies       = []
+ReduceMemoryUsage  = false
+ServerHeader       = ""
+
+[Users]
+# The account registered with this e-mail is promoted to admin on sign-up
+PromoteAdmin = ["admin@example.com"]
+
+# Persistent local file storage (backed by the "mediadata" volume)
+[[Storage]]
+ID = "local-storage"
+Type = "Local"
+Local.Path = "/var/lib/hyperuplink/media"
+Local.PublicURI = "/media"
+
+# Optional S3 storage served by the "minio" profile. Start it with
+# `--profile minio` and select this provider in the admin UI to use it for
+# avatars/attachments. Ignored (never dialed) while MinIO is not running.
+[[Storage]]
+ID = "remote-storage"
+Type = "S3"
+S3.Endpoint = "http://minio:9000"
+S3.Region = "us-east-1"
+S3.AccessKey = "minioadmin"
+S3.SecretKey = "minioadmin"
+S3.PublicURL = "http://localhost:9000"
+S3.PublicDownload = true
+S3.PresignedDownload = false
