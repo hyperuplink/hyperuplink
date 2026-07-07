@@ -1,0 +1,45 @@
+#!/sbin/openrc-run
+# OpenRC service for running Hyperuplink.
+#
+# Install:
+#   install -m 0755 hyperuplink            /usr/local/bin/hyperuplink
+#   install -m 0640 deploy/hyperuplink.toml /etc/hyperuplink.toml
+#   # create the service user (Alpine):
+#   addgroup -S hyperuplink && adduser -S -D -H -G hyperuplink \
+#       -h /var/lib/hyperuplink -s /sbin/nologin hyperuplink
+#   install -m 0755 deploy/init/hyperuplink.openrc /etc/init.d/hyperuplink
+#   rc-update add hyperuplink default
+#   rc-service hyperuplink start
+#
+# Requires ImageMagick's `convert` on PATH. Point Local.Path in the config at
+# /var/lib/hyperuplink. Override any variable below in /etc/conf.d/hyperuplink.
+
+: ${cfg:="file:///etc/hyperuplink.toml"}
+: ${command:="/usr/local/bin/hyperuplink"}
+: ${user:="hyperuplink"}
+: ${datadir:="/var/lib/hyperuplink"}
+
+name="Hyperuplink"
+description="Hyperuplink"
+
+command_args="-c ${cfg}"
+command_user="${user}:${user}"
+
+supervisor="supervise-daemon"
+respawn_delay=5
+respawn_max=0
+pidfile="/run/${RC_SVCNAME}.pid"
+
+output_log="/var/log/${RC_SVCNAME}.log"
+error_log="/var/log/${RC_SVCNAME}.log"
+
+depend() {
+	need net
+	use dns logger postgresql redis
+	after firewall
+}
+
+start_pre() {
+	checkpath --directory --mode 0750 --owner "${user}:${user}" "${datadir}"
+	checkpath --file --mode 0640 --owner "${user}:${user}" "${output_log}"
+}

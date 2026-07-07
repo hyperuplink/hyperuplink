@@ -1,0 +1,65 @@
+# systemd service for running Hyperuplink.
+#
+# Install:
+#   install -m 0755 hyperuplink            /usr/local/bin/hyperuplink
+#   install -m 0640 deploy/hyperuplink.toml /etc/hyperuplink.toml
+#   useradd --system --home-dir /var/lib/hyperuplink --shell /usr/sbin/nologin hyperuplink
+#   cp deploy/init/hyperuplink.service /etc/systemd/system/hyperuplink.service
+#   systemctl daemon-reload
+#   systemctl enable --now hyperuplink.service
+#
+# Requires ImageMagick's `convert` on PATH. Point Local.Path in the config at
+# /var/lib/hyperuplink/media (the StateDirectory created below). Postgres and
+# Valkey/Redis are expected to be reachable per the config, run them however you
+# like (this unit does not manage them).
+
+[Unit]
+Description=Hyperuplink
+After=network-online.target
+Wants=network-online.target
+# If Postgres/Valkey run on this same host, order after them, e.g.:
+# After=postgresql.service valkey.service
+
+[Service]
+Type=simple
+User=hyperuplink
+Group=hyperuplink
+ExecStart=/usr/local/bin/hyperuplink -c file:///etc/hyperuplink.toml
+Restart=on-failure
+RestartSec=5s
+
+# Persistent local media storage lives here (owned by the service user):
+StateDirectory=hyperuplink
+StateDirectoryMode=0750
+WorkingDirectory=/var/lib/hyperuplink
+
+# Sandboxing, relax any line that conflicts with your setup:
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/hyperuplink
+ProtectControlGroups=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectKernelLogs=true
+ProtectClock=true
+ProtectHostname=true
+ProtectProc=invisible
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+# To bind a privileged port (<1024) directly,
+# drop NoNewPrivileges guarantees and add:
+#
+# AmbientCapabilities=CAP_NET_BIND_SERVICE
+# CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target

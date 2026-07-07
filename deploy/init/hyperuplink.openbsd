@@ -1,0 +1,36 @@
+#!/bin/ksh
+#
+# OpenBSD rc.d script for running Hyperuplink.
+#
+# Install:
+#   install -m 0755 hyperuplink            /usr/local/bin/hyperuplink
+#   install -m 0640 deploy/hyperuplink.toml /etc/hyperuplink.toml
+#   useradd -r 100..999 -d /var/hyperuplink -s /sbin/nologin _hyperuplink
+#   install -d -o _hyperuplink -g _hyperuplink -m 0750 /var/hyperuplink
+#   install -m 0755 deploy/init/hyperuplink.openbsd /etc/rc.d/hyperuplink
+#   rcctl enable hyperuplink
+#   rcctl start hyperuplink
+#
+# Requires ImageMagick's `convert` on PATH. Point Local.Path in the config at
+# /var/hyperuplink. Override defaults in /etc/rc.conf.local, e.g.:
+#   hyperuplink_flags="-c file:///etc/hyperuplink.toml"
+#   hyperuplink_user="_hyperuplink"
+
+daemon="/usr/local/bin/hyperuplink"
+daemon_flags="-c file:///etc/hyperuplink.toml"
+daemon_user="_hyperuplink"
+
+. /etc/rc.d/rc.subr
+
+# The service stays in the foreground, so let rc.subr background it.
+rc_bg=YES
+
+# The service reloads config only on restart (SIGHUP is ignored).
+rc_reload=NO
+
+rc_pre() {
+  [ -d /var/hyperuplink ] ||
+    install -d -o "${daemon_user}" -g "${daemon_user}" -m 0750 /var/hyperuplink
+}
+
+rc_cmd $1

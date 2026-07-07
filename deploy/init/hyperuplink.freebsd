@@ -1,0 +1,63 @@
+#!/bin/sh
+#
+# FreeBSD rc.d script for running Hyperuplink.
+#
+# PROVIDE: hyperuplink
+# REQUIRE: LOGIN NETWORKING
+# KEYWORD: shutdown
+#
+# Install:
+#   install -m 0755 hyperuplink            /usr/local/bin/hyperuplink
+#   install -m 0640 deploy/hyperuplink.toml /usr/local/etc/hyperuplink.toml
+#   pw groupadd hyperuplink
+#   pw useradd hyperuplink -g hyperuplink -c "Hyperuplink" \
+#       -d /var/db/hyperuplink -s /usr/sbin/nologin
+#   install -m 0755 deploy/init/hyperuplink.freebsd /usr/local/etc/rc.d/hyperuplink
+#   sysrc hyperuplink_enable=YES
+#   service hyperuplink start
+#
+# Requires ImageMagick's `convert` on PATH. Point Local.Path in the config at
+# ${hyperuplink_datadir} (default /var/db/hyperuplink). Overridable in rc.conf:
+#   hyperuplink_enable  (default: NO)
+#   hyperuplink_config  (default: file:///usr/local/etc/hyperuplink.toml)
+#   hyperuplink_user    (default: hyperuplink)
+#   hyperuplink_datadir (default: /var/db/hyperuplink)
+
+. /etc/rc.subr
+
+name="hyperuplink"
+desc="Hyperuplink"
+rcvar="hyperuplink_enable"
+
+load_rc_config "$name"
+
+: ${hyperuplink_enable:="NO"}
+: ${hyperuplink_config:="file:///usr/local/etc/hyperuplink.toml"}
+: ${hyperuplink_user:="hyperuplink"}
+: ${hyperuplink_datadir:="/var/db/hyperuplink"}
+
+hyperuplink_program="/usr/local/bin/hyperuplink"
+logfile="/var/log/${name}.log"
+child_pidfile="/var/run/${name}_child.pid"
+pidfile="/var/run/${name}.pid"
+
+# Supervise with daemon(8): -r restarts the child if it exits,
+# ${pidfile} tracks the supervisor (what rc signals on stop),
+# ${child_pidfile} the service.
+command="/usr/sbin/daemon"
+command_args="-r -R 5 -t ${name} -u ${hyperuplink_user} \
+	-P ${pidfile} -p ${child_pidfile} -o ${logfile} \
+	-- ${hyperuplink_program} -c ${hyperuplink_config}"
+
+start_precmd="hyperuplink_precmd"
+
+hyperuplink_precmd() {
+  if [ ! -d "${hyperuplink_datadir}" ]; then
+    install -d -o "${hyperuplink_user}" -g "${hyperuplink_user}" -m 0750 \
+      "${hyperuplink_datadir}"
+  fi
+  install -o "${hyperuplink_user}" -g "${hyperuplink_user}" -m 0640 \
+    /dev/null "${logfile}"
+}
+
+run_rc_command "$1"
