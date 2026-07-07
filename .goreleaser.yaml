@@ -1,45 +1,100 @@
 # .goreleaser.yaml
+# https://goreleaser.com
 version: 2
+
+project_name: hyperuplink
+
+before:
+  hooks:
+    - go mod download
+    - go mod verify
+
 builds:
-  -
+  - id: hyperuplink
+    binary: hyperuplink
+    main: .
     env:
       - CGO_ENABLED=0
+    flags:
+      - -trimpath
     ldflags:
-      - -s -w -X xn--gckvb8fzb.com/hyperuplink/runtime.Version={{.Version}} -X xn--gckvb8fzb.com/hyperuplink/runtime.Commit={{.Commit}} -X xn--gckvb8fzb.com/hyperuplink/runtime.Date={{.Date}}
-    goos:
-      - darwin
-      - dragonfly
-      - freebsd
-      - linux
-      - netbsd
-      - openbsd
-    goarch:
-      - 386
-      - amd64
-      - arm
-      - arm64
-      - riscv64
-    goarm:
-      - "6"
-      - "7"
-    ignore:
-      - goos: darwin
-        goarch: 386
-      - goos: darwin
-        goarch: arm
-      - goos: darwin
-        goarch: riscv64
-      - goos: netbsd
-        goarch: arm64
-      - goos: netbsd
-        goarch: riscv64
-      - goos: freebsd
-        goarch: arm64
+      - -s -w
+      - -X xn--gckvb8fzb.com/hyperuplink/runtime.Version={{.Version}}
+      - -X xn--gckvb8fzb.com/hyperuplink/runtime.Commit={{.Commit}}
+      - -X xn--gckvb8fzb.com/hyperuplink/runtime.Date={{.CommitDate}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    targets:
+      - android_arm64
+      - darwin_amd64
+      - darwin_arm64
+      - dragonfly_amd64
+      - freebsd_386
+      - freebsd_amd64
+      - freebsd_arm_6
+      - freebsd_arm_7
+      - freebsd_arm64
+      - linux_386
+      - linux_amd64
+      - linux_arm_6
+      - linux_arm_7
+      - linux_arm64
+      - linux_loong64
+      - linux_mips
+      - linux_mipsle
+      - linux_mips64
+      - linux_mips64le
+      - linux_ppc64
+      - linux_ppc64le
+      - linux_riscv64
+      - linux_s390x
+      - netbsd_386
+      - netbsd_amd64
+      - netbsd_arm_6
+      - netbsd_arm_7
+      - netbsd_arm64
+      - openbsd_386
+      - openbsd_amd64
+      - openbsd_arm_6
+      - openbsd_arm_7
+      - openbsd_arm64
+      - openbsd_ppc64
+      - openbsd_riscv64
+      - windows_386
+      - windows_amd64
+      - windows_arm64
+
+archives:
+  - id: hyperuplink
+    ids:
+      - hyperuplink
+    formats:
+      - tar.gz
+    name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+    files:
+      - README.md
+      - LICENSE
+      - hyperuplink.toml
+
+checksum:
+  name_template: "checksums.txt"
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
 changelog:
   disable: false
   use: github
   format: "{{.SHA}}: {{.Message}} (@{{.AuthorUsername}})"
   sort: asc
   abbrev: -1
+
 release:
+  draft: false
+  prerelease: auto
   footer: ""
