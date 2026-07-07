@@ -26,11 +26,19 @@ var oauthProviderLabels = map[string]string{
 }
 
 func oauthProviderLabel(name string) string {
+	if name == "" {
+		return ""
+	}
+
 	if label, ok := oauthProviderLabels[name]; ok {
 		return label
 	}
 
 	return strings.ToUpper(name[:1]) + name[1:]
+}
+
+func (s *Site) OauthProviderLabel(name string) string {
+	return oauthProviderLabel(strings.ToLower(name))
 }
 
 func (s *Site) OauthProviders() []OauthProvider {

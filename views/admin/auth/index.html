@@ -25,5 +25,30 @@
         <button type="submit" class="affirmative" title="{{$._.T "update"}}">{{$._.T "update"}}</button>
       </div>
     </form>
+
+    {{ $authProviders := .Data.Get "auth_providers" }}
+    <div class="margin flex-column gap">
+      <label>{{$._.T "auth_providers"}}:</label>
+      {{ if $authProviders }}
+      {{ range $provider := $authProviders }}
+      {{ $providerClass := lower $provider.Type }}
+      <fieldset class="padding provider">
+        <legend class="{{ $providerClass }}">{{ $.Site.OauthProviderLabel $provider.Type }}</legend>
+        <div class="grid gap config-grid align-center">
+          <label>{{$._.T "provider_type"}}:</label>
+          <input type="text" class="input" value="{{ $provider.Type }}" readonly>
+          <label>{{$._.T "provider_key"}}:</label>
+          <input type="text" class="input" value="{{ $provider.Key }}" readonly>
+          <label>{{$._.T "provider_secret"}}:</label>
+          <input type="password" class="input" value="hunter7" readonly>
+          <label>{{$._.T "provider_scopes"}}:</label>
+          <input type="text" class="input" value="{{ join ", " $provider.Scopes }}" readonly>
+        </div>
+      </fieldset>
+      {{ end }}
+      {{ else }}
+      <div class="margin">{{$._.T "no_auth_providers"}}</div>
+      {{ end }}
+    </div>
   </div>
 </div>

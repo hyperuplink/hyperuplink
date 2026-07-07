@@ -6,6 +6,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/services/config"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -31,6 +32,14 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	req.SetData("setting_auth", &settingAuth.JSONValue)
+
+	var authProviders config.AuthProviders
+	authProviders, err = r.Runtime.Config.AuthProviders()
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	req.SetData("auth_providers", authProviders)
 
 	return req.Respond()
 }
