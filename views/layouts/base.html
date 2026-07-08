@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {{ $favicon := .Site.CustomFavicon }}
-    <link rel="icon" href="{{ if $favicon }}{{ $favicon }}{{ else }}{{ .Site.StaticFile "images/favicon.gif" }}{{ end }}">
+    <link rel="icon" href="{{ if $favicon }}{{ $favicon }}{{ else }}{{ .Site.StaticFile "images/favicon.ico" }}{{ end }}">
     <link rel="stylesheet" href="{{.Site.StaticFile "css/reset.css"}}" />
     <link rel="stylesheet" href="{{.Site.StaticFile (printf "themes/%s/theme.css" .Theme.GetTheme)}}" />
     <link rel="stylesheet" href="{{.Site.StaticFile "css/layout.css"}}" />

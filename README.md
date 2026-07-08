@@ -14,7 +14,7 @@ LICENSE](https://img.shields.io/static/v1?label=SEGV%20LICENSE&message=1.0&label
        █   █ █   █ █   █ █     █   █ █   █ █   █ █       █   ██  █ █  █
        █████  ███  ████  ███   ████  █   █ ████  █       █   █ █ █ ███
        █   █   █   █     █     █  █  █   █ █     █       █   █  ██ █  █
-       █   █   █   █████ █████ █   █  ███  █     █████ █████ █   █ █   █
+       █   █   █   █     █████ █   █  ███  █     █████ █████ █   █ █   █
 
       ::: A SUPER HIGH SPEED INTERNET BULLETIN BOARD AS SINGLE BINARY :::
 
