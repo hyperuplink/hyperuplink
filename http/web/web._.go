@@ -3,6 +3,7 @@ package web
 import (
 	"fmt"
 	"html/template"
+	"io/fs"
 	"net/http"
 	"os"
 	"regexp"
@@ -292,8 +293,12 @@ func (srv *Web) loadRoutes() (err error) {
 			CacheDuration: -1,
 		})
 	} else {
-		stic = static.New("./static", static.Config{
-			FS:            srv.rt.Embeds["static"],
+		var sub fs.FS
+		if sub, err = fs.Sub(srv.rt.Embeds["static"], "static"); err != nil {
+			return err
+		}
+		stic = static.New("", static.Config{
+			FS:            sub,
 			Browse:        false,
 			CacheDuration: 10 * time.Second, // TODO: Make configurable
 		})
