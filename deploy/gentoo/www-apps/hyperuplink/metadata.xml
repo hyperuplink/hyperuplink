@@ -15,5 +15,6 @@
 	<upstream>
 		<bugs-to>https://github.com/hyperuplink/hyperuplink/issues</bugs-to>
 		<remote-id type="github">hyperuplink/hyperuplink</remote-id>
+		<remote-id type="codeberg">hyperuplink/hyperuplink</remote-id>
 	</upstream>
 </pkgmetadata>

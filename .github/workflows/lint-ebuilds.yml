@@ -1,0 +1,67 @@
+name: Lint ebuilds
+
+on:
+  push:
+    paths:
+      - "deploy/gentoo/**"
+      - ".github/workflows/lint-ebuilds.yml"
+  pull_request:
+    paths:
+      - "deploy/gentoo/**"
+      - ".github/workflows/lint-ebuilds.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lint-ebuilds-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pkgcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Bash syntax check
+        run: find deploy/gentoo -name '*.ebuild' -print0 | xargs -0 -n1 bash -n
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install pkgcheck
+        run: pip install pkgcheck
+
+      # pkgcheck needs the ::gentoo tree to resolve the inherited eclasses
+      # (go-module, systemd, git-r3, acct-*) and the dependency atoms.
+      - name: Fetch the ::gentoo master repo
+        run: |
+          mkdir -p "${RUNNER_TEMP}/gentoo"
+          curl -sSL https://distfiles.gentoo.org/snapshots/portage-latest.tar.xz \
+            | tar -xJ -C "${RUNNER_TEMP}/gentoo" --strip-components=1
+
+      - name: Configure repositories
+        run: |
+          sudo mkdir -p /etc/portage/repos.conf
+          sudo tee /etc/portage/repos.conf/lint.conf >/dev/null <<EOF
+          [DEFAULT]
+          main-repo = gentoo
+
+          [gentoo]
+          location = ${RUNNER_TEMP}/gentoo
+
+          [hyperuplink]
+          location = ${GITHUB_WORKSPACE}/deploy/gentoo
+          EOF
+
+          profile=$(find "${RUNNER_TEMP}/gentoo/profiles/default/linux/amd64" \
+            -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)
+          sudo ln -snf "${profile}" /etc/portage/make.profile
+
+      - name: Run pkgcheck
+        run: |
+          pkgcheck scan -r hyperuplink --exit error \
+            -k=-NonexistentDeps,-NonsolvableDepsInStable,-NonsolvableDepsInDev,-MissingManifest
