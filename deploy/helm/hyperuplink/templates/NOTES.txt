@@ -1,0 +1,48 @@
+{{ .Chart.Name }} {{ .Chart.AppVersion }} has been deployed as release "{{ .Release.Name }}".
+
+Chart:   {{ include "hyperuplink.chart" . }}
+Image:   {{ include "hyperuplink.image" . }}
+Config:  {{ if .Values.existingConfigSecret }}existing Secret "{{ .Values.existingConfigSecret }}"{{ else }}rendered Secret "{{ include "hyperuplink.configSecretName" . }}"{{ end }}, mounted at {{ include "hyperuplink.configFilePath" . }}
+
+Reminder: this chart deploys ONLY the Hyperuplink binary. PostgreSQL,
+Redis/Valkey and (optionally) an S3-compatible store must exist and be reachable
+from the cluster. Verify `Database.Connection` and `Redis.Addresses` in your
+config point at them.
+
+1. Get the application URL:
+{{- if .Values.ingress.enabled }}
+{{- range $host := .Values.ingress.hosts }}
+{{- range .paths }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ .path }}
+{{- end }}
+{{- end }}
+{{- else if contains "NodePort" .Values.service.type }}
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "hyperuplink.fullname" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo "http://$NODE_IP:$NODE_PORT"
+{{- else if contains "LoadBalancer" .Values.service.type }}
+  NOTE: it may take a few minutes for the LoadBalancer IP to be available.
+  kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "hyperuplink.fullname" . }}
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "hyperuplink.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  echo "http://$SERVICE_IP:{{ .Values.service.port }}"
+{{- else }}
+  kubectl --namespace {{ .Release.Namespace }} port-forward svc/{{ include "hyperuplink.fullname" . }} 8080:{{ .Values.service.port }}
+  echo "Visit http://127.0.0.1:8080"
+
+  NOTE: `Mode = "production"` forces secure-only cookies, so login will fail
+  over plain HTTP. Reach the app over HTTPS (enable `ingress` with TLS) for a
+  working sign-in flow.
+{{- end }}
+
+2. Check rollout status:
+  kubectl --namespace {{ .Release.Namespace }} rollout status deployment/{{ include "hyperuplink.fullname" . }}
+
+{{- if .Values.autoscaling.enabled }}
+{{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
+
+WARNING: autoscaling is enabled together with local `persistence`. A
+ReadWriteOnce volume cannot be shared across pods and will pin all replicas to a
+single node (or block scheduling). Use S3 storage and set
+`persistence.enabled=false` for horizontally scaled deployments.
+{{- end }}
+{{- end }}

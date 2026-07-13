@@ -1,0 +1,273 @@
+# Default values for the Hyperuplink chart.
+#
+# This chart deploys ONLY the Hyperuplink binary. PostgreSQL, Redis/Valkey and
+# any S3-compatible object store must already exist and be reachable from the
+# cluster; wire them up through `config` (or `existingConfigSecret`) below.
+
+# -- Number of application replicas. Keep at 1 unless you use S3 storage
+# (`persistence` / local storage is per-pod ReadWriteOnce and does not shard).
+replicaCount: 1
+
+image:
+  repository: ghcr.io/hyperuplink/hyperuplink
+  # -- Overrides the image tag. Defaults to `.Chart.AppVersion`.
+  tag: ""
+  pullPolicy: IfNotPresent
+
+# -- Secrets for pulling the image from a private registry.
+imagePullSecrets: []
+
+# -- Override the chart name used in resource names.
+nameOverride: ""
+# -- Override the fully qualified release name.
+fullnameOverride: ""
+
+# -- Labels added to every resource the chart creates.
+commonLabels: {}
+# -- Annotations added to every resource the chart creates.
+commonAnnotations: {}
+
+# ---------------------------------------------------------------------------
+# Application configuration (hyperuplink.toml)
+# ---------------------------------------------------------------------------
+# Hyperuplink is configured through a TOML file loaded with `-c file://...`
+# The chart renders the `config` string below into a Secret and mounts it at
+# `/etc/hyperuplink/hyperuplink.toml`.
+#
+# NOTE: this file contains credentials (database password, S3 keys, SMTP/XMPP
+# passwords, OAuth secrets), which is why it is stored in a Secret rather than a
+# ConfigMap. Point `Database.Connection` and `Redis.Addresses` at YOUR external
+# services. `Mode = "production"` serves the embedded views and forces
+# secure-only cookies, so the app must be reached over HTTPS (terminate TLS at
+# the Ingress or an upstream proxy).
+
+# -- Use an existing Secret that already contains the config file instead of
+# rendering `config`. The Secret must expose the file under the key named by
+# `configFileKey`.
+existingConfigSecret: ""
+# -- Key inside the config Secret that holds the TOML file. Also used as the
+# file name once mounted, so the app is started with
+# `-c file://<configMountPath>/<configFileKey>`.
+configFileKey: hyperuplink.toml
+# -- Directory the config Secret is mounted into (read-only).
+configMountPath: /etc/hyperuplink
+
+# -- Inline hyperuplink.toml. Ignored when `existingConfigSecret` is set.
+config: |-
+  [General]
+  Mode = "production"
+
+  [Logging]
+  Level = "info"
+
+  [Redis]
+  Addresses = ["redis:6379"]
+
+  [Database]
+  Connection = "postgres://hyperuplink:hyperuplink@postgres:5432/hyperuplink?sslmode=disable"
+
+  [Server]
+  BindIP             = "0.0.0.0"
+  Port               = 3000
+  BodyLimit          = 67108864
+  Concurrency        = 262144
+  ProxyHeader        = "X-Forwarded-For" # set behind a reverse proxy / Ingress
+  EnableIPValidation = false
+  TrustProxy         = true
+  TrustLoopback      = true
+  TrustProxies       = []
+  ReduceMemoryUsage  = false
+  ServerHeader       = ""
+
+  [Users]
+  # The account registered with this e-mail is promoted to admin on sign-up.
+  PromoteAdmin = ["admin@example.com"]
+
+  # Persistent local file storage (backed by the `persistence` volume).
+  [[Storage]]
+  ID = "local-storage"
+  Type = "Local"
+  Local.Path = "/var/lib/hyperuplink/media"
+  Local.PublicURI = "/media"
+
+# ---------------------------------------------------------------------------
+# Workload
+# ---------------------------------------------------------------------------
+
+# -- Port the container listens on. MUST match `Server.Port` in the config
+# above. Exposed as the named port `http` and targeted by the Service/probes.
+containerPort: 3000
+
+# -- Deployment update strategy. `Recreate` is the safe default because the
+# `persistence` volume is ReadWriteOnce: during a RollingUpdate the new pod
+# cannot mount the volume while the old pod still holds it. Switch to
+# `RollingUpdate` when you run stateless (S3-only) replicas.
+strategy:
+  type: Recreate
+
+# -- Extra environment variables for the container.
+env: []
+#  - name: TZ
+#    value: UTC
+
+# -- Extra environment variables sourced from ConfigMaps/Secrets.
+envFrom: []
+
+# -- Additional args appended after the config flag.
+extraArgs: []
+
+serviceAccount:
+  # -- Create a dedicated ServiceAccount.
+  create: true
+  # -- Annotations for the ServiceAccount.
+  annotations: {}
+  # -- Name to use; generated from the fullname when empty.
+  name: ""
+
+# -- Pod-level annotations (a config checksum is always added automatically).
+podAnnotations: {}
+# -- Pod-level labels.
+podLabels: {}
+
+# -- Pod security context. The image runs rootless as UID/GID 10001; `fsGroup`
+# makes the media volume group-writable.
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+
+# -- Container security context. `readOnlyRootFilesystem` is left off because
+# ImageMagick may write to a scratch dir; enable it together with an emptyDir
+# `/tmp` mount if you want it locked down.
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+resources:
+  limits:
+    cpu: "1"
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# -- Health probes hit the built-in fiber healthcheck endpoints. Set `enabled`
+# to false to drop a probe entirely.
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /_internal/health/livez
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 15
+  timeoutSeconds: 3
+  failureThreshold: 3
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /_internal/health/readyz
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 3
+startupProbe:
+  enabled: true
+  httpGet:
+    path: /_internal/health/startupz
+    port: http
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 30
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+topologySpreadConstraints: []
+
+# -- Additional volumes for the pod.
+extraVolumes: []
+# -- Additional volume mounts for the container.
+extraVolumeMounts: []
+
+# ---------------------------------------------------------------------------
+# Media persistence (local storage backend)
+# ---------------------------------------------------------------------------
+# Backs `/var/lib/hyperuplink/media` for the `Local` storage provider. Disable
+# it if you serve avatars/attachments exclusively from S3.
+persistence:
+  enabled: true
+  # -- Use an existing PVC instead of creating one.
+  existingClaim: ""
+  mountPath: /var/lib/hyperuplink/media
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
+  # -- StorageClass; "" uses the cluster default, "-" disables dynamic provisioning.
+  storageClass: ""
+  annotations: {}
+
+# ---------------------------------------------------------------------------
+# Service
+# ---------------------------------------------------------------------------
+service:
+  type: ClusterIP
+  port: 3000
+  annotations: {}
+
+# ---------------------------------------------------------------------------
+# Ingress
+# ---------------------------------------------------------------------------
+# Production mode forces secure cookies, so terminate TLS here (or upstream).
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: hyperuplink.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: hyperuplink-tls
+  #    hosts:
+  #      - hyperuplink.example.com
+
+# ---------------------------------------------------------------------------
+# Autoscaling (requires S3 storage; local media is not shared across pods)
+# ---------------------------------------------------------------------------
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 0
+
+# -- PodDisruptionBudget for the deployment.
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+  # maxUnavailable: 1
+
+# ---------------------------------------------------------------------------
+# NetworkPolicy
+# ---------------------------------------------------------------------------
+# Off by default. When enabled, the policy allows ingress to the HTTP port and
+# (unless you narrow `egress`) leaves egress open so the app can reach its
+# external PostgreSQL, Redis/Valkey, S3, SMTP and OAuth endpoints.
+networkPolicy:
+  enabled: false
+  # -- Sources allowed to reach the HTTP port. Empty allows all sources.
+  ingressFrom: []
+  #  - namespaceSelector:
+  #      matchLabels:
+  #        kubernetes.io/metadata.name: ingress-nginx
+  # -- Egress rules. Empty allows all egress (recommended unless you enumerate
+  # every backend); set to a list of `to`/`ports` rules to lock it down.
+  egress: []
