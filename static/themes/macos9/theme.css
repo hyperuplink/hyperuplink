@@ -20,7 +20,7 @@
 
 body {
   background-color: var(--primary-0);
-  color: var(--window-fg);
+  color: var(--surface-00);
 }
 
 *,
@@ -575,7 +575,7 @@ input[type="reset"],
 select:not([size], [multiple]),
 select[size="1"] {
   background-color: var(--surface-13);
-  color: var(--window-fg);
+  color: var(--surface-00);
   border: 1px solid var(--border-brightness-00);
   border-radius: 3px;
   box-shadow:
@@ -778,8 +778,8 @@ textarea,
 .input,
 select[multiple],
 select[size]:not([size="1"]) {
-  background: var(--field-bg);
-  color: var(--field-fg);
+  background: var(--surface-15);
+  color: var(--surface-00);
   border: 1px solid var(--border-brightness-00);
   box-shadow: -1px -1px var(--border-brightness-08);
   margin: 2px;
@@ -797,8 +797,8 @@ textarea::selection,
 .input::selection,
 select[multiple]::selection,
 select[size]:not([size="1"])::selection {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 input:not(
     [type="button"],
@@ -824,7 +824,7 @@ select[multiple]:disabled,
 select[multiple].disabled,
 select[size]:not([size="1"]):disabled,
 select[size]:not([size="1"]).disabled {
-  color: var(--disabled-fg);
+  color: var(--border-brightness-10-1);
   border-color: var(--border-brightness-05);
   box-shadow: 0 0 0 1px var(--surface-13);
 }
@@ -866,8 +866,8 @@ select[size]:not([size="1"]) > option {
 }
 select[multiple] > option:checked,
 select[size]:not([size="1"]) > option:checked {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 select[multiple]:focus,
 select[size]:not([size="1"]):focus {
@@ -912,7 +912,7 @@ select[size]:not([size="1"]):focus > option:checked {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--window-fg);
+  color: var(--surface-00);
   width: 20px;
   pointer-events: none;
   box-shadow:
@@ -1010,7 +1010,7 @@ input[type="radio"]:checked::after {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: var(--window-fg);
+  background-color: var(--surface-00);
   margin-top: 2px;
   margin-left: 2px;
 }
@@ -1417,7 +1417,7 @@ progress:not([value])::-webkit-progress-value {
 .menu > .title-bar,
 .title-bar.active {
   background: var(--surface-12);
-  color: var(--window-fg);
+  color: var(--surface-00);
 }
 .window.active > .title-bar > .title-bar-text::before,
 .window.active > .title-bar > .title-bar-text::after,
@@ -1526,7 +1526,7 @@ progress:not([value])::-webkit-progress-value {
 
 .window.active > .window-body,
 .window:focus-within > .window-body {
-  color: var(--window-fg);
+  color: var(--surface-00);
   background: var(--surface-13);
   border: 1px solid var(--border-brightness-00);
   box-shadow:
@@ -1539,7 +1539,7 @@ progress:not([value])::-webkit-progress-value {
 }
 
 [role="menubar"] {
-  color: var(--window-fg);
+  color: var(--surface-00);
   background-color: var(--surface-13);
 }
 [role="menubar"] > li > ul,
@@ -1550,7 +1550,7 @@ progress:not([value])::-webkit-progress-value {
 }
 
 [role="menu"] {
-  color: var(--window-fg);
+  color: var(--surface-00);
   background-color: var(--surface-13);
   border: 1px solid var(--border-brightness-00);
   box-shadow:
@@ -1638,7 +1638,7 @@ progress:not([value])::-webkit-progress-value {
   box-shadow:
     inset 1px 0 var(--primary-3),
     inset -1px 0 var(--primary-2);
-  color: var(--field-bg);
+  color: var(--surface-15);
 }
 
 [role="menu"] li[aria-disabled],
@@ -1712,7 +1712,7 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .tabs > menu > button[aria-selected="true"] {
-  color: var(--window-fg);
+  color: var(--surface-00);
   background: var(--surface-14);
   box-shadow:
     inset 0 1px var(--border-brightness-00),
@@ -1741,8 +1741,8 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .list {
-  background: var(--field-bg);
-  color: var(--field-fg);
+  background: var(--surface-15);
+  color: var(--surface-00);
   border: 1px solid var(--border-brightness-00);
   box-shadow:
     -1px -1px var(--border-brightness-08),
@@ -1755,8 +1755,8 @@ progress:not([value])::-webkit-progress-value {
   white-space: nowrap;
 }
 .list > [role="option"][aria-selected="true"] {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 .list > [role="option"]:focus {
   outline: none;
@@ -1792,12 +1792,12 @@ progress:not([value])::-webkit-progress-value {
   filter: brightness(0.5);
 }
 .icon-grid > .icon[aria-selected="true"] > .icon-label {
-  background-color: var(--field-fg);
-  color: var(--field-bg);
+  background-color: var(--surface-00);
+  color: var(--surface-15);
 }
 .icon-grid:focus-within > .icon[aria-selected="true"] > .icon-label {
-  background-color: var(--field-fg);
-  color: var(--field-bg);
+  background-color: var(--surface-00);
+  color: var(--surface-15);
 }
 
 .detailed {
@@ -1808,7 +1808,7 @@ progress:not([value])::-webkit-progress-value {
   text-align: left;
   font-weight: normal;
   background-color: var(--surface-12);
-  color: var(--window-fg);
+  color: var(--surface-00);
   border: 1px solid var(--border-brightness-03);
   border-top-color: var(--border-brightness-06);
   border-left-color: var(--border-brightness-06);
@@ -1826,12 +1826,12 @@ progress:not([value])::-webkit-progress-value {
   outline: none;
 }
 .detailed tr[aria-selected="true"] {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 .detailed .icon[aria-selected="true"] .icon-label {
-  background-color: var(--field-fg);
-  color: var(--field-bg);
+  background-color: var(--surface-00);
+  color: var(--surface-15);
 }
 .detailed td {
   padding: 2px 6px 2px 6px;
@@ -1864,8 +1864,8 @@ progress:not([value])::-webkit-progress-value {
   filter: brightness(0.5);
 }
 .detailed .icon[aria-selected="true"] > .icon-label {
-  background-color: var(--field-fg);
-  color: var(--field-bg);
+  background-color: var(--surface-00);
+  color: var(--surface-15);
 }
 .detailed thead {
   position: sticky;
@@ -1943,16 +1943,16 @@ progress:not([value])::-webkit-progress-value {
   filter: brightness(0.5);
 }
 .list ul[role="tree"] .icon[aria-selected="true"] > .icon-label {
-  background-color: var(--field-fg);
-  color: var(--field-bg);
+  background-color: var(--surface-00);
+  color: var(--surface-15);
 }
 .list ul[role="tree"] [role="treeitem"]:not(.icon) {
   display: inline-flex;
   outline: none;
 }
 .list ul[role="tree"] [role="treeitem"]:not(.icon)[aria-selected="true"] {
-  background-color: var(--field-fg);
-  color: var(--field-bg);
+  background-color: var(--surface-00);
+  color: var(--surface-15);
 }
 .list ul[role="tree"] ul {
   margin-left: 8px;

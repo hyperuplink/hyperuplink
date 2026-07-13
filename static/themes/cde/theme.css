@@ -1,6 +1,6 @@
 :root {
   --preferred-font: sans-serif;
-  --focus: var(--title-bar-active-bg);
+  --focus: var(--surface-04);
   --button-active-bg: color-mix(in srgb, var(--button-bg), black 12%);
   --button-active-fg: var(--button-fg);
   --button-dark: color-mix(in srgb, var(--button-bg), black 30%);
@@ -17,12 +17,12 @@
   --dialog-input-fg: var(--input-fg);
   --dialog-input-dark: var(--input-dark);
   --dialog-input-light: var(--input-light);
-  --select-active-bg: var(--selection-bg);
-  --select-active-fg: var(--selection-fg);
+  --select-active-bg: var(--primary-5);
+  --select-active-fg: var(--surface-00);
   --title-bar-dark: var(--button-dark);
   --title-bar-light: var(--button-light);
-  --title-bar-active-dark: color-mix(in srgb, var(--title-bar-active-bg), black 35%);
-  --title-bar-active-light: color-mix(in srgb, var(--title-bar-active-bg), white 40%);
+  --title-bar-active-dark: color-mix(in srgb, var(--surface-04), black 35%);
+  --title-bar-active-light: color-mix(in srgb, var(--surface-04), white 40%);
 }
 
 body {
@@ -359,8 +359,8 @@ select[multiple] > option, select[size]:not([size="1"]) > option {
   padding: 2px 6px;
 }
 select[multiple] > option:checked, select[size]:not([size="1"]) > option:checked {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 select[multiple]:focus, select[size]:not([size="1"]):focus {
   outline: none;
@@ -639,7 +639,7 @@ progress:not([value])::-webkit-progress-value {
 .dialog.active,
 .dialog:focus-within,
 .menu {
-  background: var(--title-bar-active-bg);
+  background: var(--surface-04);
   border-color: var(--title-bar-active-light);
   border-bottom-color: var(--title-bar-active-dark);
   border-right-color: var(--title-bar-active-dark);
@@ -647,7 +647,7 @@ progress:not([value])::-webkit-progress-value {
 
 .title-bar {
   background: var(--title-bar-bg);
-  color: var(--title-bar-fg);
+  color: var(--surface-12);
   border-top: 1px solid var(--title-bar-dark);
   border-left: 1px solid var(--title-bar-dark);
   border-right: 1px solid var(--title-bar-light);
@@ -713,8 +713,8 @@ progress:not([value])::-webkit-progress-value {
 .dialog:focus-within > .title-bar,
 .menu > .title-bar,
 .title-bar.active {
-  background: var(--title-bar-active-bg);
-  color: var(--title-bar-active-fg);
+  background: var(--surface-04);
+  color: var(--surface-00);
   border-top-color: var(--title-bar-active-dark);
   border-left-color: var(--title-bar-active-dark);
   border-right-color: var(--title-bar-active-light);
@@ -996,8 +996,8 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .list > [role=option][aria-selected=true] {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 
 .list > [role=option]:focus {
@@ -1049,13 +1049,13 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .icon-grid > .icon[aria-selected=true] > img {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 
 .icon-grid > .icon[aria-selected=true] > .icon-label {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 
 .detailed {
@@ -1099,8 +1099,8 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .detailed tr[aria-selected=true] {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 
 .detailed .icon:focus {
@@ -1109,8 +1109,8 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .detailed .icon[aria-selected=true] {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 
 .detailed td {
@@ -1241,8 +1241,8 @@ progress:not([value])::-webkit-progress-value {
   outline-offset: -2px;
 }
 .list ul[role=tree] [role=treeitem][aria-selected=true] {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 .list ul[role=tree] ul {
   margin-left: 8px;

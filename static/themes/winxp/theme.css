@@ -1,23 +1,23 @@
 :root {
   --preferred-font: "Tahoma";
 
-  --link-hover: var(--title-bar-active-bg);
+  --link-hover: var(--surface-04);
 
   --button-face: linear-gradient(
     180deg,
     var(--lightest) 0%,
     var(--lighter) 100%
   );
-  --button-border: color-mix(in srgb, var(--title-bar-active-bg), black 25%);
+  --button-border: color-mix(in srgb, var(--surface-04), black 25%);
   --button-shadow-light: var(--lightest);
   --button-shadow-dark: var(--lighter);
   --button-shadow-inner: var(--dark);
   --button-active-bg: var(--light);
   --button-active-shadow: var(--dark);
   --button-disabled-bg: var(--lighter);
-  --button-disabled-fg: var(--disabled-fg);
-  --button-disabled-border: color-mix(in srgb, var(--medium), black 15%);
-  --focus-ring: color-mix(in srgb, var(--title-bar-active-bg), transparent 30%);
+  --button-disabled-fg: var(--border-brightness-10-1);
+  --button-disabled-border: color-mix(in srgb, var(--surface-12), black 15%);
+  --focus-ring: color-mix(in srgb, var(--surface-04), transparent 30%);
   --hover-ring: color-mix(in srgb, var(--highlight), transparent 30%);
   --focus-outline: var(--darkest);
 
@@ -30,127 +30,126 @@
   --raised-shadow-2: var(--lighter);
 
   --fieldset-border: var(--border-brightness-10);
-  --legend-fg: var(--title-bar-active-bg);
+  --legend-fg: var(--surface-04);
 
-  --accent-blue-edge: color-mix(in srgb, var(--title-bar-active-bg), black 15%);
+  --accent-blue-edge: color-mix(in srgb, var(--surface-04), black 15%);
   --accent-blue-shadow: color-mix(in srgb, var(--darkest), transparent 50%);
-  --accent-blue-light: color-mix(in srgb, var(--title-bar-active-bg), white 35%);
-  --accent-blue: color-mix(in srgb, var(--title-bar-active-bg), white 10%);
-  --accent-blue-mid: var(--title-bar-active-bg);
-  --accent-blue-mid-2: color-mix(in srgb, var(--title-bar-active-bg), black 8%);
-  --accent-blue-dark: color-mix(in srgb, var(--title-bar-active-bg), black 18%);
-  --accent-blue-border: color-mix(in srgb, var(--title-bar-active-bg), black 25%);
+  --accent-blue-light: color-mix(in srgb, var(--surface-04), white 35%);
+  --accent-blue: color-mix(in srgb, var(--surface-04), white 10%);
+  --accent-blue-mid: var(--surface-04);
+  --accent-blue-mid-2: color-mix(in srgb, var(--surface-04), black 8%);
+  --accent-blue-dark: color-mix(in srgb, var(--surface-04), black 18%);
+  --accent-blue-border: color-mix(in srgb, var(--surface-04), black 25%);
   --accent-blue-border-light: color-mix(
     in srgb,
-    var(--title-bar-active-bg),
+    var(--surface-04),
     white 10%
   );
-  --accent-blue-border-2: color-mix(in srgb, var(--title-bar-active-bg), black 20%);
+  --accent-blue-border-2: color-mix(in srgb, var(--surface-04), black 20%);
 
   --title-bar-active-border-top: color-mix(
     in srgb,
-    var(--title-bar-active-bg),
+    var(--surface-04),
     white 20%
   );
   --title-bar-active-border-left: color-mix(
     in srgb,
-    var(--title-bar-active-bg),
+    var(--surface-04),
     black 15%
   );
-  --title-bar-edge: color-mix(in srgb, var(--medium), black 10%);
+  --title-bar-edge: color-mix(in srgb, var(--surface-12), black 10%);
   --title-bar-shadow: color-mix(in srgb, var(--darkest), transparent 60%);
-  --title-bar-light: color-mix(in srgb, var(--title-bar-active-bg), white 55%);
-  --title-bar-light-2: color-mix(in srgb, var(--title-bar-active-bg), white 50%);
-  --title-bar-mid: color-mix(in srgb, var(--title-bar-active-bg), white 40%);
-  --title-bar-mid-2: color-mix(in srgb, var(--title-bar-active-bg), white 38%);
-  --title-bar-mid-3: color-mix(in srgb, var(--title-bar-active-bg), white 42%);
-  --title-bar-dark: color-mix(in srgb, var(--title-bar-active-bg), white 45%);
-  --title-bar-border-top: color-mix(in srgb, var(--title-bar-active-bg), white 30%);
+  --title-bar-light: color-mix(in srgb, var(--surface-04), white 55%);
+  --title-bar-light-2: color-mix(in srgb, var(--surface-04), white 50%);
+  --title-bar-mid: color-mix(in srgb, var(--surface-04), white 40%);
+  --title-bar-mid-2: color-mix(in srgb, var(--surface-04), white 38%);
+  --title-bar-mid-3: color-mix(in srgb, var(--surface-04), white 42%);
+  --title-bar-dark: color-mix(in srgb, var(--surface-04), white 45%);
+  --title-bar-border-top: color-mix(in srgb, var(--surface-04), white 30%);
   --title-bar-text-shadow: color-mix(in srgb, var(--darkest), transparent 30%);
 
-  --window-border-light: color-mix(in srgb, var(--title-bar-active-bg), white 20%);
-  --window-border-dark: color-mix(in srgb, var(--title-bar-active-bg), black 30%);
-  --window-inactive-bg-1: color-mix(in srgb, var(--title-bar-active-bg), white 45%);
-  --window-inactive-bg-2: color-mix(in srgb, var(--title-bar-active-bg), white 48%);
-  --window-inactive-border: color-mix(in srgb, var(--title-bar-active-bg), white 10%);
+  --window-border-light: color-mix(in srgb, var(--surface-04), white 20%);
+  --window-border-dark: color-mix(in srgb, var(--surface-04), black 30%);
+  --window-inactive-bg-1: color-mix(in srgb, var(--surface-04), white 45%);
+  --window-inactive-bg-2: color-mix(in srgb, var(--surface-04), white 48%);
+  --window-inactive-border: color-mix(in srgb, var(--surface-04), white 10%);
   --window-inactive-shadow-1: color-mix(
     in srgb,
-    var(--title-bar-active-bg),
+    var(--surface-04),
     white 40%
   );
   --window-inactive-shadow-2: color-mix(
     in srgb,
-    var(--title-bar-active-bg),
+    var(--surface-04),
     white 42%
   );
-  --window-active-bg-1: color-mix(in srgb, var(--title-bar-active-bg), white 15%);
-  --window-active-bg-2: color-mix(in srgb, var(--title-bar-active-bg), black 25%);
+  --window-active-bg-1: color-mix(in srgb, var(--surface-04), white 15%);
+  --window-active-bg-2: color-mix(in srgb, var(--surface-04), black 25%);
   --window-active-border-left: color-mix(
     in srgb,
-    var(--title-bar-active-bg),
+    var(--surface-04),
     black 10%
   );
-  --window-active-shadow-1: color-mix(in srgb, var(--title-bar-active-bg), black 20%);
-  --window-active-shadow-2: color-mix(in srgb, var(--title-bar-active-bg), white 5%);
+  --window-active-shadow-1: color-mix(in srgb, var(--surface-04), black 20%);
+  --window-active-shadow-2: color-mix(in srgb, var(--surface-04), white 5%);
 
-  --scrollbar-bg: var(--lighter);
-  --scrollbar-button: color-mix(in srgb, var(--title-bar-active-bg), white 55%);
-  --scrollbar-shadow-1: color-mix(in srgb, var(--title-bar-active-bg), white 30%);
-  --scrollbar-shadow-2: color-mix(in srgb, var(--title-bar-active-bg), white 20%);
-  --scrollbar-inset-1: color-mix(in srgb, var(--title-bar-active-bg), white 60%);
-  --scrollbar-inset-2: color-mix(in srgb, var(--title-bar-active-bg), white 58%);
-  --scrollbar-arrow: color-mix(in srgb, var(--title-bar-active-bg), black 10%);
+  --scrollbar-button: color-mix(in srgb, var(--surface-04), white 55%);
+  --scrollbar-shadow-1: color-mix(in srgb, var(--surface-04), white 30%);
+  --scrollbar-shadow-2: color-mix(in srgb, var(--surface-04), white 20%);
+  --scrollbar-inset-1: color-mix(in srgb, var(--surface-04), white 60%);
+  --scrollbar-inset-2: color-mix(in srgb, var(--surface-04), white 58%);
+  --scrollbar-arrow: color-mix(in srgb, var(--surface-04), black 10%);
   --scrollbar-button-hover-1: var(--lightest);
   --scrollbar-button-hover-2: color-mix(
     in srgb,
-    var(--title-bar-active-bg),
+    var(--surface-04),
     white 62%
   );
-  --scrollbar-hover-inset-1: color-mix(in srgb, var(--title-bar-active-bg), white 55%);
-  --scrollbar-hover-inset-2: color-mix(in srgb, var(--title-bar-active-bg), white 45%);
-  --scrollbar-active-1: color-mix(in srgb, var(--title-bar-active-bg), white 40%);
-  --scrollbar-active-2: color-mix(in srgb, var(--title-bar-active-bg), white 65%);
-  --scrollbar-active-inset-1: color-mix(in srgb, var(--title-bar-active-bg), white 45%);
-  --scrollbar-active-inset-2: color-mix(in srgb, var(--title-bar-active-bg), white 60%);
-  --scrollbar-thumb-border: color-mix(in srgb, var(--title-bar-active-bg), white 25%);
-  --scrollbar-thumb-inset-1: color-mix(in srgb, var(--title-bar-active-bg), white 58%);
-  --scrollbar-thumb-inset-2: color-mix(in srgb, var(--title-bar-active-bg), white 62%);
-  --scrollbar-thumb-inset-3: color-mix(in srgb, var(--title-bar-active-bg), white 70%);
+  --scrollbar-hover-inset-1: color-mix(in srgb, var(--surface-04), white 55%);
+  --scrollbar-hover-inset-2: color-mix(in srgb, var(--surface-04), white 45%);
+  --scrollbar-active-1: color-mix(in srgb, var(--surface-04), white 40%);
+  --scrollbar-active-2: color-mix(in srgb, var(--surface-04), white 65%);
+  --scrollbar-active-inset-1: color-mix(in srgb, var(--surface-04), white 45%);
+  --scrollbar-active-inset-2: color-mix(in srgb, var(--surface-04), white 60%);
+  --scrollbar-thumb-border: color-mix(in srgb, var(--surface-04), white 25%);
+  --scrollbar-thumb-inset-1: color-mix(in srgb, var(--surface-04), white 58%);
+  --scrollbar-thumb-inset-2: color-mix(in srgb, var(--surface-04), white 62%);
+  --scrollbar-thumb-inset-3: color-mix(in srgb, var(--surface-04), white 70%);
   --scrollbar-thumb-hover-inset-1: color-mix(
     in srgb,
-    var(--title-bar-active-bg),
+    var(--surface-04),
     white 68%
   );
   --scrollbar-thumb-hover-inset-2: color-mix(
     in srgb,
-    var(--title-bar-active-bg),
+    var(--surface-04),
     white 75%
   );
   --scrollbar-thumb-active-inset-1: color-mix(
     in srgb,
-    var(--title-bar-active-bg),
+    var(--surface-04),
     white 30%
   );
   --scrollbar-thumb-active-inset-2: color-mix(
     in srgb,
-    var(--title-bar-active-bg),
+    var(--surface-04),
     white 50%
   );
   --scrollbar-track-1: var(--light);
   --scrollbar-track-2: var(--lightest);
-  --scrollbar-thumb-1: color-mix(in srgb, var(--title-bar-active-bg), white 55%);
-  --scrollbar-thumb-2: color-mix(in srgb, var(--title-bar-active-bg), white 48%);
-  --scrollbar-thumb-hover-1: color-mix(in srgb, var(--title-bar-active-bg), white 68%);
-  --scrollbar-thumb-hover-2: color-mix(in srgb, var(--title-bar-active-bg), white 62%);
-  --scrollbar-thumb-active-1: color-mix(in srgb, var(--title-bar-active-bg), white 40%);
-  --scrollbar-thumb-active-2: color-mix(in srgb, var(--title-bar-active-bg), white 35%);
-  --scrollbar-grip-1: color-mix(in srgb, var(--title-bar-active-bg), white 72%);
-  --scrollbar-grip-2: color-mix(in srgb, var(--title-bar-active-bg), white 40%);
+  --scrollbar-thumb-1: color-mix(in srgb, var(--surface-04), white 55%);
+  --scrollbar-thumb-2: color-mix(in srgb, var(--surface-04), white 48%);
+  --scrollbar-thumb-hover-1: color-mix(in srgb, var(--surface-04), white 68%);
+  --scrollbar-thumb-hover-2: color-mix(in srgb, var(--surface-04), white 62%);
+  --scrollbar-thumb-active-1: color-mix(in srgb, var(--surface-04), white 40%);
+  --scrollbar-thumb-active-2: color-mix(in srgb, var(--surface-04), white 35%);
+  --scrollbar-grip-1: color-mix(in srgb, var(--surface-04), white 72%);
+  --scrollbar-grip-2: color-mix(in srgb, var(--surface-04), white 40%);
 
-  --dropdown-button-1: color-mix(in srgb, var(--title-bar-active-bg), white 65%);
-  --dropdown-button-border: color-mix(in srgb, var(--title-bar-active-bg), white 40%);
-  --dropdown-hover-border: color-mix(in srgb, var(--title-bar-active-bg), white 30%);
-  --dropdown-active-border: color-mix(in srgb, var(--title-bar-active-bg), white 25%);
+  --dropdown-button-1: color-mix(in srgb, var(--surface-04), white 65%);
+  --dropdown-button-border: color-mix(in srgb, var(--surface-04), white 40%);
+  --dropdown-hover-border: color-mix(in srgb, var(--surface-04), white 30%);
+  --dropdown-active-border: color-mix(in srgb, var(--surface-04), white 25%);
   --dropdown-disabled-1: var(--lighter);
   --dropdown-disabled-2: var(--light);
   --dropdown-disabled-border: var(--light);
@@ -158,12 +157,12 @@
 
   --check-mark: var(--affirmative);
   --check-mark-active: color-mix(in srgb, var(--affirmative), black 20%);
-  --check-disabled: var(--disabled-fg);
-  --check-border: color-mix(in srgb, var(--title-bar-active-bg), black 10%);
+  --check-disabled: var(--border-brightness-10-1);
+  --check-border: color-mix(in srgb, var(--surface-04), black 10%);
   --check-bg-1: var(--light);
   --check-hover-glow: color-mix(in srgb, var(--highlight), white 45%);
   --check-hover-ring: var(--highlight);
-  --check-active-1: var(--medium);
+  --check-active-1: var(--surface-12);
   --check-active-2: var(--lighter);
   --radio-dot-1: color-mix(in srgb, var(--affirmative), white 25%);
   --radio-dot-2: color-mix(in srgb, var(--affirmative), black 25%);
@@ -180,15 +179,15 @@
   --range-focus-outline: var(--darkest);
 
   --progress-border: var(--dark);
-  --progress-inset-1: var(--medium);
+  --progress-inset-1: var(--surface-12);
   --progress-inset-2: var(--light);
   --progress-sheen: color-mix(in srgb, white, transparent 33%);
   --progress-fill: var(--affirmative);
 
-  --titlebtn-1: color-mix(in srgb, var(--title-bar-active-bg), white 55%);
-  --titlebtn-2: color-mix(in srgb, var(--title-bar-active-bg), white 25%);
-  --titlebtn-3: color-mix(in srgb, var(--title-bar-active-bg), white 10%);
-  --titlebtn-4: color-mix(in srgb, var(--title-bar-active-bg), black 20%);
+  --titlebtn-1: color-mix(in srgb, var(--surface-04), white 55%);
+  --titlebtn-2: color-mix(in srgb, var(--surface-04), white 25%);
+  --titlebtn-3: color-mix(in srgb, var(--surface-04), white 10%);
+  --titlebtn-4: color-mix(in srgb, var(--surface-04), black 20%);
   --titlebtn-close-1: color-mix(in srgb, var(--danger), white 25%);
   --titlebtn-close-2: var(--danger);
   --titlebtn-close-3: color-mix(in srgb, var(--danger), black 15%);
@@ -208,22 +207,22 @@
   --th-bg: var(--light);
   --th-border: var(--dark);
   --th-shadow: var(--lighter);
-  --th-divider: var(--medium);
+  --th-divider: var(--surface-12);
   --th-hover-border: var(--warn);
   --th-hover-shadow-1: var(--highlight);
   --th-hover-shadow-2: color-mix(in srgb, var(--warn), black 15%);
-  --th-active-bg: var(--medium);
+  --th-active-bg: var(--surface-12);
   --th-active-border: var(--dark);
   --th-active-shadow: var(--light);
 
-  --tree-toggle-border: color-mix(in srgb, var(--title-bar-active-bg), white 30%);
+  --tree-toggle-border: color-mix(in srgb, var(--surface-04), white 30%);
   --tree-toggle-1: var(--light);
   --tree-toggle-2: var(--lighter);
 }
 
 body {
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
 }
 
 *,
@@ -270,7 +269,7 @@ code {
 }
 
 .top-panel {
-  color: var(--title-bar-active-fg);
+  color: var(--surface-00);
   background:
     linear-gradient(90deg, var(--accent-blue-edge), transparent 5px),
     linear-gradient(270deg, var(--accent-blue-shadow), transparent 5px),
@@ -288,7 +287,7 @@ code {
 }
 
 .right-panel {
-  color: var(--title-bar-active-fg);
+  color: var(--surface-00);
   background:
     linear-gradient(0, var(--accent-blue-edge), transparent 5px),
     linear-gradient(180deg, var(--accent-blue-shadow), transparent 5px),
@@ -306,7 +305,7 @@ code {
 }
 
 .bottom-panel {
-  color: var(--title-bar-active-fg);
+  color: var(--surface-00);
   background:
     linear-gradient(90deg, var(--accent-blue-edge), transparent 5px),
     linear-gradient(270deg, var(--accent-blue-shadow), transparent 5px),
@@ -324,7 +323,7 @@ code {
 }
 
 .left-panel {
-  color: var(--title-bar-active-fg);
+  color: var(--surface-00);
   background:
     linear-gradient(0, var(--accent-blue-edge), transparent 5px),
     linear-gradient(180deg, var(--accent-blue-shadow), transparent 5px),
@@ -354,14 +353,14 @@ legend {
 }
 
 hr {
-  border-top: 1px solid var(--disabled-fg);
+  border-top: 1px solid var(--border-brightness-10-1);
   border-bottom: 1px solid var(--lightest);
 }
 
 .horizontal-scrollbar,
 .vertical-scrollbar {
   display: flex;
-  background: var(--scrollbar-bg);
+  background: var(--surface-12);
 }
 .horizontal-scrollbar > button,
 .vertical-scrollbar > button {
@@ -373,7 +372,7 @@ hr {
   padding: 0;
   background: radial-gradient(
     circle at 0 0,
-    var(--scrollbar-bg),
+    var(--surface-12),
     var(--scrollbar-button) 75%
   );
   border: 1px solid var(--lightest);
@@ -629,7 +628,7 @@ hr {
 }
 
 ::-webkit-scrollbar-corner {
-  background: var(--window-bg);
+  background: var(--surface-12);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -726,7 +725,7 @@ input[type="submit"],
 input[type="reset"],
 .button {
   background: var(--button-face);
-  color: var(--button-fg);
+  color: var(--surface-00);
   border: 1px solid var(--button-border);
   border-radius: 4px;
   padding: 2px 16px 3px;
@@ -913,8 +912,8 @@ input:not(
 textarea,
 .input,
 select {
-  background-color: var(--input-bg);
-  color: var(--input-fg);
+  background-color: var(--surface-15);
+  color: var(--surface-00);
   border: 1px solid var(--input-border);
   padding: 2px 6px;
   font-family: inherit;
@@ -932,8 +931,8 @@ input:not(
 textarea::selection,
 .input::selection,
 select::selection {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 input:not(
     [type="button"],
@@ -957,7 +956,7 @@ textarea.readonly,
 .input.readonly,
 select[readonly],
 select.readonly {
-  background: var(--window-bg);
+  background: var(--surface-12);
 }
 input:not(
     [type="button"],
@@ -981,8 +980,8 @@ textarea.disabled,
 .input.disabled,
 select:disabled,
 select.disabled {
-  background: var(--window-bg);
-  color: var(--disabled-fg);
+  background: var(--surface-12);
+  color: var(--border-brightness-10-1);
 }
 
 select > option {
@@ -999,14 +998,14 @@ select[size]:not([size="1"]) > option {
 }
 select[multiple] > option:checked,
 select[size]:not([size="1"]) > option:checked {
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
 }
 select[multiple]:focus > option:checked,
 select[size]:not([size="1"]):focus > option:checked {
-  outline: 1px dotted var(--selection-inverse);
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  outline: 1px dotted var(--highlight);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 
 select:not([size], [multiple]):disabled,
@@ -1025,8 +1024,8 @@ select[size="1"]:disabled {
   padding-right: 21px;
 }
 .dropdown > select:focus {
-  background: var(--selection-bg);
-  color: var(--selection-fg);
+  background: var(--primary-5);
+  color: var(--surface-00);
   box-shadow: inset 0 0 0 2px var(--lightest);
 }
 .dropdown > select:not(:disabled):hover + .dropdown-button {
@@ -1038,8 +1037,8 @@ select[size="1"]:disabled {
   border-color: var(--dropdown-hover-border);
 }
 .dropdown > select:not(:disabled):active {
-  background: var(--input-bg);
-  color: var(--input-fg);
+  background: var(--surface-15);
+  color: var(--surface-00);
 }
 .dropdown > select:not(:disabled):active + .dropdown-button {
   background-image: radial-gradient(
@@ -1075,8 +1074,8 @@ select[size="1"]:disabled {
   justify-content: center;
   align-items: center;
   margin: 2px;
-  background-color: var(--button-bg);
-  color: var(--button-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
   background-image: radial-gradient(
     circle at top left,
     var(--dropdown-button-1),
@@ -1464,7 +1463,7 @@ progress:not([value])::-webkit-progress-value {
       var(--title-bar-dark) 97%,
       var(--title-bar-dark) 100%
     );
-  color: var(--title-bar-fg);
+  color: var(--surface-12);
   display: flex;
   flex-direction: row;
   font-weight: bold;
@@ -1498,7 +1497,7 @@ progress:not([value])::-webkit-progress-value {
       var(--accent-blue-dark) 97%,
       var(--accent-blue-dark) 100%
     );
-  color: var(--title-bar-active-fg);
+  color: var(--surface-00);
   border-top-color: var(--title-bar-active-border-top);
   border-left-color: var(--title-bar-active-border-left);
 }
@@ -1623,8 +1622,8 @@ progress:not([value])::-webkit-progress-value {
 
 .window-body,
 .dialog-body {
-  background: var(--window-bg);
-  color: var(--window-fg);
+  background: var(--surface-12);
+  color: var(--surface-00);
 }
 
 [role="menubar"] {
@@ -1644,7 +1643,7 @@ progress:not([value])::-webkit-progress-value {
 [role="menu"] {
   color: var(--darkest);
   background-color: var(--lightest);
-  border: 1px solid var(--disabled-fg);
+  border: 1px solid var(--border-brightness-10-1);
   padding: 2px;
   box-shadow: 2px 2px 4px var(--menu-shadow);
 }
@@ -1668,7 +1667,7 @@ progress:not([value])::-webkit-progress-value {
   min-width: 200px;
 }
 [role="menu"] li[role="separator"] {
-  border-top: 1px solid var(--disabled-fg);
+  border-top: 1px solid var(--border-brightness-10-1);
   margin: 3px;
   height: 0;
   padding: 0;
@@ -1728,8 +1727,8 @@ progress:not([value])::-webkit-progress-value {
 
 [role="menu"]:not(:hover) li:focus-within,
 [role="menubar"]:not(:hover) li:focus-within {
-  background: var(--selection-bg);
-  color: var(--selection-fg);
+  background: var(--primary-5);
+  color: var(--surface-00);
 }
 [role="menu"] li:focus,
 [role="menubar"] li:focus {
@@ -1737,12 +1736,12 @@ progress:not([value])::-webkit-progress-value {
 }
 [role="menu"] li:hover,
 [role="menubar"] li:hover {
-  background: var(--selection-bg);
-  color: var(--selection-fg);
+  background: var(--primary-5);
+  color: var(--surface-00);
 }
 [role="menu"] li[aria-disabled="true"],
 [role="menubar"] li[aria-disabled="true"] {
-  color: var(--disabled-fg);
+  color: var(--border-brightness-10-1);
 }
 
 .tabs > menu {
@@ -1814,8 +1813,8 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .list {
-  background: var(--input-bg);
-  color: var(--input-fg);
+  background: var(--surface-15);
+  color: var(--surface-00);
   border: 1px solid var(--input-border);
   box-shadow: inset 0 0 0 1px var(--lightest);
   overflow: auto;
@@ -1828,13 +1827,13 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .list:focus-within > [role="option"][aria-selected="true"] {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 
 .list > [role="option"][aria-selected="true"] {
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
 }
 
 .list > [role="option"]:focus {
@@ -1843,7 +1842,7 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .list > [role="option"][aria-selected="true"]:focus {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 
 .icon-grid {
@@ -1877,17 +1876,17 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .icon-grid:focus-within > .icon[aria-selected="true"] > .icon-label {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 
 .icon-grid > .icon[aria-selected="true"] > .icon-label {
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
 }
 
 .icon-grid > .icon[aria-selected="true"]:focus > .icon-label {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 
 .detailed {
@@ -1982,17 +1981,17 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .detailed:focus-within tr[aria-selected="true"] {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 
 .detailed tr[aria-selected="true"] {
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
 }
 
 .detailed tr[aria-selected="true"]:focus {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 
 .detailed .icon:focus .icon-label {
@@ -2001,17 +2000,17 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .detailed:focus-within .icon[aria-selected="true"] .icon-label {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 
 .detailed .icon[aria-selected="true"] .icon-label {
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
 }
 
 .detailed .icon[aria-selected="true"]:focus .icon-label {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 
 .detailed td {
@@ -2115,11 +2114,11 @@ progress:not([value])::-webkit-progress-value {
   outline-offset: -1px;
 }
 .list ul[role="tree"] .icon[aria-selected="true"] > .icon-label {
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
 }
 .list ul[role="tree"] .icon[aria-selected="true"]:focus > .icon-label {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 .list ul[role="tree"] [role="treeitem"]:not(.icon) {
   display: inline-flex;
@@ -2134,18 +2133,18 @@ progress:not([value])::-webkit-progress-value {
   outline-offset: -1px;
 }
 .list ul[role="tree"] [role="treeitem"]:not(.icon)[aria-selected="true"] {
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
 }
 .list ul[role="tree"] [role="treeitem"]:not(.icon)[aria-selected="true"]:focus {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 .list ul[role="tree"]:focus-within .icon[aria-selected="true"] .icon-label,
 .list
   ul[role="tree"]:focus-within
   [role="treeitem"][aria-selected="true"]:not(.icon) {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 .list ul[role="tree"] ul {
   margin-left: 8px;

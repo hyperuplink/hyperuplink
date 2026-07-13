@@ -84,7 +84,7 @@ body {
   padding: 3px 16px;
   cursor: default;
   user-select: none;
-  color: var(--window-fg);
+  color: var(--surface-00);
   background: var(--surface-12);
   box-shadow:
     inset 1px 1px var(--border-brightness-14),
@@ -103,7 +103,7 @@ body {
 }
 
 .tabs-nojs .tab-radio:focus-visible + .tab-label {
-  outline: 1px dotted var(--window-fg);
+  outline: 1px dotted var(--surface-00);
   outline-offset: -4px;
 }
 
@@ -137,7 +137,7 @@ body {
 }
 
 .header {
-  color: var(--window-fg);
+  color: var(--surface-00);
   background-color: var(--surface-13);
 }
 
@@ -172,7 +172,7 @@ body {
 }
 
 .footer {
-  color: var(--window-fg);
+  color: var(--surface-00);
   background-color: var(--surface-13);
 }
 
@@ -219,7 +219,7 @@ button.danger {
 }
 
 a {
-  color: var(--window-fg);
+  color: var(--surface-00);
 }
 
 a.button {
@@ -266,7 +266,7 @@ a.button {
 }
 
 .unconfirmed {
-  color: var(--disabled-fg);
+  color: var(--border-brightness-10-1);
 }
 
 .banned {
@@ -367,7 +367,7 @@ a.button {
 }
 
 .post > .content > .actions > .left-side > .timestamp {
-  color: var(--disabled-fg);
+  color: var(--border-brightness-10-1);
   padding: 2px var(--margin);
 }
 

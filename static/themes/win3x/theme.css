@@ -3,8 +3,8 @@
 }
 
 body {
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
   font-family: system-ui;
 }
 
@@ -22,7 +22,7 @@ button, input, textarea, select {
 }
 
 a:focus {
-  outline: 1px dotted var(--border);
+  outline: 1px dotted var(--border-brightness-00);
 }
 
 code {
@@ -34,13 +34,13 @@ code {
 }
 
 .raised {
-  background: var(--window-bg);
-  border: 1px solid var(--border);
+  background: var(--surface-12);
+  border: 1px solid var(--border-brightness-00);
 }
 
 .lowered {
-  background: var(--window-bg);
-  border: 1px solid var(--border);
+  background: var(--surface-12);
+  border: 1px solid var(--border-brightness-00);
 }
 
 .raised > .lowered {
@@ -48,35 +48,35 @@ code {
 }
 
 .raised.stack-row > .lowered + .lowered {
-  border-left: 1px solid var(--border);
+  border-left: 1px solid var(--border-brightness-00);
 }
 
 .raised.stack-column > .lowered + .lowered {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-brightness-00);
 }
 
 .top-panel {
-  background: var(--window-bg);
-  border-bottom: 1px solid var(--border);
+  background: var(--surface-12);
+  border-bottom: 1px solid var(--border-brightness-00);
 }
 
 .right-panel {
-  background: var(--window-bg);
-  border-left: 1px solid var(--border);
+  background: var(--surface-12);
+  border-left: 1px solid var(--border-brightness-00);
 }
 
 .bottom-panel {
-  background: var(--window-bg);
-  border-top: 1px solid var(--border);
+  background: var(--surface-12);
+  border-top: 1px solid var(--border-brightness-00);
 }
 
 .left-panel {
-  background: var(--window-bg);
-  border-right: 1px solid var(--border);
+  background: var(--surface-12);
+  border-right: 1px solid var(--border-brightness-00);
 }
 
 fieldset {
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-brightness-00);
   position: relative;
 }
 
@@ -87,7 +87,7 @@ legend {
 }
 
 hr {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-brightness-00);
 }
 
 .horizontal-scrollbar,
@@ -104,7 +104,7 @@ hr {
   padding: 0;
   background-repeat: no-repeat;
   background: #C0C0C0;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-brightness-00);
   box-shadow: inset 1px 1px var(--button-light), inset -2px -2px var(--button-dark);
   border-radius: 0;
 }
@@ -137,14 +137,14 @@ hr {
 .horizontal-scrollbar > .scrollbar-track,
 .vertical-scrollbar > .scrollbar-track {
   flex-grow: 1;
-  background: var(--scrollbar-bg);
+  background: var(--surface-12);
   position: relative;
 }
 .horizontal-scrollbar > .scrollbar-track > .scrollbar-thumb,
 .vertical-scrollbar > .scrollbar-track > .scrollbar-thumb {
   position: absolute;
-  background: var(--button-bg);
-  border: 1px solid var(--border);
+  background: var(--surface-12);
+  border: 1px solid var(--border-brightness-00);
   box-shadow: inset 1px 1px var(--button-light), inset -2px -2px var(--button-dark);
 }
 
@@ -155,8 +155,8 @@ hr {
   background-image: url(icons/scroll-right.svg);
 }
 .horizontal-scrollbar > .scrollbar-track {
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--border-brightness-00);
+  border-bottom: 1px solid var(--border-brightness-00);
 }
 .horizontal-scrollbar > .scrollbar-track > .scrollbar-thumb {
   top: 0;
@@ -176,8 +176,8 @@ hr {
   background-image: url(icons/scroll-down.svg);
 }
 .vertical-scrollbar > .scrollbar-track {
-  border-left: 1px solid var(--border);
-  border-right: 1px solid var(--border);
+  border-left: 1px solid var(--border-brightness-00);
+  border-right: 1px solid var(--border-brightness-00);
 }
 .vertical-scrollbar > .scrollbar-track > .scrollbar-thumb {
   left: 0;
@@ -187,25 +187,25 @@ hr {
 }
 
 ::-webkit-scrollbar {
-  background-color: var(--scrollbar-bg);
+  background-color: var(--surface-12);
   width: 17px;
   height: 17px;
 }
 
 ::-webkit-scrollbar-corner {
-  background: var(--scrollbar-bg);
+  background: var(--surface-12);
 }
 
 ::-webkit-scrollbar-button,
 ::-webkit-scrollbar-thumb {
-  background-color: var(--button-bg);
-  color: var(--button-fg);
-  border: 1px solid var(--border);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
+  border: 1px solid var(--border-brightness-00);
   box-shadow: inset 1px 1px 0 var(--button-light), inset -2px -2px var(--button-dark);
 }
 
 ::-webkit-scrollbar-track-piece {
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-brightness-00);
 }
 
 ::-webkit-scrollbar-button {
@@ -249,9 +249,9 @@ hr {
 }
 
 button, input[type=button], input[type=submit], input[type=reset], .button {
-  background-color: var(--button-bg);
-  color: var(--button-fg);
-  border: 1px solid var(--border);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
+  border: 1px solid var(--border-brightness-00);
   border-radius: 2.5px;
   min-width: 70px;
   padding: 2px 8px;
@@ -263,7 +263,7 @@ button, input[type=button], input[type=submit], input[type=reset], .button {
   text-align: center;
 }
 button:focus, button.focus, input[type=button]:focus, input[type=button].focus, input[type=submit]:focus, input[type=submit].focus, input[type=reset]:focus, input[type=reset].focus, .button:focus, .button.focus {
-  box-shadow: inset 1px 1px 0 var(--border), inset -1px -1px 0 var(--border), inset -2px -2px 0 var(--button-dark), inset 2px 2px 0 var(--button-light), inset -3px -3px 0 var(--button-dark), inset 3px 3px 0 var(--button-light);
+  box-shadow: inset 1px 1px 0 var(--border-brightness-00), inset -1px -1px 0 var(--border-brightness-00), inset -2px -2px 0 var(--button-dark), inset 2px 2px 0 var(--button-light), inset -3px -3px 0 var(--button-dark), inset 3px 3px 0 var(--button-light);
 }
 button:focus::after, button.focus::after, input[type=button]:focus::after, input[type=button].focus::after, input[type=submit]:focus::after, input[type=submit].focus::after, input[type=reset]:focus::after, input[type=reset].focus::after, .button:focus::after, .button.focus::after {
   content: "";
@@ -284,12 +284,12 @@ button:disabled::after, button.disabled::after, input[type=button]:disabled::aft
   left: 3px;
   right: 3px;
   bottom: 3px;
-  background-image: linear-gradient(45deg, var(--button-bg) 25%, transparent 25%), linear-gradient(-45deg, var(--button-bg) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, var(--button-bg) 75%), linear-gradient(-45deg, transparent 75%, var(--button-bg) 75%);
+  background-image: linear-gradient(45deg, var(--surface-12) 25%, transparent 25%), linear-gradient(-45deg, var(--surface-12) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, var(--surface-12) 75%), linear-gradient(-45deg, transparent 75%, var(--surface-12) 75%);
   background-size: 2px 2px;
   background-position: 0 0, 0 1px, 1px -1px, -1px 0px;
 }
 button:not(:disabled, .disabled):active, button.active, input[type=button]:not(:disabled, .disabled):active, input[type=button].active, input[type=submit]:not(:disabled, .disabled):active, input[type=submit].active, input[type=reset]:not(:disabled, .disabled):active, input[type=reset].active, .button:not(:disabled, .disabled):active, .button.active {
-  box-shadow: inset 1px 1px 0 var(--border), inset -1px -1px 0 var(--border), inset 2px 2px 0 var(--button-dark);
+  box-shadow: inset 1px 1px 0 var(--border-brightness-00), inset -1px -1px 0 var(--border-brightness-00), inset 2px 2px 0 var(--button-dark);
   padding: 3px 7px 1px 9px;
 }
 button:not(:disabled, .disabled):active::after, button.active::after, input[type=button]:not(:disabled, .disabled):active::after, input[type=button].active::after, input[type=submit]:not(:disabled, .disabled):active::after, input[type=submit].active::after, input[type=reset]:not(:disabled, .disabled):active::after, input[type=reset].active::after, .button:not(:disabled, .disabled):active::after, .button.active::after {
@@ -300,18 +300,18 @@ button:not(:disabled, .disabled):active::after, button.active::after, input[type
 }
 
 form:focus-within:not(:has(button:focus, input[type=button]:focus, input[type=submit]:focus, input[type=reset]:focus)) button:default, form:focus-within:not(:has(button:focus, input[type=button]:focus, input[type=submit]:focus, input[type=reset]:focus)) input[type=button]:default, form:focus-within:not(:has(button:focus, input[type=button]:focus, input[type=submit]:focus, input[type=reset]:focus)) input[type=submit]:default, form:focus-within:not(:has(button:focus, input[type=button]:focus, input[type=submit]:focus, input[type=reset]:focus)) input[type=reset]:default, form:focus-within:not(:has(button:focus, input[type=button]:focus, input[type=submit]:focus, input[type=reset]:focus)) .button:default {
-  box-shadow: inset 1px 1px 0 var(--border), inset -1px -1px 0 var(--border), inset -2px -2px 0 var(--button-dark), inset 2px 2px 0 var(--button-light), inset -3px -3px 0 var(--button-dark), inset 3px 3px 0 var(--button-light);
+  box-shadow: inset 1px 1px 0 var(--border-brightness-00), inset -1px -1px 0 var(--border-brightness-00), inset -2px -2px 0 var(--button-dark), inset 2px 2px 0 var(--button-light), inset -3px -3px 0 var(--button-dark), inset 3px 3px 0 var(--button-light);
 }
 
 button.primary, input[type=button].primary, input[type=submit].primary, input[type=reset].primary, .button.primary {
-  box-shadow: inset 1px 1px 0 var(--border), inset -1px -1px 0 var(--border), inset -2px -2px 0 var(--button-dark), inset 2px 2px 0 var(--button-light), inset -3px -3px 0 var(--button-dark), inset 3px 3px 0 var(--button-light);
+  box-shadow: inset 1px 1px 0 var(--border-brightness-00), inset -1px -1px 0 var(--border-brightness-00), inset -2px -2px 0 var(--button-dark), inset 2px 2px 0 var(--button-light), inset -3px -3px 0 var(--button-dark), inset 3px 3px 0 var(--button-light);
 }
 
 input:not([type=button], [type=submit], [type=reset], [type=checkbox], [type=radio], [type=range]), textarea, .input,
 select {
-  background-color: var(--input-bg);
-  color: var(--input-fg);
-  border: 1px solid var(--border);
+  background-color: var(--surface-15);
+  color: var(--surface-00);
+  border: 1px solid var(--border-brightness-00);
   padding: 2px 6px;
   font-family: inherit;
   font-size: inherit;
@@ -319,39 +319,39 @@ select {
 }
 input:not([type=button], [type=submit], [type=reset], [type=checkbox], [type=radio], [type=range])::selection, textarea::selection, .input::selection,
 select::selection {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 input:not([type=button], [type=submit], [type=reset], [type=checkbox], [type=radio], [type=range]):disabled, input:not([type=button], [type=submit], [type=reset], [type=checkbox], [type=radio], [type=range]).disabled, textarea:disabled, textarea.disabled, .input:disabled, .input.disabled,
 select:disabled,
 select.disabled {
-  color: var(--disabled);
+  color: var(--surface-09);
 }
 
 select > option {
   padding: 2px 6px;
 }
 select > option:checked {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 
 select[multiple], select[size]:not([size="1"]) {
   padding: 0;
 }
 select[multiple] > option:checked, select[size]:not([size="1"]) > option:checked {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 select[multiple]:focus > option:checked, select[size]:not([size="1"]):focus > option:checked {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 
 select:not([size]):not(:active):focus,
 select[size="1"]:not(:active):focus {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
-  box-shadow: inset 1px 1px 0 var(--input-bg), inset -1px -1px 0 var(--input-bg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
+  box-shadow: inset 1px 1px 0 var(--surface-15), inset -1px -1px 0 var(--surface-15);
 }
 
 .dropdown {
@@ -365,17 +365,17 @@ select[size="1"]:not(:active):focus {
   padding-right: 21px;
 }
 .dropdown > select:not(:disabled):active {
-  background: var(--input-bg);
-  color: var(--input-fg);
+  background: var(--surface-15);
+  color: var(--surface-00);
 }
 .dropdown > select:not(:disabled):active + .dropdown-button {
-  box-shadow: inset 1px 1px var(--button-dark), -1px 0 var(--input-bg);
+  box-shadow: inset 1px 1px var(--button-dark), -1px 0 var(--surface-15);
 }
 .dropdown > select:not(:disabled):active + .dropdown-button::after {
   margin: 1px 0 0 2px;
 }
 .dropdown > select:disabled + .dropdown-button {
-  color: var(--disabled);
+  color: var(--surface-09);
 }
 .dropdown > .dropdown-button {
   justify-self: end;
@@ -384,10 +384,10 @@ select[size="1"]:not(:active):focus {
   justify-content: center;
   align-items: center;
   margin: 1px;
-  background-color: var(--button-bg);
-  color: var(--button-fg);
-  border-left: 1px solid var(--border);
-  box-shadow: inset 1px 1px var(--button-light), inset -2px -2px var(--button-dark), -1px 0 var(--input-bg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
+  border-left: 1px solid var(--border-brightness-00);
+  box-shadow: inset 1px 1px var(--button-light), inset -2px -2px var(--button-dark), -1px 0 var(--surface-15);
   width: 16px;
   pointer-events: none;
 }
@@ -407,8 +407,8 @@ input[type=checkbox] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background: var(--input-bg);
-  border: 1px solid var(--input-fg);
+  background: var(--surface-15);
+  border: 1px solid var(--surface-00);
   width: 13px;
   height: 13px;
   border-radius: 0;
@@ -432,7 +432,7 @@ input[type=radio]:disabled + label::after {
   right: 0;
   bottom: 0;
   left: 0;
-  background-image: linear-gradient(45deg, var(--window-bg) 25%, transparent 25%), linear-gradient(-45deg, var(--window-bg) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, var(--window-bg) 75%), linear-gradient(-45deg, transparent 75%, var(--window-bg) 75%);
+  background-image: linear-gradient(45deg, var(--surface-12) 25%, transparent 25%), linear-gradient(-45deg, var(--surface-12) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, var(--surface-12) 75%), linear-gradient(-45deg, transparent 75%, var(--surface-12) 75%);
   background-size: 2px 2px;
   background-position: 0 0, 0 1px, 1px -1px, -1px 0px;
 }
@@ -441,8 +441,8 @@ input[type=radio] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background: var(--input-bg);
-  border: 1px solid var(--input-fg);
+  background: var(--surface-15);
+  border: 1px solid var(--surface-00);
   width: 12px;
   height: 12px;
   border-radius: 50%;
@@ -453,7 +453,7 @@ input[type=radio]:checked::after {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: var(--input-fg);
+  background-color: var(--surface-00);
   margin-top: 2px;
   margin-left: 2px;
 }
@@ -475,13 +475,13 @@ input[type=checkbox]:focus + label::after {
   left: calc(var(--spacing) - 1px);
   right: 0;
   bottom: 0;
-  border: 1px dotted var(--border);
+  border: 1px dotted var(--border-brightness-00);
   border-radius: 1px;
 }
 
 label > input[type=radio]:focus,
 label > input[type=checkbox]:focus {
-  outline: 1px dotted var(--border);
+  outline: 1px dotted var(--border-brightness-00);
   outline-offset: 1px;
 }
 
@@ -502,23 +502,23 @@ input[type=range]:focus::-webkit-slider-thumb {
 }
 input[type=range]::-moz-range-track {
   height: 16px;
-  background: var(--scrollbar-bg);
-  border: 1px solid var(--border);
+  background: var(--surface-12);
+  border: 1px solid var(--border-brightness-00);
 }
 input[type=range]::-moz-range-thumb {
   border-radius: 0;
   height: 16px;
   width: 32px;
-  background: var(--button-bg);
+  background: var(--surface-12);
   background-size: 2px 2px;
   background-position: 0 0, 0 1px, 1px -1px, -1px 0px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-brightness-00);
   box-shadow: inset 1px 1px var(--button-light), inset -2px -2px var(--button-dark);
 }
 input[type=range]::-webkit-slider-runnable-track {
   height: 16px;
-  background: var(--scrollbar-bg);
-  border: 1px solid var(--border);
+  background: var(--surface-12);
+  border: 1px solid var(--border-brightness-00);
   margin: 10px 0;
 }
 input[type=range]::-webkit-slider-thumb {
@@ -527,10 +527,10 @@ input[type=range]::-webkit-slider-thumb {
   border-radius: 0;
   height: 16px;
   width: 32px;
-  background: var(--button-bg);
+  background: var(--surface-12);
   background-size: 2px 2px;
   background-position: 0 0, 0 1px, 1px -1px, -1px 0px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-brightness-00);
   box-shadow: inset 1px 1px var(--button-light), inset -2px -2px var(--button-dark);
 }
 
@@ -547,8 +547,8 @@ progress,
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background: var(--input-bg);
-  border: 1px solid var(--border);
+  background: var(--surface-15);
+  border: 1px solid var(--border-brightness-00);
   height: 16px;
 }
 
@@ -563,7 +563,7 @@ progress,
   top: 0;
   bottom: 0;
   left: 0;
-  background: var(--selection-bg);
+  background: var(--primary-5);
 }
 .progress-bar:not([aria-valuenow])::after {
   width: 50%;
@@ -571,15 +571,15 @@ progress,
 }
 
 progress::-webkit-progress-bar {
-  background: var(--input-bg);
+  background: var(--surface-15);
 }
 
 progress::-webkit-progress-value {
-  background: var(--selection-bg);
+  background: var(--primary-5);
 }
 
 progress::-moz-progress-bar {
-  background: var(--selection-bg);
+  background: var(--primary-5);
 }
 
 progress:indeterminate::-moz-progress-bar {
@@ -603,8 +603,8 @@ progress:not([value])::-webkit-progress-value {
 .window,
 .dialog,
 .menu {
-  background: var(--window-frame);
-  border: 1px solid var(--border);
+  background: var(--surface-11);
+  border: 1px solid var(--border-brightness-00);
   position: relative;
   padding: 2px;
 }
@@ -617,7 +617,7 @@ progress:not([value])::-webkit-progress-value {
 
 .window.active,
 .window:focus-within {
-  background-color: var(--window-frame-active);
+  background-color: var(--surface-11);
 }
 
 .dialog {
@@ -626,21 +626,21 @@ progress:not([value])::-webkit-progress-value {
 
 .dialog.active,
 .dialog:focus-within {
-  background-color: var(--title-bar-active-bg);
+  background-color: var(--surface-04);
 }
 
 .title-bar {
   background: var(--title-bar-bg);
-  color: var(--title-bar-fg);
+  color: var(--surface-12);
   display: flex;
   flex-direction: row;
   font-weight: bold;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-brightness-00);
 }
 
 .dialog > .title-bar {
-  border: 1px solid var(--window-bg);
-  border-bottom-color: var(--border);
+  border: 1px solid var(--surface-12);
+  border-bottom-color: var(--border-brightness-00);
 }
 
 .title-bar-text {
@@ -664,9 +664,9 @@ progress:not([value])::-webkit-progress-value {
   min-width: 0;
   padding: 0;
   border: 0;
-  border-left: 1px solid var(--border);
+  border-left: 1px solid var(--border-brightness-00);
   border-radius: 0;
-  background-color: var(--button-bg);
+  background-color: var(--surface-12);
   background-repeat: no-repeat;
   background-position: 7px 8px;
 }
@@ -677,7 +677,7 @@ progress:not([value])::-webkit-progress-value {
 
 .title-bar-buttons:first-child button {
   border: 0;
-  border-right: 1px solid var(--border);
+  border-right: 1px solid var(--border-brightness-00);
 }
 
 .title-bar-buttons button:active {
@@ -704,14 +704,14 @@ progress:not([value])::-webkit-progress-value {
 
 .window-body,
 .dialog-body {
-  background: var(--window-bg);
-  color: var(--window-fg);
-  border: 1px solid var(--border);
+  background: var(--surface-12);
+  color: var(--surface-00);
+  border: 1px solid var(--border-brightness-00);
   border-top: 0;
 }
 
 .dialog-body {
-  border-color: var(--window-bg);
+  border-color: var(--surface-12);
 }
 
 .window.active > .title-bar,
@@ -720,20 +720,20 @@ progress:not([value])::-webkit-progress-value {
 .dialog:focus-within > .title-bar,
 .menu > .title-bar,
 .title-bar.active {
-  background: var(--title-bar-active-bg);
-  color: var(--title-bar-active-fg);
+  background: var(--surface-04);
+  color: var(--surface-00);
 }
 
 .window-body > * + *,
 .dialog-body > * + * {
   border: 0;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-brightness-00);
 }
 
 [role=menu] {
-  color: var(--menu-fg);
-  background-color: var(--menu-bg);
-  border: 1px solid var(--border);
+  color: var(--surface-00);
+  background-color: var(--surface-15);
+  border: 1px solid var(--border-brightness-00);
 }
 [role=menu] li {
   padding: 1px 3px 1px 16px;
@@ -751,7 +751,7 @@ progress:not([value])::-webkit-progress-value {
   min-width: 200px;
 }
 [role=menu] li[role=separator] {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-brightness-00);
   height: 0;
   padding: 0;
   margin: 2px 0;
@@ -796,8 +796,8 @@ progress:not([value])::-webkit-progress-value {
 }
 
 [role=menubar] {
-  color: var(--menu-fg);
-  background-color: var(--menu-bg);
+  color: var(--surface-00);
+  background-color: var(--surface-15);
 }
 [role=menubar] > li {
   padding: 1px 8px;
@@ -818,12 +818,12 @@ progress:not([value])::-webkit-progress-value {
 }
 [role=menu] li:focus-within,
 [role=menubar] li:focus-within {
-  background: var(--selection-bg);
-  color: var(--selection-fg);
+  background: var(--primary-5);
+  color: var(--surface-00);
 }
 [role=menu] li[aria-disabled],
 [role=menubar] li[aria-disabled] {
-  color: var(--disabled);
+  color: var(--surface-09);
   border-color: transparent;
 }
 
@@ -858,20 +858,20 @@ progress:not([value])::-webkit-progress-value {
   margin-top: -2px;
   margin-bottom: -1px;
   padding: 0px 12px 4px 12px;
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
   box-shadow: none;
   z-index: 1;
 }
 
 .tabs > [role=tabpanel] {
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-brightness-00);
 }
 
 .list {
-  background: var(--window-bg);
-  color: var(--window-fg);
-  border: 1px solid var(--border);
+  background: var(--surface-12);
+  color: var(--surface-00);
+  border: 1px solid var(--border-brightness-00);
   overflow: auto;
   cursor: default;
 }
@@ -882,17 +882,17 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .list > [role=option][aria-selected=true] {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 
 .list > [role=option]:focus {
-  outline: 1px dotted var(--border);
+  outline: 1px dotted var(--border-brightness-00);
   outline-offset: -1px;
 }
 
 .list > [role=option][aria-selected=true]:focus {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 
 .icon-grid {
@@ -920,22 +920,22 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .icon-grid > .icon:focus > .icon-label {
-  outline: 1px dotted var(--border);
+  outline: 1px dotted var(--border-brightness-00);
   outline-offset: -1px;
 }
 
 .icon-grid > .icon[aria-selected=true] > .icon-label {
-  outline: 1px solid var(--selection-bg);
+  outline: 1px solid var(--primary-5);
 }
 
 .icon-grid:focus-within > .icon[aria-selected=true] > .icon-label {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
   outline: none;
 }
 
 .icon-grid > .icon[aria-selected=true]:focus > .icon-label {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 
 .detailed {
@@ -948,10 +948,10 @@ progress:not([value])::-webkit-progress-value {
   font-weight: normal;
   padding: 2px 6px 2px 6px;
   white-space: nowrap;
-  border-bottom: 1px solid var(--border);
-  border-right: 1px solid var(--border);
-  background: var(--button-bg);
-  color: var(--button-fg);
+  border-bottom: 1px solid var(--border-brightness-00);
+  border-right: 1px solid var(--border-brightness-00);
+  background: var(--surface-12);
+  color: var(--surface-00);
 }
 .detailed th:last-child {
   border-right: 0;
@@ -965,7 +965,7 @@ progress:not([value])::-webkit-progress-value {
 }
 .detailed th[role=button]:active {
   padding: 3px 5px 1px 7px;
-  box-shadow: inset 1px 1px 0 var(--border);
+  box-shadow: inset 1px 1px 0 var(--border-brightness-00);
 }
 
 .detailed tr {
@@ -973,36 +973,36 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .detailed tr:focus {
-  outline: 1px dotted var(--border);
+  outline: 1px dotted var(--border-brightness-00);
   outline-offset: -1px;
 }
 
 .detailed tr[aria-selected=true] {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 
 .detailed tr[aria-selected=true]:focus {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 
 .detailed .icon:focus .icon-label {
-  outline: 1px dotted var(--border);
+  outline: 1px dotted var(--border-brightness-00);
   outline-offset: -1px;
 }
 
 .detailed .icon[aria-selected=true] {
-  outline: 1px solid var(--selection-bg);
+  outline: 1px solid var(--primary-5);
 }
 
 .detailed:focus-within .icon[aria-selected=true] {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
   outline: none;
 }
 
 .detailed .icon[aria-selected=true]:focus {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 
 .detailed td {
@@ -1086,21 +1086,21 @@ progress:not([value])::-webkit-progress-value {
   align-items: center;
 }
 .list ul[role=tree] [role=treeitem]:focus {
-  outline: 1px dotted var(--border);
+  outline: 1px dotted var(--border-brightness-00);
   outline-offset: -1px;
 }
 .list ul[role=tree] [role=treeitem][aria-selected=true] {
-  outline: 1px solid var(--selection-bg);
+  outline: 1px solid var(--primary-5);
 }
 .list ul[role=tree] [role=treeitem][aria-selected=true]:focus {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 .list ul[role=tree] [role=treeitem]:not(.icon) {
   padding-left: 16px;
 }
 .list ul[role=tree]:focus-within [role=treeitem][aria-selected=true] {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 .list ul[role=tree] ul {
   margin-left: 8px;
@@ -1117,7 +1117,7 @@ progress:not([value])::-webkit-progress-value {
   top: 0;
   left: 4px;
   bottom: 0;
-  border-left: 1px solid var(--border);
+  border-left: 1px solid var(--border-brightness-00);
 }
 .list ul[role=tree] ul li:last-child::before {
   bottom: initial;
@@ -1130,5 +1130,5 @@ progress:not([value])::-webkit-progress-value {
   top: 13px;
   left: 4px;
   width: 7px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-brightness-00);
 }

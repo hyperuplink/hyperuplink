@@ -3,8 +3,8 @@
 }
 
 body {
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
 }
 
 *,
@@ -39,39 +39,39 @@ code {
 }
 
 .raised {
-  background: var(--window-bg);
+  background: var(--surface-12);
   border: 1px solid var(--lightest);
   border-bottom-color: var(--dark);
   border-right-color: var(--dark);
 }
 
 .lowered {
-  background: var(--window-bg);
+  background: var(--surface-12);
   border: 1px solid var(--dark);
   border-bottom-color: var(--lightest);
   border-right-color: var(--lightest);
 }
 
 .top-panel {
-  background: var(--window-bg);
+  background: var(--surface-12);
   border-bottom: 1px solid var(--darkest);
   box-shadow: inset 0 -1px 0 var(--dark);
 }
 
 .right-panel {
-  background: var(--window-bg);
+  background: var(--surface-12);
   border-left: 1px solid var(--light);
   box-shadow: inset 1px 0 0 var(--lightest);
 }
 
 .bottom-panel {
-  background: var(--window-bg);
+  background: var(--surface-12);
   border-top: 1px solid var(--light);
   box-shadow: inset 0 1px 0 var(--lightest);
 }
 
 .left-panel {
-  background: var(--window-bg);
+  background: var(--surface-12);
   border-right: 1px solid var(--darkest);
   box-shadow: inset -1px 0 0 var(--dark);
 }
@@ -89,7 +89,7 @@ fieldset {
 legend {
   text-align: left;
   padding: 0 4px;
-  background-color: var(--button-bg);
+  background-color: var(--surface-12);
   display: block;
 }
 
@@ -145,7 +145,7 @@ hr {
 .horizontal-scrollbar > .scrollbar-track,
 .vertical-scrollbar > .scrollbar-track {
   flex-grow: 1;
-  background-color: var(--window-bg);
+  background-color: var(--surface-12);
   background-image:
     linear-gradient(45deg, var(--lightest) 25%, transparent 25%),
     linear-gradient(-45deg, var(--lightest) 25%, transparent 25%),
@@ -162,7 +162,7 @@ hr {
 .horizontal-scrollbar > .scrollbar-track > .scrollbar-thumb,
 .vertical-scrollbar > .scrollbar-track > .scrollbar-thumb {
   position: absolute;
-  background: var(--button-bg);
+  background: var(--surface-12);
   border: 1px solid var(--darkest);
   border-top: 1px solid var(--light);
   border-left: 1px solid var(--light);
@@ -202,7 +202,7 @@ hr {
 }
 
 ::-webkit-scrollbar {
-  background-color: var(--window-bg);
+  background-color: var(--surface-12);
   background-image:
     linear-gradient(45deg, var(--lightest) 25%, transparent 25%),
     linear-gradient(-45deg, var(--lightest) 25%, transparent 25%),
@@ -219,13 +219,13 @@ hr {
 }
 
 ::-webkit-scrollbar-corner {
-  background: var(--window-bg);
+  background: var(--surface-12);
 }
 
 ::-webkit-scrollbar-button,
 ::-webkit-scrollbar-thumb {
-  background-color: var(--button-bg);
-  color: var(--button-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
   border: 1px solid var(--darkest);
   border-top: 1px solid var(--light);
   border-left: 1px solid var(--light);
@@ -290,8 +290,8 @@ input[type="button"],
 input[type="submit"],
 input[type="reset"],
 .button {
-  background-color: var(--button-bg);
-  color: var(--button-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
   border: 1px solid var(--darkest);
   border-top: 1px solid var(--lightest);
   border-left: 1px solid var(--lightest);
@@ -427,8 +427,8 @@ textarea,
 .input,
 select,
 .dropdown {
-  background-color: var(--input-bg);
-  color: var(--input-fg);
+  background-color: var(--surface-15);
+  color: var(--surface-00);
   border: 1px solid var(--dark);
   border-bottom: 1px solid var(--lightest);
   border-right: 1px solid var(--lightest);
@@ -452,8 +452,8 @@ textarea::selection,
 .input::selection,
 select::selection,
 .dropdown::selection {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 input:not(
     [type="button"],
@@ -479,7 +479,7 @@ select[readonly],
 select.readonly,
 .dropdown[readonly],
 .dropdown.readonly {
-  background: var(--window-bg);
+  background: var(--surface-12);
 }
 input:not(
     [type="button"],
@@ -505,7 +505,7 @@ select:disabled,
 select.disabled,
 .dropdown:disabled,
 .dropdown.disabled {
-  background: var(--window-bg);
+  background: var(--surface-12);
   color: var(--dark);
   text-shadow: 1px 1px 0 var(--lightest);
 }
@@ -520,25 +520,25 @@ select[size]:not([size="1"]) > option {
 }
 select[multiple] > option:checked,
 select[size]:not([size="1"]) > option:checked {
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
 }
 select[multiple]:focus > option:checked,
 select[size]:not([size="1"]):focus > option:checked {
-  outline: 1px dotted var(--selection-inverse);
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  outline: 1px dotted var(--highlight);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 
 select:not([size], [multiple]),
 select[size="1"]:not(:active):focus {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
   box-shadow:
     inset 1px 1px 0 var(--darkest),
     inset -1px -1px 0 var(--light),
-    inset 2px 2px 0 var(--input-bg),
-    inset -2px -2px 0 var(--input-bg);
+    inset 2px 2px 0 var(--surface-15),
+    inset -2px -2px 0 var(--surface-15);
 }
 
 .dropdown {
@@ -552,8 +552,8 @@ select[size="1"]:not(:active):focus {
   padding-right: 21px;
 }
 .dropdown > select:not(:disabled):active {
-  background: var(--input-bg);
-  color: var(--input-fg);
+  background: var(--surface-15);
+  color: var(--surface-00);
 }
 .dropdown > select:not(:disabled):active + .dropdown-button {
   border: 1px solid var(--dark);
@@ -576,15 +576,15 @@ select[size="1"]:not(:active):focus {
   justify-content: center;
   align-items: center;
   margin: 1px;
-  background-color: var(--button-bg);
-  color: var(--button-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
   border: 1px solid var(--darkest);
   border-top: 1px solid var(--light);
   border-left: 1px solid var(--light);
   box-shadow:
     inset -1px -1px var(--dark),
     inset 1px 1px var(--lightest),
-    -1px 0 var(--input-bg);
+    -1px 0 var(--surface-15);
   width: 16px;
   pointer-events: none;
 }
@@ -604,7 +604,7 @@ input[type="checkbox"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background: var(--input-bg);
+  background: var(--surface-15);
   color: var(--darkest);
   border: 1px solid var(--dark);
   border-bottom: 1px solid var(--lightest);
@@ -620,7 +620,7 @@ input[type="checkbox"]:active,
 input[type="checkbox"]:disabled,
 input[type="checkbox"].active,
 input[type="checkbox"].disabled {
-  background: var(--window-bg);
+  background: var(--surface-12);
 }
 input[type="checkbox"]:checked::after,
 input[type="checkbox"].checked::after {
@@ -651,7 +651,7 @@ input[type="radio"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background: var(--input-bg);
+  background: var(--surface-15);
   color: var(--darkest);
   border: 1px solid var(--dark);
   border-bottom: 1px solid var(--lightest);
@@ -667,7 +667,7 @@ input[type="radio"]:active,
 input[type="radio"]:disabled,
 input[type="radio"].active,
 input[type="radio"].disabled {
-  background: var(--window-bg);
+  background: var(--surface-12);
 }
 input[type="radio"]:checked::after,
 input[type="radio"].checked::after {
@@ -745,7 +745,7 @@ input[type="range"]::-moz-range-track {
 }
 input[type="range"]::-moz-range-thumb {
   border-radius: 0;
-  background: var(--button-bg);
+  background: var(--surface-12);
   border: 1px solid var(--darkest);
   border-top: 1px solid var(--lightest);
   border-left: 1px solid var(--lightest);
@@ -754,7 +754,7 @@ input[type="range"]::-moz-range-thumb {
   box-shadow: inset -1px -1px 0 var(--dark);
 }
 input[type="range"]::-moz-range-thumb:active {
-  background-color: var(--window-bg);
+  background-color: var(--surface-12);
   background-image:
     linear-gradient(45deg, var(--lightest) 25%, transparent 25%),
     linear-gradient(-45deg, var(--lightest) 25%, transparent 25%),
@@ -781,7 +781,7 @@ input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   margin-top: -11px;
   border-radius: 0;
-  background: var(--button-bg);
+  background: var(--surface-12);
   border: 1px solid var(--darkest);
   border-top: 1px solid var(--lightest);
   border-left: 1px solid var(--lightest);
@@ -790,7 +790,7 @@ input[type="range"]::-webkit-slider-thumb {
   box-shadow: inset -1px -1px 0 var(--dark);
 }
 input[type="range"]::-webkit-slider-thumb:active {
-  background-color: var(--window-bg);
+  background-color: var(--surface-12);
   background-image:
     linear-gradient(45deg, var(--lightest) 25%, transparent 25%),
     linear-gradient(-45deg, var(--lightest) 25%, transparent 25%),
@@ -809,7 +809,7 @@ progress,
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background: var(--button-bg);
+  background: var(--surface-12);
   border: 1px solid var(--dark);
   border-bottom: 1px solid var(--lightest);
   border-right: 1px solid var(--lightest);
@@ -828,11 +828,11 @@ progress,
   top: 0;
   bottom: 0;
   left: 0;
-  border: 1px solid var(--button-bg);
+  border: 1px solid var(--surface-12);
   background: repeating-linear-gradient(
     90deg,
-    var(--selection-bg),
-    var(--selection-bg) 6px,
+    var(--primary-5),
+    var(--primary-5) 6px,
     transparent 6px,
     transparent 8px
   );
@@ -843,26 +843,26 @@ progress,
 }
 
 progress::-webkit-progress-bar {
-  background: var(--button-bg);
+  background: var(--surface-12);
 }
 
 progress::-webkit-progress-value {
-  border: 1px solid var(--button-bg);
+  border: 1px solid var(--surface-12);
   background: repeating-linear-gradient(
     90deg,
-    var(--selection-bg),
-    var(--selection-bg) 6px,
+    var(--primary-5),
+    var(--primary-5) 6px,
     transparent 6px,
     transparent 8px
   );
 }
 
 progress::-moz-progress-bar {
-  border: 1px solid var(--button-bg);
+  border: 1px solid var(--surface-12);
   background: repeating-linear-gradient(
     90deg,
-    var(--selection-bg),
-    var(--selection-bg) 6px,
+    var(--primary-5),
+    var(--primary-5) 6px,
     transparent 6px,
     transparent 8px
   );
@@ -889,7 +889,7 @@ progress:not([value])::-webkit-progress-value {
 .window,
 .dialog,
 .menu {
-  background: var(--window-bg);
+  background: var(--surface-12);
   border: 1px solid var(--light);
   border-bottom: 1px solid var(--darkest);
   border-right: 1px solid var(--darkest);
@@ -908,7 +908,7 @@ progress:not([value])::-webkit-progress-value {
 
 .title-bar {
   background: var(--title-bar-bg);
-  color: var(--title-bar-fg);
+  color: var(--surface-12);
   display: flex;
   flex-direction: row;
   font-weight: bold;
@@ -978,8 +978,8 @@ progress:not([value])::-webkit-progress-value {
 
 .window-body,
 .dialog-body {
-  background: var(--window-bg);
-  color: var(--window-fg);
+  background: var(--surface-12);
+  color: var(--surface-00);
   margin-top: 4px;
 }
 
@@ -988,8 +988,8 @@ progress:not([value])::-webkit-progress-value {
 .window:focus-within > .title-bar,
 .dialog:focus-within > .title-bar,
 .title-bar.active {
-  background: var(--title-bar-active-bg);
-  color: var(--title-bar-active-fg);
+  background: var(--surface-04);
+  color: var(--surface-00);
 }
 
 .window-body > [role="menubar"],
@@ -1000,8 +1000,8 @@ progress:not([value])::-webkit-progress-value {
 
 [role="menu"],
 [role="menubar"] {
-  color: var(--window-fg);
-  background-color: var(--window-bg);
+  color: var(--surface-00);
+  background-color: var(--surface-12);
   border: 1px solid var(--light);
   border-right-color: var(--darkest);
   border-bottom-color: var(--darkest);
@@ -1016,8 +1016,8 @@ progress:not([value])::-webkit-progress-value {
 }
 [role="menu"] li:hover,
 [role="menubar"] li:hover {
-  background: var(--selection-bg);
-  color: var(--selection-fg);
+  background: var(--primary-5);
+  color: var(--surface-00);
 }
 [role="menu"] li[aria-disabled="true"],
 [role="menubar"] li[aria-disabled="true"] {
@@ -1046,15 +1046,15 @@ progress:not([value])::-webkit-progress-value {
   min-width: 200px;
 }
 [role="menubar"] > li:hover {
-  background: var(--window-bg);
-  color: var(--window-fg);
+  background: var(--surface-12);
+  color: var(--surface-00);
   border: 1px solid var(--lightest);
   border-right-color: var(--dark);
   border-bottom-color: var(--dark);
 }
 [role="menubar"] > li:focus-within {
-  background: var(--window-bg);
-  color: var(--window-fg);
+  background: var(--surface-12);
+  color: var(--surface-00);
   border: 1px solid var(--dark);
   border-right-color: var(--lightest);
   border-bottom-color: var(--lightest);
@@ -1062,8 +1062,8 @@ progress:not([value])::-webkit-progress-value {
 }
 
 [role="menu"]:not(:hover) li:focus-within {
-  background: var(--selection-bg);
-  color: var(--selection-fg);
+  background: var(--primary-5);
+  color: var(--surface-00);
 }
 [role="menu"] li {
   border: 1px solid transparent;
@@ -1208,8 +1208,8 @@ progress:not([value])::-webkit-progress-value {
 }
 
 .list {
-  background: var(--input-bg);
-  color: var(--input-fg);
+  background: var(--surface-15);
+  color: var(--surface-00);
   border: 1px solid var(--dark);
   border-bottom: 1px solid var(--lightest);
   border-right: 1px solid var(--lightest);
@@ -1225,19 +1225,19 @@ progress:not([value])::-webkit-progress-value {
   white-space: nowrap;
 }
 .list > [role="option"][aria-selected="true"] {
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
 }
 .list > [role="option"]:focus {
   outline: 1px dotted var(--darkest);
   outline-offset: -1px;
 }
 .list > [role="option"][aria-selected="true"]:focus {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 .list:focus-within > [role="option"][aria-selected="true"] {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 
 .icon-grid {
@@ -1266,15 +1266,15 @@ progress:not([value])::-webkit-progress-value {
   outline-offset: -1px;
 }
 .icon-grid > .icon[aria-selected="true"] > .icon-label {
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
 }
 .icon-grid > .icon[aria-selected="true"]:focus > .icon-label {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 .icon-grid:focus-within > .icon[aria-selected="true"] > .icon-label {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 
 .detailed {
@@ -1284,8 +1284,8 @@ progress:not([value])::-webkit-progress-value {
 .detailed th {
   text-align: left;
   font-weight: normal;
-  background-color: var(--button-bg);
-  color: var(--button-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
   border: 1px solid var(--darkest);
   border-top: 1px solid var(--lightest);
   border-left: 1px solid var(--lightest);
@@ -1334,19 +1334,19 @@ progress:not([value])::-webkit-progress-value {
   outline-offset: -1px;
 }
 .detailed tr[aria-selected="true"] {
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
 }
 .detailed tr[aria-selected="true"]:focus {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 .detailed:focus-within tr[aria-selected="true"] {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 .detailed:focus-within .icon[aria-selected="true"] .icon-label {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 .detailed td {
   padding: 2px 6px 2px 6px;
@@ -1376,11 +1376,11 @@ progress:not([value])::-webkit-progress-value {
   outline-offset: -1px;
 }
 .detailed .icon[aria-selected="true"] > .icon-label {
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
 }
 .detailed .icon[aria-selected="true"]:focus > .icon-label {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 .detailed thead {
   position: sticky;
@@ -1409,7 +1409,7 @@ progress:not([value])::-webkit-progress-value {
   position: absolute;
   width: 9px;
   height: 9px;
-  background-color: var(--input-bg);
+  background-color: var(--surface-15);
   background-image: url(icons/expand.svg);
   background-repeat: no-repeat;
   top: 8px;
@@ -1444,11 +1444,11 @@ progress:not([value])::-webkit-progress-value {
   outline-offset: -1px;
 }
 .list ul[role="tree"] .icon[aria-selected="true"] > .icon-label {
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
 }
 .list ul[role="tree"] .icon[aria-selected="true"]:focus > .icon-label {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 .list ul[role="tree"] [role="treeitem"]:not(.icon) {
   display: inline-flex;
@@ -1459,18 +1459,18 @@ progress:not([value])::-webkit-progress-value {
   outline-offset: -1px;
 }
 .list ul[role="tree"] [role="treeitem"]:not(.icon)[aria-selected="true"] {
-  background-color: var(--window-bg);
-  color: var(--window-fg);
+  background-color: var(--surface-12);
+  color: var(--surface-00);
 }
 .list ul[role="tree"] [role="treeitem"]:not(.icon)[aria-selected="true"]:focus {
-  outline: 1px dotted var(--selection-inverse);
+  outline: 1px dotted var(--highlight);
 }
 .list ul[role="tree"]:focus-within .icon[aria-selected="true"] .icon-label,
 .list
   ul[role="tree"]:focus-within
   [role="treeitem"][aria-selected="true"]:not(.icon) {
-  background-color: var(--selection-bg);
-  color: var(--selection-fg);
+  background-color: var(--primary-5);
+  color: var(--surface-00);
 }
 .list ul[role="tree"] ul {
   margin-left: 8px;

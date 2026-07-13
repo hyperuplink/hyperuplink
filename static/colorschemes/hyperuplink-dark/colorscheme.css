@@ -1,41 +1,20 @@
 :root {
   --desktop-bg: url("../../images/background-dark.gif") top left repeat;
-  --workspace-bg: var(--surface-15);
 
   --button-dark: var(--surface-15);
   --button-light: var(--surface-06);
-  --border: var(--border-brightness-00);
-  --window-frame: var(--surface-11);
-  --window-frame-active: var(--window-frame);
-  --menu-bg: var(--surface-15);
-  --menu-fg: var(--surface-00);
-  --scrollbar-bg: var(--window-bg);
 
-  --window-bg: var(--surface-12);
-  --window-fg: var(--surface-00);
   --lightest: var(--surface-04);
   --lighter: var(--surface-05);
   --light: var(--surface-06);
-  --medium: var(--window-bg);
   --dark: var(--surface-13);
   --darker: var(--surface-14);
   --darkest: var(--surface-15);
-  --button-bg: var(--window-bg);
-  --button-fg: var(--window-fg);
+  --button-bg: var(--surface-12);
+  --button-fg: var(--surface-00);
   --input-bg: var(--surface-15);
   --input-fg: var(--surface-00);
   --title-bar-bg: var(--dark);
-  --title-bar-fg: var(--medium);
-  --title-bar-active-bg: var(--surface-04);
-  --title-bar-active-fg: var(--surface-00);
-  --selection-bg: var(--primary-5);
-  --selection-fg: var(--surface-00);
-  --selection-inverse: var(--highlight);
-
-  --field-bg: var(--surface-15);
-  --field-fg: var(--surface-00);
-  --disabled: var(--surface-09);
-  --disabled-fg: var(--border-brightness-10-1);
 
   --surface-15: #040707;
   --surface-14: #0c1416;
