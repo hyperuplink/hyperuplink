@@ -17,18 +17,21 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-          cache: true
-
+      # This removes AGENT_TOOLSDIRECTORY (/opt/hostedtoolcache), where setup-go
+      # installs Go, so it must happen before Go is put on PATH or later steps
+      # hit "go: command not found".
       - name: Free disk space
         run: |
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
                       /usr/local/share/boost "$AGENT_TOOLSDIRECTORY"
           sudo docker image prune -a -f
           df -h
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
 
       # Gentoo/Portage builds in a network-isolated sandbox, so the ebuild in
       # deploy/gentoo needs the Go module cache supplied as a distfile. Built
