@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>packaging@xn--gckvb8fzb.com</email>
+		<name>Hyperuplink Authors</name>
+	</maintainer>
+	<longdescription lang="en">
+		Hyperuplink is a super high speed internet bulletin board. All assets
+		(templates, static files, locales and SQL migrations) are embedded into the
+		executable. It renders server-side HTML5/CSS with no client-side JavaScript
+		and reads its data from a PostgreSQL database, using Redis/Valkey for
+		background jobs.
+	</longdescription>
+	<upstream>
+		<bugs-to>https://github.com/hyperuplink/hyperuplink/issues</bugs-to>
+		<remote-id type="github">hyperuplink/hyperuplink</remote-id>
+	</upstream>
+</pkgmetadata>

@@ -30,6 +30,20 @@ jobs:
           sudo docker image prune -a -f
           df -h
 
+      # Gentoo/Portage builds in a network-isolated sandbox, so the ebuild in
+      # deploy/gentoo needs the Go module cache supplied as a distfile. Built
+      # in RUNNER_TEMP to keep the working tree clean because GoReleaser refuses
+      # to run on a dirty tree.
+      - name: Build Go module cache tarball
+        id: deps
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          tarball="hyperuplink-${version}-deps.tar.xz"
+          GOMODCACHE="${RUNNER_TEMP}/go-mod" go mod download -modcacherw
+          tar --create --auto-compress \
+              --file "${RUNNER_TEMP}/${tarball}" -C "${RUNNER_TEMP}" go-mod
+          echo "tarball=${RUNNER_TEMP}/${tarball}" >> "$GITHUB_OUTPUT"
+
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
         with:
@@ -38,3 +52,12 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Attach the module cache to the release GoReleaser just created so the
+      # ebuild's SRC_URI can fetch it.
+      - name: Attach Go module cache to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+          TARBALL: ${{ steps.deps.outputs.tarball }}
+        run: gh release upload "$TAG" "$TARBALL" --clobber
