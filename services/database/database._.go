@@ -117,3 +117,35 @@ func (db *Database) Shutdown() error {
 	db.pool.Close()
 	return nil
 }
+
+func (db *Database) Reset() (err error) {
+	if db.pool, err = pgxpool.NewWithConfig(
+		context.Background(),
+		db.poolcfg,
+	); err != nil {
+		return err
+	}
+	defer db.pool.Close()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	if err = db.pool.Ping(ctx); err != nil {
+		return err
+	}
+
+	tx, err := db.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+
+	if _, err = tx.Exec(ctx, "DROP SCHEMA public CASCADE"); err != nil {
+		return err
+	}
+	if _, err = tx.Exec(ctx, "CREATE SCHEMA public"); err != nil {
+		return err
+	}
+
+	return tx.Commit(ctx)
+}

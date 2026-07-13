@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"xn--gckvb8fzb.com/hyperuplink/http"
 	"xn--gckvb8fzb.com/hyperuplink/runtime"
@@ -36,12 +37,14 @@ var (
 	flagCfgstr    string
 	flagLocalegen bool
 	flagVersion   bool
+	flagReset     string
 )
 
 func init() {
 	flag.StringVar(&flagCfgstr, "c", "file:///etc/hyperuplink.toml", "configuration string")
 	flag.BoolVar(&flagLocalegen, "localegen", false, "Generate locale files")
 	flag.BoolVar(&flagVersion, "v", false, "Print version information and exit")
+	flag.StringVar(&flagReset, "reset", "", "Clear the whole database and exit (requires the current time as HH:MM (24h) confirmation, e.g. --reset 10:42)")
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Use: %s [-opts]\n\n", os.Args[0])
 		flag.PrintDefaults()
@@ -73,6 +76,17 @@ func main() {
 	if err != nil {
 		fmt.Printf("%s\n", err)
 		os.Exit(1)
+	}
+
+	if flagReset != "" {
+		if err = runtime.ValidateResetTime(flagReset, time.Now()); err != nil {
+			fmt.Printf("%s\n", err)
+			os.Exit(1)
+		}
+		if err = rt.Reset(); err != nil {
+			os.Exit(1)
+		}
+		os.Exit(0)
 	}
 
 	rt.Embeds["migrations"] = &embedMigrations

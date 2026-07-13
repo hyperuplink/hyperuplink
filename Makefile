@@ -27,8 +27,8 @@ build: ## build
 	@echo "DATE    = $(DATE)"
 	@CGO_ENABLED=0 GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags "-s -w -X \"${PROJECT}/runtime.Version=${VERSION}\" -X \"${PROJECT}/runtime.Commit=${COMMIT}\" -X \"${PROJECT}/runtime.Date=${DATE}\"" -o $(PWD)/build/$(NAME)
 
-db\:drop: ## drop (and recreate) development database
-	psql -h localhost -p 5432 -U postgres -c "DROP DATABASE hyperuplink_dev;" -c "CREATE DATABASE hyperuplink_dev;"
+db\:drop: ## clear development database (drop all tables and content, keep the database)
+	psql -h localhost -p 5432 -U postgres -d hyperuplink_dev -c "DROP SCHEMA public CASCADE;" -c "CREATE SCHEMA public;"
 
 db\:dump: ## dump current data from development database into dummy.sql
 	pg_dump -h localhost -p 5432 -U postgres -d hyperuplink_dev -t users -t categories -t forums -t topics -t replies --data-only --inserts -f dummy.sql
