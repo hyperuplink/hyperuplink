@@ -20,7 +20,7 @@ services:
     # The app image is pulled from ghcr.io by default. To build it locally from
     # this repo instead, comment out `image:` and uncomment the `build:` block.
     #
-    image: ghcr.io/mrus/hyperuplink:latest
+    image: ghcr.io/hyperuplink/hyperuplink:latest
     # build:
     #   context: .
     restart: unless-stopped

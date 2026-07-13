@@ -7,7 +7,7 @@ After=hyperuplink-postgres.service hyperuplink-valkey.service
 
 [Container]
 ContainerName=hyperuplink
-Image=ghcr.io/mrus/hyperuplink:latest
+Image=ghcr.io/hyperuplink/hyperuplink:latest
 AutoUpdate=registry
 Network=hyperuplink.network
 NetworkAlias=hyperuplink

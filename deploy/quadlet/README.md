@@ -10,7 +10,7 @@ on boot, restarts on failure, and is managed with `systemctl`.
 
 | File                             | Container / resource                 |
 | -------------------------------- | ------------------------------------ |
-| `hyperuplink.container`          | the app (`ghcr.io/mrus/hyperuplink`) |
+| `hyperuplink.container`          | the app (`ghcr.io/hyperuplink/hyperuplink`) |
 | `hyperuplink-postgres.container` | PostgreSQL 17                        |
 | `hyperuplink-valkey.container`   | Valkey 8 (Redis-compatible)          |
 | `hyperuplink-minio.container`    | MinIO / S3 — **optional**            |

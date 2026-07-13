@@ -87,8 +87,8 @@ dependencies, 100% JavaScript free, and based on modern HTML5/CSS.
 ## Building
 
 Hyperuplink is actively developed on
-[Codeberg](https://codeberg.org/mrus/hyperuplink).
-[GitHub](https://github.com/mrusme/hyperuplink) is a mirror that provides
+[Codeberg](https://codeberg.org/hyperuplink/hyperuplink).
+[GitHub](https://github.com/hyperuplink/hyperuplink) is a mirror that provides
 pre-built binaries.
 
 ### Requirements
@@ -103,13 +103,13 @@ pre-built binaries.
 
 Clone this repository
 
-- from [Codeberg](https://codeberg.org/mrus/hyperuplink) (primary):
+- from [Codeberg](https://codeberg.org/hyperuplink/hyperuplink) (primary):
   ```sh
-  $ git clone https://codeberg.org/mrus/hyperuplink.git
+  $ git clone https://codeberg.org/hyperuplink/hyperuplink.git
   ```
-- from [GitHub](https://github.com/mrusme/hyperuplink) (mirror):
+- from [GitHub](https://github.com/hyperuplink/hyperuplink) (mirror):
   ```sh
-  $ git clone https://github.com/mrusme/hyperuplink.git
+  $ git clone https://github.com/hyperuplink/hyperuplink.git
   ```
 
 Then `cd` into the cloned directory and build:
