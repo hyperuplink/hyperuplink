@@ -1,0 +1,14 @@
+# Declares system user/group that owns Hyperuplink's runtime data and reads
+# its config.
+#
+# Shipping this under /usr/lib/sysusers.d makes rpm generate the
+# `Provides: user(hyperuplink)` / `group(hyperuplink)` that satisfy the
+# ownership dependencies rpm derives from the packaged files, and lets
+# systemd-sysusers (re)create the account.
+#
+# The package's %pre scriptlet also creates it directly so it exists before the
+# payload is unpacked.
+#
+#Type Name        ID GECOS                 Home                Shell
+g     hyperuplink -
+u     hyperuplink -  "Hyperuplink service" /var/lib/hyperuplink /usr/sbin/nologin

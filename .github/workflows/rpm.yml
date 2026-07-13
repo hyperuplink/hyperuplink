@@ -1,0 +1,71 @@
+name: RPM
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compute metadata
+        id: meta
+        run: |
+          ref="${GITHUB_REF_NAME}"
+          echo "version=${ref#v}" >> "$GITHUB_OUTPUT"
+          echo "date=$(git show -s --format=%cI HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Build RPMs
+        env:
+          VERSION: ${{ steps.meta.outputs.version }}
+          COMMIT: ${{ github.sha }}
+          DATE: ${{ steps.meta.outputs.date }}
+        run: |
+          docker run --rm \
+            -e VERSION -e COMMIT -e DATE \
+            -e OUTDIR=/work/dist \
+            -v "$PWD:/work" -w /work \
+            fedora:latest bash -euo pipefail -c '
+              dnf install -y --setopt=install_weak_deps=False \
+                rpm-build rpmdevtools golang git-core systemd-rpm-macros
+              git config --global --add safe.directory /work
+              bash deploy/rpm/build.sh x86_64 aarch64
+            '
+          sudo chown -R "$(id -u):$(id -g)" dist
+
+      - name: List built RPMs
+        run: ls -la dist/
+
+      - name: Upload RPMs as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rpms
+          path: dist/*.rpm
+          if-no-files-found: error
+
+      - name: Attach RPMs to the release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          for _ in $(seq 1 30); do
+            if gh release view "$TAG" >/dev/null 2>&1; then
+              gh release upload "$TAG" dist/*.rpm --clobber
+              exit 0
+            fi
+            echo "Release $TAG not ready yet, waiting..."
+            sleep 10
+          done
+          echo "Release $TAG was not created within the timeout" >&2
+          exit 1
