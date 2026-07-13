@@ -166,6 +166,10 @@ func (s *Site) GetRoute() route.Route {
 	return s.rt
 }
 
+func (s *Site) Version() string {
+	return s.r.GetRuntime().Build.Version
+}
+
 func (s *Site) Title() string {
 	return s.r.GetEnv().Title
 }
