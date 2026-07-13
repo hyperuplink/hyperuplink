@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -10,6 +11,7 @@ import (
 	"time"
 
 	"xn--gckvb8fzb.com/hyperuplink/http"
+	logicsession "xn--gckvb8fzb.com/hyperuplink/logic/session"
 	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/tools/localegen"
 	"xn--gckvb8fzb.com/hyperuplink/worker"
@@ -34,10 +36,11 @@ var embedTemplates embed.FS
 var embedDocs embed.FS
 
 var (
-	flagCfgstr    string
-	flagLocalegen bool
-	flagVersion   bool
-	flagReset     string
+	flagCfgstr     string
+	flagLocalegen  bool
+	flagVersion    bool
+	flagReset      string
+	flagCreateUser string
 )
 
 func init() {
@@ -45,6 +48,7 @@ func init() {
 	flag.BoolVar(&flagLocalegen, "localegen", false, "Generate locale files")
 	flag.BoolVar(&flagVersion, "v", false, "Print version information and exit")
 	flag.StringVar(&flagReset, "reset", "", "Clear the whole database and exit (requires the current time as HH:MM (24h) confirmation, e.g. --reset 10:42)")
+	flag.StringVar(&flagCreateUser, "create-user", "", `Create an activated user from a JSON object of signup fields and exit, e.g. --create-user '{"username":"dummy1","email":"dummy1@example.com","password":"mypassword"}'`)
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Use: %s [-opts]\n\n", os.Args[0])
 		flag.PrintDefaults()
@@ -89,6 +93,16 @@ func main() {
 		os.Exit(0)
 	}
 
+	if flagCreateUser != "" {
+		rt.Embeds["migrations"] = &embedMigrations
+		rt.Database.SetMigrations(rt.Embeds["migrations"])
+		if err = createUser(rt, flagCreateUser); err != nil {
+			fmt.Printf("%s\n", err)
+			os.Exit(1)
+		}
+		os.Exit(0)
+	}
+
 	rt.Embeds["migrations"] = &embedMigrations
 	rt.Embeds["static"] = &embedStaticFiles
 	rt.Embeds["views"] = &embedViews
@@ -127,4 +141,32 @@ func main() {
 	web.Shutdown()
 
 	rt.Exit(0)
+}
+
+func createUser(rt *runtime.Runtime, jsonStr string) error {
+	if err := rt.Database.Startup(); err != nil {
+		return err
+	}
+	defer rt.Database.Shutdown()
+
+	if err := rt.Repositories.Startup(); err != nil {
+		return err
+	}
+
+	in := new(logicsession.SignUpInput)
+	if err := json.Unmarshal([]byte(jsonStr), in); err != nil {
+		return err
+	}
+
+	usr, err := logicsession.SignUp(rt, in, logicsession.SignUpOptions{Activate: true})
+	if err != nil {
+		return err
+	}
+
+	rt.Info("create-user", "ok",
+		"id", usr.ID.String(),
+		"username", usr.Username,
+		"role", string(usr.Role),
+	)
+	return nil
 }
