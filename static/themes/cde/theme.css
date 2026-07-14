@@ -798,6 +798,8 @@ progress:not([value])::-webkit-progress-value {
 
 [role=menu],
 [role=menubar] {
+  --scroll-fade-color: var(--button-bg);
+
   color: var(--button-fg);
   background-color: var(--button-bg);
   border: 1px solid var(--button-light);

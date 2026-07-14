@@ -796,6 +796,8 @@ progress:not([value])::-webkit-progress-value {
 }
 
 [role=menubar] {
+  --scroll-fade-color: var(--surface-15);
+
   color: var(--surface-00);
   background-color: var(--surface-15);
 }

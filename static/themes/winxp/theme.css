@@ -1627,6 +1627,8 @@ progress:not([value])::-webkit-progress-value {
 }
 
 [role="menubar"] {
+  --scroll-fade-color: var(--raised-bg-bottom);
+
   padding: 1px;
 }
 [role="menubar"] > li {

@@ -137,6 +137,8 @@ body {
 }
 
 .header {
+  --scroll-fade-color: var(--surface-13);
+
   color: var(--surface-00);
   background-color: var(--surface-13);
 }
@@ -163,12 +165,147 @@ body {
   padding: 0px 8px;
 }
 
+.header > .breadcrumbs > ul > li {
+  flex: none;
+  white-space: nowrap;
+}
+
 .header > .breadcrumbs > ul > li::before {
   content: "> ";
 }
 
 .header > .breadcrumbs > ul > li.active {
   color: var(--primary-3);
+}
+
+@property --scroll-fade-start {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --scroll-fade-end {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@keyframes scroll-fade-start {
+  from {
+    --scroll-fade-start: 0;
+  }
+  to {
+    --scroll-fade-start: 1;
+  }
+}
+
+@keyframes scroll-fade-end {
+  from {
+    --scroll-fade-end: 1;
+  }
+  to {
+    --scroll-fade-end: 0;
+  }
+}
+
+.header > .breadcrumbs > ul,
+.header > .menubar > .grow > [role="menubar"] {
+  --scroll-fade-size: 24px;
+
+  scrollbar-width: none;
+
+  animation:
+    scroll-fade-start linear both,
+    scroll-fade-end linear both;
+  animation-timeline: scroll(self inline);
+  animation-range:
+    0 var(--scroll-fade-size),
+    calc(100% - var(--scroll-fade-size)) 100%;
+}
+
+.header > .breadcrumbs > ul::-webkit-scrollbar,
+.header > .menubar > .grow > [role="menubar"]::-webkit-scrollbar {
+  display: none;
+}
+
+.header > .breadcrumbs > ul {
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  mask-image:
+    linear-gradient(
+      to right,
+      transparent 0,
+      black calc(var(--scroll-fade-start) * var(--scroll-fade-size)),
+      black calc(100% - var(--scroll-fade-end) * var(--scroll-fade-size)),
+      transparent 100%
+    ),
+    linear-gradient(black, black),
+    linear-gradient(black, black);
+  mask-origin: padding-box, border-box, padding-box;
+  mask-repeat: no-repeat;
+  mask-composite: add, subtract, add;
+}
+
+@media (max-width: 600px) {
+  .header > .menubar {
+    align-items: flex-start;
+  }
+
+  .header > .menubar > .grow {
+    position: relative;
+    min-width: 0;
+  }
+
+  .header > .menubar > .grow > [role="menubar"] {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .header > .menubar > .grow > [role="menubar"]::before,
+  .header > .menubar > .grow > [role="menubar"]::after {
+    content: "";
+    position: sticky;
+    flex: none;
+    width: var(--scroll-fade-size);
+    background-color: var(--scroll-fade-color);
+    pointer-events: none;
+  }
+
+  .header > .menubar > .grow > [role="menubar"]::before {
+    left: 0;
+    margin-right: calc(-1 * var(--scroll-fade-size));
+    opacity: var(--scroll-fade-start);
+    mask-image: linear-gradient(to right, black, transparent);
+  }
+
+  .header > .menubar > .grow > [role="menubar"]::after {
+    right: 0;
+    margin-left: calc(-1 * var(--scroll-fade-size));
+    opacity: var(--scroll-fade-end);
+    mask-image: linear-gradient(to left, black, transparent);
+  }
+
+  .header > .menubar > .grow > [role="menubar"] > li {
+    position: static;
+    flex: none;
+  }
+
+  .header > .menubar > .grow > [role="menubar"] > li > ul {
+    top: 100%;
+    left: 0;
+    right: 0;
+    min-width: 0;
+  }
+
+  .header > .menubar [role="menu"] li > ul {
+    position: static;
+  }
+
+  .header > .menubar [role="menu"] li[aria-haspopup="true"]::after {
+    bottom: auto;
+    height: 1lh;
+  }
 }
 
 .footer {
