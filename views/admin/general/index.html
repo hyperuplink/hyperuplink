@@ -32,6 +32,14 @@
                    value="{{$.System.GetPostsPerPage}}" min="1" max="200" required>
           </div>
         </div>
+        <div class="fieldrow flex-row flex-wrap gap">
+          <div class="field flex-column grow">
+            <label for="admin_log_retention_days">{{$._.T "admin_log_retention_days"}}:</label>
+            <input type="number" id="admin_log_retention_days" name="admin_log_retention_days"
+                   class="input" value="{{$.System.GetAdminLogRetentionDays}}"
+                   min="1" max="3650" required>
+          </div>
+        </div>
       </div>
       {{ $general := .Data.Get "setting_general" }}
       <fieldset class="margin padding">

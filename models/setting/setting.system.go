@@ -7,10 +7,11 @@ const (
 )
 
 type System struct {
-	Name          string `json:"name"`
-	BaseURL       string `json:"base_url"`
-	TopicsPerPage int    `json:"topics_per_page"`
-	PostsPerPage  int    `json:"posts_per_page"`
+	Name                  string `json:"name"`
+	BaseURL               string `json:"base_url"`
+	TopicsPerPage         int    `json:"topics_per_page"`
+	PostsPerPage          int    `json:"posts_per_page"`
+	AdminLogRetentionDays int    `json:"admin_log_retention_days"`
 }
 
 func (sys *System) GetTopicsPerPage() (pp int) {
@@ -27,4 +28,12 @@ func (sys *System) GetPostsPerPage() (pp int) {
 	}
 
 	return sys.PostsPerPage
+}
+
+func (sys *System) GetAdminLogRetentionDays() (days int) {
+	if sys.AdminLogRetentionDays == 0 {
+		sys.AdminLogRetentionDays = DEFAULT_ADMIN_LOG_RETENTION_DAYS
+	}
+
+	return sys.AdminLogRetentionDays
 }

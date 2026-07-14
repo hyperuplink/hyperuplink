@@ -13,10 +13,11 @@ import (
 )
 
 type GeneralUpdateForm struct {
-	Name          string `form:"name" validate:"required,min=1,max=128"`
-	BaseURL       string `form:"base_url" validate:"required,url,max=255"`
-	TopicsPerPage int    `form:"topics_per_page" validate:"required,min=1,max=200"`
-	PostsPerPage  int    `form:"posts_per_page" validate:"required,min=1,max=200"`
+	Name                  string `form:"name" validate:"required,min=1,max=128"`
+	BaseURL               string `form:"base_url" validate:"required,url,max=255"`
+	TopicsPerPage         int    `form:"topics_per_page" validate:"required,min=1,max=200"`
+	PostsPerPage          int    `form:"posts_per_page" validate:"required,min=1,max=200"`
+	AdminLogRetentionDays int    `form:"admin_log_retention_days" validate:"required,min=1,max=3650"`
 
 	EnableAbout bool   `form:"enable_about"`
 	About       string `form:"about" validate:"required_if=EnableAbout true"`
@@ -69,6 +70,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 	settingSystem.JSONValue.BaseURL = frm.BaseURL
 	settingSystem.JSONValue.TopicsPerPage = frm.TopicsPerPage
 	settingSystem.JSONValue.PostsPerPage = frm.PostsPerPage
+	settingSystem.JSONValue.AdminLogRetentionDays = frm.AdminLogRetentionDays
 
 	err = settingRepo.Update[setting.System](
 		r.Runtime.Repositories.Setting,
