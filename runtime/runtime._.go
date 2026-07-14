@@ -10,6 +10,7 @@ import (
 	runt "runtime"
 	"strings"
 
+	"xn--gckvb8fzb.com/hyperuplink/services/activity"
 	"xn--gckvb8fzb.com/hyperuplink/services/config"
 	"xn--gckvb8fzb.com/hyperuplink/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/services/dispatch"
@@ -42,6 +43,7 @@ type Runtime struct {
 	ALogger      AsyncLogger
 	Database     *database.Database
 	Repositories *repositories.Repositories
+	Activity     *activity.Activity
 	Storage      *storage.Storage
 	Magick       *magick.Magick
 	Intnat       *intnat.Intnat
@@ -94,6 +96,12 @@ func New(cfgstr string) (rt *Runtime, err error) {
 
 	rt.Debug("new", "repositories")
 	if rt.Repositories, err = repositories.New(rt.Database, rt.Config); err != nil {
+		rt.Error("status", "error", "error", err)
+		return nil, err
+	}
+
+	rt.Debug("new", "activity")
+	if rt.Activity, err = activity.New(rt.Logger, rt.Repositories.Activity); err != nil {
 		rt.Error("status", "error", "error", err)
 		return nil, err
 	}
@@ -165,6 +173,12 @@ func (rt *Runtime) Startup() (err error) {
 		return err
 	}
 
+	rt.Debug("startup", "activity")
+	if err = rt.Activity.Startup(); err != nil {
+		rt.Error("status", "error", "error", err)
+		return err
+	}
+
 	rt.Debug("startup", "storage")
 	if err = rt.Storage.Startup(); err != nil {
 		rt.Error("status", "error", "error", err)
@@ -202,6 +216,12 @@ func (rt *Runtime) Startup() (err error) {
 
 func (rt *Runtime) Shutdown() (err error) {
 	rt.Debug("status", "exec")
+
+	rt.Debug("shutdown", "activity")
+	if err = rt.Activity.Shutdown(); err != nil {
+		rt.Error("status", "error", "error", err)
+		return err
+	}
 
 	rt.Debug("shutdown", "dispatch")
 	if err = rt.Dispatch.Shutdown(); err != nil {

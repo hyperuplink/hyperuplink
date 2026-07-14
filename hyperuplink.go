@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"xn--gckvb8fzb.com/hyperuplink/http"
-	logicsession "xn--gckvb8fzb.com/hyperuplink/logic/session"
+	logicsession "xn--gckvb8fzb.com/hyperuplink/logic/root/session"
 	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/tools/localegen"
 	"xn--gckvb8fzb.com/hyperuplink/worker"

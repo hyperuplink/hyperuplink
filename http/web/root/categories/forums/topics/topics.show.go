@@ -8,6 +8,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/http/web/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/site"
+	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 	"xn--gckvb8fzb.com/hyperuplink/models/vreply"
 	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
@@ -42,6 +43,10 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 
 	if !req.Perms().CanReadSlug(top.CategorySlug) {
 		return req.RedirectToRoot()
+	}
+
+	if actorID, ok := req.Session.GetUserUUID(); ok {
+		logicactivity.RecordTopicView(r.Runtime, actorID, top.ID)
 	}
 
 	req.Menu.SetCategoryForumSlugs(top.CategorySlug, top.ForumSlug)

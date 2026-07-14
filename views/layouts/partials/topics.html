@@ -3,6 +3,8 @@
 {{ $_ := get $dict "_"}}
 {{ $forum := get $dict "Forum"}}
 {{ $topics := get $dict "Topics"}}
+{{ $unread := false }}
+{{ if hasKey $dict "Unread" }}{{ $unread = get $dict "Unread" }}{{ end }}
 {{ $extra := dict }}
 {{ if hasKey $dict "Extra" }}{{ $extra = get $dict "Extra" }}{{ end }}
 <div class="list" role="listbox">
@@ -30,6 +32,8 @@
     </thead>
     <tbody>
       {{ range $idx_topic, $topic := $topics }}
+      {{ $is_unread := false }}
+      {{ if $unread }}{{ $is_unread = index $unread $topic.ID.String }}{{ end }}
       <tr role="option">
         <td>
           <a href="{{$site.GetRelRoot}}_{{$topic.CategorySlug}}/{{$topic.ForumSlug}}/{{$topic.Slug}}"
@@ -37,7 +41,7 @@
              class="icon big">
             <img src="{{$site.GetRelRoot}}static/icons/post.png">
             <div class="icon-label">
-              <div>{{$topic.Name}}</div>
+              <div{{ if $is_unread }} class="unread"{{ end }}>{{$topic.Name}}</div>
               <div class="icon-sublabel">by {{$topic.AuthorUsername}} on {{$site.DateTime $topic.CreatedAt}}</div>
             </div>
           </a>

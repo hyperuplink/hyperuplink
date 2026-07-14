@@ -3,6 +3,7 @@ package repositories
 import (
 	"xn--gckvb8fzb.com/hyperuplink/services/config"
 	"xn--gckvb8fzb.com/hyperuplink/services/database"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/activity"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/attachment"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/category"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/forum"
@@ -28,6 +29,7 @@ type Repositories struct {
 	Attachment *attachment.Repository
 	Permission *permission.Repository
 	PostEvent  *postevent.Repository
+	Activity   *activity.Repository
 	Search     *search.Repository
 }
 
@@ -98,6 +100,12 @@ func New(
 	}
 	repos.PostEvent = posteventRepo
 
+	var activityRepo *activity.Repository
+	if activityRepo, err = activity.New(repos.db); err != nil {
+		return nil, err
+	}
+	repos.Activity = activityRepo
+
 	var searchRepo *search.Repository
 	if searchRepo, err = search.New(repos.db); err != nil {
 		return nil, err
@@ -148,6 +156,10 @@ func (repos *Repositories) Startup() (err error) {
 		return err
 	}
 
+	if err = repos.Activity.Startup(); err != nil {
+		return err
+	}
+
 	if err = repos.Search.Startup(); err != nil {
 		return err
 	}
@@ -157,6 +169,10 @@ func (repos *Repositories) Startup() (err error) {
 
 func (repos *Repositories) Shutdown() (err error) {
 	if err = repos.Search.Shutdown(); err != nil {
+		return err
+	}
+
+	if err = repos.Activity.Shutdown(); err != nil {
 		return err
 	}
 

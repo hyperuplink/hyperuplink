@@ -381,6 +381,10 @@ a.button {
   color: var(--surface-05);
 }
 
+.icon-label > .unread {
+  font-weight: bold;
+}
+
 .dialog {
   max-width: 380px;
   margin: var(--margin) auto;

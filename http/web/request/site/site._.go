@@ -37,6 +37,7 @@ func New(r route.IRouteController, c fiber.Ctx) *Site {
 	s.c = c
 	s.csrf = csrf.TokenFromContext(s.c)
 	s.pager = NewPager(1, 1, 1)
+	s.title = r.GetEnv().Title
 
 	s.pathName, s.absPath, s.relRoot = helpers.GetPaths(s.c)
 
@@ -171,18 +172,18 @@ func (s *Site) Version() string {
 }
 
 func (s *Site) Title() string {
-	return s.r.GetEnv().Title
+	return s.title
 }
 
 func (s *Site) TitleFull(systemTitle string) string {
 	return fmt.Sprintf("%s // %s",
-		s.r.GetEnv().Title,
+		s.title,
 		systemTitle,
 	)
 }
 
 func (s *Site) SetTitle(title string) {
-	s.r.GetEnv().Title = title
+	s.title = title
 }
 
 func (s *Site) SetTimezone(tz string) (err error) {

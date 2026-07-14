@@ -8,7 +8,6 @@ import (
 type PostEventType string
 
 const (
-	View         PostEventType = "view"
 	Report       PostEventType = "report"
 	PollVote     PostEventType = "pollvote"
 	AnswerVote   PostEventType = "answervote"

@@ -1,6 +1,6 @@
 DROP INDEX IF EXISTS idx_vtopics_fts;
 
--- DROP TRIGGER IF EXISTS refresh_vtopics ON postevents;
+-- DROP TRIGGER IF EXISTS refresh_vtopics ON activities;
 DROP TRIGGER IF EXISTS refresh_vtopics ON replies;
 DROP TRIGGER IF EXISTS refresh_vtopics ON topics;
 DROP TRIGGER IF EXISTS refresh_vtopics ON forums;

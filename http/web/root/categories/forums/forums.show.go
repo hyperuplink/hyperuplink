@@ -8,6 +8,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/http/web/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/site"
+	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 	"xn--gckvb8fzb.com/hyperuplink/models/vforum"
 	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
@@ -78,6 +79,15 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 	req.Site.SetPager(site.NewPager(pages, perPage, activePage))
 
 	req.SetData("topics", tops)
+
+	if actorID, ok := req.Session.GetUserUUID(); ok {
+		var unread map[string]bool
+		unread, err = logicactivity.UnreadTopics(r.Runtime, actorID, tops)
+		if ret, rerr := req.RespondOnError(err); ret == true {
+			return rerr
+		}
+		req.SetData("unread", unread)
+	}
 
 	return req.Respond()
 }

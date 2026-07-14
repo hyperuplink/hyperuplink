@@ -10,8 +10,9 @@ SELECT
      WHERE r.topic_id = t.id) AS "last_reply_at",
 
     COALESCE((SELECT COUNT(*)
-      FROM postevents p
-      WHERE p.type = 'view' AND p.target = 'topic' AND p.topic_id = t.id), 0) AS views,
+      FROM activities a
+      WHERE a.kind = 'topic_view' AND a.subject = 'topic'
+        AND a.subject_id = t.id AND a.deleted_at IS NULL), 0) AS views,
 
     u.username AS author_username,
     u.role AS author_role,
@@ -60,13 +61,13 @@ CREATE TRIGGER refresh_vtopics
  AFTER INSERT ON replies
  FOR EACH STATEMENT EXECUTE PROCEDURE refresh_vtopics();
 
--- We could enable this to refresh vtopics every time postevents changes, in
--- case a "view" event was added. However, this could lead to **a lot** of
+-- We could enable this to refresh vtopics every time activities changes, in
+-- case a "topic_view" event was added. However, this could lead to **a lot** of
 -- refreshing. Updates to the views field aren't usually *that* important, so
--- it is probably okay to not trigger a refresh for every new postevent.
+-- it is probably okay to not trigger a refresh for every new activity.
 --
 -- CREATE TRIGGER refresh_vtopics
---  AFTER INSERT ON postevents
+--  AFTER INSERT ON activities
 --  FOR EACH STATEMENT EXECUTE PROCEDURE refresh_vtopics();
 
 -- IMPORTANT: the tsvector expression below MUST stay identical to the one used

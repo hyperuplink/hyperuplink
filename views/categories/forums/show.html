@@ -1,12 +1,13 @@
 <!-- FORUM -->
 {{ $forum := .Data.Get "forum" }}
 {{ $topics := .Data.Get "topics" }}
+{{ $unread := .Data.Get "unread" }}
 <div class="margin window active">
   <div class="title-bar">
     <div class="title-bar-text">{{$forum.Name}}</div>
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
-    {{ template "views/layouts/partials/topics" dict "Site" .Site "_" ._ "Forum" $forum "Topics" $topics }}
+    {{ template "views/layouts/partials/topics" dict "Site" .Site "_" ._ "Forum" $forum "Topics" $topics "Unread" $unread }}
   </div>
 </div>
 <!-- END FORUM -->
