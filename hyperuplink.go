@@ -10,7 +10,9 @@ import (
 	"syscall"
 	"time"
 
+	"xn--gckvb8fzb.com/hyperuplink/cron"
 	"xn--gckvb8fzb.com/hyperuplink/http"
+	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	logicsession "xn--gckvb8fzb.com/hyperuplink/logic/root/session"
 	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/tools/localegen"
@@ -134,13 +136,34 @@ func main() {
 
 	go wrk.Run()
 
+	// ---[ CRON ]------------------------------------------------------------- //
+	crn, err := cron.New(rt)
+	rt.NilOrDie(err)
+
+	err = crn.Startup()
+	rt.NilOrDie(err)
+
+	err = registerCronFunctions(rt)
+	rt.NilOrDie(err)
+
+	go crn.Run()
+
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 	<-quit
 
+	crn.Shutdown()
 	web.Shutdown()
 
 	rt.Exit(0)
+}
+
+func registerCronFunctions(rt *runtime.Runtime) (err error) {
+	return rt.Cron.Register(
+		logicactivity.CleanupAdminLogID,
+		logicactivity.CleanupAdminLogSpec,
+		func() error { return logicactivity.CleanupAdminLog(rt) },
+	)
 }
 
 func createUser(rt *runtime.Runtime, jsonStr string) error {

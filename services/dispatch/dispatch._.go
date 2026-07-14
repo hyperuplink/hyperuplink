@@ -9,6 +9,12 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/services/config"
 )
 
+const (
+	TaskJob   string = "job"
+	TaskCron  string = "cron"
+	QueueCron string = "cron"
+)
+
 type Dispatch struct {
 	cfg config.Redis
 	ac  *asynq.Client
@@ -64,6 +70,14 @@ func (disp *Dispatch) Shutdown() (err error) {
 }
 
 func (disp *Dispatch) Job(j *asyncjob.AsyncJob) (err error) {
+	return disp.enqueue(j, TaskJob)
+}
+
+func (disp *Dispatch) enqueue(
+	j *asyncjob.AsyncJob,
+	taskType string,
+	opts ...asynq.Option,
+) (err error) {
 	if _, err = j.SetID(); err != nil {
 		return err
 	}
@@ -73,8 +87,10 @@ func (disp *Dispatch) Job(j *asyncjob.AsyncJob) (err error) {
 		return err
 	}
 
-	task := asynq.NewTask("job", jj,
-		asynq.MaxRetry(5), asynq.Timeout(30*time.Minute))
+	task := asynq.NewTask(taskType, jj, append([]asynq.Option{
+		asynq.MaxRetry(5),
+		asynq.Timeout(30 * time.Minute),
+	}, opts...)...)
 
 	_, err = disp.ac.Enqueue(task)
 

@@ -1,8 +1,9 @@
 package setting
 
 const (
-	DEFAULT_TOPICS_PER_PAGE int = 10
-	DEFAULT_POSTS_PER_PAGE  int = 10
+	DEFAULT_TOPICS_PER_PAGE          int = 10
+	DEFAULT_POSTS_PER_PAGE           int = 10
+	DEFAULT_ADMIN_LOG_RETENTION_DAYS int = 30
 )
 
 type System struct {

@@ -40,6 +40,13 @@ func (k Kind) Policy() Policy {
 	}
 }
 
+func AdminKinds() []string {
+	return []string{
+		string(AdminVisit),
+		string(AdminSettingsUpdate),
+	}
+}
+
 func (k Kind) Coalesces() bool {
 	switch k {
 	case TopicView:

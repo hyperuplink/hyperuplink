@@ -13,6 +13,7 @@ type JobType string
 const (
 	Confirmation JobType = "confirmation"
 	Notification JobType = "notification"
+	Cron         JobType = "cron"
 )
 
 type JobSubType string
@@ -25,6 +26,8 @@ const (
 	Signin  JobSubType = "signin"
 	Reply   JobSubType = "reply"
 	Mention JobSubType = "mention"
+	// Cron
+	Run JobSubType = "run"
 )
 
 type AsyncJob struct {

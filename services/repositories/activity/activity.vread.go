@@ -7,13 +7,6 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
-func adminKinds() []string {
-	return []string{
-		string(activity.AdminVisit),
-		string(activity.AdminSettingsUpdate),
-	}
-}
-
 func (repo *Repository) VAllAdminCount(
 	qo common.QueryOptions,
 ) (total int64, err error) {
@@ -30,7 +23,7 @@ func (repo *Repository) VAllAdminCount(
 			Table:      "a",
 			HasDeleted: true,
 		}),
-		adminKinds(),
+		activity.AdminKinds(),
 	)
 	if err != nil {
 		return total, repo.db.ConvertError(err)
@@ -66,7 +59,7 @@ func (repo *Repository) VAllAdmin(
 			Table:      "a",
 			HasDeleted: true,
 		}),
-		adminKinds(),
+		activity.AdminKinds(),
 	)
 	if err != nil {
 		return nil, total, repo.db.ConvertError(err)

@@ -156,4 +156,13 @@ var (
 	ErrOAuthEmailUnverified error = errors.New(
 		"err_oauth_email_unverified",
 	)
+	ErrCronFunctionIDExists error = errors.New(
+		"err_cron_function_id_exists",
+	)
+	ErrCronFunctionIDNotFound error = errors.New(
+		"err_cron_function_id_not_found",
+	)
+	ErrCronFunctionInvalid error = errors.New(
+		"err_cron_function_invalid",
+	)
 )

@@ -25,6 +25,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.4.2
 	github.com/pquerna/otp v1.5.0
 	github.com/rhnvrm/simples3 v0.11.1
+	github.com/robfig/cron/v3 v3.0.1
 	github.com/samber/slog-fiber v1.22.2
 	github.com/shareed2k/goth_fiber/v2 v2.0.4
 	github.com/vgarvardt/pgx-google-uuid/v5 v5.6.0
@@ -74,7 +75,6 @@ require (
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/philhofer/fwd v1.2.0 // indirect
 	github.com/redis/go-redis/v9 v9.21.0 // indirect
-	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/spf13/cast v1.10.0 // indirect
 	github.com/tinylib/msgp v1.6.4 // indirect

@@ -12,6 +12,7 @@ import (
 
 	"xn--gckvb8fzb.com/hyperuplink/services/activity"
 	"xn--gckvb8fzb.com/hyperuplink/services/config"
+	"xn--gckvb8fzb.com/hyperuplink/services/cron"
 	"xn--gckvb8fzb.com/hyperuplink/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/services/dispatch"
 	"xn--gckvb8fzb.com/hyperuplink/services/intnat"
@@ -49,6 +50,7 @@ type Runtime struct {
 	Intnat       *intnat.Intnat
 	Markdown     *markdown.Markdown
 	Dispatch     *dispatch.Dispatch
+	Cron         *cron.Cron
 }
 
 const (
@@ -148,6 +150,12 @@ func New(cfgstr string) (rt *Runtime, err error) {
 		return nil, err
 	}
 
+	rt.Debug("new", "cron")
+	if rt.Cron, err = cron.New(); err != nil {
+		rt.Error("status", "error", "error", err)
+		return nil, err
+	}
+
 	rt.Info("status", "ok")
 	return rt, err
 }
@@ -209,6 +217,12 @@ func (rt *Runtime) Startup() (err error) {
 		return err
 	}
 
+	rt.Debug("startup", "cron")
+	if err = rt.Cron.Startup(); err != nil {
+		rt.Error("status", "error", "error", err)
+		return err
+	}
+
 	rt.Info("status", "ok")
 
 	return nil
@@ -219,6 +233,12 @@ func (rt *Runtime) Shutdown() (err error) {
 
 	rt.Debug("shutdown", "activity")
 	if err = rt.Activity.Shutdown(); err != nil {
+		rt.Error("status", "error", "error", err)
+		return err
+	}
+
+	rt.Debug("shutdown", "cron")
+	if err = rt.Cron.Shutdown(); err != nil {
 		rt.Error("status", "error", "error", err)
 		return err
 	}
