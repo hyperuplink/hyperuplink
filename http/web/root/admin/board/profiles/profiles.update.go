@@ -7,6 +7,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
@@ -67,6 +68,8 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	before := settingProfiles.JSONValue
+
 	settingProfiles.JSONValue.EnablePicture = frm.EnablePicture
 	settingProfiles.JSONValue.PictureUploadFormats = frm.PictureUploadFormats
 	settingProfiles.JSONValue.PictureFormat = frm.PictureFormat
@@ -80,6 +83,11 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
+	}
+
+	if actorID, ok := req.Session.GetUserUUID(); ok {
+		logicactivity.RecordAdminSettingsUpdate(r.Runtime, actorID,
+			"profiles", before, settingProfiles.JSONValue)
 	}
 
 	return req.RedirectToRoute(myRoute)

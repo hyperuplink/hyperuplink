@@ -1,6 +1,8 @@
 package activity
 
 import (
+	"encoding/json"
+
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
@@ -47,6 +49,12 @@ func (k Kind) Coalesces() bool {
 	}
 }
 
+type Context struct {
+	Path    string   `json:"path,omitempty"`
+	Setting string   `json:"setting,omitempty"`
+	Changed []string `json:"changed,omitempty"`
+}
+
 type Key struct {
 	Kind      Kind
 	ActorID   uuid.UUID
@@ -88,4 +96,39 @@ func NewTopicView(actorID uuid.UUID, topicID uuid.UUID) Record {
 		SubjectID: uuid.NullUUID{UUID: topicID, Valid: true},
 		Count:     1,
 	}
+}
+
+func NewAdminVisit(actorID uuid.UUID, path string) (rec Record, err error) {
+	var ctx []byte
+	if ctx, err = json.Marshal(Context{Path: path}); err != nil {
+		return rec, err
+	}
+
+	return Record{
+		Key:     Key{Kind: AdminVisit, ActorID: actorID},
+		Subject: Page,
+		Context: ctx,
+		Count:   1,
+	}, nil
+}
+
+func NewAdminSettingsUpdate(
+	actorID uuid.UUID,
+	settingID string,
+	changed []string,
+) (rec Record, err error) {
+	var ctx []byte
+	if ctx, err = json.Marshal(Context{
+		Setting: settingID,
+		Changed: changed,
+	}); err != nil {
+		return rec, err
+	}
+
+	return Record{
+		Key:     Key{Kind: AdminSettingsUpdate, ActorID: actorID},
+		Subject: Setting,
+		Context: ctx,
+		Count:   1,
+	}, nil
 }

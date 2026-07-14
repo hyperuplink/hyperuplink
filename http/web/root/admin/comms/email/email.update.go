@@ -7,6 +7,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
@@ -64,6 +65,8 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	before := settingCommsEmail.JSONValue
+
 	settingCommsEmail.JSONValue.TargetID = frm.TargetID
 
 	err = settingRepo.Update[setting.CommsEmail](
@@ -72,6 +75,11 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
+	}
+
+	if actorID, ok := req.Session.GetUserUUID(); ok {
+		logicactivity.RecordAdminSettingsUpdate(r.Runtime, actorID,
+			"comms_email", before, settingCommsEmail.JSONValue)
 	}
 
 	return req.RedirectToRoute(myRoute)

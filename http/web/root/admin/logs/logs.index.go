@@ -1,10 +1,16 @@
 package logs
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/request/site"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/models/vactivity"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func (r *Route) Index(c fiber.Ctx) (err error) {
@@ -18,6 +24,33 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	); ret {
 		return rerr
 	}
+
+	var activePage int
+	var perPage int = req.System.GetTopicsPerPage()
+
+	activePage, err = strconv.Atoi(c.Query("page", "1"))
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	var logs *[]vactivity.VActivity
+	var total int64
+	logs, total, err = r.Runtime.Repositories.Activity.VAllAdmin(
+		common.QueryOptions{
+			OrderBy: "a.created_at",
+			Order:   common.Descending,
+			Limit:   perPage,
+			Page:    activePage,
+		},
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	pages := helpers.GetNumberOfPages(total, perPage)
+	req.Site.SetPager(site.NewPager(pages, perPage, activePage))
+
+	req.SetData("logs", logs)
 
 	return req.Respond()
 }

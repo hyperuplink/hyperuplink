@@ -3,13 +3,33 @@
     <div class="title-bar-text">{{$.Site.Title}}</div>
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
-    <form method="post"
-          action="{{$.Site.GetFormAction "update"}}"
-          enctype="multipart/form-data"
-          class="">
-      <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-      <!-- TODO -->
-    </form>
+    {{ $logs := .Data.Get "logs" }}
+    {{ if $logs }}
+    <div class="list">
+      <table class="detailed">
+        <thead>
+          <tr>
+            <th scope="col">{{$._.T "logs_col_admin"}}</th>
+            <th scope="col">{{$._.T "logs_col_action"}}</th>
+            <th scope="col">{{$._.T "logs_col_details"}}</th>
+            <th scope="col" style="text-align: right;">{{$._.T "logs_col_date"}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range $log := $logs }}
+          <tr>
+            <td>{{$log.ActorUsername}}</td>
+            <td>{{$._.T $log.ActionKey}}</td>
+            <td>{{$log.Details}}</td>
+            <td style="text-align: right;">{{$.Site.DateTime $log.CreatedAt}}</td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </div>
+    {{ template "views/layouts/partials/pagination" dict "Site" .Site }}
+    {{ else }}
+    <div class="margin">{{$._.T "no_rows"}}</div>
+    {{ end }}
   </div>
 </div>
-

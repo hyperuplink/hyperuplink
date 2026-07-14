@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
@@ -62,6 +63,8 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	beforeSystem := settingSystem.JSONValue
+
 	settingSystem.JSONValue.Name = frm.Name
 	settingSystem.JSONValue.BaseURL = frm.BaseURL
 	settingSystem.JSONValue.TopicsPerPage = frm.TopicsPerPage
@@ -84,6 +87,8 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	beforeGeneral := settingGeneral.JSONValue
+
 	settingGeneral.JSONValue.EnableAbout = frm.EnableAbout
 	settingGeneral.JSONValue.About = frm.About
 	settingGeneral.JSONValue.EnableContact = frm.EnableContact
@@ -101,6 +106,13 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
+	}
+
+	if actorID, ok := req.Session.GetUserUUID(); ok {
+		logicactivity.RecordAdminSettingsUpdate(r.Runtime, actorID,
+			"system", beforeSystem, settingSystem.JSONValue)
+		logicactivity.RecordAdminSettingsUpdate(r.Runtime, actorID,
+			"general", beforeGeneral, settingGeneral.JSONValue)
 	}
 
 	return req.RedirectToRoute(myRoute)

@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
@@ -46,6 +47,8 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	before := settingTopics.JSONValue
+
 	settingTopics.JSONValue.AllowKindQuestion = frm.AllowKindQuestion
 	settingTopics.JSONValue.AllowKindPoll = frm.AllowKindPoll
 	settingTopics.JSONValue.AllowKindRSVP = frm.AllowKindRSVP
@@ -56,6 +59,11 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
+	}
+
+	if actorID, ok := req.Session.GetUserUUID(); ok {
+		logicactivity.RecordAdminSettingsUpdate(r.Runtime, actorID,
+			"topics", before, settingTopics.JSONValue)
 	}
 
 	return req.RedirectToRoute(myRoute)

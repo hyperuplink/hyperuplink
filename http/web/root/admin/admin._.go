@@ -30,6 +30,8 @@ func New(
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
+		base.Use(r.RecordVisit)
+
 		base.Get("", r.Index).Name("index")
 
 		adminAuthRoute, err := auth.New(r.Runtime, base)
