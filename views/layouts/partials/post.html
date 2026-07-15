@@ -7,6 +7,7 @@
 {{ $canModerate := get $dict "canModerate"}}
 {{ $target := get $dict "target"}}
 {{ $topicURL := get $dict "topicURL"}}
+{{ $poll := get $dict "poll"}}
 {{ if $post }}
 <div id="post-{{$post.ShortID}}" class="raised padding margin post flex-row gap">
   <fieldset class="profile padding">
@@ -23,6 +24,51 @@
     <div class="joined">{{ $_.T "joined"}}: {{$site.Date $post.AuthorJoinedAt}}</div>
   </fieldset>
   <div class="content flex-column">
+    {{ if $poll }}
+    <fieldset class="poll">
+      <legend>{{ $_.T "poll" }}</legend>
+      {{ if $poll.CanVote }}
+      <form method="post"
+            action="{{$site.GetFormAction "poll"}}"
+            class="flex-column gap padding">
+        <input type="hidden" name="_csrf" value="{{$site.GetCSRFToken}}">
+        {{ range $option := $poll.Options }}
+        <div class="field-row">
+          <input id="poll-{{$post.ShortID}}-{{$option.Index}}"
+                 type="radio"
+                 name="selection"
+                 value="{{$option.Index}}">
+          <label for="poll-{{$post.ShortID}}-{{$option.Index}}">{{$option.Text}}</label>
+        </div>
+        {{ end }}
+        <div class="poll-actions flex-row justify-end gap">
+          <button type="submit" class="button primary highlight">{{$_.T "poll_vote"}}</button>
+        </div>
+      </form>
+      {{ else }}
+      <div class="poll-results flex-column gap padding">
+        {{ range $option := $poll.Options }}
+        <div class="poll-result{{ if $option.Selected }} selected{{ end }}">
+          <div class="poll-result-row flex-row space-between gap">
+            <span class="poll-option">{{$option.Text}}</span>
+            <span class="poll-votes">{{$option.Votes}} ({{$option.Percent}}%)</span>
+          </div>
+          <div class="poll-bar lowered">
+            <div class="poll-bar-fill" style="width:{{$option.Percent}}%"></div>
+          </div>
+        </div>
+        {{ end }}
+        <div class="poll-footer flex-row space-between gap">
+          <span class="poll-total">{{$_.T "poll_total"}}: {{$poll.Total}}</span>
+          {{ if $poll.Ended }}
+          <span class="poll-ended">{{$_.T "poll_ended"}}</span>
+          {{ end }}
+        </div>
+      </div>
+      {{ end }}
+    </fieldset>
+    {{ end }}
+
     <div class="text markdown">{{ safeHTML $post.HTML }}</div>
     {{ $attachments := $site.Attachments $post.AttachmentIDs }}
     {{ if $attachments }}

@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	logicnewpost "xn--gckvb8fzb.com/hyperuplink/logic/root/newpost"
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
 	"xn--gckvb8fzb.com/hyperuplink/models/forum"
 	"xn--gckvb8fzb.com/hyperuplink/models/reply"
@@ -78,6 +79,15 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	req.SetData("categories_forums", catsfums)
+
+	var allowPoll bool
+	allowPoll, err = logicnewpost.PollAllowed(r.Runtime)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	req.SetData("allow_poll", allowPoll)
+	req.SetData("poll_options_max", logicnewpost.PollOptionsMax)
 
 	var writableTopic *vtopic.VTopic
 	if forum_slug != "" {

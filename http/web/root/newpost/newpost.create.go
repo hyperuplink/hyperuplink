@@ -9,6 +9,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	logicnewpost "xn--gckvb8fzb.com/hyperuplink/logic/root/newpost"
 	"xn--gckvb8fzb.com/hyperuplink/models/topic"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
@@ -16,9 +17,12 @@ import (
 )
 
 type NewCreateForm struct {
-	Name    string `form:"name" validate:"required,min=1,max=78"`
-	Text    string `form:"text" validate:"required,min=1"`
-	ForumID string `form:"forum_id" validate:"required,uuid"`
+	Name        string   `form:"name" validate:"required,min=1,max=78"`
+	Text        string   `form:"text" validate:"required,min=1"`
+	ForumID     string   `form:"forum_id" validate:"required,uuid"`
+	Kind        string   `form:"kind" validate:"omitempty,oneof=regular poll"`
+	PollOptions []string `form:"poll_options" validate:"omitempty,dive,max=78"`
+	PollEndsAt  string   `form:"poll_ends_at"`
 }
 
 func (r *Route) Create(c fiber.Ctx) (err error) {
@@ -70,7 +74,18 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
-	// top.PollOptions =
+
+	if topic.Kind(frm.Kind) == topic.Poll {
+		err = logicnewpost.ApplyPoll(r.Runtime, top, &logicnewpost.PollInput{
+			Options:  frm.PollOptions,
+			EndsAt:   frm.PollEndsAt,
+			Location: req.Site.GetTimezone(),
+		})
+		if err != nil {
+			req.Flash.SetError(err)
+			return req.RedirectToRoute(myRoute)
+		}
+	}
 
 	top.AttachmentIDs, err = helpers.ProcessAttachments(r.Runtime, c, top.AuthorID)
 	if err != nil {

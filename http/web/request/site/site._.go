@@ -194,6 +194,10 @@ func (s *Site) SetTimezone(tz string) (err error) {
 	return nil
 }
 
+func (s *Site) GetTimezone() *time.Location {
+	return s.timezone
+}
+
 func (s *Site) Date(ts pgtype.Timestamp) (date string) {
 	if ts.Valid == false {
 		return "-"

@@ -491,6 +491,29 @@ a.button {
   align-items: center;
 }
 
+.post > .content > .poll {
+  margin: 4px var(--margin);
+}
+
+.post > .content > .poll .poll-result.selected .poll-option {
+  font-weight: bold;
+}
+
+.post > .content > .poll .poll-bar {
+  height: 12px;
+  margin-top: 2px;
+}
+
+.post > .content > .poll .poll-bar > .poll-bar-fill {
+  height: 100%;
+  background: var(--border-brightness-10-1);
+}
+
+.post > .content > .poll .poll-footer {
+  font-size: 0.9rem;
+  color: var(--border-brightness-08);
+}
+
 .post > .content > .signature {
   margin: 4px var(--margin);
   color: var(--border-brightness-08);
@@ -537,6 +560,55 @@ a.button {
   margin-left: 0px;
   resize: vertical;
   padding: 8px;
+}
+
+.poll-editor {
+  margin-top: 8px;
+}
+
+.poll-editor > .kind-legend {
+  margin-right: 4px;
+}
+
+.poll-editor > .kind-radio {
+  margin-left: 8px;
+}
+
+.poll-editor > .poll-fields {
+  display: none;
+  margin-top: 8px;
+}
+
+.poll-editor > .kind-poll:checked ~ .poll-fields {
+  display: block;
+}
+
+.poll-editor .poll-fields .field-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.poll-editor .poll-fields .field-row > label {
+  min-width: 1.5rem;
+}
+
+.poll-editor .poll-fields .field-row > input {
+  flex: 1;
+  min-width: 0;
+}
+
+.poll-editor .poll-fields .poll-ends-at-row {
+  margin-top: 8px;
+}
+
+.poll-editor .poll-fields .poll-ends-at-row > label {
+  min-width: auto;
+}
+
+.poll-editor .poll-fields .poll-ends-at-row > input {
+  flex: 0 0 auto;
 }
 
 /* .reply > form > .actions > .button { */

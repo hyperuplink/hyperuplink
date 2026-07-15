@@ -24,6 +24,7 @@ func New(
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
 		base.Get("", r.Show).Name("show")
 		base.Post("", r.Create).Name("create")
+		base.Post("/poll", r.PollVote).Name("poll")
 	}, r.Path+".")
 
 	return r, nil

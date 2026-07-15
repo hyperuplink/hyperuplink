@@ -1,0 +1,34 @@
+{{ $dict := . }}
+{{ $_ := get $dict "_"}}
+{{ $pollOptionsMax := get $dict "pollOptionsMax"}}
+<div class="poll-editor-wrap">
+  <div class="poll-editor">
+    <span class="kind-legend">{{ $_.T "topic_type"}}:</span>
+    <input class="kind-radio" type="radio" name="kind" id="kind-regular" value="regular" checked>
+    <label class="kind-label" for="kind-regular">{{ $_.T "kind_regular"}}</label>
+    <input class="kind-radio kind-poll" type="radio" name="kind" id="kind-poll" value="poll">
+    <label class="kind-label" for="kind-poll">{{ $_.T "kind_poll"}}</label>
+    <fieldset class="poll-fields">
+      <legend>{{ $_.T "poll_options"}}</legend>
+      {{ range $index := until $pollOptionsMax }}
+      <div class="field-row">
+        <label for="poll_option_{{$index}}">{{ add $index 1 }}.</label>
+        <input class="input"
+               type="text"
+               id="poll_option_{{$index}}"
+               name="poll_options"
+               maxlength="78"
+               autocomplete="off">
+      </div>
+      {{ end }}
+      <div class="field-row poll-ends-at-row">
+        <label for="poll_ends_at">{{ $_.T "poll_ends_at"}}:</label>
+        <input class="input"
+               type="datetime-local"
+               id="poll_ends_at"
+               name="poll_ends_at">
+      </div>
+      <small>{{ $_.T "poll_options_hint"}}</small>
+    </fieldset>
+  </div>
+</div>

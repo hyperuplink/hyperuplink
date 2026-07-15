@@ -3,6 +3,8 @@
 {{ $form := get $dict "Form"}}
 {{ $_ := get $dict "_"}}
 {{ $hasSubject := get $dict "hasSubject"}}
+{{ $hasPoll := get $dict "hasPoll"}}
+{{ $pollOptionsMax := get $dict "pollOptionsMax"}}
 {{ $text := get $dict "text"}}
 <!-- MENUBAR -->
 <ul role="menubar">
@@ -56,4 +58,7 @@
     <label for="attachments">{{ $_.T "attachments"}}:</label>
     <input type="file" id="attachments" name="attachments" multiple>
   </div>
+  {{ if $hasPoll }}
+  {{ template "views/layouts/partials/editor.poll" dict "_" $_ "pollOptionsMax" $pollOptionsMax }}
+  {{ end }}
 </div>

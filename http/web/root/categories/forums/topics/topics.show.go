@@ -4,11 +4,13 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/site"
 	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
+	logictopics "xn--gckvb8fzb.com/hyperuplink/logic/root/categories/forums/topics"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 	"xn--gckvb8fzb.com/hyperuplink/models/vreply"
 	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
@@ -67,6 +69,20 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 	req.UpdateGrandParentTitle(top.CategoryName)
 
 	req.SetData("topic", top)
+
+	viewerID := uuid.NullUUID{}
+	viewerID.UUID, viewerID.Valid = req.Session.GetUserUUID()
+
+	poll, err := logictopics.PollView(r.Runtime, &logictopics.PollViewInput{
+		Topic:    &top.Topic,
+		ViewerID: viewerID,
+		CanWrite: req.Perms().CanWriteSlug(top.CategorySlug),
+	})
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	req.SetData("poll", poll)
 
 	var reps *[]vreply.VReply
 	var activePage int

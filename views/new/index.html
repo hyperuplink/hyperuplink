@@ -4,6 +4,8 @@
 {{ $forum := .Data.Get "forum"}}
 {{ $topic := .Data.Get "topic"}}
 {{ $reply := .Data.Get "reply"}}
+{{ $allow_poll := .Data.Get "allow_poll"}}
+{{ $poll_options_max := .Data.Get "poll_options_max"}}
 <div class="margin window active">
   <div class="title-bar">
     <div class="title-bar-text">
@@ -23,7 +25,7 @@
         {{ if $forum }}
         <input type="hidden" name="forum_id" value="{{$forum.ID}}">
         {{ end }}
-        {{ template "views/layouts/partials/editor" dict "Site" .Site "Form" .Form "_" ._ "hasSubject" true }}
+        {{ template "views/layouts/partials/editor" dict "Site" .Site "Form" .Form "_" ._ "hasSubject" true "hasPoll" (and $allow_poll (not $topic)) "pollOptionsMax" $poll_options_max }}
         <div class="attributes margin">
           <div class="flex-row gap">
             <div class="flex-column">

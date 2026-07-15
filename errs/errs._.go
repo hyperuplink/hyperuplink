@@ -165,4 +165,31 @@ var (
 	ErrCronFunctionInvalid error = errors.New(
 		"err_cron_function_invalid",
 	)
+	ErrPollKindInvalid error = errors.New(
+		"err_poll_kind_invalid",
+	)
+	ErrPollEnded error = errors.New(
+		"err_poll_ended",
+	)
+	ErrPollSelectionInvalid error = errors.New(
+		"err_poll_selection_invalid",
+	)
+	ErrPollNotAllowed error = errors.New(
+		"err_poll_not_allowed",
+	)
+	ErrPollOptionsTooFew error = errors.New(
+		"err_poll_options_too_few",
+	)
+	ErrPollOptionsTooMany error = errors.New(
+		"err_poll_options_too_many",
+	)
+	ErrPollOptionTooLong error = errors.New(
+		"err_poll_option_too_long",
+	)
+	ErrPollEndsAtInvalid error = errors.New(
+		"err_poll_ends_at_invalid",
+	)
+	ErrPollEndsAtPast error = errors.New(
+		"err_poll_ends_at_past",
+	)
 )

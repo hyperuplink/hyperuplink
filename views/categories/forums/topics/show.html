@@ -1,4 +1,5 @@
 {{ $topic := .Data.Get "topic"}}
+{{ $poll := .Data.Get "poll"}}
 {{ $replies := .Data.Get "replies"}}
 {{ $reply_to := .Data.Get "reply_to"}}
 {{ $reply_to_type := .Data.Get "reply_to_type"}}
@@ -12,7 +13,7 @@
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     <!-- POST -->
     {{ if eq $.Site.GetPager.ActivePage 1 }}
-    {{ template "views/layouts/partials/post" dict "Site" $.Site "Session" $.Session "_" $._ "post" $topic "canWrite" $canWrite "canModerate" $canModerate "target" "topic" "topicURL" $topicURL }}
+    {{ template "views/layouts/partials/post" dict "Site" $.Site "Session" $.Session "_" $._ "post" $topic "canWrite" $canWrite "canModerate" $canModerate "target" "topic" "topicURL" $topicURL "poll" $poll }}
     {{ end }}
     {{ range $idx_reply, $reply := $replies }}
     <!-- REPLY -->
