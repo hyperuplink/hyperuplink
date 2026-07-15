@@ -1497,7 +1497,7 @@ progress:not([value])::-webkit-progress-value {
       var(--accent-blue-dark) 97%,
       var(--accent-blue-dark) 100%
     );
-  color: var(--surface-00);
+  color: var(--surface-15);
   border-top-color: var(--title-bar-active-border-top);
   border-left-color: var(--title-bar-active-border-left);
 }

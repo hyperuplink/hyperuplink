@@ -989,7 +989,7 @@ progress:not([value])::-webkit-progress-value {
 .dialog:focus-within > .title-bar,
 .title-bar.active {
   background: var(--surface-04);
-  color: var(--surface-00);
+  color: var(--surface-15);
 }
 
 .window-body > [role="menubar"],

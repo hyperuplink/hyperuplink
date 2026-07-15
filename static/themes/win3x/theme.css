@@ -721,7 +721,7 @@ progress:not([value])::-webkit-progress-value {
 .menu > .title-bar,
 .title-bar.active {
   background: var(--surface-04);
-  color: var(--surface-00);
+  color: var(--surface-15);
 }
 
 .window-body > * + *,
