@@ -1,0 +1,70 @@
+:root {
+  --desktop-bg: #336698;
+
+  --button-dark: var(--surface-06);
+  --button-light: var(--surface-15);
+
+  --lightest: var(--surface-15);
+  --lighter: var(--surface-14);
+  --light: var(--surface-13);
+  --dark: var(--surface-05);
+  --darker: var(--surface-04);
+  --darkest: var(--surface-00);
+  --button-bg: var(--surface-12);
+  --button-fg: var(--surface-00);
+  --input-bg: var(--surface-15);
+  --input-fg: var(--surface-00);
+  --title-bar-bg: var(--dark);
+
+  --surface-15: #ffffff;
+  --surface-14: #f6f6f6;
+  --surface-13: #e9e9e9;
+  --surface-12: #d8d8d8;
+  --surface-11: #c2c2c2;
+  --surface-10: #b8b8b8;
+  --surface-09: #989898;
+  --surface-08: #8c8c8c;
+  --surface-07: #6c6c6c;
+  --surface-06: #5c5c5c;
+  --surface-05: #4d4d4d;
+  --surface-04: #3f3f3f;
+  --surface-03: #363636;
+  --surface-02: #232323;
+  --surface-01: #0b0b0b;
+  --surface-00: #000000;
+
+  --border-brightness-15: #ffffff;
+  --border-brightness-14: #f6f6f6;
+  --border-brightness-13: #e9e9e9;
+  --border-brightness-12: #d8d8d8;
+  --border-brightness-11: #c2c2c2;
+  --border-brightness-10-1: #bdbdbd;
+  --border-brightness-10: #b8b8b8;
+  --border-brightness-09: #989898;
+  --border-brightness-08: #8c8c8c;
+  --border-brightness-07: #6c6c6c;
+  --border-brightness-06: #5c5c5c;
+  --border-brightness-05: #4d4d4d;
+  --border-brightness-04: #3f3f3f;
+  --border-brightness-03: #363636;
+  --border-brightness-02: #232323;
+  --border-brightness-01: #0b0b0b;
+  --border-brightness-00: #000000;
+
+  --primary-6: #fff3d1;
+  --primary-5: #ffe08a;
+  --primary-4: #ffd04d;
+  --primary-3: #ffc000;
+  --primary-2: #a67c00;
+  --primary-1: #3d2e00;
+  --primary-0: #000000;
+
+  --affirmative: #4ed464;
+  --highlight: #ffc000;
+  --danger: #cc0000;
+  --warn: #ff9900;
+  --info: #ffffe1;
+  --debug: #cdcdcd;
+
+  --text-quote: #6c6c6c;
+}
