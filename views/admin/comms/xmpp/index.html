@@ -23,16 +23,16 @@
             <div class="dropdown-button"></div>
           </div>
         </div>
-        {{ if $selectedTarget }}
+        {{ if and $selectedTarget (not $selectedTarget.IsDebug) }}
         <fieldset class="padding">
           <legend>{{$._.T "configuration"}}:</legend>
           <div class="grid gap config-grid align-center">
             <label for="xmpp_server">{{$._.T "xmpp_server"}}:</label>
             <input type="text" id="xmpp_server" class="input"
                    value="{{$selectedTarget.XMPP.Server}}" readonly>
-            <label for="xmpp_tls">{{$._.T "xmpp_tls"}}:</label>
-            <input type="text" id="xmpp_tls" class="input"
-                   value="{{$selectedTarget.XMPP.TLS}}" readonly>
+            <label for="xmpp_insecure_skip_verify">{{$._.T "xmpp_insecure_skip_verify"}}:</label>
+            <input type="text" id="xmpp_insecure_skip_verify" class="input"
+                   value="{{$selectedTarget.XMPP.InsecureSkipVerify}}" readonly>
             <label for="xmpp_username">{{$._.T "xmpp_username"}}:</label>
             <input type="text" id="xmpp_username" class="input"
                    value="{{$selectedTarget.XMPP.Username}}" readonly>

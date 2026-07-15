@@ -9,12 +9,14 @@ type Recipient struct {
 	Username string
 	Address  string
 	Lang     string
+	IsJID    bool
 }
 
 func (entity *Recipient) SetRecipient(rcpt *user.User) {
 	entity.Username = rcpt.Username
 	entity.Address = rcpt.Email
 	entity.Lang = rcpt.Language
+	entity.IsJID = rcpt.EmailIsJID
 }
 
 type System struct {

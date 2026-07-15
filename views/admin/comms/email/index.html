@@ -23,7 +23,7 @@
             <div class="dropdown-button"></div>
           </div>
         </div>
-        {{ if $selectedTarget }}
+        {{ if and $selectedTarget (not $selectedTarget.IsDebug) }}
         <fieldset class="padding">
           <legend>{{$._.T "configuration"}}:</legend>
           <div class="grid gap config-grid align-center">

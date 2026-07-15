@@ -6,31 +6,48 @@ import (
 )
 
 func (disp *Dispatch) SignupConfirmations(
-	targetID string,
-	payload []*signupconfirmation.SignupConfirmation,
+	payloads []*signupconfirmation.SignupConfirmation,
 ) (err error) {
-	j := asyncjob.New(
-		targetID,
-		asyncjob.Confirmation,
-		asyncjob.Signup,
-	)
-	if err = j.SetPayload(payload); err != nil {
+	sys, err := disp.system()
+	if err != nil {
 		return err
 	}
 
-	if err = disp.Job(j); err != nil {
+	r, err := disp.routing()
+	if err != nil {
 		return err
+	}
+
+	byTarget := make(map[string][]*signupconfirmation.SignupConfirmation)
+	for _, payload := range payloads {
+		payload.SetSystem(sys)
+
+		targetID := r.targetIDFor(payload.Recipient)
+		byTarget[targetID] = append(byTarget[targetID], payload)
+	}
+
+	for targetID, targetPayloads := range byTarget {
+		j := asyncjob.New(
+			targetID,
+			asyncjob.Confirmation,
+			asyncjob.Signup,
+		)
+		if err = j.SetPayload(targetPayloads); err != nil {
+			return err
+		}
+
+		if err = disp.Job(j); err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
 func (disp *Dispatch) SignupConfirmation(
-	targetID string,
 	payload *signupconfirmation.SignupConfirmation,
 ) (err error) {
 	return disp.SignupConfirmations(
-		targetID,
 		[]*signupconfirmation.SignupConfirmation{payload},
 	)
 }

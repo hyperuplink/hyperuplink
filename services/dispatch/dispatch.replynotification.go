@@ -6,31 +6,48 @@ import (
 )
 
 func (disp *Dispatch) ReplyNotifications(
-	targetID string,
-	payload []replynotification.ReplyNotification,
+	payloads []*replynotification.ReplyNotification,
 ) (err error) {
-	j := asyncjob.New(
-		targetID,
-		asyncjob.Notification,
-		asyncjob.Reply,
-	)
-	if err = j.SetPayload(payload); err != nil {
+	sys, err := disp.system()
+	if err != nil {
 		return err
 	}
 
-	if err = disp.Job(j); err != nil {
+	r, err := disp.routing()
+	if err != nil {
 		return err
+	}
+
+	byTarget := make(map[string][]*replynotification.ReplyNotification)
+	for _, payload := range payloads {
+		payload.SetSystem(sys)
+
+		targetID := r.targetIDFor(payload.Recipient)
+		byTarget[targetID] = append(byTarget[targetID], payload)
+	}
+
+	for targetID, targetPayloads := range byTarget {
+		j := asyncjob.New(
+			targetID,
+			asyncjob.Notification,
+			asyncjob.Reply,
+		)
+		if err = j.SetPayload(targetPayloads); err != nil {
+			return err
+		}
+
+		if err = disp.Job(j); err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
 func (disp *Dispatch) ReplyNotification(
-	targetID string,
-	payload replynotification.ReplyNotification,
+	payload *replynotification.ReplyNotification,
 ) (err error) {
 	return disp.ReplyNotifications(
-		targetID,
-		[]replynotification.ReplyNotification{payload},
+		[]*replynotification.ReplyNotification{payload},
 	)
 }

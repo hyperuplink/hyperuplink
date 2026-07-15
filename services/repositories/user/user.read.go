@@ -3,6 +3,8 @@ package user
 import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
+	"xn--gckvb8fzb.com/hyperuplink/models/permission"
+	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
@@ -110,6 +112,63 @@ func (repo *Repository) GetByEmail(
 	defer rows.Close()
 
 	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[user.User])
+
+	return &mod, repo.db.ConvertError(err)
+}
+
+func (repo *Repository) AllToNotifyForReply(
+	topicID uuid.UUID,
+	replyID uuid.UUID,
+	authorID uuid.UUID,
+	categoryID uuid.UUID,
+	qo common.QueryOptions,
+) (model *[]user.User, err error) {
+	var rows pgx.Rows
+	var mod []user.User
+
+	rows, err = repo.db.Query(qo.Query(
+		`SELECT u.* FROM users u
+		JOIN (
+			SELECT author_id FROM topics WHERE id = $1
+			UNION
+			SELECT author_id FROM replies
+			WHERE topic_id = $1 AND id <> $2 AND deleted_at IS NULL
+		) p ON p.author_id = u.id
+		LEFT JOIN settings s ON s.id = $7 || u.id::text
+		WHERE u.id <> $3
+		AND COALESCE((s.json_value ->> $8)::boolean, $9)
+		AND (
+			u.role = $4
+			OR GREATEST(
+				COALESCE((SELECT bits::int FROM permissions
+					WHERE group_id IS NULL AND category_id IS NULL
+					AND deleted_at IS NULL), 0),
+				COALESCE((SELECT MAX(bits::int) FROM permissions
+					WHERE group_id = ANY(u.member_of) AND category_id = $5
+					AND deleted_at IS NULL), 0)
+			) >= $6
+		)`,
+		common.QueryCapabilities{
+			Table:      "u",
+			HasBanned:  true,
+			HasDeleted: true,
+		}),
+		topicID,
+		replyID,
+		authorID,
+		string(user.AdminRole),
+		categoryID,
+		int(permission.ReadOnly),
+		setting.UserProfilePrefix,
+		setting.UserProfileNotifyOnReplyKey,
+		setting.NewUserProfile().NotifyOnReply,
+	)
+	if err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+	defer rows.Close()
+
+	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[user.User])
 
 	return &mod, repo.db.ConvertError(err)
 }

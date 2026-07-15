@@ -20,6 +20,7 @@ import (
 type ProfileUpdateForm struct {
 	ProfilePicture *multipart.FileHeader `form:"profile_picture" validate:""`
 	SignatureText  string                `form:"signature_text" validate:"max=256"`
+	NotifyOnReply  bool                  `form:"notify_on_reply"`
 }
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
@@ -136,6 +137,25 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 	}
 
 	err = r.Runtime.Repositories.User.Update(usr)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	var settingUserProfile *setting.Setting[setting.UserProfile]
+	settingUserProfile, err = settingRepo.GetOrCreateUserProfile(
+		r.Runtime.Repositories.Setting,
+		usr.ID,
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	settingUserProfile.JSONValue.NotifyOnReply = frm.NotifyOnReply
+
+	err = settingRepo.Update[setting.UserProfile](
+		r.Runtime.Repositories.Setting,
+		settingUserProfile,
+	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

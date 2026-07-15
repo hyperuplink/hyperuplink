@@ -7,6 +7,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob"
 	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/services/config"
+	"xn--gckvb8fzb.com/hyperuplink/worker/targets/debug"
 	"xn--gckvb8fzb.com/hyperuplink/worker/targets/email"
 	"xn--gckvb8fzb.com/hyperuplink/worker/targets/xmpp"
 )
@@ -35,10 +36,12 @@ func NewTarget(
 	def config.Target,
 ) (t ITarget, err error) {
 	switch def.Type {
-	case "email":
+	case config.TargetTypeEmail:
 		t, err = email.New(rt, def)
-	case "xmpp":
+	case config.TargetTypeXMPP:
 		t, err = xmpp.New(rt, def)
+	case config.TargetTypeDebug:
+		t, err = debug.New(rt, def)
 	default:
 		return nil, fmt.Errorf("%w: %s", errs.ErrNoSuchTargetType, def.Type)
 	}

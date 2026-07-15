@@ -40,7 +40,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	var emailTargets config.Targets
 	var selectedTarget *config.Target
 	for i := range targets {
-		if targets[i].Type != "email" {
+		if !targets[i].Serves(config.TargetTypeEmail) {
 			continue
 		}
 		emailTargets = append(emailTargets, targets[i])

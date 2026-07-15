@@ -1,8 +1,8 @@
 <p>Hello {{.Recipient.Username}},</p>
 
-<p>{{.Reply.ByUsername}} replied to "{{.Reply.Topic.Title}}" in
-{{.Reply.Category.Title}}/{{.Reply.Forum.Title}} with:</p>
+<p>{{.Reply.ByUsername}} replied to "{{.Reply.Topic.Name}}" in
+{{.Reply.Category.Name}}/{{.Reply.Forum.Name}} with:</p>
 
-<p>{{.Reply.HTML}}</p>
+{{.Reply.HTML}}
 
-<p>You can view the latest reply <a href="{{.Reply.URL}}" title="here">here</a> or you reply to this e-mail to respond.<p>
+<p>You can view the latest reply <a href="{{.Reply.URL}}" title="here">here</a> or you reply to this e-mail to respond.</p>

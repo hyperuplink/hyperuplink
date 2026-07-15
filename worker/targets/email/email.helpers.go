@@ -83,33 +83,21 @@ func (t *Email) prepareMessage(
 func (t *Email) SendMessages(
 	messages []*mail.Msg,
 ) (err error) {
-	if t.rt.IsDevelopmentMode() {
-		t.rt.Debug(
-			"pretend", "send",
-			"messages", messages,
-		)
-		return nil
-	} else {
-		t.rt.Debug(
-			"execute", "send",
-			"messages", messages,
-		)
+	t.rt.Debug(
+		"execute", "send",
+		"messages", messages,
+	)
 
-		client, err := mail.NewClient(
-			t.def.Email.SMTPServer,
-			mail.WithSMTPAuth(mail.SMTPAuthType(t.def.Email.SMTPAuthType)),
-			mail.WithTLSPolicy(mail.TLSPolicy(t.def.Email.SMTPTLSPolicy)),
-			mail.WithUsername(t.def.Email.SMTPUsername),
-			mail.WithPassword(t.def.Email.SMTPPassword),
-		)
-		if err != nil {
-			return err
-		}
-
-		if err = client.DialAndSend(messages...); err != nil {
-			return err
-		}
-
-		return nil
+	client, err := mail.NewClient(
+		t.def.Email.SMTPServer,
+		mail.WithSMTPAuth(mail.SMTPAuthType(t.def.Email.SMTPAuthType)),
+		mail.WithTLSPolicy(mail.TLSPolicy(t.def.Email.SMTPTLSPolicy)),
+		mail.WithUsername(t.def.Email.SMTPUsername),
+		mail.WithPassword(t.def.Email.SMTPPassword),
+	)
+	if err != nil {
+		return err
 	}
+
+	return client.DialAndSend(messages...)
 }

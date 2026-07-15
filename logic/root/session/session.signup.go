@@ -146,38 +146,17 @@ func SendSignupConfirmation(
 	rt *runtime.Runtime,
 	usr *user.User,
 	subject string,
-	signupURL string,
+	signupPath string,
 ) error {
-	settingSystem, err := repoSetting.GetByID[setting.System](rt.Repositories.Setting, "system")
-	if err != nil {
-		return err
-	}
-
-	settingCommsEmail, err := repoSetting.GetByID[setting.CommsEmail](rt.Repositories.Setting, "comms_email")
-	if err != nil {
-		return err
-	}
-
-	settingCommsXMPP, err := repoSetting.GetByID[setting.CommsXMPP](rt.Repositories.Setting, "comms_xmpp")
-	if err != nil {
-		return err
-	}
-
 	sc, err := signupconfirmation.New(
-		&settingSystem.JSONValue,
 		usr,
 		subject,
 		usr.EmailConfirmationToken,
-		signupURL,
+		signupPath,
 	)
 	if err != nil {
 		return err
 	}
 
-	targetID := settingCommsEmail.JSONValue.TargetID
-	if usr.EmailIsJID {
-		targetID = settingCommsXMPP.JSONValue.TargetID
-	}
-
-	return rt.Dispatch.SignupConfirmation(targetID, sc)
+	return rt.Dispatch.SignupConfirmation(sc)
 }

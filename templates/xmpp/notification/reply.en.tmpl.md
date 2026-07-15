@@ -1,0 +1,7 @@
+Hello {{.Recipient.Username}},
+
+{{.Reply.ByUsername}} replied to "{{.Reply.Topic.Name}}" in {{.Reply.Category.Name}}/{{.Reply.Forum.Name}} with:
+
+{{.Reply.Text}}
+
+You can view the latest reply at {{.Reply.URL}}

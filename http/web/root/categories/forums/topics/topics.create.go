@@ -108,10 +108,12 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		))
 	}
 
-	_, err = r.Runtime.Repositories.Reply.Create(rep)
+	rep.ID, err = r.Runtime.Repositories.Reply.Create(rep)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
+
+	r.notifyReply(c, req, rep, top, fum)
 
 	var total int64
 	total, err = r.Runtime.Repositories.Reply.VAllCountForTopicUUID(rep.TopicID, common.QueryOptions{})

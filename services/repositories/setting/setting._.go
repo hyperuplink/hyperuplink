@@ -158,7 +158,7 @@ func (repo *Repository) Startup() (err error) {
 		exists := false
 		for _, target := range targets {
 			if target.ID == settingCommsEmail.JSONValue.TargetID &&
-				target.Type == "email" {
+				target.Serves(config.TargetTypeEmail) {
 				exists = true
 				break
 			}
@@ -192,7 +192,7 @@ func (repo *Repository) Startup() (err error) {
 		exists := false
 		for _, target := range targets {
 			if target.ID == settingCommsXMPP.JSONValue.TargetID &&
-				target.Type == "xmpp" {
+				target.Serves(config.TargetTypeXMPP) {
 				exists = true
 				break
 			}

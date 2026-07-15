@@ -5,6 +5,7 @@
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ $user := .Data.Get "user"}}
     {{ $settingProfiles := .Data.Get "setting_profiles"}}
+    {{ $settingUserProfile := .Data.Get "setting_user_profile"}}
     <form method="post"
           action="{{$.Site.GetFormAction "update"}}"
           enctype="multipart/form-data"
@@ -30,6 +31,19 @@
                     rows="6"
                     wrap="soft"
                     placeholder="{{ $._.T "signature_placeholder" }}">{{$user.SignatureText}}</textarea>
+        </fieldset>
+      </div>
+      <div class="flex-row flex-wrap gap margin">
+        <!------ Notifications   ------>
+        <fieldset class="flex-column grow notifications padding">
+          <legend>{{$._.T "notifications"}}</legend>
+          <div class="field flex-column justify-end">
+            <span class="checkbox-row">
+              <input type="checkbox" id="notify_on_reply" name="notify_on_reply" value="1"
+                    {{ if $settingUserProfile.NotifyOnReply }}checked{{ end }}>
+              <label for="notify_on_reply">{{$._.T "notify_on_reply"}}</label>
+            </span>
+          </div>
         </fieldset>
       </div>
       <div class="actions margin flex-row justify-end gap">

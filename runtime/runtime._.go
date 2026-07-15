@@ -144,8 +144,16 @@ func New(cfgstr string) (rt *Runtime, err error) {
 		rt.Error("status", "error", "error", err)
 		return nil, err
 	}
+	rt.Debug("new", "targets")
+	targetsCfg, err := rt.Config.Targets()
+	if err != nil {
+		rt.Error("status", "error", "error", err)
+		return nil, err
+	}
 	rt.Debug("new", "dispatch")
-	if rt.Dispatch, err = dispatch.New(redisCfg); err != nil {
+	if rt.Dispatch, err = dispatch.New(
+		redisCfg, targetsCfg, rt.Repositories.Setting,
+	); err != nil {
 		rt.Error("status", "error", "error", err)
 		return nil, err
 	}

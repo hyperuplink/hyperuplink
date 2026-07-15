@@ -99,7 +99,22 @@ func (wrk *Worker) Run() (err error) {
 }
 
 func (wrk *Worker) Shutdown() error {
-	wrk.as.Shutdown()
+	if wrk.as != nil {
+		wrk.as.Shutdown()
+	}
+
+	if wrk.ts == nil {
+		return nil
+	}
+
+	ok, shutdownErrs := wrk.ts.ShutdownAll()
+	if !ok {
+		for id, err := range shutdownErrs {
+			wrk.rt.Error("failed to shutdown target", "worker",
+				"target", id, "error", err)
+		}
+	}
+
 	return nil
 }
 

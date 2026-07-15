@@ -37,8 +37,18 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
+	var settingUserProfile *setting.Setting[setting.UserProfile]
+	settingUserProfile, err = settingRepo.GetOrCreateUserProfile(
+		r.Runtime.Repositories.Setting,
+		usr.ID,
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
 	req.SetData("user", usr)
 	req.SetData("setting_profiles", &settingProfiles.JSONValue)
+	req.SetData("setting_user_profile", &settingUserProfile.JSONValue)
 
 	return req.Respond()
 }

@@ -40,7 +40,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	var xmppTargets config.Targets
 	var selectedTarget *config.Target
 	for i := range targets {
-		if targets[i].Type != "xmpp" {
+		if !targets[i].Serves(config.TargetTypeXMPP) {
 			continue
 		}
 		xmppTargets = append(xmppTargets, targets[i])

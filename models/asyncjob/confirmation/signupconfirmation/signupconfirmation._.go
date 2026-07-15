@@ -17,33 +17,31 @@ type SignupConfirmation struct {
 
 type Signup struct {
 	Token string
+	Path  string
 	URL   string
 }
 
 func New(
-	sys *setting.System,
 	forUser *user.User,
 	subject string,
 	token string,
-	signupURL string,
+	signupPath string,
 ) (entity *SignupConfirmation, err error) {
 	entity = new(SignupConfirmation)
 	entity.Recipient = new(common.Recipient)
 	entity.Signup = new(Signup)
 	entity.System = new(common.System)
 
-	entity.SetSystem(sys)
 	entity.SetRecipient(forUser)
 	entity.SetSubject(subject)
-	entity.Signup.SetSignup(token,
-		fmt.Sprintf("%s/%s", entity.System.BaseURL, signupURL),
-	)
+	entity.Signup.SetSignup(token, signupPath)
 
 	return entity, nil
 }
 
 func (entity *SignupConfirmation) SetSystem(sys *setting.System) {
 	entity.System.SetSystem(sys)
+	entity.Signup.SetURL(entity.System.BaseURL)
 }
 
 func (entity *SignupConfirmation) SetRecipient(rcpt *user.User) {
@@ -54,7 +52,11 @@ func (entity *SignupConfirmation) SetSubject(subject string) {
 	entity.Subject = subject
 }
 
-func (entity *Signup) SetSignup(token string, url string) {
+func (entity *Signup) SetSignup(token string, path string) {
 	entity.Token = token
-	entity.URL = url
+	entity.Path = path
+}
+
+func (entity *Signup) SetURL(baseURL string) {
+	entity.URL = fmt.Sprintf("%s/%s", baseURL, entity.Path)
 }

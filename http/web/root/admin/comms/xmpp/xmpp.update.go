@@ -10,6 +10,7 @@ import (
 	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/services/config"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -45,7 +46,8 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 
 		valid := false
 		for _, target := range targets {
-			if target.ID == frm.TargetID && target.Type == "xmpp" {
+			if target.ID == frm.TargetID &&
+				target.Serves(config.TargetTypeXMPP) {
 				valid = true
 				break
 			}

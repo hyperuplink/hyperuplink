@@ -3,6 +3,7 @@ package xmpp
 import (
 	"crypto/tls"
 	"strings"
+	"sync"
 
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob"
@@ -19,7 +20,9 @@ type XMPP struct {
 	tmplCache *tmpl.Cache
 
 	jabberOpts goxmpp.Options
-	jabber     *goxmpp.Client
+
+	mu     sync.Mutex
+	jabber *goxmpp.Client
 }
 
 type Args struct{}
@@ -42,21 +45,19 @@ func (t *XMPP) Load() error {
 	t.rt.Debug("config", t.def)
 
 	xmppServer := t.def.XMPP.Server
-	xmppTLS := t.def.XMPP.TLS
 	xmppUsername := t.def.XMPP.Username
 	xmppPassword := t.def.XMPP.Password
 
-	goxmpp.DefaultConfig = &tls.Config{
-		ServerName:         strings.Split(xmppServer, ":")[0],
-		InsecureSkipVerify: false,
-	}
-
 	t.jabberOpts = goxmpp.Options{
-		Host:                xmppServer,
-		User:                xmppUsername,
-		Password:            xmppPassword,
-		NoTLS:               true,
-		StartTLS:            xmppTLS,
+		Host:     xmppServer,
+		User:     xmppUsername,
+		Password: xmppPassword,
+		NoTLS:    true,
+		StartTLS: true,
+		TLSConfig: &tls.Config{
+			ServerName:         strings.Split(xmppServer, ":")[0],
+			InsecureSkipVerify: t.def.XMPP.InsecureSkipVerify,
+		},
 		Debug:               t.rt.IsDevelopmentMode(),
 		Session:             true,
 		Status:              "chat",
@@ -69,12 +70,30 @@ func (t *XMPP) Load() error {
 
 func (t *XMPP) Run() error {
 	t.rt.Info("run target", "xmpp")
-	return t.reconnect()
+
+	t.mu.Lock()
+	defer t.mu.Unlock()
+
+	if err := t.reconnect(); err != nil {
+		t.rt.Error("failed to connect, will retry on first send", "xmpp",
+			"host", t.jabberOpts.Host,
+			"error", err)
+	}
+
+	return nil
 }
 
 func (t *XMPP) Shutdown() error {
 	t.rt.Info("shutdown target", "xmpp")
-	return nil
+
+	t.mu.Lock()
+	defer t.mu.Unlock()
+
+	if t.jabber == nil {
+		return nil
+	}
+
+	return t.disconnect()
 }
 
 func (t *XMPP) Execute(
