@@ -154,6 +154,7 @@ func main() {
 
 	crn.Shutdown()
 	web.Shutdown()
+	wrk.Shutdown()
 
 	rt.Exit(0)
 }
