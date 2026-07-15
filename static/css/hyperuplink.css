@@ -334,6 +334,11 @@ body {
   height: 18px;
 }
 
+.button.primary,
+button.primary {
+  background-color: var(--primary-3);
+}
+
 .button.affirmative,
 button.affirmative {
   background-color: var(--affirmative);
@@ -347,6 +352,16 @@ button.highlight {
 .button.danger,
 button.danger {
   background-color: var(--danger);
+}
+
+.button.warn,
+button.warn {
+  background-color: var(--warn);
+}
+
+.button.info,
+button.info {
+  background-color: var(--info);
 }
 
 .detailed .big > img {
