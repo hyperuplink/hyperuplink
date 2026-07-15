@@ -1,86 +1,9 @@
 package xmpp
 
 import (
-	"fmt"
-	htmltemplate "html/template"
-	texttemplate "text/template"
-
 	goxmpp "github.com/xmppo/go-xmpp"
 	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob"
 )
-
-type TmplCacheItem struct {
-	TextTmpl *texttemplate.Template
-	HtmlTmpl *htmltemplate.Template
-}
-
-type TmplCache map[string]TmplCacheItem
-
-func tmplCacheKey(
-	jobType asyncjob.JobType,
-	jobSubType asyncjob.JobSubType,
-	lang string,
-) string {
-	return fmt.Sprintf("%s/%s.%s",
-		string(jobType), string(jobSubType), lang,
-	)
-}
-
-func (t XMPP) TemplatesFor(
-	jobType asyncjob.JobType,
-	jobSubType asyncjob.JobSubType,
-	lang string,
-) (
-	textTmpl *texttemplate.Template,
-	htmlTmpl *htmltemplate.Template,
-	err error,
-) {
-	key := tmplCacheKey(jobType, jobSubType, lang)
-
-	if cache, ok := t.tmplCache[key]; ok {
-		textTmpl = cache.TextTmpl
-		htmlTmpl = cache.HtmlTmpl
-	} else {
-		textTmpl, htmlTmpl, err = t.LoadTemplates(
-			jobType, jobSubType, lang)
-		if err != nil {
-			return nil, nil, err
-		}
-
-		t.tmplCache[key] = TmplCacheItem{
-			TextTmpl: textTmpl,
-			HtmlTmpl: htmlTmpl,
-		}
-	}
-
-	return textTmpl, htmlTmpl, nil
-}
-
-func (t *XMPP) LoadTemplates(
-	jobType asyncjob.JobType,
-	jobSubType asyncjob.JobSubType,
-	lang string,
-) (
-	textTmpl *texttemplate.Template,
-	htmlTmpl *htmltemplate.Template,
-	err error,
-) {
-	var tmpl string = fmt.Sprintf(
-		"templates/xmpp/%s/%s.%s.tmpl",
-		string(jobType), string(jobSubType), lang,
-	)
-
-	if textTmpl, err = texttemplate.ParseFS(t.rt.Embeds["templates"],
-		tmpl+".eml"); err != nil {
-		return nil, nil, err
-	}
-	if htmlTmpl, err = htmltemplate.ParseFS(t.rt.Embeds["templates"],
-		tmpl+".html"); err != nil {
-		return nil, nil, err
-	}
-
-	return textTmpl, htmlTmpl, nil
-}
 
 func (t *XMPP) prepareMessage(
 	jobType asyncjob.JobType,
@@ -97,7 +20,7 @@ func (t *XMPP) prepareMessage(
 	message.To(rcptAddress)
 
 	// Get templates
-	textTmpl, _, err := t.TemplatesFor(
+	item, err := t.tmplCache.TemplatesFor(
 		jobType,
 		jobSubType,
 		lang,
@@ -107,7 +30,7 @@ func (t *XMPP) prepareMessage(
 	}
 	// Set text template
 	if err = message.SetBodyTextTemplate(
-		textTmpl,
+		item.TextTmpl,
 		data,
 	); err != nil {
 		return nil, err

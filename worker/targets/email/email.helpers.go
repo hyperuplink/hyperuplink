@@ -2,86 +2,11 @@ package email
 
 import (
 	"fmt"
-	htmltemplate "html/template"
 	"strings"
-	texttemplate "text/template"
 
 	"github.com/wneessen/go-mail"
 	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob"
 )
-
-type TmplCacheItem struct {
-	TextTmpl *texttemplate.Template
-	HtmlTmpl *htmltemplate.Template
-}
-
-type TmplCache map[string]TmplCacheItem
-
-func tmplCacheKey(
-	jobType asyncjob.JobType,
-	jobSubType asyncjob.JobSubType,
-	lang string,
-) string {
-	return fmt.Sprintf("%s/%s.%s",
-		string(jobType), string(jobSubType), lang,
-	)
-}
-
-func (t Email) TemplatesFor(
-	jobType asyncjob.JobType,
-	jobSubType asyncjob.JobSubType,
-	lang string,
-) (
-	textTmpl *texttemplate.Template,
-	htmlTmpl *htmltemplate.Template,
-	err error,
-) {
-	key := tmplCacheKey(jobType, jobSubType, lang)
-
-	if cache, ok := t.tmplCache[key]; ok {
-		textTmpl = cache.TextTmpl
-		htmlTmpl = cache.HtmlTmpl
-	} else {
-		textTmpl, htmlTmpl, err = t.LoadTemplates(
-			jobType, jobSubType, lang)
-		if err != nil {
-			return nil, nil, err
-		}
-
-		t.tmplCache[key] = TmplCacheItem{
-			TextTmpl: textTmpl,
-			HtmlTmpl: htmlTmpl,
-		}
-	}
-
-	return textTmpl, htmlTmpl, nil
-}
-
-func (t *Email) LoadTemplates(
-	jobType asyncjob.JobType,
-	jobSubType asyncjob.JobSubType,
-	lang string,
-) (
-	textTmpl *texttemplate.Template,
-	htmlTmpl *htmltemplate.Template,
-	err error,
-) {
-	var tmpl string = fmt.Sprintf(
-		"templates/email/%s/%s.%s.tmpl",
-		string(jobType), string(jobSubType), lang,
-	)
-
-	if textTmpl, err = texttemplate.ParseFS(t.rt.Embeds["templates"],
-		tmpl+".eml"); err != nil {
-		return nil, nil, err
-	}
-	if htmlTmpl, err = htmltemplate.ParseFS(t.rt.Embeds["templates"],
-		tmpl+".html"); err != nil {
-		return nil, nil, err
-	}
-
-	return textTmpl, htmlTmpl, nil
-}
 
 func (t *Email) AddPlusToAddr(email string, plus string) (plusemail string) {
 	splitAddr := strings.Split(email, "@")
@@ -129,7 +54,7 @@ func (t *Email) prepareMessage(
 	message.Subject(subject)
 
 	// Get templates
-	textTmpl, htmlTmpl, err := t.TemplatesFor(
+	item, err := t.tmplCache.TemplatesFor(
 		jobType,
 		jobSubType,
 		lang,
@@ -139,14 +64,14 @@ func (t *Email) prepareMessage(
 	}
 	// Set text template
 	if err = message.SetBodyTextTemplate(
-		textTmpl,
+		item.TextTmpl,
 		data,
 	); err != nil {
 		return nil, err
 	}
 	// Set html template
 	if err = message.AddAlternativeHTMLTemplate(
-		htmlTmpl,
+		item.HtmlTmpl,
 		data,
 	); err != nil {
 		return nil, err

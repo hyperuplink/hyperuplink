@@ -5,12 +5,13 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob"
 	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/services/config"
+	"xn--gckvb8fzb.com/hyperuplink/worker/targets/tmpl"
 )
 
 type Email struct {
 	rt        *runtime.Runtime
 	def       config.Target
-	tmplCache TmplCache
+	tmplCache *tmpl.Cache
 }
 
 type Args struct{}
@@ -23,7 +24,7 @@ func New(
 
 	t.rt = rt
 	t.def = def
-	t.tmplCache = make(TmplCache)
+	t.tmplCache = tmpl.NewCache(rt.Embeds["templates"], tmpl.EmailSpec)
 
 	return t, nil
 }

@@ -8,6 +8,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob"
 	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/services/config"
+	"xn--gckvb8fzb.com/hyperuplink/worker/targets/tmpl"
 
 	goxmpp "github.com/xmppo/go-xmpp"
 )
@@ -15,7 +16,7 @@ import (
 type XMPP struct {
 	rt        *runtime.Runtime
 	def       config.Target
-	tmplCache TmplCache
+	tmplCache *tmpl.Cache
 
 	jabberOpts goxmpp.Options
 	jabber     *goxmpp.Client
@@ -31,7 +32,7 @@ func New(
 
 	t.rt = rt
 	t.def = def
-	t.tmplCache = make(TmplCache)
+	t.tmplCache = tmpl.NewCache(rt.Embeds["templates"], tmpl.XMPPSpec)
 
 	return t, nil
 }
