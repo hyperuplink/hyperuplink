@@ -7,6 +7,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/board"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/comms"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/general"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/health"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/logs"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/permissions"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin/reports"
@@ -49,6 +50,10 @@ func New(
 		adminGeneralRoute, err := general.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
 		r.Routes = append(r.Routes, adminGeneralRoute)
+
+		adminHealthRoute, err := health.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, adminHealthRoute)
 
 		adminLogsRoute, err := logs.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)

@@ -350,6 +350,11 @@ func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 						Title: m.T(route.For("AdminLogs").AsTitle()),
 						Href:  route.For("AdminLogs").AsURL(),
 					},
+					{
+						Label: m.T(route.For("AdminHealth").AsTitle()),
+						Title: m.T(route.For("AdminHealth").AsTitle()),
+						Href:  route.For("AdminHealth").AsURL(),
+					},
 				},
 			},
 		}

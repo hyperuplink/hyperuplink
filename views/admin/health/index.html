@@ -1,0 +1,23 @@
+<div class="margin window active">
+  <div class="title-bar">
+    <div class="title-bar-text">{{$.Site.Title}}</div>
+  </div>
+  <div class="window-body {{$.Site.GetRoute.AsID}}">
+    {{ $issues := .Data.Get "issues" }}
+    {{ if $issues }}
+    {{ range $issue := $issues }}
+    <fieldset class="margin padding">
+      <legend>{{$._.T $issue.LegendKey}}</legend>
+      <p>{{$._.T $issue.TextKey}}</p>
+      <div class="actions flex-row justify-end">
+        <a class="button {{$issue.FixClass}}"
+           href="{{$.Site.HrefTo $issue.FixURL}}"
+           title="{{$._.T "health_fix"}}">{{$._.T "health_fix"}}</a>
+      </div>
+    </fieldset>
+    {{ end }}
+    {{ else }}
+    <p class="margin">{{$._.T "health_all_clear"}}</p>
+    {{ end }}
+  </div>
+</div>
