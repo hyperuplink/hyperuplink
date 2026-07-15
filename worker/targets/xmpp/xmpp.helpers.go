@@ -16,6 +16,16 @@ type TmplCacheItem struct {
 
 type TmplCache map[string]TmplCacheItem
 
+func tmplCacheKey(
+	jobType asyncjob.JobType,
+	jobSubType asyncjob.JobSubType,
+	lang string,
+) string {
+	return fmt.Sprintf("%s/%s.%s",
+		string(jobType), string(jobSubType), lang,
+	)
+}
+
 func (t XMPP) TemplatesFor(
 	jobType asyncjob.JobType,
 	jobSubType asyncjob.JobSubType,
@@ -25,7 +35,9 @@ func (t XMPP) TemplatesFor(
 	htmlTmpl *htmltemplate.Template,
 	err error,
 ) {
-	if cache, ok := t.tmplCache[lang]; ok {
+	key := tmplCacheKey(jobType, jobSubType, lang)
+
+	if cache, ok := t.tmplCache[key]; ok {
 		textTmpl = cache.TextTmpl
 		htmlTmpl = cache.HtmlTmpl
 	} else {
@@ -35,7 +47,7 @@ func (t XMPP) TemplatesFor(
 			return nil, nil, err
 		}
 
-		t.tmplCache[lang] = TmplCacheItem{
+		t.tmplCache[key] = TmplCacheItem{
 			TextTmpl: textTmpl,
 			HtmlTmpl: htmlTmpl,
 		}
