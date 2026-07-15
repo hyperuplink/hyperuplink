@@ -30,14 +30,5 @@ build: ## build
 db\:drop: ## clear development database (drop all tables and content, keep the database)
 	psql -h localhost -p 5432 -U postgres -d hyperuplink_dev -c "DROP SCHEMA public CASCADE;" -c "CREATE SCHEMA public;"
 
-db\:dump: ## dump current data from development database into dummy.sql
-	pg_dump -h localhost -p 5432 -U postgres -d hyperuplink_dev -t users -t categories -t forums -t topics -t replies --data-only --inserts -f dummy.sql
-
-db\:restore: ## restore dummy.sql data
-	psql -h localhost -p 5432 -U postgres -d hyperuplink_dev < dummy.sql
-
-db\:refresh: ## trigger refresh of materialized views
-	psql -h localhost -p 5432 -U postgres -d hyperuplink_dev -c "REFRESH MATERIALIZED VIEW vforums; REFRESH MATERIALIZED VIEW vtopics;"
-
 run: build ## build and run
 	./build/hyperuplink -c "file://$(PWD)/hyperuplink.toml"
