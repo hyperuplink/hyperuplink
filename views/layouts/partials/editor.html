@@ -49,11 +49,11 @@
   {{ if eq $hasSubject true }}
   <div class="">
     <label for="name">{{ $_.T "subject"}}:</label>
-    {{$form.Input "text" "name" "" false}}
+    {{$form.Input "text" "name" "" false "id" "name"}}
   </div>
   {{ end }}
   <label for="text">{{ $_.T "text"}}:</label>
-  <textarea name="text" cols="72" rows="12" wrap="soft" placeholder="{{ $_.T "editor_placeholder" }}">{{$text}}</textarea>
+  <textarea id="text" name="text" cols="72" rows="12" wrap="soft" placeholder="{{ $_.T "editor_placeholder" }}">{{$text}}</textarea>
   <div class="field flex-column">
     <label for="attachments">{{ $_.T "attachments"}}:</label>
     <input type="file" id="attachments" name="attachments" multiple>

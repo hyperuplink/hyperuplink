@@ -21,7 +21,7 @@
                 {{ else }}
                 <label for="email">{{._.T "email"}}</label>
                 {{ end }}
-                {{.Form.Input "text" "email" "" false}}
+                {{.Form.Input "text" "email" "" false "id" "email"}}
               </div>
             </div>
             {{ if eq $settingAuth.AddressType 2 }}

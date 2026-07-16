@@ -5,6 +5,8 @@ import (
 	"html/template"
 	"reflect"
 
+	"github.com/lithammer/shortuuid/v4"
+
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/flash"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/in"
@@ -74,23 +76,17 @@ func (f *Form) Input(
 	hasLabel bool,
 	args ...string,
 ) template.HTML {
-	var html string = ""
-
-	if hasLabel {
-		html = fmt.Sprintf("<label for=\"%s\">%s</label>",
-			name, f.in.T(name))
-	}
-
-	fvalue := f.StringValueFor(name)
-	if fvalue != "" {
-		value = fvalue
-	}
-
+	var id string = ""
 	var kv string = ""
 	for i := 0; i < len(args); i++ {
 		key := args[i]
 		i++
 		val := args[i]
+
+		if key == "id" {
+			id = val
+			continue
+		}
 
 		if val == "" {
 			kv = fmt.Sprintf(`%s %s`, kv, key)
@@ -99,9 +95,25 @@ func (f *Form) Input(
 		}
 	}
 
+	if id == "" {
+		id = fmt.Sprintf("%s-%s", name, shortuuid.New())
+	}
+
+	var html string = ""
+
+	if hasLabel {
+		html = fmt.Sprintf("<label for=\"%s\">%s</label>",
+			id, f.in.T(name))
+	}
+
+	fvalue := f.StringValueFor(name)
+	if fvalue != "" {
+		value = fvalue
+	}
+
 	html = fmt.Sprintf(
-		`%s<input type="%s" name="%s" value="%s" class="%s" %s>`,
-		html, inputType, name, value, f.fl.ClassFor(name), kv,
+		`%s<input type="%s" id="%s" name="%s" value="%s" class="%s" %s>`,
+		html, inputType, id, name, value, f.fl.ClassFor(name), kv,
 	)
 
 	return template.HTML(html)
