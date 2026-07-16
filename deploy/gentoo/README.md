@@ -2,15 +2,19 @@
 
 This directory is a small, drop-in [Gentoo][gentoo] ebuild repository (overlay)
 that builds Hyperuplink from source and installs it as a single binary with
-`emerge`. At the moment two ebuilds are provided:
+`emerge`. Every ebuild here is the same file, which branches on `${PV}`:
 
-- `hyperuplink-0.1.0.ebuild`, which is a released version, with the Go module
-  cache supplied as a separate _deps tarball_ alongside the GitHub source
-  archive. The Release workflow builds and attaches that tarball automatically
-  (see below).
-- `hyperuplink-9999.ebuild`, which is a live ebuild that builds the tip of the
-  GitHub default branch. It needs no deps tarball, because it vendors the
-  modules during `src_unpack`.
+- `hyperuplink-9999.ebuild` is the canonical one, and it is also the live ebuild
+  that builds the tip of the GitHub default branch. It needs no deps tarball,
+  because it vendors the modules during `src_unpack`.
+- `hyperuplink-0.1.0.ebuild`, and any other released version, is a byte-for-byte
+  copy of it that `make release` writes. Portage takes `${PV}` from the
+  filename, so the copy takes the `else` branch and builds from the GitHub tag
+  tarball, with the Go module cache supplied as a separate _deps tarball_ that
+  the Release workflow attaches (see below).
+
+Edit `hyperuplink-9999.ebuild` and only that one, since anything else is
+overwritten on the next release.
 
 ```
 deploy/gentoo/
@@ -127,12 +131,12 @@ proxy, in `Mode = "production"` so that the session cookie is HTTPS-only.
 - Hyperuplink is under the custom, non-OSI **SEGV** license, whose full text is
   in `licenses/SEGV`. `::gentoo` does not carry it, which is why it is bundled
   here and must be accepted via `package.license`.
-- To release a new version, copy `hyperuplink-0.1.0.ebuild` to
-  `hyperuplink-<new>.ebuild` and regenerate the Manifest. The deps tarball is
-  produced by the Release workflow on the new tag. The
-  `-ldflags -X …/runtime.Version` value is wired to `${PV}`, so `hyperuplink -v`
-  reports the ebuild version (the live ebuild reports `9999` plus the
-  checked-out commit).
+- `make release VERSION=<new>` writes `hyperuplink-<new>.ebuild` for you, as a
+  copy of the live one. The Manifest is not part of that, because it hashes the
+  deps tarball that only exists once the Release workflow has attached it to the
+  new tag, so regenerate it here afterwards. The `-ldflags -X …/runtime.Version`
+  value is wired to `${PV}`, so `hyperuplink -v` reports the ebuild version (the
+  live ebuild reports `9999` plus the checked-out commit).
 - GitHub's tag archive extracts to `hyperuplink-<version>/`, which is
   go-module.eclass's default `S`, so the released ebuild sets no explicit `S`.
 

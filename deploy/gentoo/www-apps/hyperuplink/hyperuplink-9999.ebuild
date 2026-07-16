@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit git-r3 go-module systemd
+inherit go-module systemd
 
 DESCRIPTION="A super high speed internet bulletin board"
 HOMEPAGE="
@@ -12,16 +12,49 @@ HOMEPAGE="
 	https://github.com/hyperuplink/hyperuplink
 "
 
-# Build straight from the GitHub default branch. There is no source archive and
-# no deps tarball, and go-module_live_vendor populates a vendor/ directory
-# during src_unpack.
-EGIT_REPO_URI="https://github.com/hyperuplink/hyperuplink.git"
+# This one file serves the live version and every release alike.
+# `make release` copies it to hyperuplink-<version>.ebuild unchanged, and the
+# branches below are all that the copy needs, since ${PV} comes from the
+# filename.
+if [[ ${PV} == 9999 ]]; then
+  # Build straight from the GitHub default branch. There is no source archive
+  # and no deps tarball, and go-module_live_vendor populates a vendor/
+  # directory during src_unpack.
+  inherit git-r3
+
+  EGIT_REPO_URI="https://github.com/hyperuplink/hyperuplink.git"
+  KEYWORDS=""
+
+  src_unpack() {
+    git-r3_src_unpack
+    # Vendors the modules (needs network, hence src_unpack) so the sandboxed
+    # src_compile can build fully offline against vendor/.
+    go-module_live_vendor
+  }
+else
+  # The main source archive is GitHub's auto-generated tag tarball.
+  # ${P}-deps.tar.xz is the Go module cache, and it is not produced by GitHub
+  # automatically. The Release workflow (.github/workflows/release.yml) builds
+  # it and attaches it to the GitHub release. See deploy/gentoo/README.md to
+  # build it by hand.
+  #
+  # There is no src_unpack here on purpose, because go-module.eclass unpacks
+  # the deps tarball into the module cache itself.
+  SRC_URI="
+		https://github.com/hyperuplink/hyperuplink/archive/v${PV}.tar.gz -> ${P}.tar.gz
+		https://github.com/hyperuplink/hyperuplink/releases/download/v${PV}/${P}-deps.tar.xz
+	"
+
+  # GitHub's archive extracts to ${PN}-${PV}, which is go-module.eclass's
+  # default S (${WORKDIR}/${P}), so no explicit S is needed.
+
+  KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~riscv ~x86"
+fi
 
 # SEGV is a custom, non-OSI license. The full text ships as licenses/SEGV in
 # this overlay, because ::gentoo does not carry it.
 LICENSE="SEGV"
 SLOT="0"
-KEYWORDS=""
 
 # go.mod requires this Go version, and GOTOOLCHAIN=local
 # (set by go-module.eclass) forbids downloading a newer toolchain, so the
@@ -38,13 +71,6 @@ RDEPEND="
 	${DEPEND}
 	media-gfx/imagemagick
 "
-
-src_unpack() {
-  git-r3_src_unpack
-  # Vendors the modules (needs network, hence src_unpack) so the sandboxed
-  # src_compile can build fully offline against vendor/.
-  go-module_live_vendor
-}
 
 src_prepare() {
   default
@@ -73,13 +99,25 @@ src_compile() {
   local ldflags=(
     -s -w
     -X "${modpath}/runtime.Version=${PV}"
-    -X "${modpath}/runtime.Commit=${EGIT_VERSION}"
-    -X "${modpath}/runtime.Date=live"
   )
+  local goflags=()
 
-  # -mod=vendor (explicit, overriding the eclass GOFLAGS) forces the offline
-  # build against the vendor/ tree created above.
-  CGO_ENABLED=0 go build -mod=vendor -trimpath \
+  if [[ ${PV} == 9999 ]]; then
+    ldflags+=(
+      -X "${modpath}/runtime.Commit=${EGIT_VERSION}"
+      -X "${modpath}/runtime.Date=live"
+    )
+    # -mod=vendor (explicit, overriding the eclass GOFLAGS) forces the offline
+    # build against the vendor/ tree created in src_unpack.
+    goflags+=(-mod=vendor)
+  else
+    ldflags+=(
+      -X "${modpath}/runtime.Commit=v${PV}"
+      -X "${modpath}/runtime.Date=release"
+    )
+  fi
+
+  CGO_ENABLED=0 go build "${goflags[@]}" -trimpath \
     -ldflags "${ldflags[*]}" -o "${PN}" . || die
 }
 

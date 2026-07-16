@@ -1,0 +1,101 @@
+name: Nix
+
+# Unlike the RPM and the container, the Nix package has no release artifact to
+# publish. Nix users install straight from a tag with:
+#
+# `nix build github:hyperuplink/hyperuplink/vX.Y.Z`
+#
+# So this validates on releases. go.mod/go.sum are in the paths because
+# vendorHash in deploy/nix/package.nix is the hash of the module cache, and a
+# dependency bump invalidates it, which breaks the build for everyone installing
+# from the flake. The version in package.nix is checked against the tag in
+# release.yml.
+
+on:
+  push:
+    paths:
+      - "deploy/nix/**"
+      - "flake.nix"
+      - "flake.lock"
+      - "go.mod"
+      - "go.sum"
+      - ".github/workflows/nix.yml"
+  pull_request:
+    paths:
+      - "deploy/nix/**"
+      - "flake.nix"
+      - "flake.lock"
+      - "go.mod"
+      - "go.sum"
+      - ".github/workflows/nix.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nix-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      # Evaluation only
+      - name: Check every declared system evaluates
+        run: nix flake check --all-systems --no-build --print-build-logs
+
+      - name: Build the package
+        run: nix build --print-build-logs .#hyperuplink
+
+      # The build already runs `-v` inside the sandbox via versionCheckHook.
+      # This runs the installed wrapper, which is what a user actually invokes.
+      - name: Smoke test the binary
+        run: ./result/bin/hyperuplink -v
+
+  vm-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # The VM test builds a NixOS system with PostgreSQL and Redis in it, which
+      # does not fit next to the runner's preinstalled toolchains. Nothing here
+      # uses them (no setup-go), so they can all go.
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+                      /usr/local/share/boost "$AGENT_TOOLSDIRECTORY"
+          sudo docker image prune -a -f
+          df -h
+
+      # The runner has /dev/kvm, but only the kvm group may write to it and the
+      # Nix build user is not in it, so without this the test falls back to
+      # software emulation and times out.
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      # Boots a machine with only `services.hyperuplink.enable = true` and
+      # checks that the board answers, that the migrations reached the
+      # provisioned database, and that the environmentFile secrets path renders.
+      - name: Run the NixOS VM test
+        run: nix build --print-build-logs .#checks.x86_64-linux.nixos

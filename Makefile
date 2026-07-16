@@ -1,4 +1,4 @@
-.PHONY: all help test build db\:drop db\:dump db\:restore db\:refresh run
+.PHONY: all help test build db\:drop run release
 PWD := $(shell pwd)
 GOPATH := $(shell go env GOPATH)
 
@@ -9,6 +9,20 @@ NAME := hyperuplink
 PREFIX := xn--gckvb8fzb.com/
 PROJECT := $(PREFIX)$(NAME)
 VERSION := $(shell git describe --tags 2>/dev/null || echo "dev")
+
+# The ebuild takes its version from its filename and the RPM spec from
+# --define, but a Nix flake cannot read the git tag (`self` exposes rev, never
+# the tag), so deploy/nix/package.nix has to carry it in the tree. `make
+# release` writes it there and derives the tag from it, which is why the two
+# cannot drift apart.
+NIXPKG := deploy/nix/package.nix
+NIXVERSION = sed -n -E 's/^[[:space:]]*version \? "([^"]*)".*/\1/p' $(NIXPKG)
+
+# The live ebuild is the canonical one and branches on ${PV}, which Portage
+# takes from the filename, so a release ebuild is a plain copy of it.
+EBUILDDIR := deploy/gentoo/www-apps/hyperuplink
+LIVEEBUILD := $(EBUILDDIR)/hyperuplink-9999.ebuild
+EBUILD = $(EBUILDDIR)/hyperuplink-$(VERSION).ebuild
 COMMIT := $(shell git rev-parse --verify HEAD)
 DATE := $(shell date)
 
@@ -32,3 +46,24 @@ db\:drop: ## clear development database (drop all tables and content, keep the d
 
 run: build ## build and run
 	./build/hyperuplink -c "file://$(PWD)/hyperuplink.toml"
+
+release: ## bump the nix package, commit and tag a release (VERSION=x.y.z)
+	@echo "$(VERSION)" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$$' \
+		|| { echo "VERSION must be x.y.z, e.g. make release VERSION=0.1.3"; exit 1; }
+	@test -z "$$(git status --porcelain --untracked-files=no)" \
+		|| { echo "there are uncommitted changes, commit or stash them first:"; \
+		     git status --short --untracked-files=no; exit 1; }
+	@git rev-parse -q --verify "refs/tags/v$(VERSION)" >/dev/null \
+		&& { echo "tag v$(VERSION) already exists"; exit 1; } || true
+	@sed -i -E 's/^([[:space:]]*version \? )"[^"]*"/\1"$(VERSION)"/' $(NIXPKG)
+	@test "$$($(NIXVERSION))" = "$(VERSION)" \
+		|| { git checkout -- $(NIXPKG); \
+		     echo "could not set the version in $(NIXPKG), has the argument been renamed?"; exit 1; }
+	@cp $(LIVEEBUILD) $(EBUILD)
+	@git add $(NIXPKG) $(EBUILD) && git commit -S -q -m "Release v$(VERSION)" \
+		|| { git reset -q -- $(NIXPKG) $(EBUILD); git checkout -- $(NIXPKG); rm -f $(EBUILD); \
+		     echo "the commit failed, $(NIXPKG) and $(EBUILD) have been rolled back"; exit 1; }
+	@git tag -s -m "v$(VERSION)" "v$(VERSION)"
+	@echo "Tagged v$(VERSION), with $(NIXPKG) bumped and $(EBUILD) added."
+	@echo "Nothing is published until you run:"
+	@echo "    git push --follow-tags"

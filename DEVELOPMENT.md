@@ -567,6 +567,46 @@ SELECT group_id, category_id, bits, bits::int AS level FROM permissions
  WHERE deleted_at IS NULL;
 ```
 
+## Releasing
+
+```sh
+make release VERSION=0.1.3    # bumps, commits and tags, but pushes nothing
+git push --follow-tags        # pushes
+```
+
+`make release` writes the version into `deploy/nix/package.nix`, copies
+`hyperuplink-9999.ebuild` to `hyperuplink-0.1.3.ebuild`, commits the two as
+`Release v0.1.3` and derives the signed tag from them rather than the other way
+around, because a _Nix_ flake cannot read the tag it was built from.
+
+The ebuild needs no editing at all, because _Portage_ takes `${PV}` from the
+filename and the live ebuild branches on it, which is what makes the copy a
+release ebuild and the original a live one, and is why there is only ever the
+one file to keep up to date.
+
+The `make release` command refuses to run when `VERSION` is not an `x.y.z`, when
+tracked files have uncommitted changes, or when the tag exists already, and it
+rolls both files back if the commit fails, so a half-finished release does not
+survive.
+
+Nothing leaves the machine until the push, which then starts the Release, which
+cross-compiles the targets in `.goreleaser.yaml`, creates the GitHub release and
+attaches the Go module cache that the ebuild needs as a distfile. It also
+triggers the container build, which pushes the multi-arch image to `ghcr.io`.
+
+The _RPM_ build waits for _Release_ to succeed first, since _GoReleaser_ creates
+the release only once all targets are built and there is nothing to attach the
+packages to before that.
+
+`make release` also refuses to publish anything when `deploy/nix/package.nix`
+and the tag disagree, which is the backstop for a tag that was made by hand
+instead of by `make release`.
+
+> **Note:** The Gentoo _Manifest_ hashes the deps tarball that only exists once
+> _Release_ has built and attached it, so it cannot be generated at tag time and
+> has to be done afterwards on a machine with _Portage_, as
+> `deploy/gentoo/README.md` describes.
+
 ## Conventions
 
 A handful of these are not apparent from reading the code:

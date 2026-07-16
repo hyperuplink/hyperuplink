@@ -9,7 +9,36 @@ permissions:
   contents: write
 
 jobs:
+  # The ebuild takes its version from ${PV} in the filename and the RPM spec
+  # from --define version, so both follow the tag on their own. deploy/nix's is
+  # written down in package.nix, so we gate the release on it.
+  nix-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check deploy/nix/package.nix matches the tag
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          want="${TAG#v}"
+          got="$(grep -oP '^\s*version \? "\K[^"]+' deploy/nix/package.nix || true)"
+
+          if [ -z "$got" ]; then
+            echo "::error file=deploy/nix/package.nix::cannot read the version, has the argument been renamed?"
+            exit 1
+          fi
+
+          if [ "$got" != "$want" ]; then
+            echo "::error file=deploy/nix/package.nix::version is ${got}, but the tag is ${TAG}. Bump it to ${want}."
+            exit 1
+          fi
+
+          echo "deploy/nix/package.nix is at ${got}, matching ${TAG}."
+
   goreleaser:
+    needs: nix-version
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

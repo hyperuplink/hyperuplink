@@ -50,6 +50,12 @@ RPMs land in `dist/` (override with `OUTDIR`). Under the hood `build.sh` just
 drives `rpmbuild --target <arch>` against `hyperuplink.spec`, which maps the RPM
 target CPU onto a Go `GOARCH`.
 
+In CI, `.github/workflows/rpm.yml` does the same and attaches the result to the
+release. It runs after the Release workflow rather than on the tag, because
+GoReleaser publishes the release only once it has cross-compiled every target,
+and there is nothing to attach to before then. `workflow_dispatch` builds the
+RPMs from any ref without attaching them.
+
 ## Installing
 
 ```sh

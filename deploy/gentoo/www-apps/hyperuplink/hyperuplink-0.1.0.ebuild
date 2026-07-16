@@ -12,36 +12,34 @@ HOMEPAGE="
 	https://github.com/hyperuplink/hyperuplink
 "
 
-# The main source archive is GitHub's auto-generated tag tarball.
-# ${P}-deps.tar.xz is the Go module cache, and it is not produced by GitHub
-# automatically. The Release workflow (.github/workflows/release.yml) builds
-# it and attaches it to the GitHub release. See deploy/gentoo/README.md to build
-# it by hand.
-SRC_URI="
-	https://github.com/hyperuplink/hyperuplink/archive/v${PV}.tar.gz -> ${P}.tar.gz
-	https://github.com/hyperuplink/hyperuplink/releases/download/v${PV}/${P}-deps.tar.xz
-"
+if [[ ${PV} == 9999 ]]; then
+	inherit git-r3
 
-# GitHub's archive extracts to ${PN}-${PV}, which is go-module.eclass's default
-# S (${WORKDIR}/${P}), so no explicit S is needed.
+	EGIT_REPO_URI="https://github.com/hyperuplink/hyperuplink.git"
+	KEYWORDS=""
 
-# SEGV is a custom, non-OSI license. The full text ships as licenses/SEGV in
-# this overlay, because ::gentoo does not carry it.
+	src_unpack() {
+		git-r3_src_unpack
+		go-module_live_vendor
+	}
+else
+	SRC_URI="
+		https://github.com/hyperuplink/hyperuplink/archive/v${PV}.tar.gz -> ${P}.tar.gz
+		https://github.com/hyperuplink/hyperuplink/releases/download/v${PV}/${P}-deps.tar.xz
+	"
+
+	KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~riscv ~x86"
+fi
+
 LICENSE="SEGV"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~riscv ~x86"
 
-# go.mod requires this Go version, and GOTOOLCHAIN=local
-# (set by go-module.eclass) forbids downloading a newer toolchain, so the
-# system Go must be new enough.
 BDEPEND=">=dev-lang/go-1.26.4"
 
-# The service user/group are provided by the acct-* packages in this overlay.
 DEPEND="
 	acct-group/hyperuplink
 	acct-user/hyperuplink
 "
-# convert(1) from ImageMagick is shelled out to for image processing.
 RDEPEND="
 	${DEPEND}
 	media-gfx/imagemagick
@@ -50,15 +48,11 @@ RDEPEND="
 src_prepare() {
   default
 
-  # Gentoo installs the binary to /usr/bin
   sed -i \
     -e 's|/usr/local/bin/hyperuplink|/usr/bin/hyperuplink|g' \
     deploy/init/hyperuplink.openrc \
     deploy/init/hyperuplink.service || die
 
-  # The shipped production config targets Docker service hostnames, so we
-  # rewrite them to loopback, so that a single-host install works out of the
-  # box. Edit /etc/hyperuplink.toml afterwards.
   sed -i \
     -e 's|"valkey:6379"|"127.0.0.1:6379"|g' \
     -e 's|@postgres:5432|@localhost:5432|g' \
@@ -67,33 +61,39 @@ src_prepare() {
 }
 
 src_compile() {
-  # All embedded assets (static/, views/, locales/, templates/, docs/,
-  # migrations/) are compiled into the binary via go:embed, so the single
-  # executable is fully self-contained.
   local modpath="xn--gckvb8fzb.com/hyperuplink"
   local ldflags=(
     -s -w
     -X "${modpath}/runtime.Version=${PV}"
-    -X "${modpath}/runtime.Commit=v${PV}"
-    -X "${modpath}/runtime.Date=release"
   )
+  local goflags=()
 
-  CGO_ENABLED=0 go build -trimpath -ldflags "${ldflags[*]}" -o "${PN}" . || die
+  if [[ ${PV} == 9999 ]]; then
+    ldflags+=(
+      -X "${modpath}/runtime.Commit=${EGIT_VERSION}"
+      -X "${modpath}/runtime.Date=live"
+    )
+    goflags+=( -mod=vendor )
+  else
+    ldflags+=(
+      -X "${modpath}/runtime.Commit=v${PV}"
+      -X "${modpath}/runtime.Date=release"
+    )
+  fi
+
+  CGO_ENABLED=0 go build "${goflags[@]}" -trimpath \
+    -ldflags "${ldflags[*]}" -o "${PN}" . || die
 }
 
 src_install() {
   dobin "${PN}"
 
-  # Configuration under /etc.
   insinto /etc
   newins deploy/hyperuplink.toml hyperuplink.toml
 
-  # Init integration for both supported init systems.
   newinitd deploy/init/hyperuplink.openrc "${PN}"
   systemd_dounit deploy/init/hyperuplink.service
 
-  # Runtime data / local media storage, owned by the service user.
-  # Matches [[Storage]] Local.Path in the installed config.
   keepdir /var/lib/${PN}/media
   fowners -R ${PN}:${PN} /var/lib/${PN}
   fperms 0750 /var/lib/${PN}

@@ -1,9 +1,24 @@
 name: RPM
 
+# Runs *after* the Release workflow rather than on the tag itself, because
+# GoReleaser creates the GitHub release only at the end of its run, and it
+# cross-compiles all targets first, so this job, when started by the same tag
+# push, reaches the upload long before the release exists.
+#
+# `on: release: [published]` likely does not work here, because GitHub does not
+# start workflow runs from events created with GITHUB_TOKEN, which is what
+# GoReleaser authenticates with, so that trigger would never fire.
+#
+# Two consequences of workflow_run worth knowing before editing this file:
+#   - The definition that runs is the one on the default branch, not the one
+#     at the tag.
+#   - github.sha and github.ref_name point at the default branch, not at the
+#     tag, so everything below is derived from the checked-out tree instead.
+
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_run:
+    workflows: ["Release"]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -11,24 +26,46 @@ permissions:
 
 jobs:
   build:
+    # A failed Release published nothing to attach to. Manual runs still build
+    # the RPMs, they just do not attach them.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # The commit Release ran on, which is the tag. Without this the
+          # default branch is checked out and the RPMs would not match the
+          # release they are attached to.
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Compute metadata
         id: meta
+        env:
+          # Carries the tag name for a tag-triggered run, and is empty on a
+          # manual one.
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
         run: |
-          ref="${GITHUB_REF_NAME}"
-          echo "version=${ref#v}" >> "$GITHUB_OUTPUT"
-          echo "date=$(git show -s --format=%cI HEAD)" >> "$GITHUB_OUTPUT"
+          if [ -n "${HEAD_BRANCH}" ]; then
+            tag="${HEAD_BRANCH}"
+          else
+            tag="$(git describe --tags --abbrev=0 2>/dev/null || echo v0.0.0)"
+          fi
+
+          {
+            echo "tag=${tag}"
+            echo "version=${tag#v}"
+            echo "commit=$(git rev-parse HEAD)"
+            echo "date=$(git show -s --format=%cI HEAD)"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Build RPMs
         env:
           VERSION: ${{ steps.meta.outputs.version }}
-          COMMIT: ${{ github.sha }}
+          COMMIT: ${{ steps.meta.outputs.commit }}
           DATE: ${{ steps.meta.outputs.date }}
         run: |
           docker run --rm \
@@ -53,19 +90,11 @@ jobs:
           path: dist/*.rpm
           if-no-files-found: error
 
+      # Release succeeded, so the release is already published and there is
+      # nothing to wait for.
       - name: Attach RPMs to the release
-        if: startsWith(github.ref, 'refs/tags/')
+        if: github.event_name == 'workflow_run'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ github.ref_name }}
-        run: |
-          for _ in $(seq 1 30); do
-            if gh release view "$TAG" >/dev/null 2>&1; then
-              gh release upload "$TAG" dist/*.rpm --clobber
-              exit 0
-            fi
-            echo "Release $TAG not ready yet, waiting..."
-            sleep 10
-          done
-          echo "Release $TAG was not created within the timeout" >&2
-          exit 1
+          TAG: ${{ steps.meta.outputs.tag }}
+        run: gh release upload "$TAG" dist/*.rpm --clobber
