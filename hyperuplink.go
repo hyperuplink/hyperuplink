@@ -15,7 +15,6 @@ import (
 	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	logicsession "xn--gckvb8fzb.com/hyperuplink/logic/root/session"
 	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/tools/localegen"
 	"xn--gckvb8fzb.com/hyperuplink/worker"
 )
 
@@ -39,7 +38,6 @@ var embedDocs embed.FS
 
 var (
 	flagCfgstr     string
-	flagLocalegen  bool
 	flagVersion    bool
 	flagReset      string
 	flagCreateUser string
@@ -47,7 +45,6 @@ var (
 
 func init() {
 	flag.StringVar(&flagCfgstr, "c", "file:///etc/hyperuplink.toml", "configuration string")
-	flag.BoolVar(&flagLocalegen, "localegen", false, "Generate locale files")
 	flag.BoolVar(&flagVersion, "v", false, "Print version information and exit")
 	flag.StringVar(&flagReset, "reset", "", "Clear the whole database and exit (requires the current time as HH:MM (24h) confirmation, e.g. --reset 10:42)")
 	flag.StringVar(&flagCreateUser, "create-user", "", `Create an activated user from a JSON object of signup fields and exit, e.g. --create-user '{"username":"dummy1","email":"dummy1@example.com","password":"mypassword"}'`)
@@ -58,17 +55,14 @@ func init() {
 }
 
 func main() {
+	var rt *runtime.Runtime
+	var web *http.HTTP
+	var wrk *worker.Worker
+	var crn *cron.Cron
 	var err error
 
 	flag.Parse()
 
-	if flagLocalegen {
-		if err = localegen.LocaleGen(); err != nil {
-			os.Exit(1)
-		}
-
-		os.Exit(0)
-	}
 	if flagVersion {
 		fmt.Printf("Hyper Uplink %s\nCommit: %s\nBuild date: %s\n",
 			runtime.Version,
@@ -78,7 +72,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	rt, err := runtime.New(flagCfgstr)
+	rt, err = runtime.New(flagCfgstr)
 	if err != nil {
 		fmt.Printf("%s\n", err)
 		os.Exit(1)
@@ -119,7 +113,7 @@ func main() {
 	rt.NilOrDie(err)
 
 	// ---[ WEB ]-------------------------------------------------------------- //
-	web, err := http.New(rt, http.IfaceWeb)
+	web, err = http.New(rt, http.IfaceWeb)
 	rt.NilOrDie(err)
 
 	err = web.Startup()
@@ -128,7 +122,7 @@ func main() {
 	go web.Run()
 
 	// ---[ WORKER ]----------------------------------------------------------- //
-	wrk, err := worker.New(rt)
+	wrk, err = worker.New(rt)
 	rt.NilOrDie(err)
 
 	err = wrk.Startup()
@@ -137,7 +131,7 @@ func main() {
 	go wrk.Run()
 
 	// ---[ CRON ]------------------------------------------------------------- //
-	crn, err := cron.New(rt)
+	crn, err = cron.New(rt)
 	rt.NilOrDie(err)
 
 	err = crn.Startup()
