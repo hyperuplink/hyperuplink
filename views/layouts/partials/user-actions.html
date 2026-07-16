@@ -1,0 +1,49 @@
+{{ $dict := . }}
+{{ $site := get $dict "Site"}}
+{{ $_ := get $dict "_"}}
+{{ $user := get $dict "User"}}
+{{ $session := get $dict "Session"}}
+{{ $isSelf := eq $user.Username $session.GetCurrentUserUsername }}
+<form method="post"
+      action="{{$site.GetRelRoot}}admin/users/confirm"
+      class="flex-column">
+  <input type="hidden" name="_csrf" value="{{$site.GetCSRFToken}}">
+  <input type="hidden" name="id" value="{{$user.ID}}">
+  <button type="submit"
+          class=""
+          title="{{$_.T "confirm"}}"
+          {{ if or $isSelf $user.ConfirmedAt.Valid }}disabled=""{{ end }}>{{$_.T "confirm"}}</button>
+</form>
+{{ if $user.BannedAt.Valid }}
+<form method="post"
+      action="{{$site.GetRelRoot}}admin/users/unban"
+      class="flex-column">
+  <input type="hidden" name="_csrf" value="{{$site.GetCSRFToken}}">
+  <input type="hidden" name="id" value="{{$user.ID}}">
+  <button type="submit"
+          class="highlight"
+          title="{{$_.T "unban"}}"
+          {{ if $isSelf }}disabled=""{{ end }}>{{$_.T "unban"}}</button>
+</form>
+{{ else }}
+<form method="post"
+      action="{{$site.GetRelRoot}}admin/users/ban"
+      class="flex-column">
+  <input type="hidden" name="_csrf" value="{{$site.GetCSRFToken}}">
+  <input type="hidden" name="id" value="{{$user.ID}}">
+  <button type="submit"
+          class="highlight"
+          title="{{$_.T "ban"}}"
+          {{ if $isSelf }}disabled=""{{ end }}>{{$_.T "ban"}}</button>
+</form>
+{{ end }}
+<form method="post"
+      action="{{$site.GetRelRoot}}admin/users/delete"
+      class="flex-column">
+  <input type="hidden" name="_csrf" value="{{$site.GetCSRFToken}}">
+  <input type="hidden" name="id" value="{{$user.ID}}">
+  <button type="submit"
+          class="danger"
+          title="{{$_.T "delete"}}"
+          {{ if or $isSelf $user.DeletedAt.Valid }}disabled=""{{ end }}>{{$_.T "delete"}}</button>
+</form>
