@@ -17,9 +17,9 @@
   --radius-wrap: 8px;
   --radius-button: 4px;
 
-  --bar-lip: color-mix(in srgb, var(--surface-07), white 35%);
-  --bar-top: var(--surface-07);
+  --bar-top: color-mix(in srgb, var(--title-bar-bg), var(--surface-07) 60%);
   --bar-bottom: var(--title-bar-bg);
+  --bar-lip: color-mix(in srgb, var(--bar-top), white 35%);
   --bar-fg: color-mix(in srgb, var(--title-bar-bg), white 90%);
   --bar-fg-hover: color-mix(in srgb, var(--title-bar-bg), white 65%);
 

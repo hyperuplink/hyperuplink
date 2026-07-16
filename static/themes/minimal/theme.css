@@ -477,7 +477,7 @@ input:disabled,
   transform: none;
 }
 
-button[type="submit"],
+button[type="submit"]:not(.affirmative, .highlight, .danger, .warn, .info),
 button.primary,
 .button.primary {
   background: var(--accent-grad);
@@ -486,7 +486,13 @@ button.primary,
   font-weight: 600;
 }
 
-button[type="submit"]:hover,
+button[type="submit"]:not(
+    .affirmative,
+    .highlight,
+    .danger,
+    .warn,
+    .info
+  ):hover,
 button.primary:hover,
 .button.primary:hover {
   background: linear-gradient(180deg, var(--primary-4), var(--primary-4));
@@ -496,9 +502,13 @@ button.primary:hover,
 button.affirmative,
 button.highlight,
 button.danger,
+button.warn,
+button.info,
 .button.affirmative,
 .button.highlight,
-.button.danger {
+.button.danger,
+.button.warn,
+.button.info {
   border-color: transparent;
   color: var(--surface-00);
   font-weight: 600;

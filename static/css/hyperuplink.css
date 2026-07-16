@@ -364,6 +364,12 @@ button.info {
   background-color: var(--info);
 }
 
+.detailed .icon > img {
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+}
+
 .detailed .big > img {
   width: 48px;
   height: 48px;
@@ -738,6 +744,12 @@ a.button {
 
 .button-block > hr {
   border-bottom: var(--border-brightness-08) 1px dashed;
+}
+
+.date-column,
+.detailed th.date-column {
+  width: 140px;
+  text-align: right;
 }
 
 @media (max-width: 600px) {

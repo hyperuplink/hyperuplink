@@ -139,6 +139,21 @@ pre {
   flex-grow: 1;
 }
 
+.quarter {
+  flex: 1 1 0;
+}
+
+.three-quarters {
+  flex: 3 1 0;
+}
+
+@media (max-width: 600px) {
+  .quarter,
+  .three-quarters {
+    flex-basis: 100%;
+  }
+}
+
 .grid {
   display: grid;
 }

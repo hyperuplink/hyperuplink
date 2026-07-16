@@ -22,12 +22,10 @@
             role="button"
             style="text-align: right;
                    width: 60px">{{$_.T "views_noun"}}</th>
-        <th class="no-mobile"
+        <th class="no-mobile date-column"
             scope="col"
             role="button"
-            aria-sort="descending"
-            style="text-align: right;
-                   width: 140px">{{$_.T "updated_adjective"}}</th>
+            aria-sort="descending">{{$_.T "updated_adjective"}}</th>
       </tr>
     </thead>
     <tbody>
@@ -48,7 +46,7 @@
         </td>
         <td class="no-mobile" style="text-align: right;">{{$topic.Replies}}</td>
         <td class="no-mobile" style="text-align: right;">{{$topic.Views}}</td>
-        <td class="no-mobile" style="text-align: right;">{{$site.DateTime $topic.LastReplyAt}}</td>
+        <td class="no-mobile date-column">{{$site.DateTime $topic.LastReplyAt}}</td>
       </tr>
       {{ end }}
     </tbody>

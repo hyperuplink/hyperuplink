@@ -12,8 +12,7 @@
 				<th scope="col">{{$_.T "search_col_result"}}</th>
 				<th class="no-mobile" scope="col" style="text-align: right;
                    width: 80px">{{$_.T "search_col_type"}}</th>
-				<th class="no-mobile" scope="col" style="text-align: right;
-                   width: 140px">{{$_.T "search_col_date"}}</th>
+				<th class="no-mobile date-column" scope="col">{{$_.T "search_col_date"}}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -34,7 +33,7 @@
 				<td class="no-mobile" style="text-align: right;">
 					{{ if $r.IsReply }}{{$_.T "search_kind_reply"}}{{ else }}{{$_.T "search_kind_topic"}}{{ end }}
 				</td>
-				<td class="no-mobile" style="text-align: right;">{{$site.DateTime $r.CreatedAt}}</td>
+				<td class="no-mobile date-column">{{$site.DateTime $r.CreatedAt}}</td>
 			</tr>
 			{{ end }}
 		</tbody>

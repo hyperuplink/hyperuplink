@@ -7,7 +7,7 @@
     {{ $topics := .Data.Get "topics"}}
     {{ $replies := .Data.Get "replies"}}
     <div class="flex-row flex-wrap gap margin">
-      <div class="flex-column gap" style="min-width: 200px;">
+      <div class="flex-column quarter gap">
       <!------ Profile ------>
       <fieldset class="flex-column padding">
         <legend>{{$user.Username}}</legend>
@@ -50,21 +50,26 @@
           </div>
         </form>
       </fieldset>
+      <!------ Administrate ------>
+      <fieldset class="flex-column padding">
+        <legend>{{$._.T "administrate"}}</legend>
+        <div class="flex-column gap">
+          {{ template "views/layouts/partials/user-actions" dict "Site" $.Site "_" $._ "Session" $.Session "User" $user }}
+        </div>
+      </fieldset>
       {{ end }}
       </div>
-      <div class="flex-column grow gap">
+      <div class="flex-column three-quarters gap">
         <!------ Recent Topics ------>
         <fieldset class="flex-column padding">
           <legend>{{$._.T "recent_topics"}}</legend>
           <div class="list" role="listbox">
-            <table>
+            <table class="detailed">
               <thead>
                 <tr>
                   <th scope="col">{{$._.T "subject"}}</th>
-                  <th class="no-mobile"
-                      scope="col"
-                      style="text-align: right;
-                             width: 140px">{{$._.T "updated_adjective"}}</th>
+                  <th class="no-mobile date-column"
+                      scope="col">{{$._.T "updated_adjective"}}</th>
                 </tr>
               </thead>
               <tbody>
@@ -78,7 +83,7 @@
                       <div class="icon-label">{{.Name}}</div>
                     </a>
                   </td>
-                  <td class="no-mobile" style="text-align: right;">{{$.Site.DateTime .CreatedAt}}</td>
+                  <td class="no-mobile date-column">{{$.Site.DateTime .CreatedAt}}</td>
                 </tr>
                 {{ else }}
                 <tr>
@@ -93,14 +98,12 @@
         <fieldset class="flex-column padding">
           <legend>{{$._.T "recent_replies"}}</legend>
           <div class="list" role="listbox">
-            <table>
+            <table class="detailed">
               <thead>
                 <tr>
                   <th scope="col">{{$._.T "text"}}</th>
-                  <th class="no-mobile"
-                      scope="col"
-                      style="text-align: right;
-                             width: 140px">{{$._.T "updated_adjective"}}</th>
+                  <th class="no-mobile date-column"
+                      scope="col">{{$._.T "updated_adjective"}}</th>
                 </tr>
               </thead>
               <tbody>
@@ -114,7 +117,7 @@
                       <div class="icon-label">{{ trunc 64 .Text }}</div>
                     </a>
                   </td>
-                  <td class="no-mobile" style="text-align: right;">{{$.Site.DateTime .CreatedAt}}</td>
+                  <td class="no-mobile date-column">{{$.Site.DateTime .CreatedAt}}</td>
                 </tr>
                 {{ else }}
                 <tr>

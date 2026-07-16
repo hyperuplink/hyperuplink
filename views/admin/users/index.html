@@ -5,7 +5,6 @@
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ $users := .Data.Get "users"}}
     {{ range $users }}
-    {{ $isSelf := eq .Username $.Session.GetCurrentUserUsername }}
     <div class="raised padding margin post flex-row gap">
       <div class="flex-row grow gap" style="align-items: center;">
         <a href="{{$.Site.GetRelRoot}}~{{.Username}}"
@@ -15,49 +14,7 @@
            title="{{.Email}}"
            class="{{ if .DeletedAt.Valid }}deleted{{ else if .BannedAt.Valid }}banned{{ else if not .ConfirmedAt.Valid }}unconfirmed{{ end }}">{{.Email}}</a>
       </div>
-      <form method="post"
-            action="{{$.Site.GetFormAction "confirm"}}"
-            class="flex-column">
-        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-        <input type="hidden" name="id" value="{{.ID}}">
-        <button type="submit"
-                class=""
-                title="{{$._.T "confirm"}}"
-                {{ if or $isSelf .ConfirmedAt.Valid }}disabled=""{{ end }}>{{$._.T "confirm"}}</button>
-      </form>
-      {{ if .BannedAt.Valid }}
-      <form method="post"
-            action="{{$.Site.GetFormAction "unban"}}"
-            class="flex-column">
-        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-        <input type="hidden" name="id" value="{{.ID}}">
-        <button type="submit"
-                class="highlight"
-                title="{{$._.T "unban"}}"
-                {{ if $isSelf }}disabled=""{{ end }}>{{$._.T "unban"}}</button>
-      </form>
-      {{ else }}
-      <form method="post"
-            action="{{$.Site.GetFormAction "ban"}}"
-            class="flex-column">
-        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-        <input type="hidden" name="id" value="{{.ID}}">
-        <button type="submit"
-                class="highlight"
-                title="{{$._.T "ban"}}"
-                {{ if $isSelf }}disabled=""{{ end }}>{{$._.T "ban"}}</button>
-      </form>
-      {{ end }}
-      <form method="post"
-            action="{{$.Site.GetFormAction "delete"}}"
-            class="flex-column">
-        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
-        <input type="hidden" name="id" value="{{.ID}}">
-        <button type="submit"
-                class="danger"
-                title="{{$._.T "delete"}}"
-                {{ if or $isSelf .DeletedAt.Valid }}disabled=""{{ end }}>{{$._.T "delete"}}</button>
-      </form>
+      {{ template "views/layouts/partials/user-actions" dict "Site" $.Site "_" $._ "Session" $.Session "User" . }}
     </div>
     {{ end }}
   </div>
