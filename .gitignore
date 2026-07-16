@@ -8,6 +8,8 @@
 /build/**
 !/build/.gitkeep
 /dist/**
+/result
+/result-*
 .DS_Store
 /dummy.sql
 
