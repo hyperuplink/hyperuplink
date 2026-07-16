@@ -47,9 +47,21 @@ PromoteAdmin = ["dummy1@example.com", "dummy2@example.com"]
 # ID = "jabber"
 # Type = "xmpp"
 # XMPP.Server ="jabber.example.org:5222"
-# XMPP.TLS = true
+# XMPP.InsecureSkipVerify = false
 # XMPP.Username = "hello@example.org"
 # XMPP.Password = "swordfish123"
+
+[[Target]]
+ID = "debug-email"
+Type = "debug"
+Debug.Emulates = "email"
+Debug.Path = "/tmp/hyperuplink-messages"
+
+[[Target]]
+ID = "debug-xmpp"
+Type = "debug"
+Debug.Emulates = "xmpp"
+Debug.Path = "/tmp/hyperuplink-messages"
 
 [[Storage]]
 ID = "remote-storage"
