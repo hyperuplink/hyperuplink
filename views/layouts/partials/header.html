@@ -1,10 +1,12 @@
 <div class="margin header raised">
+  {{ if .UserProfile.ShowBanner }}
   <div class="banner">
     <a href="{{.Site.GetRelRoot}}" title="{{.Site.Title}}">
       <img src="{{.Site.BannerImageURL}}">
       <!-- <div class="text">VT100 Community</div> -->
     </a>
   </div>
+  {{ end }}
   <div class="flex-row menubar">
     <div class="flex-column grow">
       <ul role="menubar">

@@ -13,11 +13,11 @@
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     <!-- POST -->
     {{ if eq $.Site.GetPager.ActivePage 1 }}
-    {{ template "views/layouts/partials/post" dict "Site" $.Site "Session" $.Session "_" $._ "post" $topic "canWrite" $canWrite "canModerate" $canModerate "target" "topic" "topicURL" $topicURL "poll" $poll }}
+    {{ template "views/layouts/partials/post" dict "Site" $.Site "Session" $.Session "_" $._ "UserProfile" $.UserProfile "post" $topic "canWrite" $canWrite "canModerate" $canModerate "target" "topic" "topicURL" $topicURL "poll" $poll }}
     {{ end }}
     {{ range $idx_reply, $reply := $replies }}
     <!-- REPLY -->
-    {{ template "views/layouts/partials/post" dict "Site" $.Site "Session" $.Session "_" $._ "post" $reply "canWrite" $canWrite "canModerate" $canModerate "target" "reply" "topicURL" $topicURL }}
+    {{ template "views/layouts/partials/post" dict "Site" $.Site "Session" $.Session "_" $._ "UserProfile" $.UserProfile "post" $reply "canWrite" $canWrite "canModerate" $canModerate "target" "reply" "topicURL" $topicURL }}
     {{ end }}
     {{ template "views/layouts/partials/pagination" dict "Site" .Site }}
   </div>

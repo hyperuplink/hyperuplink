@@ -16,6 +16,7 @@ var Routes map[string]Route = map[string]Route{
 	"AccountPassword":         {hierarchy: []string{"root", "account", "password"}},
 	"AccountProfile":          {hierarchy: []string{"root", "account", "profile"}},
 	"AccountSettings":         {hierarchy: []string{"root", "account", "settings"}},
+	"AccountSettingsView":     {hierarchy: []string{"root", "account", "settings", "view"}, noBreadcrumb: true},
 	"AccountTwofactor":        {hierarchy: []string{"root", "account", "twofactor"}},
 	"Admin":                   {hierarchy: []string{"root", "admin"}},
 	"Attachment":              {hierarchy: []string{"root", "attachment", ":attachment"}},

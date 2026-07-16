@@ -12,8 +12,10 @@
       <fieldset class="flex-column padding">
         <legend>{{$user.Username}}</legend>
         <div class="flex-column gap">
+          {{ if $.UserProfile.ShowProfilePictures }}
           <img class="picture lowered"
                src="{{$.Site.ProfilePicture $user.ProfilePicture}}">
+          {{ end }}
           <div class="role">{{ $._.T (nospace (cat $user.Role "_role")) }}</div>
           <div class="units">
             {{ range $user.MemberOf }}

@@ -24,6 +24,8 @@ func New(
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
 		base.Get("", r.Index).Name("show")
 		base.Post("update", r.Update).Name("update")
+		base.Get(route.For("AccountSettingsView").Pathname()+"/:view",
+			r.View).Name("view")
 	}, r.Path+".")
 
 	return r, nil

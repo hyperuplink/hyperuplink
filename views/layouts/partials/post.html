@@ -8,11 +8,16 @@
 {{ $target := get $dict "target"}}
 {{ $topicURL := get $dict "topicURL"}}
 {{ $poll := get $dict "poll"}}
+{{ $userProfile := get $dict "UserProfile"}}
+{{ $showProfilePictures := true }}
+{{ if $userProfile }}{{ $showProfilePictures = $userProfile.ShowProfilePictures }}{{ end }}
 {{ if $post }}
 <div id="post-{{$post.ShortID}}" class="raised padding margin post flex-row gap">
   <fieldset class="profile padding">
+    {{ if $showProfilePictures }}
     <img class="picture lowered"
          src="{{$site.ProfilePicture $post.AuthorProfilePicture}}">
+    {{ end }}
     <a href="{{$site.GetRelRoot}}~{{$post.AuthorUsername}}"
        title="{{$post.AuthorUsername}}">{{$post.AuthorUsername}}</a>
     <div class="role">{{ $_.T (nospace (cat $post.AuthorRole "_role")) }}</div>

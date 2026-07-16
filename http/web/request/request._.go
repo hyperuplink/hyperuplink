@@ -2,6 +2,7 @@ package request
 
 import (
 	"fmt"
+	"net/url"
 	"reflect"
 	"strings"
 
@@ -25,24 +26,25 @@ import (
 )
 
 type Request struct {
-	r       route.IRouteController
-	c       fiber.Ctx
-	rt      route.Route
-	layouts []string
-	view    string
-	Menu    *menu.Menu
-	BCN     *bcn.BreadcrumbNavigation
-	Site    *site.Site
-	Session *session.Session
-	Flash   *flash.Flash
-	Form    *form.Form
-	In      *in.Internationalization
-	Data    *data.Data
-	System  *setting.System
-	Theme   *setting.Theme
-	perms   *permission.Resolution
-	absPath string
-	relRoot string
+	r           route.IRouteController
+	c           fiber.Ctx
+	rt          route.Route
+	layouts     []string
+	view        string
+	Menu        *menu.Menu
+	BCN         *bcn.BreadcrumbNavigation
+	Site        *site.Site
+	Session     *session.Session
+	Flash       *flash.Flash
+	Form        *form.Form
+	In          *in.Internationalization
+	Data        *data.Data
+	System      *setting.System
+	Theme       *setting.Theme
+	UserProfile *setting.UserProfile
+	perms       *permission.Resolution
+	absPath     string
+	relRoot     string
 }
 
 func (req *Request) Perms() *permission.Resolution {
@@ -112,6 +114,9 @@ func New(
 
 	_, req.absPath, req.relRoot = helpers.GetPaths(req.c)
 
+	defaultUserProfile := setting.NewUserProfile()
+	req.UserProfile = &defaultUserProfile
+
 	if userID, ok := req.Session.GetUserID(); ok {
 		usr, err := req.r.GetRuntime().Repositories.User.GetByID(
 			userID,
@@ -132,12 +137,23 @@ func New(
 			}
 		} else {
 			req.Session.SetCurrentUser(usr)
+
+			settingUserProfile, err := settingRepo.GetOrCreateUserProfile(
+				req.r.GetRuntime().Repositories.Setting,
+				usr.ID,
+			)
+			if err != nil {
+				req.r.GetRuntime().Error("error", err)
+			} else {
+				req.UserProfile = &settingUserProfile.JSONValue
+			}
 		}
 	}
 
 	req.Menu.SetI18n(req.In.Ts)
 	req.Menu.SetGeneral(settingGeneral.JSONValue)
 	req.Menu.SetRole(req.Session.GetCurrentUserRole())
+	req.Menu.SetUserProfile(*req.UserProfile)
 	req.Menu.SetPerms(req.Perms())
 
 	if title == "" {
@@ -260,6 +276,7 @@ func (req *Request) RespondWithView(layouts []string, view string) error {
 		"Data":        req.Data,
 		"System":      req.System,
 		"Theme":       req.Theme,
+		"UserProfile": req.UserProfile,
 		"Perms":       req.Perms(),
 	}, layoutsFull...)
 }
@@ -366,6 +383,36 @@ func (req *Request) RedirectToOnError(err error, path string) (bool, error) {
 		req.relRoot,
 		path,
 	))
+}
+
+func (req *Request) backURL() string {
+	referer := req.c.Referer()
+	if referer == "" {
+		return req.relRoot
+	}
+
+	ref, err := url.Parse(referer)
+	if err != nil || !strings.HasPrefix(ref.Path, "/") {
+		return req.relRoot
+	}
+	if ref.Host != "" && ref.Host != req.c.Host() {
+		return req.relRoot
+	}
+
+	back := ref.EscapedPath()
+	if ref.RawQuery != "" {
+		back = fmt.Sprintf("%s?%s", back, ref.RawQuery)
+	}
+
+	return back
+}
+
+func (req *Request) RedirectBack() error {
+	return req.redirect(req.backURL())
+}
+
+func (req *Request) RedirectBackOnError(err error) (bool, error) {
+	return req.redirectOnError(err, req.backURL())
 }
 
 func (req *Request) RedirectToRoot() error {

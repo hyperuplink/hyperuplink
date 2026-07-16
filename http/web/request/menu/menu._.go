@@ -17,6 +17,7 @@ type Menu struct {
 	currentCategorySlug string
 	currentForumSlug    string
 	general             setting.General
+	userProfile         setting.UserProfile
 	perms               *permission.Resolution
 }
 
@@ -48,6 +49,11 @@ func (m *Menu) SetI18n(fn func(msg string) string) {
 
 func (m *Menu) SetGeneral(general setting.General) {
 	m.general = general
+	m.generate()
+}
+
+func (m *Menu) SetUserProfile(userProfile setting.UserProfile) {
+	m.userProfile = userProfile
 	m.generate()
 }
 
@@ -366,54 +372,40 @@ func (m *Menu) AdminMenu(forRole user.Role) []MenuItem {
 	return []MenuItem{}
 }
 
+func (m *Menu) viewToggle(view string, checked bool) MenuItem {
+	return MenuItem{
+		IsCheckbox: true,
+		Checked:    checked,
+		Label:      m.T(view),
+		Title:      m.T(view),
+		Href: fmt.Sprintf("%s/%s",
+			route.For("AccountSettingsView").AsURL(),
+			view,
+		),
+	}
+}
+
 func (m *Menu) ViewMenu(forRole user.Role) []MenuItem {
+	if forRole == user.GuestRole {
+		return []MenuItem{}
+	}
+
 	return []MenuItem{
 		{
 			Label: m.T("_v_iew"),
 			SubItems: []MenuItem{
-				{
-					Label: m.T("mode"),
-					SubItems: []MenuItem{
-						{
-							IsCheckbox: true,
-							Checked:    true,
-							Label:      m.T("light"),
-							Title:      m.T("light"),
-							Href:       route.For("Session").AsURL() + "?mode=light",
-						},
-						{
-							IsCheckbox: true,
-							Checked:    false,
-							Label:      m.T("dark"),
-							Title:      m.T("dark"),
-							Href:       route.For("Session").AsURL() + "?mode=dark",
-						},
-					},
-				},
-				{
-					IsSeparator: true,
-				},
-				{
-					IsCheckbox: true,
-					Checked:    true,
-					Label:      m.T("banner"),
-					Title:      m.T("banner"),
-					Href:       route.For("Session").AsURL() + "?banner=false",
-				},
-				{
-					IsCheckbox: true,
-					Checked:    true,
-					Label:      m.T("footer"),
-					Title:      m.T("footer"),
-					Href:       route.For("Session").AsURL() + "?footer=false",
-				},
-				{
-					IsCheckbox: true,
-					Checked:    true,
-					Label:      m.T("profile_pictures"),
-					Title:      m.T("profile_pictures"),
-					Href:       route.For("Session").AsURL() + "?profile_pictures=false",
-				},
+				m.viewToggle(
+					setting.UserProfileViewBanner,
+					m.userProfile.ShowBanner,
+				),
+				m.viewToggle(
+					setting.UserProfileViewFooter,
+					m.userProfile.ShowFooter,
+				),
+				m.viewToggle(
+					setting.UserProfileViewProfilePictures,
+					m.userProfile.ShowProfilePictures,
+				),
 			},
 		},
 	}
