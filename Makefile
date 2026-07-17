@@ -1,4 +1,4 @@
-.PHONY: all help test build db\:drop run release
+.PHONY: all help test build db\:drop db\:seed run release manual\:screenshots site\:screenshots
 PWD := $(shell pwd)
 GOPATH := $(shell go env GOPATH)
 
@@ -26,6 +26,10 @@ EBUILD = $(EBUILDDIR)/hyperuplink-$(VERSION).ebuild
 COMMIT := $(shell git rev-parse --verify HEAD)
 DATE := $(shell date)
 
+# Where the hyperup.link Hugo project keeps the screenshots its landing page
+# shows. It is a sibling checkout, so override this if yours sits elsewhere.
+SITE ?= $(abspath $(PWD)/../pub/static/screenshots)
+
 all: build
 
 help: ## print this help
@@ -44,8 +48,19 @@ build: ## build
 db\:drop: ## clear development database (drop all tables and content, keep the database)
 	psql -h localhost -p 5432 -U postgres -d hyperuplink_dev -c "DROP SCHEMA public CASCADE;" -c "CREATE SCHEMA public;"
 
+db\:seed: build ## seed the development database with users and a board
+	@tools/seed/seed.sh "file://$(PWD)/hyperuplink.toml" hyperuplink_dev
+
 run: build ## build and run
 	./build/hyperuplink -c "file://$(PWD)/hyperuplink.toml"
+
+manual\:screenshots: ## regenerate the screenshots embedded in the manual
+	@tools/screenshots/run.sh -set manual
+
+site\:screenshots: ## regenerate the screenshots on the hyperup.link website (SITE=...)
+	@test -d "$(dir $(SITE))" \
+		|| { echo "error: '$(dir $(SITE))' not found, set SITE=/path/to/pub/static/screenshots"; exit 1; }
+	@tools/screenshots/run.sh -set site -out "$(SITE)"
 
 release: ## bump the nix package, commit and tag a release (VERSION=x.y.z)
 	@echo "$(VERSION)" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$$' \
