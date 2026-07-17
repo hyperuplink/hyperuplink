@@ -1,5 +1,5 @@
 # Copyright 2025 Hyperuplink Authors
-# Distributed under the terms of the SEGV License, Version 1.0
+# Distributed under the terms of the SEGV License, Version 1.1
 
 EAPI=8
 
@@ -31,7 +31,7 @@ else
 	KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~riscv ~x86"
 fi
 
-LICENSE="SEGV"
+LICENSE="SEGV-1.1"
 SLOT="0"
 
 BDEPEND=">=dev-lang/go-1.26.4"

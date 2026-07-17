@@ -1,5 +1,5 @@
 # Copyright 2025 Hyperuplink Authors
-# Distributed under the terms of the SEGV License, Version 1.0
+# Distributed under the terms of the SEGV License, Version 1.1
 
 EAPI=8
 

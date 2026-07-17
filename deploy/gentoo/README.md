@@ -24,7 +24,7 @@ deploy/gentoo/
 │   ├── hyperuplink-0.1.0.ebuild
 │   ├── hyperuplink-9999.ebuild
 │   └── metadata.xml
-├── licenses/SEGV               # SEGV license
+├── licenses/SEGV-1.1           # SEGV license, v1.1
 ├── metadata/layout.conf
 └── profiles/repo_name
 ```
@@ -56,7 +56,7 @@ EOF
 
 ```sh
 # The SEGV license is non-OSI and must be accepted explicitly for this package.
-echo 'www-apps/hyperuplink SEGV' >> /etc/portage/package.license
+echo 'www-apps/hyperuplink SEGV-1.1' >> /etc/portage/package.license
 
 # Either the released version:
 echo 'www-apps/hyperuplink ~amd64' >> /etc/portage/package.accept_keywords
@@ -128,9 +128,9 @@ proxy, in `Mode = "production"` so that the session cookie is HTTPS-only.
 
 ## Notes
 
-- Hyperuplink is under the custom, non-OSI **SEGV** license, whose full text is
-  in `licenses/SEGV`. `::gentoo` does not carry it, which is why it is bundled
-  here and must be accepted via `package.license`.
+- Hyperuplink is under the custom, non-OSI **SEGV** license, whose text
+  (version 1.1) is in `licenses/SEGV-1.1`. `::gentoo` does not carry it, which
+  is why it is bundled here and must be accepted via `package.license`.
 - `make release VERSION=<new>` writes `hyperuplink-<new>.ebuild` for you, as a
   copy of the live one. The Manifest is not part of that, because it hashes the
   deps tarball that only exists once the Release workflow has attached it to the

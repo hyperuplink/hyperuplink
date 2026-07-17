@@ -109,7 +109,7 @@ buildGoModule (finalAttrs: {
     # Redistributing the built binary is allowed.
     license = {
       shortName = "SEGV";
-      fullName = "SEGV License, Version 1.0";
+      fullName = "SEGV License, Version 1.1";
       url = "https://xn--gckvb8fzb.com/segv/";
       free = false;
       redistributable = true;

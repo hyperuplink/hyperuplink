@@ -1,5 +1,5 @@
 # Copyright 2025 Hyperuplink Authors
-# Distributed under the terms of the SEGV License, Version 1.0
+# Distributed under the terms of the SEGV License, Version 1.1
 
 EAPI=8
 
@@ -51,9 +51,9 @@ else
   KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~riscv ~x86"
 fi
 
-# SEGV is a custom, non-OSI license. The full text ships as licenses/SEGV in
-# this overlay, because ::gentoo does not carry it.
-LICENSE="SEGV"
+# SEGV is a custom, non-OSI license. The full text ships as licenses/SEGV-1.1
+# in this overlay, because ::gentoo does not carry it.
+LICENSE="SEGV-1.1"
 SLOT="0"
 
 # go.mod requires this Go version, and GOTOOLCHAIN=local
