@@ -13,7 +13,33 @@ import (
 )
 
 func (r *Route) Show(c fiber.Ctx) (err error) {
-	return r.render(c, c.Params("*"))
+	sub := c.Params("*")
+
+	if path.Ext(sub) != "" {
+		return r.sendAsset(c, sub)
+	}
+
+	return r.render(c, sub)
+}
+
+func (r *Route) sendAsset(c fiber.Ctx, sub string) (err error) {
+	embedPath := path.Join("docs", "manual", strings.Trim(sub, "/"))
+	if !strings.HasPrefix(embedPath, "docs/manual/") ||
+		path.Ext(embedPath) == ".md" {
+		return c.SendStatus(fiber.StatusNotFound)
+	}
+
+	var body []byte
+	if body, err = fs.ReadFile(
+		r.Runtime.Embeds["docs"],
+		embedPath,
+	); err != nil {
+		return c.SendStatus(fiber.StatusNotFound)
+	}
+
+	c.Type(strings.TrimPrefix(path.Ext(embedPath), "."))
+
+	return c.Send(body)
 }
 
 func (r *Route) render(c fiber.Ctx, sub string) (err error) {
@@ -49,8 +75,14 @@ func (r *Route) render(c fiber.Ctx, sub string) (err error) {
 		return c.SendStatus(fiber.StatusNotFound)
 	}
 
+	var expanded string
+	expanded, err = expandLinks(req, myRoute, string(src))
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
 	var html string
-	html, err = r.Runtime.Markdown.Convert(string(src))
+	html, err = r.Runtime.Markdown.ConvertDocs(expanded)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

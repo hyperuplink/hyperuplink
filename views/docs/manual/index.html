@@ -3,6 +3,6 @@
     <div class="title-bar-text">{{$.Site.Title}}</div>
   </div>
   <div class="window-body {{$.Site.GetRoute.AsID}}">
-    <div class="markdown">{{ safeHTML (.Data.Get "html") }}</div>
+    <div class="markdown padding">{{ safeHTML (.Data.Get "html") }}</div>
   </div>
 </div>
