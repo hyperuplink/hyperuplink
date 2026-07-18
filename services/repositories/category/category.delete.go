@@ -12,6 +12,52 @@ func (repo *Repository) Delete(model *category.Category) (err error) {
 	defer tx.End()
 
 	_, err = tx.Exec(`
+		UPDATE replies SET
+			updated_at = NOW(),
+			deleted_at = NOW()
+		WHERE deleted_at IS NULL
+		AND topic_id IN (
+			SELECT t.id FROM topics t
+			JOIN forums f ON f.id = t.forum_id
+			WHERE f.category_id = $1
+		)
+		`,
+		model.ID,
+	)
+	if err != nil {
+		return repo.db.ConvertError(err)
+	}
+
+	_, err = tx.Exec(`
+		UPDATE topics SET
+			updated_at = NOW(),
+			deleted_at = NOW()
+		WHERE deleted_at IS NULL
+		AND forum_id IN (
+			SELECT id FROM forums
+			WHERE category_id = $1
+		)
+		`,
+		model.ID,
+	)
+	if err != nil {
+		return repo.db.ConvertError(err)
+	}
+
+	_, err = tx.Exec(`
+		UPDATE forums SET
+			updated_at = NOW(),
+			deleted_at = NOW()
+		WHERE deleted_at IS NULL
+		AND category_id = $1
+		`,
+		model.ID,
+	)
+	if err != nil {
+		return repo.db.ConvertError(err)
+	}
+
+	_, err = tx.Exec(`
 		UPDATE categories SET
 			updated_at = NOW(),
 			deleted_at = NOW()

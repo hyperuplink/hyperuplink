@@ -25,7 +25,7 @@ CREATE TRIGGER refresh_vreplies
  FOR EACH STATEMENT EXECUTE PROCEDURE refresh_vreplies();
 
 CREATE TRIGGER refresh_vreplies
- AFTER INSERT ON replies
+ AFTER INSERT OR UPDATE ON replies
  FOR EACH STATEMENT EXECUTE PROCEDURE refresh_vreplies();
 
 -- IMPORTANT: the tsvector expression below MUST stay identical to the reply

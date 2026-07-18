@@ -1,10 +1,12 @@
 package topics
 
 import (
+	"errors"
 	"strconv"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
@@ -39,6 +41,9 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 			Limit: 1,
 		},
 	)
+	if errors.Is(err, errs.ErrNoRows) {
+		return c.SendStatus(fiber.StatusNotFound)
+	}
 	if ret, rerr := req.RedirectToRootOnError(err); ret == true {
 		return rerr
 	}

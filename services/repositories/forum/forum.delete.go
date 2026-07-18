@@ -12,6 +12,35 @@ func (repo *Repository) Delete(model *forum.Forum) (err error) {
 	defer tx.End()
 
 	_, err = tx.Exec(`
+		UPDATE replies SET
+			updated_at = NOW(),
+			deleted_at = NOW()
+		WHERE deleted_at IS NULL
+		AND topic_id IN (
+			SELECT id FROM topics
+			WHERE forum_id = $1
+		)
+		`,
+		model.ID,
+	)
+	if err != nil {
+		return repo.db.ConvertError(err)
+	}
+
+	_, err = tx.Exec(`
+		UPDATE topics SET
+			updated_at = NOW(),
+			deleted_at = NOW()
+		WHERE deleted_at IS NULL
+		AND forum_id = $1
+		`,
+		model.ID,
+	)
+	if err != nil {
+		return repo.db.ConvertError(err)
+	}
+
+	_, err = tx.Exec(`
 		UPDATE forums SET
 			updated_at = NOW(),
 			deleted_at = NOW()

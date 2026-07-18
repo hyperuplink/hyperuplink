@@ -54,11 +54,11 @@ CREATE TRIGGER refresh_vtopics
  FOR EACH STATEMENT EXECUTE PROCEDURE refresh_vtopics();
 
 CREATE TRIGGER refresh_vtopics
- AFTER INSERT ON topics
+ AFTER INSERT OR UPDATE ON topics
  FOR EACH STATEMENT EXECUTE PROCEDURE refresh_vtopics();
 
 CREATE TRIGGER refresh_vtopics
- AFTER INSERT ON replies
+ AFTER INSERT OR UPDATE ON replies
  FOR EACH STATEMENT EXECUTE PROCEDURE refresh_vtopics();
 
 -- We could enable this to refresh vtopics every time activities changes, in

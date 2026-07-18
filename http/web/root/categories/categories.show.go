@@ -1,7 +1,10 @@
 package categories
 
 import (
+	"errors"
+
 	"github.com/gofiber/fiber/v3"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
@@ -31,6 +34,9 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 			Limit: 1,
 		},
 	)
+	if errors.Is(err, errs.ErrNoRows) {
+		return c.SendStatus(fiber.StatusNotFound)
+	}
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
