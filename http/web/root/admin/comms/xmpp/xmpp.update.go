@@ -1,22 +1,17 @@
 package xmpp
 
 import (
+	"errors"
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
-	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	logicxmpp "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/comms/xmpp"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/services/config"
-	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
-
-type XMPPUpdateForm struct {
-	TargetID string `form:"target_id" validate:"omitempty,max=64"`
-}
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
 	myRoute := route.For("AdminCommsXmpp")
@@ -30,58 +25,24 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(XMPPUpdateForm)
+	in := new(logicxmpp.UpdateInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	r.Runtime.Debug("form", frm)
+	r.Runtime.Debug("form", in)
 
-	if frm.TargetID != "" {
-		targets, terr := r.Runtime.Config.Targets()
-		if ret, rerr := req.RespondOnError(terr); ret == true {
-			return rerr
-		}
+	actorID := uuid.NullUUID{}
+	actorID.UUID, actorID.Valid = req.Session.GetUserUUID()
 
-		valid := false
-		for _, target := range targets {
-			if target.ID == frm.TargetID &&
-				target.Serves(config.TargetTypeXMPP) {
-				valid = true
-				break
-			}
-		}
-		if !valid {
-			req.Flash.SetError(errs.ErrTargetIDNotFound)
-			return req.RedirectToRoute(myRoute)
-		}
+	err = logicxmpp.Update(r.Runtime, actorID, in)
+	if errors.Is(err, errs.ErrTargetIDNotFound) {
+		req.Flash.SetError(err)
+		return req.RedirectToRoute(myRoute)
 	}
-
-	var settingCommsXMPP *setting.Setting[setting.CommsXMPP]
-	settingCommsXMPP, err = settingRepo.GetByID[setting.CommsXMPP](
-		r.Runtime.Repositories.Setting,
-		"comms_xmpp",
-	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
-	}
-
-	before := settingCommsXMPP.JSONValue
-
-	settingCommsXMPP.JSONValue.TargetID = frm.TargetID
-
-	err = settingRepo.Update[setting.CommsXMPP](
-		r.Runtime.Repositories.Setting,
-		settingCommsXMPP,
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	if actorID, ok := req.Session.GetUserUUID(); ok {
-		logicactivity.RecordAdminSettingsUpdate(r.Runtime, actorID,
-			"comms_xmpp", before, settingCommsXMPP.JSONValue)
 	}
 
 	return req.RedirectToRoute(myRoute)

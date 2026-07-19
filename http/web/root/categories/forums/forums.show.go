@@ -5,16 +5,13 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
-	"xn--gckvb8fzb.com/hyperuplink/http/web/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/site"
-	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
+	logicforums "xn--gckvb8fzb.com/hyperuplink/logic/root/categories/forums"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/models/vforum"
-	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func (r *Route) Show(c fiber.Ctx) (err error) {
@@ -31,23 +28,35 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var fum *vforum.VForum
-	fum, err = r.Runtime.Repositories.Forum.VGetBySlug(
-		c.Params("forums"), // TODO: Abstract into req, automatic err handling
-		common.QueryOptions{
-			Limit: 1,
-		},
-	)
+	var activePage int
+	activePage, err = strconv.Atoi(c.Query("page", "1"))
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	viewerID := uuid.NullUUID{}
+	viewerID.UUID, viewerID.Valid = req.Session.GetUserUUID()
+
+	var perPage int = req.System.GetTopicsPerPage()
+
+	var view *logicforums.View
+	view, err = logicforums.Show(r.Runtime, &logicforums.ShowInput{
+		ForumSlug: c.Params("forums"),
+		Page:      activePage,
+		PerPage:   perPage,
+		ViewerID:  viewerID,
+	}, req.Perms())
 	if errors.Is(err, errs.ErrNoRows) {
 		return c.SendStatus(fiber.StatusNotFound)
+	}
+	if errors.Is(err, errs.ErrForbidden) {
+		return req.RedirectToRoot()
 	}
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
 
-	if !req.Perms().CanReadID(fum.CategoryID) {
-		return req.RedirectToRoot()
-	}
+	fum := view.Forum
 
 	req.Menu.SetCategoryForumSlugs(fum.CategorySlug, fum.Slug)
 
@@ -56,42 +65,12 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 	req.UpdateParentTitle(fum.CategoryName)
 	req.SetData("forum", fum)
 
-	var activePage int
-	var total int64
-	var perPage int = req.System.GetTopicsPerPage()
-	var limit int = perPage
+	req.Site.SetPager(site.NewPager(view.Pages, perPage, activePage))
 
-	activePage, err = strconv.Atoi(c.Query("page", "1"))
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
+	req.SetData("topics", view.Topics)
 
-	var tops *[]vtopic.VTopic
-	tops, total, err = r.Runtime.Repositories.Topic.VAllForForumUUID(
-		fum.ID,
-		common.QueryOptions{
-			OrderBy: "updated_at",
-			Order:   common.Descending,
-			Limit:   limit,
-			Page:    activePage,
-		},
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	pages := helpers.GetNumberOfPages(total, perPage)
-	req.Site.SetPager(site.NewPager(pages, perPage, activePage))
-
-	req.SetData("topics", tops)
-
-	if actorID, ok := req.Session.GetUserUUID(); ok {
-		var unread map[string]bool
-		unread, err = logicactivity.UnreadTopics(r.Runtime, actorID, tops)
-		if ret, rerr := req.RespondOnError(err); ret == true {
-			return rerr
-		}
-		req.SetData("unread", unread)
+	if view.Unread != nil {
+		req.SetData("unread", view.Unread)
 	}
 
 	return req.Respond()

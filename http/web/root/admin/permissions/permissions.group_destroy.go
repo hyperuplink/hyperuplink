@@ -6,13 +6,9 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/group"
+	logicpermissions "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/permissions"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
-
-type GroupDestroyForm struct {
-	ID string `form:"id" validate:"required,slug,min=1,max=32"`
-}
 
 func (r *Route) GroupDestroy(c fiber.Ctx) (err error) {
 	myRoute := route.For("AdminPermissions")
@@ -26,16 +22,13 @@ func (r *Route) GroupDestroy(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(GroupDestroyForm)
+	in := new(logicpermissions.GroupDestroyInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	grp := new(group.Group)
-	grp.ID = frm.ID
-
-	err = r.Runtime.Repositories.Group.Delete(grp)
+	err = logicpermissions.GroupDestroy(r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

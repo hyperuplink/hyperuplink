@@ -4,16 +4,11 @@ import (
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/category"
+	logiccategories "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/board/categories"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
-
-type CategoryMoveForm struct {
-	ID string `form:"id" validate:"required,uuid"`
-}
 
 func (r *Route) MoveUp(c fiber.Ctx) (err error) {
 	myRoute := route.For("AdminBoardCategories")
@@ -27,18 +22,15 @@ func (r *Route) MoveUp(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(CategoryMoveForm)
+	in := new(logiccategories.MoveInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	r.Runtime.Debug("form", frm)
+	r.Runtime.Debug("form", in)
 
-	cat := new(category.Category)
-	cat.ID, err = uuid.Parse(frm.ID)
-
-	err = r.Runtime.Repositories.Category.MoveUp(cat)
+	err = logiccategories.MoveUp(r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
@@ -58,18 +50,15 @@ func (r *Route) MoveDown(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(CategoryMoveForm)
+	in := new(logiccategories.MoveInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	r.Runtime.Debug("form", frm)
+	r.Runtime.Debug("form", in)
 
-	cat := new(category.Category)
-	cat.ID, err = uuid.Parse(frm.ID)
-
-	err = r.Runtime.Repositories.Category.MoveDown(cat)
+	err = logiccategories.MoveDown(r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

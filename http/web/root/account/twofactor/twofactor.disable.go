@@ -1,12 +1,14 @@
 package twofactor
 
 import (
+	"errors"
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	logictwofactor "xn--gckvb8fzb.com/hyperuplink/logic/root/account/twofactor"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
@@ -42,19 +44,11 @@ func (r *Route) Disable(c fiber.Ctx) (err error) {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	var match bool
-	if match, _, err = usr.CheckPassword(frm.CurrentPassword); !match {
-		if err == nil {
-			err = errs.ErrPasswordWrong
-		}
+	err = logictwofactor.Disable(r.Runtime, usr, frm.CurrentPassword)
+	if errors.Is(err, errs.ErrPasswordWrong) {
+		req.Flash.SetError(err)
+		return req.RedirectToRoute(myRoute)
 	}
-	if ret, rerr := req.RedirectToRouteOnError(err, myRoute); ret == true {
-		return rerr
-	}
-
-	usr.DisableOTP()
-
-	err = r.Runtime.Repositories.User.Update(usr)
 	if ret, rerr := req.RedirectToRouteOnError(err, myRoute); ret == true {
 		return rerr
 	}

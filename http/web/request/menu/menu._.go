@@ -216,6 +216,14 @@ func (m *Menu) AccountMenu(forRole user.Role) []MenuItem {
 						Title: m.T(route.For("AccountTwofactor").AsTitle()),
 						Href:  route.For("AccountTwofactor").AsURL(),
 					},
+					{
+						IsSeparator: true,
+					},
+					{
+						Label: m.T(route.For("AccountAPI").AsTitle()),
+						Title: m.T(route.For("AccountAPI").AsTitle()),
+						Href:  route.For("AccountAPI").AsURL(),
+					},
 				},
 			},
 			{

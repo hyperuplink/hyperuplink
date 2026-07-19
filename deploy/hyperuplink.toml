@@ -23,6 +23,19 @@ TrustProxies       = []
 ReduceMemoryUsage  = false
 ServerHeader       = ""
 
+[API]
+BindIP             = "0.0.0.0"
+Port               = 3001
+BodyLimit          = 67108864
+Concurrency        = 262144
+ProxyHeader        = "" # set to "X-Forwarded-For" behind a reverse proxy
+EnableIPValidation = false
+TrustProxy         = false
+TrustLoopback      = true
+TrustProxies       = []
+ReduceMemoryUsage  = false
+ServerHeader       = ""
+
 [Users]
 # The account registered with this e-mail is promoted to admin on sign-up
 PromoteAdmin = ["admin@example.com"]

@@ -5,9 +5,9 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
-	"xn--gckvb8fzb.com/hyperuplink/http/web/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/site"
+	"xn--gckvb8fzb.com/hyperuplink/logic/helpers/paging"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 	"xn--gckvb8fzb.com/hyperuplink/models/vactivity"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
@@ -47,7 +47,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	pages := helpers.GetNumberOfPages(total, perPage)
+	pages := paging.Pages(total, perPage)
 	req.Site.SetPager(site.NewPager(pages, perPage, activePage))
 
 	req.SetData("logs", logs)

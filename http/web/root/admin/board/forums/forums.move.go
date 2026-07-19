@@ -4,16 +4,11 @@ import (
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/forum"
+	logicforums "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/board/forums"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
-
-type ForumMoveForm struct {
-	ID string `form:"id" validate:"required,uuid"`
-}
 
 func (r *Route) MoveUp(c fiber.Ctx) (err error) {
 	myRoute := route.For("AdminBoardForums")
@@ -27,18 +22,15 @@ func (r *Route) MoveUp(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(ForumMoveForm)
+	in := new(logicforums.MoveInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	r.Runtime.Debug("form", frm)
+	r.Runtime.Debug("form", in)
 
-	fum := new(forum.Forum)
-	fum.ID, err = uuid.Parse(frm.ID)
-
-	err = r.Runtime.Repositories.Forum.MoveUp(fum)
+	err = logicforums.MoveUp(r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
@@ -58,18 +50,15 @@ func (r *Route) MoveDown(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(ForumMoveForm)
+	in := new(logicforums.MoveInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	r.Runtime.Debug("form", frm)
+	r.Runtime.Debug("form", in)
 
-	fum := new(forum.Forum)
-	fum.ID, err = uuid.Parse(frm.ID)
-
-	err = r.Runtime.Repositories.Forum.MoveDown(fum)
+	err = logicforums.MoveDown(r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

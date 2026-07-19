@@ -1,0 +1,62 @@
+<div class="margin window active">
+  <div class="title-bar">
+    <div class="title-bar-text">{{$.Site.Title}}</div>
+  </div>
+  <div class="window-body {{$.Site.GetRoute.AsID}}">
+    {{ $apikeys := .Data.Get "apikeys" }}
+    {{ if $apikeys }}
+    <div class="list">
+      <table class="detailed">
+        <thead>
+          <tr>
+            <th scope="col">{{$._.T "api_col_name"}}</th>
+            <th scope="col">{{$._.T "api_col_key"}}</th>
+            <th scope="col">{{$._.T "api_col_last_used"}}</th>
+            <th scope="col">{{$._.T "api_col_created"}}</th>
+            <th scope="col">{{$._.T "api_col_actions"}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range $key := $apikeys }}
+          <tr>
+            <td>{{$key.Name}}</td>
+            <td><code>{{$key.SecretHash}}</code></td>
+            <td>{{$.Site.DateTime $key.LastUsedAt}}</td>
+            <td>{{$.Site.DateTime $key.CreatedAt}}</td>
+            <td>
+              <form method="post" action="{{$.Site.GetFormAction "destroy"}}">
+                <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+                <input type="hidden" name="id" value="{{$key.ID}}">
+                <button type="submit" class="danger" title="{{$._.T "delete"}}">{{$._.T "delete"}}</button>
+              </form>
+            </td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </div>
+    {{ else }}
+    <div class="margin">{{$._.T "no_rows"}}</div>
+    {{ end }}
+  </div>
+</div>
+<div class="margin window active">
+  <div class="title-bar">
+    <div class="title-bar-text">{{._.T "api_key_new"}}</div>
+  </div>
+  <div class="window-body">
+    <div class="padding margin post flex-row gap">
+      <form method="post" action="{{.Site.GetFormAction}}" class="flex-column grow">
+        <input type="hidden" name="_csrf" value="{{.Site.GetCSRFToken}}">
+        <div class="flex-row gap">
+          <div class="flex-column grow">{{.Form.Input "text" "name" "" true}}</div>
+          <div class="flex-column">
+            <label>&nbsp;</label>
+            <button type="submit" class="affirmative" title="{{._.T "api_key_issue"}}">{{._.T "api_key_issue"}}</button>
+          </div>
+        </div>
+        <small>{{._.T "api_key_new_hint"}}</small>
+      </form>
+    </div>
+  </div>
+</div>

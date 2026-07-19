@@ -4,18 +4,11 @@ import (
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
-	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	logicpassword "xn--gckvb8fzb.com/hyperuplink/logic/root/account/password"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
-
-type PasswordUpdateForm struct {
-	CurrentPassword   string `form:"current_password" validate:"required,min=8,max=64"`
-	NewPassword       string `form:"new_password" validate:"required,min=8,max=64"`
-	NewPasswordRepeat string `form:"new_password_repeat" validate:"required,eqcsfield=NewPassword"`
-	OTPCode           string `form:"otp_code" validate:"omitempty,numeric,len=6"`
-}
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
 	myRoute := route.For("AccountPassword")
@@ -30,13 +23,11 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(PasswordUpdateForm)
+	in := new(logicpassword.UpdateInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
-
-	r.Runtime.Debug("form", frm)
 
 	var usr *user.User
 	usr, err = req.GetUser()
@@ -46,29 +37,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 
 	req.SetData("user", usr)
 
-	var match bool
-	if match, _, err = usr.CheckPassword(frm.CurrentPassword); !match {
-		if err == nil {
-			err = errs.ErrPasswordWrong
-		}
-	}
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	if usr.OTPEnabled && !user.ValidateOTP(usr.OTPSecret, frm.OTPCode) {
-		err = errs.ErrOTPCodeWrong
-	}
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	err = usr.SetPassword(frm.NewPassword)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	err = r.Runtime.Repositories.User.Update(usr)
+	err = logicpassword.Update(r.Runtime, usr, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

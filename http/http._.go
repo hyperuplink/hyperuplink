@@ -2,6 +2,7 @@ package http
 
 import (
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	"xn--gckvb8fzb.com/hyperuplink/http/api"
 	"xn--gckvb8fzb.com/hyperuplink/http/web"
 	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
@@ -33,7 +34,9 @@ func New(
 
 	switch ifType {
 	case IfaceAPI:
-		// TODO
+		if srv.iface, err = api.New(srv.rt); err != nil {
+			return nil, err
+		}
 	case IfaceWeb:
 		if srv.iface, err = web.New(srv.rt); err != nil {
 			return nil, err

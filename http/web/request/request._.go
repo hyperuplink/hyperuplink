@@ -19,6 +19,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/menu"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/session"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/site"
+	logicperms "xn--gckvb8fzb.com/hyperuplink/logic/helpers/perms"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
@@ -52,7 +53,7 @@ func (req *Request) Perms() *permission.Resolution {
 		return req.perms
 	}
 
-	req.perms = helpers.ResolvePermissions(
+	req.perms = logicperms.Resolve(
 		req.r.GetRuntime(),
 		req.Session.GetCurrentUserRole(),
 		req.Session.GetCurrentUserMemberOf(),

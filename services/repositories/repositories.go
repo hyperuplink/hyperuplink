@@ -4,6 +4,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/services/config"
 	"xn--gckvb8fzb.com/hyperuplink/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/activity"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/apikey"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/attachment"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/category"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/forum"
@@ -27,6 +28,7 @@ type Repositories struct {
 	Topic      *topic.Repository
 	Reply      *reply.Repository
 	Attachment *attachment.Repository
+	APIKey     *apikey.Repository
 	Permission *permission.Repository
 	PostEvent  *postevent.Repository
 	Activity   *activity.Repository
@@ -88,6 +90,12 @@ func New(
 	}
 	repos.Attachment = attachmentRepo
 
+	var apikeyRepo *apikey.Repository
+	if apikeyRepo, err = apikey.New(repos.db); err != nil {
+		return nil, err
+	}
+	repos.APIKey = apikeyRepo
+
 	var permissionRepo *permission.Repository
 	if permissionRepo, err = permission.New(repos.db); err != nil {
 		return nil, err
@@ -148,6 +156,10 @@ func (repos *Repositories) Startup() (err error) {
 		return err
 	}
 
+	if err = repos.APIKey.Startup(); err != nil {
+		return err
+	}
+
 	if err = repos.Permission.Startup(); err != nil {
 		return err
 	}
@@ -181,6 +193,10 @@ func (repos *Repositories) Shutdown() (err error) {
 	}
 
 	if err = repos.Permission.Shutdown(); err != nil {
+		return err
+	}
+
+	if err = repos.APIKey.Shutdown(); err != nil {
 		return err
 	}
 

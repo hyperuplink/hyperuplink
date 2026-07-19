@@ -6,7 +6,6 @@ import (
 	"io/fs"
 	"net/http"
 	"os"
-	"regexp"
 	runt "runtime"
 	"strconv"
 	"strings"
@@ -33,15 +32,11 @@ import (
 	slogfiber "github.com/samber/slog-fiber"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/validation"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
-)
-
-const (
-	VALID_SLUG_REGEX     = `^[a-z0-9\-]+$`
-	VALID_SLUG_REGEX_NEG = `[^a-z0-9\-]`
 )
 
 type Web struct {
@@ -54,22 +49,6 @@ type Web struct {
 	hash      string
 }
 
-type structValidator struct {
-	validate *validator.Validate
-}
-
-func IsValidSlug(fl validator.FieldLevel) bool {
-	value := fl.Field().String()
-
-	re := regexp.MustCompile(VALID_SLUG_REGEX)
-
-	return re.MatchString(value)
-}
-
-func (v *structValidator) Validate(out any) error {
-	return v.validate.Struct(out)
-}
-
 func New(
 	rt *runtime.Runtime,
 ) (srv *Web, err error) {
@@ -80,8 +59,7 @@ func New(
 		return nil, err
 	}
 
-	srv.validator = validator.New()
-	srv.validator.RegisterValidation("slug", IsValidSlug)
+	srv.validator = validation.New()
 
 	srv.app = fiber.New(fiber.Config{
 		StrictRouting:      false,
@@ -99,7 +77,7 @@ func New(
 		ServerHeader:      srv.rt.Config.ServerServerHeader(),
 		AppName:           "hyperuplink",
 		Views:             srv.engine,
-		StructValidator:   &structValidator{validate: srv.validator},
+		StructValidator:   validation.NewStructValidator(srv.validator),
 	})
 
 	return srv, nil

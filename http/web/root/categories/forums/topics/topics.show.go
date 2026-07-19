@@ -8,15 +8,10 @@ import (
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
-	"xn--gckvb8fzb.com/hyperuplink/http/web/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/site"
-	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	logictopics "xn--gckvb8fzb.com/hyperuplink/logic/root/categories/forums/topics"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/models/vreply"
-	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func (r *Route) Show(c fiber.Ctx) (err error) {
@@ -33,28 +28,36 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var top *vtopic.VTopic
-	top, err = r.Runtime.Repositories.Topic.VGetBySlugs(
-		c.Params("forums"), // TODO: Abstract into req, automatic err handling
-		c.Params("topics"), // TODO: Abstract into req, automatic err handling
-		common.QueryOptions{
-			Limit: 1,
-		},
-	)
+	var activePage int
+	activePage, err = strconv.Atoi(c.Query("page", "1"))
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	viewerID := uuid.NullUUID{}
+	viewerID.UUID, viewerID.Valid = req.Session.GetUserUUID()
+
+	var perPage int = req.System.GetPostsPerPage()
+
+	var view *logictopics.View
+	view, err = logictopics.Show(r.Runtime, &logictopics.ShowInput{
+		ForumSlug: c.Params("forums"),
+		TopicSlug: c.Params("topics"),
+		Page:      activePage,
+		PerPage:   perPage,
+		ViewerID:  viewerID,
+	}, req.Perms())
 	if errors.Is(err, errs.ErrNoRows) {
 		return c.SendStatus(fiber.StatusNotFound)
+	}
+	if errors.Is(err, errs.ErrForbidden) {
+		return req.RedirectToRoot()
 	}
 	if ret, rerr := req.RedirectToRootOnError(err); ret == true {
 		return rerr
 	}
 
-	if !req.Perms().CanReadSlug(top.CategorySlug) {
-		return req.RedirectToRoot()
-	}
-
-	if actorID, ok := req.Session.GetUserUUID(); ok {
-		logicactivity.RecordTopicView(r.Runtime, actorID, top.ID)
-	}
+	top := view.Topic
 
 	req.Menu.SetCategoryForumSlugs(top.CategorySlug, top.ForumSlug)
 
@@ -74,58 +77,11 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 	req.UpdateGrandParentTitle(top.CategoryName)
 
 	req.SetData("topic", top)
+	req.SetData("poll", view.Poll)
 
-	viewerID := uuid.NullUUID{}
-	viewerID.UUID, viewerID.Valid = req.Session.GetUserUUID()
+	req.Site.SetPager(site.NewPager(view.Pages, perPage, activePage))
 
-	poll, err := logictopics.PollView(r.Runtime, &logictopics.PollViewInput{
-		Topic:    &top.Topic,
-		ViewerID: viewerID,
-		CanWrite: req.Perms().CanWriteSlug(top.CategorySlug),
-	})
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	req.SetData("poll", poll)
-
-	var reps *[]vreply.VReply
-	var activePage int
-	var total int64
-	var perPage int = req.System.GetPostsPerPage()
-	var limit int = perPage
-	var offAdjust int = 1
-
-	activePage, err = strconv.Atoi(c.Query("page", "1"))
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	// If we are on the first page, we subtract 1 from limit due to the Topic,
-	// and we set offadjust to 0 because we only need to adjust the offset for
-	// all pages past the first one.
-	if activePage == 1 {
-		limit -= 1
-		offAdjust = 0
-	}
-	reps, total, err = r.Runtime.Repositories.Reply.VAllForTopicUUID(
-		top.ID,
-		common.QueryOptions{
-			OrderBy:   "created_at",
-			Order:     common.Ascending,
-			Limit:     limit,
-			Page:      activePage,
-			OffAdjust: offAdjust,
-		},
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-	// We add the Topic to the total
-	total += 1
-	pages := helpers.GetNumberOfPages(total, perPage)
-	req.Site.SetPager(site.NewPager(pages, perPage, activePage))
-
+	reps := view.Replies
 	req.SetData("replies", reps)
 
 	replyTo := c.Query("reply", "")

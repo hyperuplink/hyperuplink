@@ -2,18 +2,13 @@ package users
 
 import (
 	"reflect"
-	"time"
 
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	logicusers "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/users"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
-
-type UserBanForm struct {
-	ID string `form:"id" validate:"required,uuid"`
-}
 
 func (r *Route) Ban(c fiber.Ctx) (err error) {
 	myRoute := route.For("AdminUsers")
@@ -27,29 +22,15 @@ func (r *Route) Ban(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(UserBanForm)
+	in := new(logicusers.UserInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	r.Runtime.Debug("form", frm)
+	r.Runtime.Debug("form", in)
 
-	usr, err := r.Runtime.Repositories.User.GetByID(
-		frm.ID,
-		common.QueryOptions{
-			WithBanned:  true,
-			WithDeleted: true,
-			Limit:       1,
-		},
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	usr.SetBannedAt(time.Now())
-
-	err = r.Runtime.Repositories.User.Update(usr)
+	err = logicusers.Ban(r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

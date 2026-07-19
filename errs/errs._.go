@@ -129,6 +129,18 @@ var (
 	ErrAttachmentDuplicate error = errors.New(
 		"attachment_duplicate",
 	)
+	ErrAttachmentNotFound error = errors.New(
+		"attachment_not_found",
+	)
+	ErrAPIKeyInvalid error = errors.New(
+		"err_apikey_invalid",
+	)
+	ErrForbidden error = errors.New(
+		"err_forbidden",
+	)
+	ErrUnauthorized error = errors.New(
+		"err_unauthorized",
+	)
 	ErrUniqueViolationOn error = errors.New(
 		"unique_violation_on",
 	)

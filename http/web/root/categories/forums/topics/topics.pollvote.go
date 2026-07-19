@@ -10,10 +10,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	logictopics "xn--gckvb8fzb.com/hyperuplink/logic/root/categories/forums/topics"
-	"xn--gckvb8fzb.com/hyperuplink/models/topic"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 type TopicPollVoteForm struct {
@@ -50,39 +47,20 @@ func (r *Route) PollVote(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var vtop *vtopic.VTopic
-	vtop, err = r.Runtime.Repositories.Topic.VGetBySlugs(
-		c.Params("forums"),
-		c.Params("topics"),
-		common.QueryOptions{Limit: 1},
-	)
-	if ret, rerr := req.RedirectToRootOnError(err); ret == true {
-		return rerr
-	}
-
-	if !req.Perms().CanWriteSlug(vtop.CategorySlug) {
-		return req.RedirectToRoot()
-	}
-
 	authorID, ok := req.Session.GetUserUUID()
 	if !ok {
 		return req.RedirectToRoot()
 	}
 
-	var top *topic.Topic
-	top, err = r.Runtime.Repositories.Topic.GetByUUID(
-		vtop.ID,
-		common.QueryOptions{Limit: 1},
-	)
-	if ret, rerr := req.RedirectToRootOnError(err); ret == true {
-		return rerr
-	}
-
-	err = logictopics.PollVote(r.Runtime, &logictopics.PollVoteInput{
-		Topic:     top,
+	err = logictopics.PollVoteBySlugs(r.Runtime, req.Perms(), &logictopics.PollVoteBySlugsInput{
+		ForumSlug: c.Params("forums"),
+		TopicSlug: c.Params("topics"),
 		AuthorID:  authorID,
 		Selection: selection,
 	})
+	if errors.Is(err, errs.ErrForbidden) {
+		return req.RedirectToRoot()
+	}
 	if errors.Is(err, errs.ErrUniqueViolationOn) {
 		req.Flash.SetInfo("poll_already")
 		return req.RedirectToRoute(topicRoute)

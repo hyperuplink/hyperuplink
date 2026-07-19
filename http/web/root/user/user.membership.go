@@ -2,18 +2,13 @@ package user
 
 import (
 	"reflect"
-	"slices"
 
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	logicuser "xn--gckvb8fzb.com/hyperuplink/logic/root/user"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
-
-type MembershipForm struct {
-	MemberOf []string `form:"member_of"`
-}
 
 func (r *Route) Membership(c fiber.Ctx) (err error) {
 	myRoute := route.For("User")
@@ -29,39 +24,13 @@ func (r *Route) Membership(c fiber.Ctx) (err error) {
 
 	username := c.Params("user")
 
-	frm := new(MembershipForm)
+	in := new(logicuser.MembershipInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute.Fill(map[string]string{"user": username}))
 	}
 
-	usr, err := r.Runtime.Repositories.User.GetByUsername(
-		username,
-		common.QueryOptions{
-			WithBanned:  false,
-			WithSpammed: false,
-			WithDeleted: false,
-			Limit:       1,
-		},
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	groups, err := r.Runtime.Repositories.Group.All(common.QueryOptions{})
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	memberOf := []string{}
-	for _, grp := range *groups {
-		if slices.Contains(frm.MemberOf, grp.ID) {
-			memberOf = append(memberOf, grp.ID)
-		}
-	}
-	usr.MemberOf = memberOf
-
-	err = r.Runtime.Repositories.User.Update(usr)
+	err = logicuser.UpdateMembership(r.Runtime, username, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

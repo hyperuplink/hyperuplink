@@ -4,19 +4,12 @@ import (
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
-	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	logictopics "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/board/topics"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
-
-type TopicsUpdateForm struct {
-	AllowKindQuestion bool `form:"allow_kind_question"`
-	AllowKindPoll     bool `form:"allow_kind_poll"`
-	AllowKindRSVP     bool `form:"allow_kind_rsvp"`
-}
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
 	myRoute := route.For("AdminBoardTopics")
@@ -30,40 +23,20 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(TopicsUpdateForm)
+	in := new(logictopics.UpdateInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	r.Runtime.Debug("form", frm)
+	r.Runtime.Debug("form", in)
 
-	var settingTopics *setting.Setting[setting.Topics]
-	settingTopics, err = settingRepo.GetByID[setting.Topics](
-		r.Runtime.Repositories.Setting,
-		"topics",
-	)
+	actorID := uuid.NullUUID{}
+	actorID.UUID, actorID.Valid = req.Session.GetUserUUID()
+
+	err = logictopics.Update(r.Runtime, actorID, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
-	}
-
-	before := settingTopics.JSONValue
-
-	settingTopics.JSONValue.AllowKindQuestion = frm.AllowKindQuestion
-	settingTopics.JSONValue.AllowKindPoll = frm.AllowKindPoll
-	settingTopics.JSONValue.AllowKindRSVP = frm.AllowKindRSVP
-
-	err = settingRepo.Update[setting.Topics](
-		r.Runtime.Repositories.Setting,
-		settingTopics,
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	if actorID, ok := req.Session.GetUserUUID(); ok {
-		logicactivity.RecordAdminSettingsUpdate(r.Runtime, actorID,
-			"topics", before, settingTopics.JSONValue)
 	}
 
 	return req.RedirectToRoute(myRoute)

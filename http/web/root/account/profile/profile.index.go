@@ -4,9 +4,8 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	logicprofile "xn--gckvb8fzb.com/hyperuplink/logic/root/account/profile"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
 func (r *Route) Index(c fiber.Ctx) (err error) {
@@ -28,27 +27,15 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var settingProfiles *setting.Setting[setting.Profiles]
-	settingProfiles, err = settingRepo.GetByID[setting.Profiles](
-		r.Runtime.Repositories.Setting,
-		"profiles",
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	var settingUserProfile *setting.Setting[setting.UserProfile]
-	settingUserProfile, err = settingRepo.GetOrCreateUserProfile(
-		r.Runtime.Repositories.Setting,
-		usr.ID,
-	)
+	var view *logicprofile.View
+	view, err = logicprofile.Show(r.Runtime, usr)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
 
 	req.SetData("user", usr)
-	req.SetData("setting_profiles", &settingProfiles.JSONValue)
-	req.SetData("setting_user_profile", &settingUserProfile.JSONValue)
+	req.SetData("setting_profiles", view.Profiles)
+	req.SetData("setting_user_profile", view.UserProfile)
 
 	return req.Respond()
 }

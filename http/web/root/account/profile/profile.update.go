@@ -1,27 +1,16 @@
 package profile
 
 import (
-	"io"
-	"mime/multipart"
-	"os"
+	"errors"
 	"reflect"
 
-	"github.com/gabriel-vasile/mimetype"
 	"github.com/gofiber/fiber/v3"
-	"github.com/lithammer/shortuuid/v4"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	logicprofile "xn--gckvb8fzb.com/hyperuplink/logic/root/account/profile"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
-
-type ProfileUpdateForm struct {
-	ProfilePicture *multipart.FileHeader `form:"profile_picture" validate:""`
-	SignatureText  string                `form:"signature_text" validate:"max=256"`
-	NotifyOnReply  bool                  `form:"notify_on_reply"`
-}
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
 	myRoute := route.For("AccountProfile")
@@ -36,13 +25,13 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(ProfileUpdateForm)
+	in := new(logicprofile.UpdateInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	r.Runtime.Debug("form", frm)
+	r.Runtime.Debug("form", in)
 
 	var usr *user.User
 	usr, err = req.GetUser()
@@ -50,112 +39,12 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	if frm.ProfilePicture != nil && frm.ProfilePicture.Filename != "" {
-		var settingProfiles *setting.Setting[setting.Profiles]
-		settingProfiles, err = settingRepo.GetByID[setting.Profiles](
-			r.Runtime.Repositories.Setting,
-			"profiles",
-		)
-		if ret, rerr := req.RespondOnError(err); ret == true {
-			return rerr
-		}
-		profiles := settingProfiles.JSONValue
-
-		if profiles.EnablePicture {
-			if frm.ProfilePicture.Size > profiles.GetPictureMaxSize() {
-				req.Flash.SetError(errs.ErrPictureTooLarge)
-				return req.RedirectToRoute(myRoute)
-			}
-
-			profilePictureMultipartFile, err := frm.ProfilePicture.Open()
-			if ret, rerr := req.RespondOnError(err); ret == true {
-				return rerr
-			}
-
-			mtype, err := mimetype.DetectReader(profilePictureMultipartFile)
-			if ret, rerr := req.RespondOnError(err); ret == true {
-				profilePictureMultipartFile.Close()
-				return rerr
-			}
-			if _, err = profilePictureMultipartFile.Seek(0, io.SeekStart); err != nil {
-				profilePictureMultipartFile.Close()
-				return req.RespondError(err)
-			}
-
-			allowed := false
-			for _, format := range profiles.PictureUploadFormats {
-				if mtype.Is(format) {
-					allowed = true
-					break
-				}
-			}
-			if !allowed {
-				profilePictureMultipartFile.Close()
-				req.Flash.SetError(errs.ErrPictureFormatNotAllowed)
-				return req.RedirectToRoute(myRoute)
-			}
-
-			profilePictureFile, profilePictureFileName, err := r.Runtime.Magick.ConvertProfilePicture(
-				profilePictureMultipartFile,
-				profiles.PictureFormat,
-			)
-			if ret, rerr := req.RespondOnError(err); ret == true {
-				profilePictureMultipartFile.Close()
-				return rerr
-			}
-
-			profilePictureID := shortuuid.New()
-
-			err = r.Runtime.Storage.StoreFile(
-				profiles.PictureStorageProviderID,
-				profilePictureFile,
-				profiles.PictureStoragePath+"/"+profilePictureID+"."+profiles.PictureFormat,
-			)
-			if ret, rerr := req.RespondOnError(err); ret == true {
-				return rerr
-			}
-
-			profilePictureFile.Close()
-			if profilePictureFileName != "" {
-				os.Remove(profilePictureFileName)
-			}
-
-			// oldProfilePicutreID := usr.ProfilePicture
-			usr.ProfilePicture = profilePictureID
-			// TODO: Delete oldProfilePicutreID
-		}
+	err = logicprofile.Update(r.Runtime, usr, in)
+	if errors.Is(err, errs.ErrPictureTooLarge) ||
+		errors.Is(err, errs.ErrPictureFormatNotAllowed) {
+		req.Flash.SetError(err)
+		return req.RedirectToRoute(myRoute)
 	}
-
-	usr.SignatureText = frm.SignatureText
-	if usr.SignatureText == "" {
-		usr.SignatureHTML = ""
-	} else {
-		usr.SignatureHTML, err = r.Runtime.Markdown.Convert(usr.SignatureText)
-		if ret, rerr := req.RespondOnError(err); ret == true {
-			return rerr
-		}
-	}
-
-	err = r.Runtime.Repositories.User.Update(usr)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	var settingUserProfile *setting.Setting[setting.UserProfile]
-	settingUserProfile, err = settingRepo.GetOrCreateUserProfile(
-		r.Runtime.Repositories.Setting,
-		usr.ID,
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	settingUserProfile.JSONValue.NotifyOnReply = frm.NotifyOnReply
-
-	err = settingRepo.Update[setting.UserProfile](
-		r.Runtime.Repositories.Setting,
-		settingUserProfile,
-	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

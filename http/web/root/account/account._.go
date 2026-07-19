@@ -3,6 +3,7 @@ package account
 import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/hyperuplink/http/web/root/account/api"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/account/password"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/account/profile"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/account/settings"
@@ -43,6 +44,10 @@ func New(
 		accountTwofactorRoute, err := twofactor.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
 		r.Routes = append(r.Routes, accountTwofactorRoute)
+
+		accountAPIRoute, err := api.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, accountAPIRoute)
 	}, r.Path+".")
 
 	return r, nil

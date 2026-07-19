@@ -9,7 +9,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/postevent"
+	logicreport "xn--gckvb8fzb.com/hyperuplink/logic/root/report"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
@@ -39,25 +39,16 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		return req.RedirectToRoot()
 	}
 
-	post, err := r.resolvePost(frm.Target, frm.ID)
-	if ret, rerr := req.RedirectToRootOnError(err); ret == true {
-		return rerr
-	}
-
 	authorID, ok := req.Session.GetUserUUID()
 	if !ok {
 		return req.RedirectToRoot()
 	}
 
-	event := new(postevent.PostEvent)
-	event.Type = postevent.Report
-	event.AuthorID = authorID
-	event.Target = post.Target
-	event.TopicID = post.TopicID
-	event.ReplyID = post.ReplyID
-	event.Selection = frm.ReportType
-
-	_, err = r.Runtime.Repositories.PostEvent.Create(event)
+	err = logicreport.Create(r.Runtime, authorID, &logicreport.CreateInput{
+		Target:     frm.Target,
+		ID:         frm.ID,
+		ReportType: frm.ReportType,
+	})
 	if errors.Is(err, errs.ErrUniqueViolationOn) {
 		req.Flash.SetInfo("report_already")
 		return req.RedirectTo(sanitizeReturn(frm.Return))

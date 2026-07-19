@@ -4,8 +4,8 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	logichealth "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/health"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/services/config"
 )
 
 type Issue struct {
@@ -27,45 +27,22 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var targets config.Targets
-	targets, err = r.Runtime.Config.Targets()
+	logicIssues, err := logichealth.Issues(r.Runtime)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
 
 	var issues []Issue
-
-	if issue, found := r.checkXMPPInsecureSkipVerify(targets); found {
-		issues = append(issues, issue)
+	for _, issue := range logicIssues {
+		issues = append(issues, Issue{
+			LegendKey: issue.LegendKey,
+			TextKey:   issue.TextKey,
+			FixClass:  issue.FixClass,
+			FixURL:    route.For(issue.FixRouteID).AsURL(),
+		})
 	}
 
 	req.SetData("issues", issues)
 
 	return req.Respond()
-}
-
-func (r *Route) checkXMPPInsecureSkipVerify(
-	targets config.Targets,
-) (issue Issue, found bool) {
-	if r.Runtime.IsDevelopmentMode() {
-		return issue, false
-	}
-
-	for _, target := range targets {
-		if target.Type != config.TargetTypeXMPP {
-			continue
-		}
-		if !target.XMPP.InsecureSkipVerify {
-			continue
-		}
-
-		return Issue{
-			LegendKey: "health_xmpp_insecure_skip_verify",
-			TextKey:   "health_xmpp_insecure_skip_verify_text",
-			FixClass:  "warn",
-			FixURL:    route.For("AdminCommsXmpp").AsURL(),
-		}, true
-	}
-
-	return issue, false
 }

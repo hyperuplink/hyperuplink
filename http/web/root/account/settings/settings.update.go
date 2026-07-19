@@ -6,12 +6,9 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	logicsettings "xn--gckvb8fzb.com/hyperuplink/logic/root/account/settings"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
-
-type SettingsUpdateForm struct {
-	Timezone string `form:"timezone" validate:"required,timezone"`
-}
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
 	myRoute := route.For("AccountSettings")
@@ -26,13 +23,13 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(SettingsUpdateForm)
+	in := new(logicsettings.UpdateInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	r.Runtime.Debug("form", frm)
+	r.Runtime.Debug("form", in)
 
 	var usr *user.User
 	usr, err = req.GetUser()
@@ -40,9 +37,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	usr.Timezone = frm.Timezone
-
-	err = r.Runtime.Repositories.User.Update(usr)
+	err = logicsettings.Update(r.Runtime, usr, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

@@ -6,12 +6,10 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
-	"xn--gckvb8fzb.com/hyperuplink/http/web/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/site"
+	logicsearch "xn--gckvb8fzb.com/hyperuplink/logic/root/search"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/models/vsearchresult"
-	searchrepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/search"
 )
 
 func (r *Route) Index(c fiber.Ctx) (err error) {
@@ -28,32 +26,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var query string = strings.TrimSpace(c.Query("q"))
-	var author string = strings.TrimSpace(c.Query("author"))
-
 	present := func(key string) bool { return c.Query(key) != "" }
-
-	fTitle := present("f_title")
-	fBody := present("f_body")
-	fReplies := present("f_replies")
-	fAttachments := present("f_attachments")
-	if !fTitle && !fBody && !fReplies && !fAttachments {
-		fTitle, fBody, fReplies = true, true, true
-	}
-
-	req.SetData("query", query)
-	req.SetData("author", author)
-	req.SetData("f_title", fTitle)
-	req.SetData("f_body", fBody)
-	req.SetData("f_replies", fReplies)
-	req.SetData("f_attachments", fAttachments)
-
-	if query == "" {
-		return req.Respond()
-	}
-
-	var resultsPerPage int = req.System.GetTopicsPerPage()
-	var postsPerPage int = req.System.GetPostsPerPage()
 
 	var activePage int
 	activePage, err = strconv.Atoi(c.Query("page", "1"))
@@ -61,46 +34,58 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var results *[]vsearchresult.VSearchResult
-	var total int64
-	results, total, err = r.Runtime.Repositories.Search.Query(
-		query,
-		searchrepo.Options{
-			Title:                fTitle,
-			Body:                 fBody,
-			Replies:              fReplies,
-			Attachments:          fAttachments,
-			Author:               author,
-			AllowedCategorySlugs: req.Perms().AllowedReadSlugs(),
-		},
-		resultsPerPage,
-		activePage,
-	)
+	var resultsPerPage int = req.System.GetTopicsPerPage()
+	var postsPerPage int = req.System.GetPostsPerPage()
+
+	in := &logicsearch.Input{
+		Query:        strings.TrimSpace(c.Query("q")),
+		Author:       strings.TrimSpace(c.Query("author")),
+		FTitle:       present("f_title"),
+		FBody:        present("f_body"),
+		FReplies:     present("f_replies"),
+		FAttachments: present("f_attachments"),
+		Page:         activePage,
+		PerPage:      resultsPerPage,
+	}
+	in.Normalize()
+
+	req.SetData("query", in.Query)
+	req.SetData("author", in.Author)
+	req.SetData("f_title", in.FTitle)
+	req.SetData("f_body", in.FBody)
+	req.SetData("f_replies", in.FReplies)
+	req.SetData("f_attachments", in.FAttachments)
+
+	if in.Query == "" {
+		return req.Respond()
+	}
+
+	var results *logicsearch.Results
+	results, err = logicsearch.Query(r.Runtime, req.Perms(), in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
 
-	pages := helpers.GetNumberOfPages(total, resultsPerPage)
-	req.Site.SetPager(site.NewPager(pages, resultsPerPage, activePage))
+	req.Site.SetPager(site.NewPager(results.Pages, resultsPerPage, activePage))
 
-	req.SetData("results", results)
-	req.SetData("total", int(total))
+	req.SetData("results", results.Results)
+	req.SetData("total", int(results.Total))
 	req.SetData("posts_per_page", postsPerPage)
 
-	extra := map[string]string{"q": query}
-	if author != "" {
-		extra["author"] = author
+	extra := map[string]string{"q": in.Query}
+	if in.Author != "" {
+		extra["author"] = in.Author
 	}
-	if fTitle {
+	if in.FTitle {
 		extra["f_title"] = "1"
 	}
-	if fBody {
+	if in.FBody {
 		extra["f_body"] = "1"
 	}
-	if fReplies {
+	if in.FReplies {
 		extra["f_replies"] = "1"
 	}
-	if fAttachments {
+	if in.FAttachments {
 		extra["f_attachments"] = "1"
 	}
 	req.SetData("pagination_extra", extra)

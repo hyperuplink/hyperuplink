@@ -57,6 +57,7 @@ func init() {
 func main() {
 	var rt *runtime.Runtime
 	var web *http.HTTP
+	var api *http.HTTP
 	var wrk *worker.Worker
 	var crn *cron.Cron
 	var err error
@@ -121,6 +122,15 @@ func main() {
 
 	go web.Run()
 
+	// ---[ API ]-------------------------------------------------------------- //
+	api, err = http.New(rt, http.IfaceAPI)
+	rt.NilOrDie(err)
+
+	err = api.Startup()
+	rt.NilOrDie(err)
+
+	go api.Run()
+
 	// ---[ WORKER ]----------------------------------------------------------- //
 	wrk, err = worker.New(rt)
 	rt.NilOrDie(err)
@@ -147,6 +157,7 @@ func main() {
 	<-quit
 
 	crn.Shutdown()
+	api.Shutdown()
 	web.Shutdown()
 	wrk.Shutdown()
 

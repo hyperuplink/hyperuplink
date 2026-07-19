@@ -4,10 +4,8 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	logicuser "xn--gckvb8fzb.com/hyperuplink/logic/root/user"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/models/vreply"
-	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func (r *Route) Index(c fiber.Ctx) (err error) {
@@ -27,74 +25,16 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	var username string = c.Params("user")
 	req.UpdateTitle("~" + username)
 
-	usr, err := r.Runtime.Repositories.User.GetByUsername(
-		username,
-		common.QueryOptions{
-			WithBanned:  false,
-			WithSpammed: false,
-			WithDeleted: false,
-			Limit:       1,
-		},
-	)
+	var view *logicuser.View
+	view, err = logicuser.Show(r.Runtime, username, req.Perms())
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
 
-	req.SetData("user", usr)
-
-	groups, err := r.Runtime.Repositories.Group.All(common.QueryOptions{
-		OrderBy: "name",
-		Order:   common.Ascending,
-	})
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	req.SetData("groups", groups)
-
-	topics, err := r.Runtime.Repositories.Topic.VAllForAuthorUUID(
-		usr.ID,
-		common.QueryOptions{
-			OrderBy: "created_at",
-			Order:   common.Descending,
-			Limit:   10,
-		},
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	perms := req.Perms()
-
-	visibleTopics := []vtopic.VTopic{}
-	for _, top := range *topics {
-		if perms.CanReadSlug(top.CategorySlug) {
-			visibleTopics = append(visibleTopics, top)
-		}
-	}
-
-	req.SetData("topics", &visibleTopics)
-
-	replies, err := r.Runtime.Repositories.Reply.VAllWithTopicForAuthorUUID(
-		usr.ID,
-		common.QueryOptions{
-			OrderBy: "created_at",
-			Order:   common.Descending,
-			Limit:   10,
-		},
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	visibleReplies := []vreply.VReplyWithTopic{}
-	for _, rep := range *replies {
-		if perms.CanReadSlug(rep.CategorySlug) {
-			visibleReplies = append(visibleReplies, rep)
-		}
-	}
-
-	req.SetData("replies", &visibleReplies)
+	req.SetData("user", view.User)
+	req.SetData("groups", view.Groups)
+	req.SetData("topics", &view.Topics)
+	req.SetData("replies", &view.Replies)
 
 	return req.Respond()
 }

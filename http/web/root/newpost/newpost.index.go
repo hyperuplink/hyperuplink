@@ -5,19 +5,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	logicnewpost "xn--gckvb8fzb.com/hyperuplink/logic/root/newpost"
-	"xn--gckvb8fzb.com/hyperuplink/models/category"
-	"xn--gckvb8fzb.com/hyperuplink/models/forum"
-	"xn--gckvb8fzb.com/hyperuplink/models/reply"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/models/vforum"
-	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
-
-type CategoryWithForums struct {
-	Category category.Category
-	Forums   []forum.Forum
-}
 
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	myRoute := route.For("New")
@@ -34,117 +23,35 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 
 	var category_slug string = c.Query("category")
 	var forum_slug string = c.Query("forum")
-	var topic_slug string = c.Query("topic")
-	var reply_id string = c.Query("reply")
 
 	if category_slug != "" && forum_slug != "" {
 		req.SetData("select_category_slug", category_slug)
 		req.SetData("select_forum_slug", forum_slug)
 	}
 
-	var cats *[]category.Category
-	cats, err = r.Runtime.Repositories.Category.All(common.QueryOptions{
-		OrderBy: "position",
-		Order:   common.Ascending,
+	var view *logicnewpost.FormView
+	view, err = logicnewpost.View(r.Runtime, req.Perms(), &logicnewpost.FormViewInput{
+		ForumSlug: forum_slug,
+		TopicSlug: c.Query("topic"),
+		ReplyID:   c.Query("reply"),
 	})
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
 
-	var fums *[]forum.Forum
-	fums, err = r.Runtime.Repositories.Forum.All(common.QueryOptions{
-		OrderBy: "position",
-		Order:   common.Ascending,
-	})
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
+	req.SetData("categories_forums", view.CategoriesForums)
+	req.SetData("allow_poll", view.AllowPoll)
+	req.SetData("poll_options_max", view.PollOptionsMax)
+
+	if view.Forum != nil {
+		req.SetData("forum", view.Forum)
 	}
-
-	perms := req.Perms()
-
-	var catsfums []CategoryWithForums
-	for _, cat := range *cats {
-		if !perms.CanWriteID(cat.ID) {
-			continue
-		}
-		catfum := CategoryWithForums{
-			Category: cat,
-		}
-		for _, fum := range *fums {
-			if fum.CategoryID == cat.ID {
-				catfum.Forums = append(catfum.Forums, fum)
-			}
-		}
-		catsfums = append(catsfums, catfum)
+	if view.Topic != nil {
+		req.SetData("topic", view.Topic)
 	}
-
-	req.SetData("categories_forums", catsfums)
-
-	var allowPoll bool
-	allowPoll, err = logicnewpost.PollAllowed(r.Runtime)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
+	if view.Reply != nil {
+		req.SetData("reply", view.Reply)
 	}
-
-	req.SetData("allow_poll", allowPoll)
-	req.SetData("poll_options_max", logicnewpost.PollOptionsMax)
-
-	var writableTopic *vtopic.VTopic
-	if forum_slug != "" {
-		var fum *vforum.VForum
-		fum, err = r.Runtime.Repositories.Forum.VGetBySlug(
-			forum_slug,
-			common.QueryOptions{
-				Limit: 1,
-			},
-		)
-		if ret, rerr := req.RespondOnError(err); ret == true {
-			return rerr
-		}
-
-		if perms.CanWriteSlug(fum.CategorySlug) {
-			req.SetData("forum", fum)
-
-			if topic_slug != "" {
-				var top *vtopic.VTopic
-				top, err = r.Runtime.Repositories.Topic.VGetByForumUUIDSlug(
-					fum.ID,
-					topic_slug,
-					common.QueryOptions{
-						Limit: 1,
-					},
-				)
-				if ret, rerr := req.RespondOnError(err); ret == true {
-					return rerr
-				}
-
-				req.SetData("topic", top)
-				writableTopic = top
-			}
-		}
-	}
-
-	if reply_id != "" && writableTopic != nil {
-
-		var rep *reply.Reply
-		rep, err = r.Runtime.Repositories.Reply.GetByID(
-			reply_id,
-			common.QueryOptions{
-				Limit: 1,
-			},
-		)
-		if ret, rerr := req.RespondOnError(err); ret == true {
-			return rerr
-		}
-
-		if rep.TopicID == writableTopic.ID {
-			req.SetData("reply", rep)
-		}
-	}
-
-	// req.UpdateTitle(fum.Name)
-	// req.UpdateParentHref(req.HrefTo("_" + fum.CategorySlug))
-	// req.UpdateParentTitle(fum.CategoryName)
 
 	return req.Respond()
 }

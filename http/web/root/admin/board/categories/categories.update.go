@@ -4,18 +4,11 @@ import (
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/category"
+	logiccategories "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/board/categories"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
-
-type CategoryUpdateForm struct {
-	ID   string `form:"id" validate:"required,uuid"`
-	Name string `form:"name" validate:"required,min=1,max=32"`
-	Slug string `form:"slug" validate:"required,slug,min=1,max=32"`
-}
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
 	myRoute := route.For("AdminBoardCategories")
@@ -29,23 +22,15 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(CategoryUpdateForm)
+	in := new(logiccategories.UpdateInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	r.Runtime.Debug("form", frm)
+	r.Runtime.Debug("form", in)
 
-	cat := new(category.Category)
-	cat.ID, err = uuid.Parse(frm.ID)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-	cat.Name = frm.Name
-	cat.Slug = frm.Slug
-
-	err = r.Runtime.Repositories.Category.Update(cat)
+	err = logiccategories.Update(r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

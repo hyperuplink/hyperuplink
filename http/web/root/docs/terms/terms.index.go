@@ -1,12 +1,14 @@
 package terms
 
 import (
+	"errors"
+
 	"github.com/gofiber/fiber/v3"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	logicdocs "xn--gckvb8fzb.com/hyperuplink/logic/root/docs"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
 func (r *Route) Index(c fiber.Ctx) (err error) {
@@ -23,26 +25,16 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var settingGeneral *setting.Setting[setting.General]
-	settingGeneral, err = settingRepo.GetByID[setting.General](
-		r.Runtime.Repositories.Setting,
-		"general",
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	if !settingGeneral.JSONValue.EnableTerms {
+	var view *logicdocs.Page
+	view, err = logicdocs.Show(r.Runtime, logicdocs.PageTerms)
+	if errors.Is(err, errs.ErrNoRows) {
 		return c.SendStatus(fiber.StatusNotFound)
 	}
-
-	var html string
-	html, err = r.Runtime.Markdown.Convert(settingGeneral.JSONValue.Terms)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
 
-	req.SetData("html", html)
+	req.SetData("html", view.HTML)
 
 	return req.Respond()
 }

@@ -1,26 +1,17 @@
 package profiles
 
 import (
+	"errors"
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
-	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	logicprofiles "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/board/profiles"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
-
-type ProfilesUpdateForm struct {
-	EnablePicture            bool     `form:"enable_picture"`
-	PictureUploadFormats     []string `form:"upload_formats" validate:"required_if=EnablePicture true,dive,oneof=image/gif image/jpeg image/png image/webp"`
-	PictureFormat            string   `form:"picture_format" validate:"required,oneof=webp png jpg"`
-	PictureMaxSize           int64    `form:"picture_max_size" validate:"required,min=1"`
-	PictureStorageProviderID string   `form:"picture_storage_provider_id" validate:"required_if=EnablePicture true,max=64"`
-	PictureStoragePath       string   `form:"picture_storage_path" validate:"omitempty,max=255"`
-}
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
 	myRoute := route.For("AdminBoardProfiles")
@@ -34,60 +25,24 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(ProfilesUpdateForm)
+	in := new(logicprofiles.UpdateInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	r.Runtime.Debug("form", frm)
+	r.Runtime.Debug("form", in)
 
-	storages, err := r.Runtime.Config.Storages()
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
+	actorID := uuid.NullUUID{}
+	actorID.UUID, actorID.Valid = req.Session.GetUserUUID()
 
-	valid := frm.PictureStorageProviderID == ""
-	for _, storage := range storages {
-		if storage.ID == frm.PictureStorageProviderID {
-			valid = true
-			break
-		}
-	}
-	if !valid {
-		req.Flash.SetError(errs.ErrInvalidStorageProvider)
+	err = logicprofiles.Update(r.Runtime, actorID, in)
+	if errors.Is(err, errs.ErrInvalidStorageProvider) {
+		req.Flash.SetError(err)
 		return req.RedirectToRoute(myRoute)
 	}
-
-	var settingProfiles *setting.Setting[setting.Profiles]
-	settingProfiles, err = settingRepo.GetByID[setting.Profiles](
-		r.Runtime.Repositories.Setting,
-		"profiles",
-	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
-	}
-
-	before := settingProfiles.JSONValue
-
-	settingProfiles.JSONValue.EnablePicture = frm.EnablePicture
-	settingProfiles.JSONValue.PictureUploadFormats = frm.PictureUploadFormats
-	settingProfiles.JSONValue.PictureFormat = frm.PictureFormat
-	settingProfiles.JSONValue.PictureMaxSize = frm.PictureMaxSize
-	settingProfiles.JSONValue.PictureStorageProviderID = frm.PictureStorageProviderID
-	settingProfiles.JSONValue.PictureStoragePath = frm.PictureStoragePath
-
-	err = settingRepo.Update[setting.Profiles](
-		r.Runtime.Repositories.Setting,
-		settingProfiles,
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	if actorID, ok := req.Session.GetUserUUID(); ok {
-		logicactivity.RecordAdminSettingsUpdate(r.Runtime, actorID,
-			"profiles", before, settingProfiles.JSONValue)
 	}
 
 	return req.RedirectToRoute(myRoute)

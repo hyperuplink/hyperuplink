@@ -1,28 +1,17 @@
 package attachments
 
 import (
+	"errors"
 	"reflect"
-	"slices"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
-	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	logicattachments "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/board/attachments"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
-
-type AttachmentsUpdateForm struct {
-	EnableAttachments  bool     `form:"enable_attachments"`
-	UploadFormats      []string `form:"upload_formats" validate:"required_if=EnableAttachments true"`
-	MaxSize            int64    `form:"max_size" validate:"required,min=1"`
-	StorageProviderID  string   `form:"storage_provider_id" validate:"required_if=EnableAttachments true,max=64"`
-	StoragePath        string   `form:"storage_path" validate:"omitempty,max=255"`
-	OnUploadHook       string   `form:"on_upload_hook" validate:"omitempty,max=1024"`
-	InlineImageDisplay bool     `form:"inline_image_display"`
-}
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
 	myRoute := route.For("AdminBoardAttachments")
@@ -36,68 +25,25 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(AttachmentsUpdateForm)
+	in := new(logicattachments.UpdateInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	r.Runtime.Debug("form", frm)
+	r.Runtime.Debug("form", in)
 
-	for _, format := range frm.UploadFormats {
-		if !slices.Contains(setting.AttachmentUploadFormatOptions, format) {
-			req.Flash.SetError(errs.ErrInvalidUploadFormat)
-			return req.RedirectToRoute(myRoute)
-		}
-	}
+	actorID := uuid.NullUUID{}
+	actorID.UUID, actorID.Valid = req.Session.GetUserUUID()
 
-	storages, err := r.Runtime.Config.Storages()
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	valid := frm.StorageProviderID == ""
-	for _, storage := range storages {
-		if storage.ID == frm.StorageProviderID {
-			valid = true
-			break
-		}
-	}
-	if !valid {
-		req.Flash.SetError(errs.ErrInvalidStorageProvider)
+	err = logicattachments.Update(r.Runtime, actorID, in)
+	if errors.Is(err, errs.ErrInvalidUploadFormat) ||
+		errors.Is(err, errs.ErrInvalidStorageProvider) {
+		req.Flash.SetError(err)
 		return req.RedirectToRoute(myRoute)
 	}
-
-	var settingAttachments *setting.Setting[setting.Attachments]
-	settingAttachments, err = settingRepo.GetByID[setting.Attachments](
-		r.Runtime.Repositories.Setting,
-		"attachments",
-	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
-	}
-
-	before := settingAttachments.JSONValue
-
-	settingAttachments.JSONValue.EnableAttachments = frm.EnableAttachments
-	settingAttachments.JSONValue.UploadFormats = frm.UploadFormats
-	settingAttachments.JSONValue.MaxSize = frm.MaxSize
-	settingAttachments.JSONValue.StorageProviderID = frm.StorageProviderID
-	settingAttachments.JSONValue.StoragePath = frm.StoragePath
-	settingAttachments.JSONValue.OnUploadHook = frm.OnUploadHook
-	settingAttachments.JSONValue.InlineImageDisplay = frm.InlineImageDisplay
-
-	err = settingRepo.Update[setting.Attachments](
-		r.Runtime.Repositories.Setting,
-		settingAttachments,
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	if actorID, ok := req.Session.GetUserUUID(); ok {
-		logicactivity.RecordAdminSettingsUpdate(r.Runtime, actorID,
-			"attachments", before, settingAttachments.JSONValue)
 	}
 
 	return req.RedirectToRoute(myRoute)

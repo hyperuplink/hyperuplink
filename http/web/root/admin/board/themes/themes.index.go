@@ -3,11 +3,9 @@ package themes
 import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
-	"xn--gckvb8fzb.com/hyperuplink/http/web/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	logicthemes "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/board/themes"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
 func (r *Route) Index(c fiber.Ctx) (err error) {
@@ -22,39 +20,16 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var settingTheme *setting.Setting[setting.Theme]
-	settingTheme, err = settingRepo.GetByID[setting.Theme](
-		r.Runtime.Repositories.Setting,
-		"theme",
-	)
+	var view *logicthemes.View
+	view, err = logicthemes.Show(r.Runtime)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
 
-	themes, err := helpers.GetThemes(r.Runtime)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	colorschemes, err := helpers.GetColorschemes(r.Runtime)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	storages, err := r.Runtime.Config.Storages()
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	var storageIDs []string
-	for _, storage := range storages {
-		storageIDs = append(storageIDs, storage.ID)
-	}
-
-	req.SetData("setting_theme", &settingTheme.JSONValue)
-	req.SetData("themes", themes)
-	req.SetData("colorschemes", colorschemes)
-	req.SetData("storage_ids", storageIDs)
+	req.SetData("setting_theme", view.Theme)
+	req.SetData("themes", view.Themes)
+	req.SetData("colorschemes", view.Colorschemes)
+	req.SetData("storage_ids", view.StorageIDs)
 
 	return req.Respond()
 }

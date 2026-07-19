@@ -23,6 +23,19 @@ TrustProxies       = []
 ReduceMemoryUsage  = false
 ServerHeader       = ""
 
+[API]
+BindIP             = "0.0.0.0"
+Port               = 3001
+BodyLimit          = 67108864
+Concurrency        = 262144
+ProxyHeader        = "" # "X-Forwarded-For"
+EnableIPValidation = false
+TrustProxy         = false
+TrustLoopback      = true
+TrustProxies       = []
+ReduceMemoryUsage  = false
+ServerHeader       = ""
+
 [Users]
 PromoteAdmin = ["dummy1@example.com", "dummy2@example.com"]
 

@@ -4,10 +4,8 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	logicxmpp "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/comms/xmpp"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/services/config"
-	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
 func (r *Route) Index(c fiber.Ctx) (err error) {
@@ -22,36 +20,15 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var settingCommsXMPP *setting.Setting[setting.CommsXMPP]
-	settingCommsXMPP, err = settingRepo.GetByID[setting.CommsXMPP](
-		r.Runtime.Repositories.Setting,
-		"comms_xmpp",
-	)
+	var view *logicxmpp.View
+	view, err = logicxmpp.Show(r.Runtime)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
 
-	var targets config.Targets
-	targets, err = r.Runtime.Config.Targets()
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	var xmppTargets config.Targets
-	var selectedTarget *config.Target
-	for i := range targets {
-		if !targets[i].Serves(config.TargetTypeXMPP) {
-			continue
-		}
-		xmppTargets = append(xmppTargets, targets[i])
-		if targets[i].ID == settingCommsXMPP.JSONValue.TargetID {
-			selectedTarget = &targets[i]
-		}
-	}
-
-	req.SetData("setting_comms_xmpp", &settingCommsXMPP.JSONValue)
-	req.SetData("xmpp_targets", xmppTargets)
-	req.SetData("selected_target", selectedTarget)
+	req.SetData("setting_comms_xmpp", view.CommsXMPP)
+	req.SetData("xmpp_targets", view.XMPPTargets)
+	req.SetData("selected_target", view.SelectedTarget)
 
 	return req.Respond()
 }

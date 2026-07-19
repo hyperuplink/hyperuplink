@@ -13,6 +13,7 @@ type Route struct {
 var Routes map[string]Route = map[string]Route{
 	"Root":                    {hierarchy: []string{"root"}},
 	"Account":                 {hierarchy: []string{"root", "account"}},
+	"AccountAPI":              {hierarchy: []string{"root", "account", "api"}},
 	"AccountPassword":         {hierarchy: []string{"root", "account", "password"}},
 	"AccountProfile":          {hierarchy: []string{"root", "account", "profile"}},
 	"AccountSettings":         {hierarchy: []string{"root", "account", "settings"}},

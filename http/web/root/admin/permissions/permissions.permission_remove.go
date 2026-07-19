@@ -4,17 +4,11 @@ import (
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	logicpermissions "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/permissions"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
-
-type PermissionRemoveForm struct {
-	GroupID    string `form:"group_id" validate:"required,slug,max=32"`
-	CategoryID string `form:"category_id" validate:"required,uuid"`
-}
 
 func (r *Route) PermissionRemove(c fiber.Ctx) (err error) {
 	myRoute := route.For("AdminPermissions")
@@ -28,21 +22,13 @@ func (r *Route) PermissionRemove(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(PermissionRemoveForm)
+	in := new(logicpermissions.RemoveInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	uid, perr := uuid.Parse(frm.CategoryID)
-	if ret, rerr := req.RespondOnError(perr); ret == true {
-		return rerr
-	}
-
-	groupID := pgtype.Text{String: frm.GroupID, Valid: true}
-	categoryID := pgtype.UUID{Bytes: [16]byte(uid), Valid: true}
-
-	err = r.Runtime.Repositories.Permission.Remove(groupID, categoryID)
+	err = logicpermissions.Remove(r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

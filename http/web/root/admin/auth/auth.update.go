@@ -4,17 +4,12 @@ import (
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
-	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	logicauth "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/auth"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
-
-type AuthUpdateForm struct {
-	AddressType int `form:"address_type" validate:"oneof=0 1 2"`
-}
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
 	myRoute := route.For("AdminAuth")
@@ -28,38 +23,20 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(AuthUpdateForm)
+	in := new(logicauth.UpdateInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	r.Runtime.Debug("form", frm)
+	r.Runtime.Debug("form", in)
 
-	var settingAuth *setting.Setting[setting.Auth]
-	settingAuth, err = settingRepo.GetByID[setting.Auth](
-		r.Runtime.Repositories.Setting,
-		"auth",
-	)
+	actorID := uuid.NullUUID{}
+	actorID.UUID, actorID.Valid = req.Session.GetUserUUID()
+
+	err = logicauth.Update(r.Runtime, actorID, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
-	}
-
-	before := settingAuth.JSONValue
-
-	settingAuth.JSONValue.AddressType = setting.AddressType(frm.AddressType)
-
-	err = settingRepo.Update[setting.Auth](
-		r.Runtime.Repositories.Setting,
-		settingAuth,
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	if actorID, ok := req.Session.GetUserUUID(); ok {
-		logicactivity.RecordAdminSettingsUpdate(r.Runtime, actorID,
-			"auth", before, settingAuth.JSONValue)
 	}
 
 	return req.RedirectToRoute(myRoute)

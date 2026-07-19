@@ -1,26 +1,15 @@
 package settings
 
 import (
+	"errors"
+
 	"github.com/gofiber/fiber/v3"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	logicsettings "xn--gckvb8fzb.com/hyperuplink/logic/root/account/settings"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
-
-func viewToggle(profile *setting.UserProfile, view string) *bool {
-	switch view {
-	case setting.UserProfileViewBanner:
-		return &profile.ShowBanner
-	case setting.UserProfileViewFooter:
-		return &profile.ShowFooter
-	case setting.UserProfileViewProfilePictures:
-		return &profile.ShowProfilePictures
-	}
-
-	return nil
-}
 
 func (r *Route) View(c fiber.Ctx) (err error) {
 	myRoute := route.For("AccountSettingsView")
@@ -42,27 +31,17 @@ func (r *Route) View(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var settingUserProfile *setting.Setting[setting.UserProfile]
-	settingUserProfile, err = settingRepo.GetOrCreateUserProfile(
-		r.Runtime.Repositories.Setting,
-		usr.ID,
-	)
-	if ret, rerr := req.RedirectBackOnError(err); ret == true {
-		return rerr
-	}
-
-	toggle := viewToggle(&settingUserProfile.JSONValue, c.Params("view"))
-	if toggle == nil {
-		return req.RedirectBack()
-	}
-	*toggle = !*toggle
-
-	err = settingRepo.Update[setting.UserProfile](
-		r.Runtime.Repositories.Setting,
-		settingUserProfile,
-	)
-	if ret, rerr := req.RedirectBackOnError(err); ret == true {
-		return rerr
+	if _, err = logicsettings.ToggleView(
+		r.Runtime,
+		usr,
+		c.Params("view"),
+	); err != nil {
+		if errors.Is(err, errs.ErrValidation) {
+			return req.RedirectBack()
+		}
+		if ret, rerr := req.RedirectBackOnError(err); ret == true {
+			return rerr
+		}
 	}
 
 	return req.RedirectBack()

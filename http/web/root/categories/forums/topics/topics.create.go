@@ -1,25 +1,19 @@
 package topics
 
 import (
+	"errors"
 	"reflect"
 	"strconv"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
-	"github.com/lithammer/shortuuid/v4"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/reply"
+	logictopics "xn--gckvb8fzb.com/hyperuplink/logic/root/categories/forums/topics"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
-
-type TopicCreateForm struct {
-	Text    string `form:"text" validate:"required,min=1"`
-	TopicID string `form:"topic_id" validate:"required,uuid"`
-	ReplyID string `form:"reply_id" validate:"omitempty,uuid"`
-}
 
 func (r *Route) Create(c fiber.Ctx) (err error) {
 	myRoute := route.For("CategoriesForumsTopics")
@@ -34,97 +28,60 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(TopicCreateForm)
-
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
-		return req.RedirectToRoute(myRoute.Fill(
-			map[string]string{
-				"categories": c.Params("categories"),
-				"forums":     c.Params("forums"),
-				"topics":     c.Params("topics"),
-			},
-		))
-	}
-
-	r.Runtime.Debug("form", frm)
-
-	rep := new(reply.Reply)
-	rep.ShortID = shortuuid.New()
-	rep.TopicID, err = uuid.Parse(frm.TopicID)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	top, err := r.Runtime.Repositories.Topic.GetByUUID(
-		rep.TopicID,
-		common.QueryOptions{Limit: 1},
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-	fum, err := r.Runtime.Repositories.Forum.GetByUUID(
-		top.ForumID,
-		common.QueryOptions{Limit: 1},
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-	if !req.Perms().CanWriteID(fum.CategoryID) {
-		return req.RedirectToRoot()
-	}
-
-	if frm.ReplyID != "" {
-		var replyUUID uuid.UUID
-		replyUUID, err = uuid.Parse(frm.ReplyID)
-		if ret, rerr := req.RespondOnError(err); ret == true {
-			return rerr
-		}
-		rep.ReplyID = uuid.NullUUID{
-			UUID:  replyUUID,
-			Valid: true,
-		}
-	} else {
-		rep.ReplyID = uuid.NullUUID{
-			UUID:  uuid.Nil,
-			Valid: false,
-		}
-	}
-	rep.AuthorID, _ = req.Session.GetUserUUID()
-	rep.Text = frm.Text
-	rep.HTML, err = r.Runtime.Markdown.Convert(rep.Text)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	rep.AttachmentIDs, err = helpers.ProcessAttachments(r.Runtime, c, rep.AuthorID)
-	if err != nil {
-		req.Flash.SetError(err)
-		return req.RedirectToRoute(myRoute.Fill(
-			map[string]string{
-				"categories": c.Params("categories"),
-				"forums":     c.Params("forums"),
-				"topics":     c.Params("topics"),
-			},
-		))
-	}
-
-	rep.ID, err = r.Runtime.Repositories.Reply.Create(rep)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	r.notifyReply(c, req, rep, top, fum)
-
-	var total int64
-	total, err = r.Runtime.Repositories.Reply.VAllCountForTopicUUID(rep.TopicID, common.QueryOptions{})
-
-	pages := helpers.GetNumberOfPages(total, req.System.GetPostsPerPage())
-
-	return req.RedirectToRouteWithQuery(myRoute.Fill(
+	topicRoute := myRoute.Fill(
 		map[string]string{
 			"categories": c.Params("categories"),
 			"forums":     c.Params("forums"),
 			"topics":     c.Params("topics"),
 		},
-	), "page", strconv.Itoa(pages))
+	)
+
+	in := new(logictopics.CreateReplyInput)
+
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
+		return req.RedirectToRoute(topicRoute)
+	}
+
+	r.Runtime.Debug("form", in)
+
+	authorID, _ := req.Session.GetUserUUID()
+
+	var created *logictopics.CreatedReply
+	created, err = logictopics.CreateReply(
+		r.Runtime,
+		authorID,
+		req.Perms(),
+		in,
+		func(authorID uuid.UUID) ([]uuid.UUID, error) {
+			return helpers.ProcessAttachments(r.Runtime, c, authorID)
+		},
+	)
+	if errors.Is(err, errs.ErrForbidden) {
+		return req.RedirectToRoot()
+	}
+	if errors.Is(err, errs.ErrAttachmentTooLarge) ||
+		errors.Is(err, errs.ErrAttachmentFormatNotAllowed) ||
+		errors.Is(err, errs.ErrAttachmentHookFailed) ||
+		errors.Is(err, errs.ErrAttachmentDuplicate) ||
+		errors.Is(err, errs.ErrAttachmentUploadFailed) {
+		req.Flash.SetError(err)
+		return req.RedirectToRoute(topicRoute)
+	}
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	r.notifyReply(c, req, created.Reply, created.Topic, created.Forum)
+
+	var pages int
+	pages, err = logictopics.ReplyPages(
+		r.Runtime,
+		created.Reply.TopicID,
+		req.System.GetPostsPerPage(),
+	)
+	if ret, rerr := req.RespondOnError(err); ret == true {
+		return rerr
+	}
+
+	return req.RedirectToRouteWithQuery(topicRoute, "page", strconv.Itoa(pages))
 }

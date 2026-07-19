@@ -1,14 +1,11 @@
 package attachments
 
 import (
-	"strings"
-
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	logicattachments "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/board/attachments"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
 func (r *Route) Index(c fiber.Ctx) (err error) {
@@ -23,36 +20,16 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var settingAttachments *setting.Setting[setting.Attachments]
-	settingAttachments, err = settingRepo.GetByID[setting.Attachments](
-		r.Runtime.Repositories.Setting,
-		"attachments",
-	)
+	var view *logicattachments.View
+	view, err = logicattachments.Show(r.Runtime)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
 
-	storages, err := r.Runtime.Config.Storages()
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	var storageIDs []string
-	storageIsPublic := false
-	for _, storage := range storages {
-		storageIDs = append(storageIDs, storage.ID)
-
-		if storage.ID == settingAttachments.JSONValue.StorageProviderID &&
-			strings.ToLower(storage.Type) == "s3" &&
-			storage.S3.PublicDownload {
-			storageIsPublic = true
-		}
-	}
-
-	req.SetData("setting_attachments", &settingAttachments.JSONValue)
-	req.SetData("storage_ids", storageIDs)
-	req.SetData("storage_is_public", storageIsPublic)
-	req.SetData("upload_format_options", setting.AttachmentUploadFormatOptions)
+	req.SetData("setting_attachments", view.Attachments)
+	req.SetData("storage_ids", view.StorageIDs)
+	req.SetData("storage_is_public", view.StorageIsPublic)
+	req.SetData("upload_format_options", view.UploadFormatOptions)
 
 	return req.Respond()
 }

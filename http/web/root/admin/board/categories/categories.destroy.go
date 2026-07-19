@@ -4,16 +4,11 @@ import (
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/category"
+	logiccategories "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/board/categories"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
-
-type CategoryDestroyForm struct {
-	ID string `form:"id" validate:"required,uuid"`
-}
 
 func (r *Route) Destroy(c fiber.Ctx) (err error) {
 	myRoute := route.For("AdminBoardCategories")
@@ -27,18 +22,15 @@ func (r *Route) Destroy(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(CategoryDestroyForm)
+	in := new(logiccategories.DestroyInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	r.Runtime.Debug("form", frm)
+	r.Runtime.Debug("form", in)
 
-	cat := new(category.Category)
-	cat.ID, err = uuid.Parse(frm.ID)
-
-	err = r.Runtime.Repositories.Category.Delete(cat)
+	err = logiccategories.Destroy(r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

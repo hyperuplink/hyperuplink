@@ -1,12 +1,14 @@
 package twofactor
 
 import (
+	"errors"
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	logictwofactor "xn--gckvb8fzb.com/hyperuplink/logic/root/account/twofactor"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
@@ -54,14 +56,11 @@ func (r *Route) Enable(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	if !user.ValidateOTP(secret, frm.OTPCode) {
-		req.Flash.SetError(errs.ErrOTPCodeWrong)
+	err = logictwofactor.Enable(r.Runtime, usr, secret, frm.OTPCode)
+	if errors.Is(err, errs.ErrOTPCodeWrong) {
+		req.Flash.SetError(err)
 		return req.RedirectToRoute(myRoute)
 	}
-
-	usr.EnableOTP(secret)
-
-	err = r.Runtime.Repositories.User.Update(usr)
 	if ret, rerr := req.RedirectToRouteOnError(err, myRoute); ret == true {
 		return rerr
 	}

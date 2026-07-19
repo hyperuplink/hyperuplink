@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	logicreport "xn--gckvb8fzb.com/hyperuplink/logic/root/report"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
@@ -24,7 +25,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	id := c.Query("id")
 	returnTo := c.Query("return")
 
-	post, err := r.resolvePost(target, id)
+	post, err := logicreport.ResolvePost(r.Runtime, target, id)
 	if ret, rerr := req.RedirectToRootOnError(err); ret == true {
 		return rerr
 	}

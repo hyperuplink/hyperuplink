@@ -7,10 +7,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/category"
+	logiccategories "xn--gckvb8fzb.com/hyperuplink/logic/root/categories"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/models/vforum"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func (r *Route) Show(c fiber.Ctx) (err error) {
@@ -27,40 +25,21 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var cat *category.Category
-	cat, err = r.Runtime.Repositories.Category.GetBySlug(
-		c.Params("categories"), // TODO: Abstract into req, automatic err handling
-		common.QueryOptions{
-			Limit: 1,
-		},
-	)
+	var view *logiccategories.View
+	view, err = logiccategories.Show(r.Runtime, c.Params("categories"), req.Perms())
 	if errors.Is(err, errs.ErrNoRows) {
 		return c.SendStatus(fiber.StatusNotFound)
 	}
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	if !req.Perms().CanReadID(cat.ID) {
+	if errors.Is(err, errs.ErrForbidden) {
 		return req.RedirectToRoot()
 	}
-
-	req.UpdateTitle(cat.Name)
-	req.SetData("category", cat)
-
-	var fums *[]vforum.VForum
-	fums, err = r.Runtime.Repositories.Forum.VAllForCategoryUUID(
-		cat.ID,
-		common.QueryOptions{
-			OrderBy: "position",
-			Order:   common.Ascending,
-		},
-	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
 
-	req.SetData("forums", fums)
+	req.UpdateTitle(view.Category.Name)
+	req.SetData("category", view.Category)
+	req.SetData("forums", view.Forums)
 
 	return req.Respond()
 }

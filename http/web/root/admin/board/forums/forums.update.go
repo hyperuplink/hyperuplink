@@ -4,20 +4,11 @@ import (
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/forum"
+	logicforums "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/board/forums"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
-
-type ForumUpdateForm struct {
-	ID          string `form:"id" validate:"required,uuid"`
-	Name        string `form:"name" validate:"required,min=1,max=32"`
-	Slug        string `form:"slug" validate:"required,slug,min=1,max=32"`
-	CategoryID  string `form:"category_id" validate:"required,uuid"`
-	Description string `form:"description" validate:"min=0,max=128"`
-}
 
 func (r *Route) Update(c fiber.Ctx) (err error) {
 	myRoute := route.For("AdminBoardForums")
@@ -31,28 +22,15 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(ForumUpdateForm)
+	in := new(logicforums.UpdateInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	r.Runtime.Debug("form", frm)
+	r.Runtime.Debug("form", in)
 
-	fum := new(forum.Forum)
-	fum.ID, err = uuid.Parse(frm.ID)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-	fum.Name = frm.Name
-	fum.Slug = frm.Slug
-	fum.CategoryID, err = uuid.Parse(frm.CategoryID)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-	fum.Description = frm.Description
-
-	err = r.Runtime.Repositories.Forum.Update(fum)
+	err = logicforums.Update(r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

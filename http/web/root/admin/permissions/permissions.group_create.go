@@ -6,14 +6,9 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/group"
+	logicpermissions "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/permissions"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
-
-type GroupCreateForm struct {
-	ID   string `form:"id" validate:"required,slug,min=1,max=32"`
-	Name string `form:"name" validate:"required,min=1,max=32"`
-}
 
 func (r *Route) GroupCreate(c fiber.Ctx) (err error) {
 	myRoute := route.For("AdminPermissions")
@@ -27,17 +22,13 @@ func (r *Route) GroupCreate(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	frm := new(GroupCreateForm)
+	in := new(logicpermissions.GroupCreateInput)
 
-	if ok := req.ValidateForm(frm, reflect.TypeOf(*frm)); !ok {
+	if ok := req.ValidateForm(in, reflect.TypeOf(*in)); !ok {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	grp := new(group.Group)
-	grp.ID = frm.ID
-	grp.Name = frm.Name
-
-	_, err = r.Runtime.Repositories.Group.Create(grp)
+	err = logicpermissions.GroupCreate(r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
