@@ -1,5 +1,9 @@
 package config
 
+func (cfg *Config) ServerEnable() bool {
+	return cfg.k.Bool("Server.Enable")
+}
+
 func (cfg *Config) ServerBindIP() string {
 	return cfg.k.String("Server.BindIP")
 }

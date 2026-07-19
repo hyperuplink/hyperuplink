@@ -2,6 +2,10 @@ package config
 
 const APIDefaultPort = 3001
 
+func (cfg *Config) APIEnable() bool {
+	return cfg.k.Bool("API.Enable")
+}
+
 func (cfg *Config) APIBindIP() string {
 	return cfg.k.String("API.BindIP")
 }

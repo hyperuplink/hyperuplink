@@ -114,22 +114,26 @@ func main() {
 	rt.NilOrDie(err)
 
 	// ---[ WEB ]-------------------------------------------------------------- //
-	web, err = http.New(rt, http.IfaceWeb)
-	rt.NilOrDie(err)
+	if rt.Config.ServerEnable() {
+		web, err = http.New(rt, http.IfaceWeb)
+		rt.NilOrDie(err)
 
-	err = web.Startup()
-	rt.NilOrDie(err)
+		err = web.Startup()
+		rt.NilOrDie(err)
 
-	go web.Run()
+		go web.Run()
+	}
 
 	// ---[ API ]-------------------------------------------------------------- //
-	api, err = http.New(rt, http.IfaceAPI)
-	rt.NilOrDie(err)
+	if rt.Config.APIEnable() {
+		api, err = http.New(rt, http.IfaceAPI)
+		rt.NilOrDie(err)
 
-	err = api.Startup()
-	rt.NilOrDie(err)
+		err = api.Startup()
+		rt.NilOrDie(err)
 
-	go api.Run()
+		go api.Run()
+	}
 
 	// ---[ WORKER ]----------------------------------------------------------- //
 	wrk, err = worker.New(rt)
@@ -157,8 +161,12 @@ func main() {
 	<-quit
 
 	crn.Shutdown()
-	api.Shutdown()
-	web.Shutdown()
+	if api != nil {
+		api.Shutdown()
+	}
+	if web != nil {
+		web.Shutdown()
+	}
 	wrk.Shutdown()
 
 	rt.Exit(0)
