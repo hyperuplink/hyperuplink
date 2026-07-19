@@ -64,17 +64,17 @@ func New(
 	srv.app = fiber.New(fiber.Config{
 		StrictRouting:      false,
 		CaseSensitive:      false,
-		BodyLimit:          srv.rt.Config.ServerBodyLimit(),
-		Concurrency:        srv.rt.Config.ServerConcurrency(),
-		ProxyHeader:        srv.rt.Config.ServerProxyHeader(),
-		EnableIPValidation: srv.rt.Config.ServerEnableIPValidation(),
-		TrustProxy:         srv.rt.Config.ServerTrustProxy(),
+		BodyLimit:          srv.rt.Config.WebBodyLimit(),
+		Concurrency:        srv.rt.Config.WebConcurrency(),
+		ProxyHeader:        srv.rt.Config.WebProxyHeader(),
+		EnableIPValidation: srv.rt.Config.WebEnableIPValidation(),
+		TrustProxy:         srv.rt.Config.WebTrustProxy(),
 		TrustProxyConfig: fiber.TrustProxyConfig{
-			Loopback: srv.rt.Config.ServerTrustLoopback(),
-			Proxies:  srv.rt.Config.ServerTrustProxies(),
+			Loopback: srv.rt.Config.WebTrustLoopback(),
+			Proxies:  srv.rt.Config.WebTrustProxies(),
 		},
-		ReduceMemoryUsage: srv.rt.Config.ServerReduceMemoryUsage(),
-		ServerHeader:      srv.rt.Config.ServerServerHeader(),
+		ReduceMemoryUsage: srv.rt.Config.WebReduceMemoryUsage(),
+		ServerHeader:      srv.rt.Config.WebServerHeader(),
 		AppName:           "hyperuplink",
 		Views:             srv.engine,
 		StructValidator:   validation.NewStructValidator(srv.validator),
@@ -377,8 +377,8 @@ func (srv *Web) Startup() (err error) {
 func (srv *Web) Run() error {
 	listenAddr := fmt.Sprintf(
 		"%s:%d",
-		srv.rt.Config.ServerBindIP(),
-		srv.rt.Config.ServerPort(),
+		srv.rt.Config.WebBindIP(),
+		srv.rt.Config.WebPort(),
 	)
 	if err := srv.app.Listen(listenAddr, fiber.ListenConfig{
 		DisableStartupMessage: true,

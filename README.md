@@ -146,7 +146,8 @@ Addresses = ["127.0.0.1:6379"]
 [Database]
 Connection = "postgres://user:pass@localhost:5432/hyperuplink?sslmode=disable"
 
-[Server]
+[Web]
+Enable = true
 BindIP = "0.0.0.0"
 Port   = 3000
 

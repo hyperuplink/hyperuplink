@@ -10,7 +10,7 @@ Addresses = ["127.0.0.1:6379"]
 [Database]
 Connection = "postgres://postgres:postgres@localhost:5432/hyperuplink_dev?sslmode=disable"
 
-[Server]
+[Web]
 Enable             = true
 BindIP             = "0.0.0.0"
 Port               = 3000

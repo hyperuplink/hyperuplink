@@ -10,7 +10,8 @@ Addresses = ["valkey:6379"]
 [Database]
 Connection = "postgres://hyperuplink:hyperuplink@postgres:5432/hyperuplink?sslmode=disable"
 
-[Server]
+[Web]
+Enable             = true
 BindIP             = "0.0.0.0"
 Port               = 3000
 BodyLimit          = 67108864
@@ -24,6 +25,7 @@ ReduceMemoryUsage  = false
 ServerHeader       = ""
 
 [API]
+Enable             = true
 BindIP             = "0.0.0.0"
 Port               = 3001
 BodyLimit          = 67108864

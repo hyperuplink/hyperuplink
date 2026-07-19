@@ -114,7 +114,7 @@ func main() {
 	rt.NilOrDie(err)
 
 	// ---[ WEB ]-------------------------------------------------------------- //
-	if rt.Config.ServerEnable() {
+	if rt.Config.WebEnable() {
 		web, err = http.New(rt, http.IfaceWeb)
 		rt.NilOrDie(err)
 
