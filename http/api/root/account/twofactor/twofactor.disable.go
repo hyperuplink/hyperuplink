@@ -7,6 +7,18 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary	Disable two-factor authentication
+// @Tags		account
+// @Accept		json
+// @Produce	json
+// @Param		request	body		twofactor.TwofactorDisableInput	true	"The current password"
+// @Success	200		{object}	request.StatusResponse
+// @Failure	401		{object}	request.ErrorResponse
+// @Failure	403		{object}	request.ErrorResponse
+// @Failure	422		{object}	request.ValidationErrorResponse
+// @Security	BearerAuth
+// @Security	APIKeyAuth
+// @Router		/account/twofactor/disable [post]
 func (r *Route) Disable(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

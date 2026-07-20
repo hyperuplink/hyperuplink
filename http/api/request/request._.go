@@ -20,6 +20,19 @@ import (
 
 const UserLocal = "api_user"
 
+type StatusResponse struct {
+	Status string `json:"status" example:"ok"`
+}
+
+type ErrorResponse struct {
+	Error string `json:"error" example:"forbidden"`
+}
+
+type ValidationErrorResponse struct {
+	Error  string            `json:"error" example:"validation"`
+	Fields map[string]string `json:"fields"`
+}
+
 type Request struct {
 	r      route.IRouteController
 	c      fiber.Ctx
@@ -133,14 +146,14 @@ func (req *Request) respondBindError(berr error, tag string) error {
 			)
 		}
 
-		return req.c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
-			"error":  errs.ErrValidation.Error(),
-			"fields": fields,
+		return req.c.Status(fiber.StatusUnprocessableEntity).JSON(ValidationErrorResponse{
+			Error:  errs.ErrValidation.Error(),
+			Fields: fields,
 		})
 	}
 
-	return req.c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-		"error": errs.ErrFormInvalid.Error(),
+	return req.c.Status(fiber.StatusBadRequest).JSON(ErrorResponse{
+		Error: errs.ErrFormInvalid.Error(),
 	})
 }
 
@@ -153,12 +166,12 @@ func (req *Request) RespondCreated(data any) error {
 }
 
 func (req *Request) RespondOK() error {
-	return req.c.JSON(fiber.Map{"status": "ok"})
+	return req.c.JSON(StatusResponse{Status: "ok"})
 }
 
 func (req *Request) RespondError(err error) error {
-	return req.c.Status(statusForError(err)).JSON(fiber.Map{
-		"error": err.Error(),
+	return req.c.Status(statusForError(err)).JSON(ErrorResponse{
+		Error: err.Error(),
 	})
 }
 

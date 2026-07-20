@@ -7,6 +7,19 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary		Delete a forum
+// @Description	The delete is soft and propagates down to the topics and replies the
+// @Description	forum holds.
+// @Tags			admin
+// @Produce		json
+// @Param			id	path		string	true	"The forum identifier"
+// @Success		200	{object}	request.StatusResponse
+// @Failure		401	{object}	request.ErrorResponse
+// @Failure		403	{object}	request.ErrorResponse
+// @Failure		404	{object}	request.ErrorResponse
+// @Security		BearerAuth
+// @Security		APIKeyAuth
+// @Router			/admin/board/forums/{id} [delete]
 func (r *Route) Destroy(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

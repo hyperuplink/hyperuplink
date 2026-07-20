@@ -8,6 +8,21 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary		Report a post
+// @Description	The report is filed for the administrators to read under Admin ->
+// @Description	Reports.
+// @Tags			board
+// @Accept			json
+// @Produce		json
+// @Param			request	body		logicreport.CreateInput	true	"The post and the reason to report it"
+// @Success		201		{object}	request.StatusResponse
+// @Failure		401		{object}	request.ErrorResponse
+// @Failure		403		{object}	request.ErrorResponse
+// @Failure		404		{object}	request.ErrorResponse
+// @Failure		422		{object}	request.ValidationErrorResponse
+// @Security		BearerAuth
+// @Security		APIKeyAuth
+// @Router			/report [post]
 func (r *Route) Create(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

@@ -1,4 +1,4 @@
-.PHONY: all help test build db\:drop db\:seed run release manual\:screenshots site\:screenshots
+.PHONY: all help test swagger build db\:drop db\:seed run release manual\:screenshots site\:screenshots
 PWD := $(shell pwd)
 GOPATH := $(shell go env GOPATH)
 
@@ -38,7 +38,22 @@ help: ## print this help
 test: ## test
 	go test -v ./...
 
-build: ## build
+# The specification lands in docs/, which is already embedded, so the build
+# picks it up without any further wiring. Only the JSON is generated: the
+# handler reads the embedded file, so swag's docs.go would be dead weight.
+swagger: ## generate the OpenAPI specification the API serves at /_internal/swagger
+	@go tool swag init \
+		--quiet \
+		--generalInfo http/api/api._.go \
+		--dir ./ \
+		--exclude build,deploy,docs,locales,migrations,static,templates,testdata,tools,views \
+		--output docs \
+		--outputTypes json \
+		--parseInternal \
+		--parseDependency \
+		--parseDepth 2
+
+build: swagger ## build
 	@echo "Building with the following parameters:"
 	@echo "VERSION = $(VERSION)"
 	@echo "COMMIT  = $(COMMIT)"

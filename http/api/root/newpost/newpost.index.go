@@ -7,6 +7,22 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary		Show what a new post may be written into
+// @Description	Hands back the forums the caller may post in, and, when a forum,
+// @Description	topic or reply is named in the query, the post that is being
+// @Description	answered.
+// @Tags			board
+// @Produce		json
+// @Param			forum	query		string	false	"The slug of the forum to post in"
+// @Param			topic	query		string	false	"The slug of the topic to reply to"
+// @Param			reply	query		string	false	"The identifier of the reply to quote"
+// @Success		200		{object}	logicnewpost.FormView
+// @Failure		401		{object}	request.ErrorResponse
+// @Failure		403		{object}	request.ErrorResponse
+// @Failure		404		{object}	request.ErrorResponse
+// @Security		BearerAuth
+// @Security		APIKeyAuth
+// @Router			/new [get]
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

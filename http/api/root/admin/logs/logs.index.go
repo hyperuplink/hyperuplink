@@ -11,6 +11,17 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
+// @Summary	List the audit log
+// @Tags		admin
+// @Produce	json
+// @Param		page	query		integer	false	"The page to return, counting from one"
+// @Success	200		{object}	object{logs=[]vactivity.VActivity,total=integer,pages=integer}
+// @Failure	401		{object}	request.ErrorResponse
+// @Failure	403		{object}	request.ErrorResponse
+// @Failure	422		{object}	request.ErrorResponse
+// @Security	BearerAuth
+// @Security	APIKeyAuth
+// @Router		/admin/logs [get]
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

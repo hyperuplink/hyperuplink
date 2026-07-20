@@ -7,6 +7,17 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary		Show the email settings
+// @Description	The target identifiers are the delivery targets the configuration
+// @Description	file declares, one of which the settings pick to send through.
+// @Tags			admin
+// @Produce		json
+// @Success		200	{object}	object{comms_email=setting.CommsEmail,target_ids=[]string}
+// @Failure		401	{object}	request.ErrorResponse
+// @Failure		403	{object}	request.ErrorResponse
+// @Security		BearerAuth
+// @Security		APIKeyAuth
+// @Router			/admin/comms/email [get]
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

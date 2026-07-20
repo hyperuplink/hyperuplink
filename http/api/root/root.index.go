@@ -7,6 +7,17 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary		Show the board
+// @Description	Lists every category the caller may see together with the forums
+// @Description	inside it and the board-wide counters.
+// @Tags			board
+// @Produce		json
+// @Success		200	{object}	logicroot.Board
+// @Failure		403	{object}	request.ErrorResponse
+// @Failure		500	{object}	request.ErrorResponse
+// @Security		BearerAuth
+// @Security		APIKeyAuth
+// @Router			/ [get]
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

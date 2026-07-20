@@ -2,17 +2,20 @@ package api
 
 import (
 	"fmt"
+	"io/fs"
 	"net/http"
 	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	swaggo "github.com/gofiber/contrib/v3/swaggo"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/gofiber/fiber/v3/middleware/healthcheck"
 	"github.com/gofiber/fiber/v3/middleware/recover"
 	"github.com/gofiber/fiber/v3/middleware/requestid"
 	slogfiber "github.com/samber/slog-fiber"
+	"github.com/swaggo/swag"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/root"
@@ -23,6 +26,11 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
+const (
+	internalPrefix  = "/_internal/"
+	swaggerSpecPath = "docs/swagger.json"
+)
+
 type API struct {
 	rt        *runtime.Runtime
 	app       *fiber.App
@@ -30,6 +38,46 @@ type API struct {
 	validator *validator.Validate
 }
 
+// @title		HyperUplink API
+// @version		{{.Version}}
+// @description	The JSON interface to a HyperUplink board, exposing the same
+// @description	categories, forums, topics and administrative surfaces the web
+// @description	interface serves, with every response shaped by the permissions
+// @description	of the user the API key belongs to.
+// @description
+// @description	Authentication happens with an API key that a signed-in user
+// @description	mints under Account -> API on the board itself, and the secret
+// @description	it hands out once is sent either as a bearer token in the
+// @description	Authorization header or verbatim in the X-API-Key header, so a
+// @description	request that carries neither is answered with 401 before it
+// @description	ever reaches a controller.
+//
+// @contact.name	HyperUplink
+// @contact.url	https://hyperup.link
+//
+// @license.name	SEGV
+// @license.url	https://xn--gckvb8fzb.com/segv/
+//
+// @basePath	/
+// @accept		json
+// @produce		json
+//
+// @tag.name		board
+// @tag.description	The board itself, its categories, forums and topics.
+// @tag.name		account
+// @tag.description	The signed-in user's own profile, settings and credentials.
+// @tag.name		admin
+// @tag.description	Board administration, restricted to administrators.
+//
+// @securityDefinitions.apikey	BearerAuth
+// @in				header
+// @name			Authorization
+// @description		The API key secret prefixed with "Bearer ".
+//
+// @securityDefinitions.apikey	APIKeyAuth
+// @in				header
+// @name			X-API-Key
+// @description		The API key secret on its own.
 func New(
 	rt *runtime.Runtime,
 ) (srv *API, err error) {
@@ -59,7 +107,7 @@ func New(
 			if ferr, ok := err.(*fiber.Error); ok {
 				code = ferr.Code
 			}
-			return c.Status(code).JSON(fiber.Map{"error": err.Error()})
+			return c.Status(code).JSON(request.ErrorResponse{Error: err.Error()})
 		},
 	})
 
@@ -88,12 +136,39 @@ func (srv *API) loadMiddlewares() error {
 	srv.app.Get(fmt.Sprintf("/_internal/health%s", healthcheck.StartupEndpoint),
 		healthcheck.New())
 
+	srv.loadSwagger()
+
 	srv.app.Use(srv.authenticate)
 
 	return nil
 }
 
+func (srv *API) loadSwagger() {
+	embedded, ok := srv.rt.Embeds["docs"]
+	if !ok {
+		srv.rt.Warn("swagger", "no embedded documentation")
+		return
+	}
+
+	doc, err := fs.ReadFile(embedded, swaggerSpecPath)
+	if err != nil {
+		srv.rt.Warn("swagger", "error", "error", err)
+		return
+	}
+
+	swag.Register(swag.Name, &swag.Spec{
+		Version:         srv.rt.Build.Version,
+		SwaggerTemplate: string(doc),
+	})
+
+	srv.app.Get("/_internal/swagger/*", swaggo.HandlerDefault)
+}
+
 func (srv *API) authenticate(c fiber.Ctx) error {
+	if isInternal(c) {
+		return c.Next()
+	}
+
 	secret := extractSecret(c)
 	if secret == "" || !apikey.IsSecret(secret) {
 		return unauthorized(c)
@@ -129,6 +204,10 @@ func (srv *API) authenticate(c fiber.Ctx) error {
 	return c.Next()
 }
 
+func isInternal(c fiber.Ctx) bool {
+	return strings.HasPrefix(strings.ToLower(c.Path()), internalPrefix)
+}
+
 func extractSecret(c fiber.Ctx) string {
 	if header := c.Get("Authorization"); strings.HasPrefix(header, "Bearer ") {
 		return strings.TrimSpace(strings.TrimPrefix(header, "Bearer "))
@@ -138,8 +217,8 @@ func extractSecret(c fiber.Ctx) string {
 }
 
 func unauthorized(c fiber.Ctx) error {
-	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-		"error": errs.ErrAPIKeyInvalid.Error(),
+	return c.Status(fiber.StatusUnauthorized).JSON(request.ErrorResponse{
+		Error: errs.ErrAPIKeyInvalid.Error(),
 	})
 }
 

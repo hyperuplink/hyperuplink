@@ -8,6 +8,15 @@ import (
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
+// @Summary	Show the profile settings
+// @Tags		admin
+// @Produce	json
+// @Success	200	{object}	object{profiles=setting.Profiles,storage_ids=[]string}
+// @Failure	401	{object}	request.ErrorResponse
+// @Failure	403	{object}	request.ErrorResponse
+// @Security	BearerAuth
+// @Security	APIKeyAuth
+// @Router		/admin/board/profiles [get]
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

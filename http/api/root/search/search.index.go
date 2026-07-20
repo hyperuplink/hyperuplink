@@ -11,6 +11,26 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary		Search the board
+// @Description	The filters narrow what is matched, and passing none of them searches
+// @Description	titles and bodies both; results are limited to what the caller is
+// @Description	allowed to read.
+// @Tags			board
+// @Produce		json
+// @Param			q				query		string	true	"The terms to search for"
+// @Param			author			query		string	false	"Only match posts by this author"
+// @Param			f_title			query		string	false	"Match topic titles"
+// @Param			f_body			query		string	false	"Match post bodies"
+// @Param			f_replies		query		string	false	"Match replies"
+// @Param			f_attachments	query		string	false	"Match attachment filenames"
+// @Param			page			query		integer	false	"The page to return, counting from one"
+// @Success		200				{object}	logicsearch.Results
+// @Failure		401				{object}	request.ErrorResponse
+// @Failure		403				{object}	request.ErrorResponse
+// @Failure		422				{object}	request.ErrorResponse
+// @Security		BearerAuth
+// @Security		APIKeyAuth
+// @Router			/search [get]
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

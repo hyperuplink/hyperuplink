@@ -48,6 +48,21 @@ func (r *Route) GetEnv() *route.Environment {
 	return r.Env
 }
 
+// @Summary		Upload the account picture
+// @Description	The picture is resized and converted by the board, so any format
+// @Description	ImageMagick reads is accepted as long as it stays under the size
+// @Description	limit the administrators have set.
+// @Tags			account
+// @Accept			mpfd
+// @Produce		json
+// @Param			profile_picture	formData	file	true	"The image to use as the account picture"
+// @Success		200				{object}	request.StatusResponse
+// @Failure		401				{object}	request.ErrorResponse
+// @Failure		403				{object}	request.ErrorResponse
+// @Failure		422				{object}	request.ErrorResponse
+// @Security		BearerAuth
+// @Security		APIKeyAuth
+// @Router			/account/profile/picture [post]
 func (r *Route) PictureUpload(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

@@ -12,6 +12,23 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary		Show a topic
+// @Description	Lists one page of the topic's replies together with the poll, the
+// @Description	attachments and the read marker of the calling user.
+// @Tags			board
+// @Produce		json
+// @Param			categories	path		string	true	"The category slug"
+// @Param			forums		path		string	true	"The forum slug"
+// @Param			topics		path		string	true	"The topic slug"
+// @Param			page		query		integer	false	"The page to return, counting from one"
+// @Success		200			{object}	logictopics.View
+// @Failure		401			{object}	request.ErrorResponse
+// @Failure		403			{object}	request.ErrorResponse
+// @Failure		404			{object}	request.ErrorResponse
+// @Failure		422			{object}	request.ErrorResponse
+// @Security		BearerAuth
+// @Security		APIKeyAuth
+// @Router			/_{categories}/{forums}/{topics} [get]
 func (r *Route) Show(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

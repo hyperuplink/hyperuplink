@@ -8,6 +8,18 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary	Update the email settings
+// @Tags		admin
+// @Accept		json
+// @Produce	json
+// @Param		request	body		logicemail.UpdateInput	true	"The email settings to store"
+// @Success	200		{object}	request.StatusResponse
+// @Failure	401		{object}	request.ErrorResponse
+// @Failure	403		{object}	request.ErrorResponse
+// @Failure	422		{object}	request.ValidationErrorResponse
+// @Security	BearerAuth
+// @Security	APIKeyAuth
+// @Router		/admin/comms/email [put]
 func (r *Route) Update(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

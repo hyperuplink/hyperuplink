@@ -7,6 +7,16 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary		List the forums
+// @Description	The forums come back grouped under the category each one belongs to.
+// @Tags			admin
+// @Produce		json
+// @Success		200	{object}	object{categories_forums=[]logicforums.CategoryWithForums}
+// @Failure		401	{object}	request.ErrorResponse
+// @Failure		403	{object}	request.ErrorResponse
+// @Security		BearerAuth
+// @Security		APIKeyAuth
+// @Router			/admin/board/forums [get]
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

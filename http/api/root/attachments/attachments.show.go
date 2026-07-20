@@ -11,6 +11,20 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary		Download an attachment
+// @Description	The file is streamed back under the name it was uploaded with, and
+// @Description	callers who cannot read the category the attachment was posted in
+// @Description	are answered as though it did not exist.
+// @Tags			board
+// @Produce		octet-stream
+// @Param			attachment	path		string	true	"The attachment identifier"
+// @Success		200			{file}		binary
+// @Failure		401			{object}	request.ErrorResponse
+// @Failure		403			{object}	request.ErrorResponse
+// @Failure		404			{object}	request.ErrorResponse
+// @Security		BearerAuth
+// @Security		APIKeyAuth
+// @Router			/attachments/{attachment} [get]
 func (r *Route) Show(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

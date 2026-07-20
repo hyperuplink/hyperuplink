@@ -13,6 +13,21 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
 )
 
+// @Summary		Start a topic
+// @Description	Creates a topic in the given forum, optionally with a poll and with
+// @Description	attachments that were uploaded beforehand, and answers with the slugs
+// @Description	the new topic can be read under.
+// @Tags			board
+// @Accept			json
+// @Produce		json
+// @Param			request	body		newpost.NewCreateBody	true	"The topic to create"
+// @Success		201		{object}	object{id=string,slug=string,category_slug=string,forum_slug=string}
+// @Failure		401		{object}	request.ErrorResponse
+// @Failure		403		{object}	request.ErrorResponse
+// @Failure		422		{object}	request.ValidationErrorResponse
+// @Security		BearerAuth
+// @Security		APIKeyAuth
+// @Router			/new [post]
 func (r *Route) Create(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

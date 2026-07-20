@@ -10,6 +10,19 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary		Show a category
+// @Description	A category the caller may not read is answered as though it did not
+// @Description	exist, so that the board gives nothing away about what it hides.
+// @Tags			board
+// @Produce		json
+// @Param			categories	path		string	true	"The category slug"
+// @Success		200			{object}	logiccategories.View
+// @Failure		401			{object}	request.ErrorResponse
+// @Failure		403			{object}	request.ErrorResponse
+// @Failure		404			{object}	request.ErrorResponse
+// @Security		BearerAuth
+// @Security		APIKeyAuth
+// @Router			/_{categories} [get]
 func (r *Route) Show(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

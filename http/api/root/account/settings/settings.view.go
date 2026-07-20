@@ -7,6 +7,19 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary		Toggle a collapsible view
+// @Description	Flips whether the named section of the interface starts out open or
+// @Description	closed for the caller and answers with the state it now has.
+// @Tags			account
+// @Produce		json
+// @Param			view	path		string	true	"The name of the view to toggle"
+// @Success		200		{object}	object{view=string,enabled=boolean}
+// @Failure		401		{object}	request.ErrorResponse
+// @Failure		403		{object}	request.ErrorResponse
+// @Failure		422		{object}	request.ErrorResponse
+// @Security		BearerAuth
+// @Security		APIKeyAuth
+// @Router			/account/settings/view/{view} [post]
 func (r *Route) View(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

@@ -7,6 +7,19 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary		Show a user
+// @Description	The public view of a user, with the groups they belong to and the
+// @Description	posts of theirs the caller is allowed to read.
+// @Tags			board
+// @Produce		json
+// @Param			user	path		string	true	"The username"
+// @Success		200		{object}	object{user=user.Public,groups=[]group.Group,topics=[]vtopic.VTopic,replies=[]vreply.VReplyWithTopic}
+// @Failure		401		{object}	request.ErrorResponse
+// @Failure		403		{object}	request.ErrorResponse
+// @Failure		404		{object}	request.ErrorResponse
+// @Security		BearerAuth
+// @Security		APIKeyAuth
+// @Router			/~{user} [get]
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

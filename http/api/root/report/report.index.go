@@ -7,6 +7,18 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary	Show the post a report would be about
+// @Tags		board
+// @Produce	json
+// @Param		target	query		string	true	"The kind of post, either topic or reply"
+// @Param		id		query		string	true	"The identifier of the post"
+// @Success	200		{object}	object{target=string,id=string,post_text=string}
+// @Failure	401		{object}	request.ErrorResponse
+// @Failure	403		{object}	request.ErrorResponse
+// @Failure	404		{object}	request.ErrorResponse
+// @Security	BearerAuth
+// @Security	APIKeyAuth
+// @Router		/report [get]
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

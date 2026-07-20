@@ -7,6 +7,18 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary	Create a category
+// @Tags		admin
+// @Accept		json
+// @Produce	json
+// @Param		request	body		logiccategories.CreateInput	true	"The category to create"
+// @Success	201		{object}	object{id=string}
+// @Failure	401		{object}	request.ErrorResponse
+// @Failure	403		{object}	request.ErrorResponse
+// @Failure	422		{object}	request.ValidationErrorResponse
+// @Security	BearerAuth
+// @Security	APIKeyAuth
+// @Router		/admin/board/categories [post]
 func (r *Route) Create(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

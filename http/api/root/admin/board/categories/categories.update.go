@@ -7,6 +7,20 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary	Update a category
+// @Tags		admin
+// @Accept		json
+// @Produce	json
+// @Param		id		path		string						true	"The category identifier"
+// @Param		request	body		logiccategories.UpdateInput	true	"The fields to store"
+// @Success	200		{object}	request.StatusResponse
+// @Failure	401		{object}	request.ErrorResponse
+// @Failure	403		{object}	request.ErrorResponse
+// @Failure	404		{object}	request.ErrorResponse
+// @Failure	422		{object}	request.ValidationErrorResponse
+// @Security	BearerAuth
+// @Security	APIKeyAuth
+// @Router		/admin/board/categories/{id} [put]
 func (r *Route) Update(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 

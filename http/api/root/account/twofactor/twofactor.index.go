@@ -6,6 +6,18 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
+// @Summary		Show the two-factor state
+// @Description	When two-factor authentication is off this hands out a fresh
+// @Description	enrollment with the secret and the otpauth URL to scan, and when it
+// @Description	is already on only the enabled flag comes back.
+// @Tags			account
+// @Produce		json
+// @Success		200	{object}	object{enabled=boolean,enrollment=user.OTPEnrollment}
+// @Failure		401	{object}	request.ErrorResponse
+// @Failure		403	{object}	request.ErrorResponse
+// @Security		BearerAuth
+// @Security		APIKeyAuth
+// @Router			/account/twofactor [get]
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
