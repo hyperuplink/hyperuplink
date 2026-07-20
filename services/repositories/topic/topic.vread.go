@@ -39,6 +39,82 @@ func (repo *Repository) VAllCountForForumUUID(
 	return total, nil
 }
 
+func (repo *Repository) VAllCountForReadableSlugs(
+	slugs []string,
+	qo common.QueryOptions,
+) (total int64, err error) {
+	var rows pgx.Rows
+
+	qoc := qo
+	qoc.OrderBy = ""
+	qoc.Limit = 0
+	qoc.Page = 0
+
+	base := `SELECT COUNT(id) AS total FROM vtopics`
+	var args []any
+	if slugs != nil {
+		base += ` WHERE category_slug = ANY($1)`
+		args = append(args, slugs)
+	}
+
+	rows, err = repo.db.Query(qoc.Query(
+		base,
+		common.QueryCapabilities{
+			HasSpammed: true,
+			HasDeleted: true,
+		}),
+		args...,
+	)
+	if err != nil {
+		return total, repo.db.ConvertError(err)
+	}
+
+	var pag map[string]any
+	pag, err = pgx.CollectOneRow(rows, pgx.RowToMap)
+	if err != nil {
+		return total, repo.db.ConvertError(err)
+	}
+	total = pag["total"].(int64)
+
+	return total, nil
+}
+
+func (repo *Repository) VAllForReadableSlugs(
+	slugs []string,
+	qo common.QueryOptions,
+) (model *[]vtopic.VTopic, total int64, err error) {
+	var rows pgx.Rows
+	var mod []vtopic.VTopic
+
+	total, err = repo.VAllCountForReadableSlugs(slugs, qo)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	base := `SELECT * FROM vtopics`
+	var args []any
+	if slugs != nil {
+		base += ` WHERE category_slug = ANY($1)`
+		args = append(args, slugs)
+	}
+
+	rows, err = repo.db.Query(qo.Query(
+		base,
+		common.QueryCapabilities{
+			HasSpammed: true,
+			HasDeleted: true,
+		}),
+		args...,
+	)
+	if err != nil {
+		return nil, 0, repo.db.ConvertError(err)
+	}
+
+	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[vtopic.VTopic])
+
+	return &mod, total, repo.db.ConvertError(err)
+}
+
 func (repo *Repository) VAll(
 	qo common.QueryOptions,
 ) (model *[]vtopic.VTopic, err error) {
@@ -98,6 +174,54 @@ func (repo *Repository) VAllForForumID(
 	}
 
 	return repo.VAllForForumUUID(uuID, qo)
+}
+
+func (repo *Repository) VGetByUUID(
+	id uuid.UUID,
+	qo common.QueryOptions,
+) (model *vtopic.VTopic, err error) {
+	var rows pgx.Rows
+	var mod vtopic.VTopic
+
+	rows, err = repo.db.Query(qo.Query(
+		`SELECT * FROM vtopics WHERE id = $1`,
+		common.QueryCapabilities{
+			HasSpammed: true,
+			HasDeleted: true,
+		}),
+		id,
+	)
+	if err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+
+	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[vtopic.VTopic])
+
+	return &mod, repo.db.ConvertError(err)
+}
+
+func (repo *Repository) VGetByShortID(
+	shortID string,
+	qo common.QueryOptions,
+) (model *vtopic.VTopic, err error) {
+	var rows pgx.Rows
+	var mod vtopic.VTopic
+
+	rows, err = repo.db.Query(qo.Query(
+		`SELECT * FROM vtopics WHERE short_id = $1`,
+		common.QueryCapabilities{
+			HasSpammed: true,
+			HasDeleted: true,
+		}),
+		shortID,
+	)
+	if err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+
+	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[vtopic.VTopic])
+
+	return &mod, repo.db.ConvertError(err)
 }
 
 func (repo *Repository) VGetByForumUUIDSlug(
