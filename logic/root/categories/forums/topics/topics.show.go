@@ -20,6 +20,13 @@ type ShowInput struct {
 	ViewerID  uuid.NullUUID
 }
 
+type ShowByIDInput struct {
+	ID       string
+	Page     int
+	PerPage  int
+	ViewerID uuid.NullUUID
+}
+
 type View struct {
 	Topic   *vtopic.VTopic   `json:"topic"`
 	Poll    *Poll            `json:"poll,omitempty"`
@@ -44,30 +51,59 @@ func Show(
 		return nil, err
 	}
 
+	return viewForTopic(rt, top, in.Page, in.PerPage, in.ViewerID, perms)
+}
+
+func ShowByID(
+	rt *runtime.Runtime,
+	in *ShowByIDInput,
+	perms *permission.Resolution,
+) (view *View, err error) {
+	var top *vtopic.VTopic
+	if id, perr := uuid.Parse(in.ID); perr == nil {
+		top, err = rt.Repositories.Topic.VGetByUUID(id, common.QueryOptions{Limit: 1})
+	} else {
+		top, err = rt.Repositories.Topic.VGetByShortID(in.ID, common.QueryOptions{Limit: 1})
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	return viewForTopic(rt, top, in.Page, in.PerPage, in.ViewerID, perms)
+}
+
+func viewForTopic(
+	rt *runtime.Runtime,
+	top *vtopic.VTopic,
+	page int,
+	perPage int,
+	viewerID uuid.NullUUID,
+	perms *permission.Resolution,
+) (view *View, err error) {
 	if !perms.CanReadSlug(top.CategorySlug) {
 		return nil, errs.ErrForbidden
 	}
 
-	if in.ViewerID.Valid {
-		logicactivity.RecordTopicView(rt, in.ViewerID.UUID, top.ID)
+	if viewerID.Valid {
+		logicactivity.RecordTopicView(rt, viewerID.UUID, top.ID)
 	}
 
 	poll, err := PollView(rt, &PollViewInput{
 		Topic:    &top.Topic,
-		ViewerID: in.ViewerID,
+		ViewerID: viewerID,
 		CanWrite: perms.CanWriteSlug(top.CategorySlug),
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	limit := in.PerPage
+	limit := perPage
 	offAdjust := 1
 
 	// If we are on the first page, we subtract 1 from limit due to the Topic,
 	// and we set offadjust to 0 because we only need to adjust the offset for
 	// all pages past the first one.
-	if in.Page == 1 {
+	if page == 1 {
 		limit -= 1
 		offAdjust = 0
 	}
@@ -77,7 +113,7 @@ func Show(
 			OrderBy:   "created_at",
 			Order:     common.Ascending,
 			Limit:     limit,
-			Page:      in.Page,
+			Page:      page,
 			OffAdjust: offAdjust,
 		},
 	)
@@ -92,6 +128,6 @@ func Show(
 		Poll:    poll,
 		Replies: reps,
 		Total:   total,
-		Pages:   paging.Pages(total, in.PerPage),
+		Pages:   paging.Pages(total, perPage),
 	}, nil
 }
