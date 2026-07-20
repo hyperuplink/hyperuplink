@@ -18,7 +18,7 @@
   makeBinaryWrapper,
   imagemagick,
   versionCheckHook,
-  version ? "0.1.2",
+  version ? "0.2.0",
   rev ? "v${version}",
   date ? "release",
 }:
