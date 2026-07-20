@@ -18,12 +18,12 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = "user"
+	r.Path = route.For("User").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
-		base.Get("/:user", r.Index).Name("index")
-		base.Post("/:user/membership", r.Membership).Name("membership")
+		base.Get("", r.Index).Name("index")
+		base.Post("/membership", r.Membership).Name("membership")
 	}, r.Path+".")
 
 	return r, nil

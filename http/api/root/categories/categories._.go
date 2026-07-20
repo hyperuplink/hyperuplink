@@ -19,11 +19,11 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = "categories"
+	r.Path = route.For("Categories").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
-		base.Get("/:categories", r.Show).Name("show")
+		base.Get("/", r.Show).Name("show")
 
 		forumsRoute, err := forums.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)

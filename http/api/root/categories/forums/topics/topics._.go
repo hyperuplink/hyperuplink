@@ -28,14 +28,14 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = ":topics"
+	r.Path = route.For("CategoriesForumsTopics").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
 		base.Get("", r.Show).Name("show")
 		base.Post("", r.Create).Name("create")
 		base.Post("/poll", r.PollVote).Name("poll")
-	}, "topics.")
+	}, r.Path+".")
 
 	return r, nil
 }

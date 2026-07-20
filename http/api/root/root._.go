@@ -11,6 +11,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/http/api/root/report"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/root/search"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/root/session"
+	"xn--gckvb8fzb.com/hyperuplink/http/api/root/topics"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/root/user"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/runtime"
@@ -53,6 +54,10 @@ func New(
 		categoriesRoute, err := categories.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
 		r.Routes = append(r.Routes, categoriesRoute)
+
+		topicsRoute, err := topics.New(r.Runtime, base)
+		r.Runtime.NilOrDie(err)
+		r.Routes = append(r.Routes, topicsRoute)
 
 		docsRoute, err := docs.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
