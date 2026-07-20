@@ -25,6 +25,6 @@ someone's posts and deciding what to do about them.
 
 An account becomes an administrator through the `PromoteAdmin` list in the
 board's configuration file at sign-up and **not** through this page, and there
-is no button here that hands out the admin role.
+is no button here that grants the admin role.
 
 The page itself: [Administration → Users]({{ hrefTo "admin/users" }})

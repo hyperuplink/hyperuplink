@@ -13,15 +13,15 @@ until it outgrows it.
 A category page lists the forums inside it, each with its description, its topic
 and reply counts, and the time it was last written in. Categories you have no
 read permission for are, however, not listed at all, instead of being listed and
-then refused. A board can hold a members-only category without ever
-advertising its existence to every passer-by.
+then denied. A board can hold a members-only category without showing it to
+everyone who visits.
 
 ![A forum and its topics](forum.webp)
 
 A forum page lists its topics, newest activity first, with pinned topics held at
 the top. How many topics fit on a page is set by the administrator in
-[General]({{ manual "admin/general" }}), and the pager underneath walks through
-the rest.
+[General]({{ manual "admin/general" }}), and the pager underneath covers the
+rest.
 
 ## Topics
 
@@ -34,15 +34,15 @@ Attachments appear under the post, either as download links or as images
 rendered inline, depending on whether the administrator switched on
 [inline image display]({{ manual "admin/board/attachments" }}).
 
-Two buttons sit at the bottom right of every post while you're signed in. The
+Two buttons appear at the bottom right of every post while you're signed in. The
 `!` button [reports the post]({{ manual "report" }}) to the administrators, and
 the `@` button starts a reply aimed at that particular post, which is covered
 in [writing]({{ manual "newpost" }}).
 
 ## Polls
 
-Where the administrator allows poll topics, a topic can carry a poll, and that
-poll sits above the post text in a fieldset of its own.
+Where the administrator allows poll topics, a topic can include a poll, and that
+poll is shown above the post text in a fieldset of its own.
 
 ![A poll waiting for a vote](poll.webp)
 

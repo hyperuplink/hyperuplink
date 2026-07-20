@@ -18,7 +18,7 @@ it:
 - _Read, Write_: may read and post.
 - _Read, Write, Moderate_: may read, post and moderate what is in there.
 
-## The default permission
+## Default permission
 
 The top window sets the level for _All_ categories and for everyone who isn't
 lifted above it by a group, meaning guests and signed-in users alike. This is
@@ -40,9 +40,9 @@ more.
 Adding a group takes an ID and a name, the ID being what the permission rows
 point at, and _Add permission_ then adds a category row to that group. A
 category that already has a row in a group cannot be added a second time, and
-the page says so once every category is mapped.
+the page shows a message once every category is mapped.
 
-## How the two combine
+## Resolution
 
 A user's level in a category is the **highest** of the default and of every
 group they're in, which has one consequence worth being clear about: a group can
@@ -52,9 +52,9 @@ they already had more than it grants.
 
 Hence a private category is built by setting the default to _None_ and granting
 the group what it needs, rather than by leaving the default open and trying to
-fence one group out. There is no deny rule.
+exclude one group. There is no deny rule.
 
-Administrators aren't resolved through any of this and are never refused. An
-admin account reads and writes everywhere, whatever the table says.
+Administrators aren't resolved through any of this and are never denied access.
+An admin account reads and writes everywhere, whatever the table is set to.
 
 The page itself: [Administration → Permissions]({{ hrefTo "admin/permissions" }})

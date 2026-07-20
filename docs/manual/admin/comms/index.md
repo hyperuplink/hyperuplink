@@ -8,7 +8,7 @@ or over XMPP depending on what the recipient's address is.
 
 _Targets_ are defined in the board's configuration file, each with an ID, a type
 and its credentials, and these two pages are where you decide which of those
-targets carries which kind of message:
+targets is used for which kind of message:
 
 - [Email]({{ manual "admin/comms/email" }}) picks the target for email
   addresses.

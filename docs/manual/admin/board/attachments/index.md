@@ -8,8 +8,8 @@ where those files end up.
 - _Enable attachments_: adds the file field to the [editor]({{ manual "newpost"
   }}). With it off there's no field and no uploads.
 - _Allowed upload formats_: a list of media types, and it works as a whitelist,
-  so a file whose type isn't ticked is refused however it happened to be named.
-- _Max attachment size (bytes)_: in bytes, and anything above it is refused.
+  so a file whose type isn't ticked is rejected however it happened to be named.
+- _Max attachment size (bytes)_: in bytes, and anything above it is rejected.
 - _Storage provider_: one of the providers from the board's configuration file,
   and _Storage path_ is the prefix inside it.
 - _On-upload hook command_: optional, and runs on every upload before the file
@@ -22,9 +22,9 @@ where those files end up.
 
 ## Public storage and permissions
 
-Where the storage provider you picked serves files publicly, the page says so,
-and that warning is worth reading rather than clicking past: attachment read
-permissions cannot be enforced against a public provider, because everyone who
+Where the storage provider you picked serves files publicly, the page shows a
+warning. Attachment read permissions cannot be enforced against a public
+provider, because everyone who
 guesses the URL downloads the file straight from it without the board ever being
 asked.
 

@@ -17,8 +17,8 @@ upload one you get the board's default avatar.
 The signature is appended to every post you write, it is _Markdown_ like the
 posts themselves, and the preview above the field shows what it looks like once
 rendered. Keep in mind that it is repeated underneath every single post you
-make, and what reads as witty once tends to read rather differently on the
-fortieth reply of a long thread.
+make, and what reads as witty once tends to read differently on the fortieth
+reply of a long thread.
 
 ## Notifications
 

@@ -10,10 +10,10 @@ authenticator implement, and nothing here is specific to this board.
 
 Turning it on means scanning the QR code with your app, or typing the key next
 to it in by hand where scanning is impractical, and then entering the six-digit
-code the app produces to prove that the two of you agree. The setup is only
-stored once that code checks out, which is what keeps an account from ending up
-locked behind a secret that never made it into an app. The enrollment expires if
-you leave it sitting around, and the page then hands you a fresh QR code to
+code the app produces, to confirm that the app and the board are in sync. The
+setup is only stored once that code checks out, which is what keeps an account
+from ending up locked behind a secret that never reached an app. The enrollment
+expires if you leave it unfinished, and the page then shows a fresh QR code to
 start over.
 
 From then on, [signing in]({{ manual "session" }}) asks for a code after the

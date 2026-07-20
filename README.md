@@ -53,11 +53,11 @@ dependencies, 100% JavaScript free, and based on modern HTML5/CSS.
   because it's written purely in Go, it cross-compiles to Linux, macOS, FreeBSD,
   NetBSD, OpenBSD, and probably to whatever runs on your toaster these days.
 - PostgreSQL-native, and cluster-friendly. Talks to Postgres over a plain
-  connection string via [pgx](https://github.com/jackc/pgx), so it happily
-  points at a single server _or_ a full-blown HA cluster. Hot read paths (forum
-  and topic listings) are backed by _materialized views_ so the front page stays
-  snappy under load. Schema migrations run automatically on startup and they're
-  fully embedded, so there are no external migration files to take care of.
+  connection string via [pgx](https://github.com/jackc/pgx), so it points at a
+  single server _or_ a full-blown HA cluster. Hot read paths (forum and topic
+  listings) are backed by _materialized views_ so the front page stays snappy
+  under load. Schema migrations run automatically on startup and they're fully
+  embedded, so there are no external migration files to take care of.
 - 100% JavaScript-free. Simple and beautiful HTML5 and CSS, without the browser
   having to run a single line of code. And of course, nothing that tracks how
   your cursor gravitates for the third time towards that post on _"why pineapple

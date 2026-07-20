@@ -27,13 +27,13 @@ another category first wherever the content is meant to survive.
 The delete is a **soft** one, meaning the rows are marked instead of dropped,
 and everything marked stops existing as far as the board is concerned: it leaves
 the listings and the _Latest Topics_ panel, it stops turning up in search and on
-profiles, and its URLs answer with a 404 to everyone who kept the link. What it
+profiles, and its URLs return a 404 to everyone who kept the link. What it
 does leave behind are the rows themselves, and someone with access to the
 database can still bring a category back by hand, however nothing in the
 interface will do it for you.
 
 Adding a category takes a name and a slug in the window underneath. A board with
-no categories has nowhere to post, and the first thing a new board wants is a
+no categories has nowhere to post, and the first thing a new board needs is a
 category and then a [forum]({{ manual "admin/board/forums" }}) inside it.
 
 The page itself: [Administration → Board Settings → Categories]({{ hrefTo "admin/board/categories" }})

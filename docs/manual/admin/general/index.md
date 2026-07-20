@@ -22,16 +22,16 @@ General holds the handful of settings that describe the board as a whole.
   the _Link_ underneath it, which is there for boards that live inside something
   else and want a way back out. The link is required once the checkbox is on.
 
-## The documentation pages
+## Documentation pages
 
 The four tabs at the bottom are the About, Contact, Privacy Policy and Terms
 pages. Each of them has a checkbox that turns it on and a text area holding its
-content, which is _Markdown_, and a page that is enabled while empty is refused
+content, which is _Markdown_, and a page that is enabled while empty is rejected
 instead of published blank.
 
 An enabled page appears in the _Help_ menu, and Terms, Privacy Policy and
 Contact additionally appear in the footer. A disabled page leaves the menus and
-answers with a 404, and nobody gets to read a policy you took down by digging
+returns a 404, and nobody gets to read a policy you took down by digging
 the URL out of their history.
 
 The page itself: [Administration → General]({{ hrefTo "admin/general" }})

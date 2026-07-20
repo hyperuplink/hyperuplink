@@ -21,7 +21,7 @@ sometimes doesn't, _Resend confirmation_ sends another one.
 On a board whose administrator has configured neither email nor XMPP delivery
 the token unfortunately goes nowhere at all, and the account then waits until an
 administrator confirms it by hand in [Users]({{ manual "admin/users" }}). Hence
-an open board wants delivery working before it wants sign-ups.
+an open board needs delivery working before it opens sign-ups.
 
 ## Signing in
 
@@ -33,7 +33,7 @@ is only ever used for confirmation and for notifications.
 Where the administrator configured OAuth providers, buttons for them appear
 underneath the form. Signing in through one of them requires the provider to
 hand over an email address **and** to confirm that it has been verified, and a
-provider that does neither is refused, because the board would otherwise be
+provider that does neither is rejected, because the board would otherwise be
 trusting an address that nobody ever checked.
 
 ## Two-factor authentication

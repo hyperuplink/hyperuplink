@@ -4,11 +4,11 @@ _File_ → _New_ opens the editor. If you opened it from within a forum then tha
 forum is already selected and locked, and from anywhere else you pick the forum
 from the dropdown at the bottom. The menu entry stays grayed out for as long as
 you have write permission nowhere, which saves you from filling in a form that
-the board was always going to refuse.
+the board was always going to reject.
 
 ![The new topic editor](new-topic.webp)
 
-## The editor
+## Editor
 
 A topic needs a subject and some text, a reply needs only the text, and both are
 written in _Markdown_. Headings, emphasis, lists, links, tables, task lists,
@@ -23,11 +23,11 @@ underneath the field says so.
 
 ## Attachments
 
-Where the administrator enabled attachments, a file field sits under the text
+Where the administrator enabled attachments, a file field appears under the text
 area and takes several files at once. What you may upload, and how large it may
 be, is set in [Attachments]({{ manual "admin/board/attachments" }}). A file that
 is too large, of a type that isn't allowed, or a duplicate of something you
-already uploaded, is refused with a message saying which of the three it was.
+already uploaded, is rejected with a message saying which of the three it was.
 
 Image attachments show up as links underneath the post. Where the administrator
 turned on inline image display, however, they're rendered under the post body
@@ -51,12 +51,12 @@ meaning the one you picked in [Settings]({{ manual "account/settings" }}).
 
 ## Replying
 
-The reply editor sits at the bottom of every topic you're allowed to write in.
+The reply editor is at the bottom of every topic you're allowed to write in.
 The `@` button on a post replies to that post specifically rather than to the
-topic as a whole, and the reply then hangs off the post you aimed it at.
+topic as a whole, and the reply is then attached to that post.
 
-Everyone who wrote in a topic is notified when a new reply lands, provided they
-left [reply notifications]({{ manual "account/profile" }}) on and the board has
-a way of reaching them. Nobody is notified about their own replies.
+Everyone who wrote in a topic is notified when a new reply is posted, provided
+they left [reply notifications]({{ manual "account/profile" }}) on and the board
+has a way of reaching them. Nobody is notified about their own replies.
 
 The page itself: [File → New]({{ hrefTo "new" }})

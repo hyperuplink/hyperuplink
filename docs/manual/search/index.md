@@ -14,8 +14,8 @@ search down to one user, and left empty it means everyone.
 
 Results are listed with their type, meaning whether the hit was a topic or a
 reply, along with who wrote it and when. Each result links to the post itself
-rather than to the topic it sits in, and a reply found on the fourth page of a
-long thread opens right at that reply.
+rather than to the topic it belongs to, and a reply found on the fourth page of
+a long thread opens right at that reply.
 
 The result list is paged like the rest of the board, at the number of topics per
 page the administrator set in [General]({{ manual "admin/general" }}).

@@ -1,4 +1,4 @@
-# Your account
+# Account
 
 The _Account_ menu holds everything that concerns your own account, and the
 account page itself is a plain index of the same entries.
