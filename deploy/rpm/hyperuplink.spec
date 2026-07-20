@@ -32,7 +32,7 @@ Summary:        A super high speed internet bulletin board
 
 # SEGV is a custom, non-OSI license. Its full text ships as the LICENSE file.
 License:        SEGV
-URL:            https://xn--gckvb8fzb.com
+URL:            https://hyperup.link
 Source0:        %{name}-%{version}.tar.gz
 Source1:        %{name}.sysusers
 

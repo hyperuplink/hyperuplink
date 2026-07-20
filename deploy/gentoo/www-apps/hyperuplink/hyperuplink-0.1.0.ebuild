@@ -7,34 +7,39 @@ inherit go-module systemd
 
 DESCRIPTION="A super high speed internet bulletin board"
 HOMEPAGE="
-	https://xn--gckvb8fzb.com
+	https://hyperup.link
 	https://codeberg.org/hyperuplink/hyperuplink
 	https://github.com/hyperuplink/hyperuplink
 "
 
-if [[ ${PV} == 9999 ]]; then
-	inherit git-r3
+if [[ ${PV} == *9999 ]]; then
+  inherit git-r3
 
-	EGIT_REPO_URI="https://github.com/hyperuplink/hyperuplink.git"
-	KEYWORDS=""
+  EGIT_REPO_URI="https://github.com/hyperuplink/hyperuplink.git"
+  KEYWORDS=""
 
-	src_unpack() {
-		git-r3_src_unpack
-		go-module_live_vendor
-	}
+  HUP_GOFLAGS=(-mod=vendor)
+
+  src_unpack() {
+    git-r3_src_unpack
+    go-env_set_compile_environment
+    go-module_live_vendor
+  }
 else
-	SRC_URI="
+  SRC_URI="
 		https://github.com/hyperuplink/hyperuplink/archive/v${PV}.tar.gz -> ${P}.tar.gz
 		https://github.com/hyperuplink/hyperuplink/releases/download/v${PV}/${P}-deps.tar.xz
 	"
 
-	KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~riscv ~x86"
+  HUP_GOFLAGS=()
+
+  KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~riscv ~x86"
 fi
 
 LICENSE="SEGV-1.1"
 SLOT="0"
 
-BDEPEND=">=dev-lang/go-1.26.4"
+BDEPEND+=" >=dev-lang/go-1.26.4:="
 
 DEPEND="
 	acct-group/hyperuplink
@@ -66,14 +71,12 @@ src_compile() {
     -s -w
     -X "${modpath}/runtime.Version=${PV}"
   )
-  local goflags=()
 
-  if [[ ${PV} == 9999 ]]; then
+  if [[ ${PV} == *9999 ]]; then
     ldflags+=(
       -X "${modpath}/runtime.Commit=${EGIT_VERSION}"
       -X "${modpath}/runtime.Date=live"
     )
-    goflags+=( -mod=vendor )
   else
     ldflags+=(
       -X "${modpath}/runtime.Commit=v${PV}"
@@ -81,15 +84,23 @@ src_compile() {
     )
   fi
 
-  CGO_ENABLED=0 go build "${goflags[@]}" -trimpath \
-    -ldflags "${ldflags[*]}" -o "${PN}" . || die
+  local -x CGO_ENABLED=0
+  ego build "${HUP_GOFLAGS[@]}" -trimpath -ldflags "${ldflags[*]}" -o "${PN}" .
+}
+
+src_test() {
+  local -x CGO_ENABLED=0
+  ego test "${HUP_GOFLAGS[@]}" ./...
 }
 
 src_install() {
   dobin "${PN}"
 
   insinto /etc
+  insopts -m0640
   newins deploy/hyperuplink.toml hyperuplink.toml
+  fowners root:${PN} /etc/hyperuplink.toml
+  insopts -m0644
 
   newinitd deploy/init/hyperuplink.openrc "${PN}"
   systemd_dounit deploy/init/hyperuplink.service
@@ -100,7 +111,7 @@ src_install() {
   fperms 0750 /var/lib/${PN}/media
 
   einstalldocs
-  dodoc deploy/init/README.md
+  newdoc deploy/init/README.md README.init.md
 }
 
 pkg_postinst() {

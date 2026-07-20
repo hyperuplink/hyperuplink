@@ -101,7 +101,7 @@ buildGoModule (finalAttrs: {
       JavaScript and reads its data from a PostgreSQL database, using
       Redis/Valkey for background jobs.
     '';
-    homepage = "https://xn--gckvb8fzb.com";
+    homepage = "https://hyperup.link";
     downloadPage = "https://codeberg.org/hyperuplink/hyperuplink";
     # SEGV is a custom, non-OSI license. Section 2.1 grants copying and
     # distribution, but section 3 conditions the grant on ethical standards,

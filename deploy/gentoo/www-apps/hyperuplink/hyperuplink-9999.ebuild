@@ -7,7 +7,7 @@ inherit go-module systemd
 
 DESCRIPTION="A super high speed internet bulletin board"
 HOMEPAGE="
-	https://xn--gckvb8fzb.com
+	https://hyperup.link
 	https://codeberg.org/hyperuplink/hyperuplink
 	https://github.com/hyperuplink/hyperuplink
 "
@@ -16,7 +16,7 @@ HOMEPAGE="
 # `make release` copies it to hyperuplink-<version>.ebuild unchanged, and the
 # branches below are all that the copy needs, since ${PV} comes from the
 # filename.
-if [[ ${PV} == 9999 ]]; then
+if [[ ${PV} == *9999 ]]; then
   # Build straight from the GitHub default branch. There is no source archive
   # and no deps tarball, and go-module_live_vendor populates a vendor/
   # directory during src_unpack.
@@ -25,28 +25,22 @@ if [[ ${PV} == 9999 ]]; then
   EGIT_REPO_URI="https://github.com/hyperuplink/hyperuplink.git"
   KEYWORDS=""
 
+  # -mod=vendor (explicit, since the eclass GOFLAGS sets no module mode) forces
+  # the offline build against the vendor/ tree created in src_unpack.
+  HUP_GOFLAGS=(-mod=vendor)
+
   src_unpack() {
     git-r3_src_unpack
-    # Vendors the modules (needs network, hence src_unpack) so the sandboxed
-    # src_compile can build fully offline against vendor/.
+    go-env_set_compile_environment
     go-module_live_vendor
   }
 else
-  # The main source archive is GitHub's auto-generated tag tarball.
-  # ${P}-deps.tar.xz is the Go module cache, and it is not produced by GitHub
-  # automatically. The Release workflow (.github/workflows/release.yml) builds
-  # it and attaches it to the GitHub release. See deploy/gentoo/README.md to
-  # build it by hand.
-  #
-  # There is no src_unpack here on purpose, because go-module.eclass unpacks
-  # the deps tarball into the module cache itself.
   SRC_URI="
 		https://github.com/hyperuplink/hyperuplink/archive/v${PV}.tar.gz -> ${P}.tar.gz
 		https://github.com/hyperuplink/hyperuplink/releases/download/v${PV}/${P}-deps.tar.xz
 	"
 
-  # GitHub's archive extracts to ${PN}-${PV}, which is go-module.eclass's
-  # default S (${WORKDIR}/${P}), so no explicit S is needed.
+  HUP_GOFLAGS=()
 
   KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~riscv ~x86"
 fi
@@ -58,10 +52,10 @@ SLOT="0"
 
 # go.mod requires this Go version, and GOTOOLCHAIN=local
 # (set by go-module.eclass) forbids downloading a newer toolchain, so the
-# system Go must be new enough.
-BDEPEND=">=dev-lang/go-1.26.4"
+# system Go must be new enough. Appended, because a plain assignment would drop
+# the eclass's own BDEPEND.
+BDEPEND+=" >=dev-lang/go-1.26.4:="
 
-# The service user/group are provided by the acct-* packages in this overlay.
 DEPEND="
 	acct-group/hyperuplink
 	acct-user/hyperuplink
@@ -100,16 +94,12 @@ src_compile() {
     -s -w
     -X "${modpath}/runtime.Version=${PV}"
   )
-  local goflags=()
 
-  if [[ ${PV} == 9999 ]]; then
+  if [[ ${PV} == *9999 ]]; then
     ldflags+=(
       -X "${modpath}/runtime.Commit=${EGIT_VERSION}"
       -X "${modpath}/runtime.Date=live"
     )
-    # -mod=vendor (explicit, overriding the eclass GOFLAGS) forces the offline
-    # build against the vendor/ tree created in src_unpack.
-    goflags+=(-mod=vendor)
   else
     ldflags+=(
       -X "${modpath}/runtime.Commit=v${PV}"
@@ -117,16 +107,23 @@ src_compile() {
     )
   fi
 
-  CGO_ENABLED=0 go build "${goflags[@]}" -trimpath \
-    -ldflags "${ldflags[*]}" -o "${PN}" . || die
+  local -x CGO_ENABLED=0
+  ego build "${HUP_GOFLAGS[@]}" -trimpath -ldflags "${ldflags[*]}" -o "${PN}" .
+}
+
+src_test() {
+  local -x CGO_ENABLED=0
+  ego test "${HUP_GOFLAGS[@]}" ./...
 }
 
 src_install() {
   dobin "${PN}"
 
-  # Configuration under /etc.
   insinto /etc
+  insopts -m0640
   newins deploy/hyperuplink.toml hyperuplink.toml
+  fowners root:${PN} /etc/hyperuplink.toml
+  insopts -m0644
 
   # Init integration for both supported init systems.
   newinitd deploy/init/hyperuplink.openrc "${PN}"
@@ -140,7 +137,9 @@ src_install() {
   fperms 0750 /var/lib/${PN}/media
 
   einstalldocs
-  dodoc deploy/init/README.md
+  # Renamed, because einstalldocs has already installed the project's own
+  # README.md into the same directory.
+  newdoc deploy/init/README.md README.init.md
 }
 
 pkg_postinst() {

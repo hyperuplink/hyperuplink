@@ -111,8 +111,9 @@ Either way, `emerge` creates the `hyperuplink` user/group, installs the binary
 to `/usr/bin/hyperuplink`, a starter config to `/etc/hyperuplink.toml`, an
 OpenRC service, a systemd unit, and the data directory `/var/lib/hyperuplink`.
 
-Edit `/etc/hyperuplink.toml` (database DSN, Redis address, `PromoteAdmin`, …),
-then:
+Edit `/etc/hyperuplink.toml` (database DSN, Redis address, `PromoteAdmin`, …)
+as root, since it holds the database password and is installed `0640
+root:hyperuplink`, then:
 
 ```sh
 # OpenRC
