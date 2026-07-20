@@ -61,7 +61,7 @@ responsible for restarting pods after editing the Secret.
 | `existingConfigSecret`          | `""`                              | Use an existing config Secret instead of `config`.  |
 | `configFileKey`                 | `hyperuplink.toml`                | Key/filename of the config in the Secret.           |
 | `configMountPath`               | `/etc/hyperuplink`                | Where the config Secret is mounted.                 |
-| `containerPort`                 | `3000`                            | Must match `Server.Port` in the config.             |
+| `containerPort`                 | `3000`                            | Must match `Web.Port` in the config.             |
 | `strategy.type`                 | `Recreate`                        | Deployment strategy (RWO-safe default).             |
 | `persistence.enabled`           | `true`                            | PVC backing the `Local` storage provider.           |
 | `persistence.size`              | `10Gi`                            | PVC size.                                           |
@@ -87,8 +87,8 @@ See [`values.yaml`](./values.yaml) for the full, commented list.
 
 `Mode = "production"` serves the embedded views and forces secure-only cookies,
 so the app must be reached over HTTPS. Terminate TLS at the Ingress (set
-`ingress.tls`) or an upstream proxy, and set `Server.ProxyHeader` /
-`Server.TrustProxy` in the config so client IPs are read from the proxy.
+`ingress.tls`) or an upstream proxy, and set `Web.ProxyHeader` /
+`Web.TrustProxy` in the config so client IPs are read from the proxy.
 
 ## Uninstalling
 

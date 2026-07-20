@@ -66,7 +66,8 @@ config: |-
   [Database]
   Connection = "postgres://hyperuplink:hyperuplink@postgres:5432/hyperuplink?sslmode=disable"
 
-  [Server]
+  [Web]
+  Enable             = true
   BindIP             = "0.0.0.0"
   Port               = 3000
   BodyLimit          = 67108864
@@ -94,7 +95,7 @@ config: |-
 # Workload
 # ---------------------------------------------------------------------------
 
-# -- Port the container listens on. MUST match `Server.Port` in the config
+# -- Port the container listens on. MUST match `Web.Port` in the config
 # above. Exposed as the named port `http` and targeted by the Service/probes.
 containerPort: 3000
 
