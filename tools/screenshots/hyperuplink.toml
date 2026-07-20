@@ -1,0 +1,49 @@
+# The screenshot board runs beside the development board, so it takes its own
+# database, its own Redis database index and its own port. Mode stays
+# "development" because production mode forces HTTPS-only cookies, which a
+# headless browser on plain http://localhost cannot round-trip.
+
+[General]
+Mode = "development"
+
+[Logging]
+Level = "error"
+
+[Redis]
+Addresses = ["127.0.0.1:6379"]
+Database = 3
+
+[Database]
+Connection = "postgres://postgres:postgres@localhost:5432/hyperuplink_manual?sslmode=disable"
+
+[Web]
+Enable             = true
+BindIP             = "127.0.0.1"
+Port               = 3100
+BodyLimit          = 67108864
+Concurrency        = 262144
+EnableIPValidation = false
+TrustProxy         = false
+TrustLoopback      = true
+
+# The API's default port 3001 belongs to the development board's API, so this
+# board's API sits at 3101, beside its web server on 3100.
+[API]
+Enable             = true
+BindIP             = "127.0.0.1"
+Port               = 3101
+
+[Users]
+PromoteAdmin = ["dummy1@example.com"]
+
+[[Target]]
+ID = "debug-email"
+Type = "debug"
+Debug.Emulates = "email"
+Debug.Path = "/tmp/hyperuplink-manual/messages"
+
+[[Storage]]
+ID = "local-storage"
+Type = "Local"
+Local.Path = "/tmp/hyperuplink-manual/storage"
+Local.PublicURI = "/media"
