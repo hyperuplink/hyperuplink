@@ -1,25 +1,24 @@
-package topics
+package notify
 
 import (
-	"github.com/gofiber/fiber/v3"
-	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
 	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	logictopics "xn--gckvb8fzb.com/hyperuplink/logic/root/categories/forums/topics"
+	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
-func (r *Route) notifyReply(
-	c fiber.Ctx,
-	req *request.Request,
+func Reply(
+	rt *runtime.Runtime,
 	created *logictopics.CreatedReply,
+	byUsername string,
+	subject string,
 ) {
-	cat, err := r.Runtime.Repositories.Category.GetBySlug(
-		c.Params("categories"),
+	cat, err := rt.Repositories.Category.GetByUUID(
+		created.Forum.CategoryID,
 		common.QueryOptions{Limit: 1},
 	)
 	if err != nil {
-		r.Runtime.Error("reply notification: cannot load category",
-			"error", err)
+		rt.Error("reply notification: cannot load category", "error", err)
 		return
 	}
 
@@ -46,13 +45,12 @@ func (r *Route) notifyReply(
 	}
 
 	if err = logictopics.SendReplyNotifications(
-		r.Runtime,
+		rt,
 		created.Reply,
-		req.User.Username,
-		req.Ts("reply_notification_subject"),
+		byUsername,
+		subject,
 		loc,
 	); err != nil {
-		r.Runtime.Error("reply notification: dispatch failed",
-			"error", err)
+		rt.Error("reply notification: dispatch failed", "error", err)
 	}
 }
