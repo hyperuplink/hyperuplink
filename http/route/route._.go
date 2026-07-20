@@ -21,6 +21,7 @@ var Routes map[string]Route = map[string]Route{
 	"AccountTwofactor":        {hierarchy: []string{"root", "account", "twofactor"}},
 	"Admin":                   {hierarchy: []string{"root", "admin"}},
 	"Attachment":              {hierarchy: []string{"root", "attachment", ":attachment"}},
+	"Attachments":             {hierarchy: []string{"root", "attachments"}, noBreadcrumb: true},
 	"AdminAuth":               {hierarchy: []string{"root", "admin", "auth"}},
 	"AdminBoard":              {hierarchy: []string{"root", "admin", "board"}},
 	"AdminBoardAttachments":   {hierarchy: []string{"root", "admin", "board", "attachments"}},
@@ -59,6 +60,7 @@ var Routes map[string]Route = map[string]Route{
 	"SessionTwofactor":        {hierarchy: []string{"root", "session", "twofactor"}},
 	"SessionProvider":         {hierarchy: []string{"root", "session", ":provider"}},
 	"SessionProviderCallback": {hierarchy: []string{"root", "session", ":provider", "callback"}},
+	"Topics":                  {hierarchy: []string{"root", "topics"}, noBreadcrumb: true},
 	"User":                    {hierarchy: []string{"root", "~:user"}},
 	"System":                  {hierarchy: []string{"root", "system"}},
 }
