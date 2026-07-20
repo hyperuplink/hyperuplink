@@ -11,6 +11,6 @@
 /result
 /result-*
 .DS_Store
-/dummy.sql
+/log
 
 /tools/screenshots/screenshots
