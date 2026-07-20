@@ -100,8 +100,8 @@ is what makes the deployment reproducible. Everything in
 
 ```nix
 services.hyperuplink.settings = {
-  Server.ProxyHeader = "X-Forwarded-For";   # behind a reverse proxy
-  Server.TrustProxy = true;
+  Web.ProxyHeader = "X-Forwarded-For";   # behind a reverse proxy
+  Web.TrustProxy = true;
   Logging.Level = "debug";
 };
 ```

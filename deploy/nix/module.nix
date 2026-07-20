@@ -114,7 +114,7 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to open {option}`services.hyperuplink.settings.Server.Port` in
+        Whether to open {option}`services.hyperuplink.settings.Web.Port` in
         the firewall. Leave this off when a reverse proxy on the same host
         terminates TLS, which is the recommended setup.
       '';
@@ -126,7 +126,7 @@ in
       example = lib.literalExpression ''
         {
           Users.PromoteAdmin = [ "me@example.com" ];
-          Server.ProxyHeader = "X-Forwarded-For";
+          Web.ProxyHeader = "X-Forwarded-For";
           Logging.Level = "debug";
         }
       '';
@@ -182,7 +182,8 @@ in
       General.Mode = lib.mkDefault "production";
       Logging.Level = lib.mkDefault "info";
 
-      Server = {
+      Web = {
+        Enable = lib.mkDefault true;
         BindIP = lib.mkDefault "0.0.0.0";
         Port = lib.mkDefault 3000;
         BodyLimit = lib.mkDefault 67108864;
@@ -244,7 +245,7 @@ in
       port = cfg.redis.port;
     };
 
-    networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [ cfg.settings.Server.Port ];
+    networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [ cfg.settings.Web.Port ];
 
     systemd.services.hyperuplink = {
       description = "Hyperuplink";
