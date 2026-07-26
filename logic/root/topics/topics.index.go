@@ -2,14 +2,15 @@ package topics
 
 import (
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	"xn--gckvb8fzb.com/hyperuplink/logic/helpers/paging"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/vforum"
 	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 type Input struct {
@@ -46,7 +47,7 @@ func Index(
 
 	if in.ForumID.Valid {
 		var fum *vforum.VForum
-		fum, err = rt.Repositories.Forum.VGetByUUID(
+		fum, err = gh.Repositories(rt).Forum.VGetByUUID(
 			in.ForumID.UUID,
 			common.QueryOptions{Limit: 1},
 		)
@@ -58,14 +59,14 @@ func Index(
 			return nil, errs.ErrForbidden
 		}
 
-		tops, total, err = rt.Repositories.Topic.VAllForForumUUID(fum.ID, qo)
+		tops, total, err = gh.Repositories(rt).Topic.VAllForForumUUID(fum.ID, qo)
 		if err != nil {
 			return nil, err
 		}
 
 		view.Forum = fum
 	} else {
-		tops, total, err = rt.Repositories.Topic.VAllForReadableSlugs(
+		tops, total, err = gh.Repositories(rt).Topic.VAllForReadableSlugs(
 			perms.AllowedReadSlugs(),
 			qo,
 		)

@@ -9,12 +9,13 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/markbates/goth"
 	goth_fiber "github.com/shareed2k/goth_fiber/v2"
+	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 type Route struct {
@@ -86,7 +87,7 @@ func (r *Route) ProviderCallbackShow(c fiber.Ctx) (err error) {
 	}
 
 	var usr *user.User
-	usr, err = r.Runtime.Repositories.User.GetByEmail(
+	usr, err = gh.Repositories(r.Runtime).User.GetByEmail(
 		gothUser.Email,
 		common.QueryOptions{
 			WithBanned:  false,
@@ -136,12 +137,12 @@ func (r *Route) createOAuthUser(
 		return nil, err
 	}
 
-	id, err := r.Runtime.Repositories.User.Create(usr)
+	id, err := gh.Repositories(r.Runtime).User.Create(usr)
 	if err != nil {
 		return nil, err
 	}
 
-	usr, err = r.Runtime.Repositories.User.GetByUUID(
+	usr, err = gh.Repositories(r.Runtime).User.GetByUUID(
 		id,
 		common.QueryOptions{Limit: 1},
 	)
@@ -152,7 +153,7 @@ func (r *Route) createOAuthUser(
 	now := time.Now()
 	usr.SetConfirmedAt(now)
 	usr.SetEmailConfirmedAt(now)
-	if err := r.Runtime.Repositories.User.Update(usr); err != nil {
+	if err := gh.Repositories(r.Runtime).User.Update(usr); err != nil {
 		return nil, err
 	}
 
@@ -175,7 +176,7 @@ func (r *Route) uniqueUsername(gothUser goth.User) string {
 
 	candidate := base
 	for i := 1; i <= 9999; i++ {
-		if _, err := r.Runtime.Repositories.User.GetByUsername(
+		if _, err := gh.Repositories(r.Runtime).User.GetByUsername(
 			candidate,
 			common.QueryOptions{Limit: 1},
 		); err != nil {

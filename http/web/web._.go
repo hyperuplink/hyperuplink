@@ -30,12 +30,13 @@ import (
 	"github.com/gofiber/storage/redis/v3"
 	html "github.com/gofiber/template/html/v3"
 	slogfiber "github.com/samber/slog-fiber"
+	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/http/validation"
+	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
-	"xn--gckvb8fzb.com/hyperuplink/http/validation"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -64,17 +65,17 @@ func New(
 	srv.app = fiber.New(fiber.Config{
 		StrictRouting:      false,
 		CaseSensitive:      false,
-		BodyLimit:          srv.rt.Config.WebBodyLimit(),
-		Concurrency:        srv.rt.Config.WebConcurrency(),
-		ProxyHeader:        srv.rt.Config.WebProxyHeader(),
-		EnableIPValidation: srv.rt.Config.WebEnableIPValidation(),
-		TrustProxy:         srv.rt.Config.WebTrustProxy(),
+		BodyLimit:          srv.rt.Config().WebBodyLimit(),
+		Concurrency:        srv.rt.Config().WebConcurrency(),
+		ProxyHeader:        srv.rt.Config().WebProxyHeader(),
+		EnableIPValidation: srv.rt.Config().WebEnableIPValidation(),
+		TrustProxy:         srv.rt.Config().WebTrustProxy(),
 		TrustProxyConfig: fiber.TrustProxyConfig{
-			Loopback: srv.rt.Config.WebTrustLoopback(),
-			Proxies:  srv.rt.Config.WebTrustProxies(),
+			Loopback: srv.rt.Config().WebTrustLoopback(),
+			Proxies:  srv.rt.Config().WebTrustProxies(),
 		},
-		ReduceMemoryUsage: srv.rt.Config.WebReduceMemoryUsage(),
-		ServerHeader:      srv.rt.Config.WebServerHeader(),
+		ReduceMemoryUsage: srv.rt.Config().WebReduceMemoryUsage(),
+		ServerHeader:      srv.rt.Config().WebServerHeader(),
 		AppName:           "hyperuplink",
 		Views:             srv.engine,
 		StructValidator:   validation.NewStructValidator(srv.validator),
@@ -84,8 +85,8 @@ func New(
 }
 
 func (srv *Web) loadMiddlewares() error {
-	srv.app.Use(slogfiber.NewWithConfig(srv.rt.Logger, slogfiber.Config{
-		DefaultLevel:       srv.rt.LoggerLevel,
+	srv.app.Use(slogfiber.NewWithConfig(srv.rt.Logger(), slogfiber.Config{
+		DefaultLevel:       srv.rt.GetLogLevel(),
 		WithRequestID:      true,
 		WithRequestBody:    srv.rt.IsDevelopmentMode(),
 		WithRequestHeader:  true,
@@ -155,14 +156,14 @@ func (srv *Web) loadMiddlewares() error {
 
 func (srv *Web) getSessionStorage() (storage fiber.Storage, err error) {
 	redisConfig := redis.Config{
-		MasterName: srv.rt.Config.RedisMasterName(),
-		Username:   srv.rt.Config.RedisUsername(),
-		Password:   srv.rt.Config.RedisPassword(),
-		Database:   srv.rt.Config.RedisDatabase(),
-		Reset:      srv.rt.Config.RedisReset(),
+		MasterName: srv.rt.Config().RedisMasterName(),
+		Username:   srv.rt.Config().RedisUsername(),
+		Password:   srv.rt.Config().RedisPassword(),
+		Database:   srv.rt.Config().RedisDatabase(),
+		Reset:      srv.rt.Config().RedisReset(),
 	}
 
-	addrs := srv.rt.Config.RedisAddresses()
+	addrs := srv.rt.Config().RedisAddresses()
 	addrsl := len(addrs)
 	if addrsl == 0 {
 		return nil, errs.ErrRedisAddrsEmpty
@@ -179,7 +180,7 @@ func (srv *Web) getSessionStorage() (storage fiber.Storage, err error) {
 		redisConfig.Addrs = addrs
 	}
 
-	poolSize := srv.rt.Config.RedisPoolsize()
+	poolSize := srv.rt.Config().RedisPoolsize()
 	if poolSize <= 0 {
 		poolSize = 10 * runt.GOMAXPROCS(0)
 	}
@@ -209,7 +210,7 @@ func (srv *Web) getViewsEngine() (*html.Engine, error) {
 			}
 		})
 	} else {
-		engine = html.NewFileSystem(http.FS(srv.rt.Embeds["views"]), ".html")
+		engine = html.NewFileSystem(http.FS(srv.rt.GetEmbed("views")), ".html")
 	}
 	// https://masterminds.github.io/sprig/
 	engine.AddFuncMap(sprig.FuncMap())
@@ -272,7 +273,7 @@ func (srv *Web) loadRoutes() (err error) {
 		})
 	} else {
 		var sub fs.FS
-		if sub, err = fs.Sub(srv.rt.Embeds["static"], "static"); err != nil {
+		if sub, err = fs.Sub(srv.rt.GetEmbed("static"), "static"); err != nil {
 			return err
 		}
 		stic = static.New("", static.Config{
@@ -295,7 +296,7 @@ func (srv *Web) loadRoutes() (err error) {
 }
 
 func (srv *Web) loadStorageRoutes() (err error) {
-	storages, err := srv.rt.Config.Storages()
+	storages, err := srv.rt.Config().Storages()
 	if err != nil {
 		return err
 	}
@@ -338,7 +339,7 @@ func (srv *Web) loadStorageRoutes() (err error) {
 // blocked to prevent bypassing the read permission check by guessing URLs.
 func (srv *Web) isGatedAttachmentPath(providerID, rel string) bool {
 	settingAttachments, err := settingRepo.GetByID[setting.Attachments](
-		srv.rt.Repositories.Setting,
+		gh.Repositories(srv.rt).Setting,
 		"attachments",
 	)
 	if err != nil {
@@ -377,8 +378,8 @@ func (srv *Web) Startup() (err error) {
 func (srv *Web) Run() error {
 	listenAddr := fmt.Sprintf(
 		"%s:%d",
-		srv.rt.Config.WebBindIP(),
-		srv.rt.Config.WebPort(),
+		srv.rt.Config().WebBindIP(),
+		srv.rt.Config().WebPort(),
 	)
 	if err := srv.app.Listen(listenAddr, fiber.ListenConfig{
 		DisableStartupMessage: true,

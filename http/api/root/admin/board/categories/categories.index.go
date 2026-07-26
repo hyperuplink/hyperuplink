@@ -2,9 +2,10 @@ package categories
 
 import (
 	"github.com/gofiber/fiber/v3"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 // @Summary	List the categories
@@ -25,7 +26,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	cats, err := r.Runtime.Repositories.Category.All(common.QueryOptions{
+	cats, err := gh.Repositories(r.Runtime).Category.All(common.QueryOptions{
 		OrderBy: "position",
 		Order:   common.Ascending,
 	})

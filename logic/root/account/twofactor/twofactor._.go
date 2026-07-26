@@ -1,9 +1,10 @@
 package twofactor
 
 import (
+	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 func Enable(
@@ -22,7 +23,7 @@ func Enable(
 
 	usr.EnableOTP(secret)
 
-	return rt.Repositories.User.Update(usr)
+	return gh.Repositories(rt).User.Update(usr)
 }
 
 func Disable(
@@ -46,5 +47,5 @@ func Disable(
 
 	usr.DisableOTP()
 
-	return rt.Repositories.User.Update(usr)
+	return gh.Repositories(rt).User.Update(usr)
 }

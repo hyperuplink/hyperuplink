@@ -19,9 +19,9 @@ builds:
       - -trimpath
     ldflags:
       - -s -w
-      - -X xn--gckvb8fzb.com/hyperuplink/runtime.Version={{.Version}}
-      - -X xn--gckvb8fzb.com/hyperuplink/runtime.Commit={{.Commit}}
-      - -X xn--gckvb8fzb.com/hyperuplink/runtime.Date={{.CommitDate}}
+      - -X main.Version={{.Version}}
+      - -X main.Commit={{.Commit}}
+      - -X main.Date={{.CommitDate}}
     mod_timestamp: "{{ .CommitTimestamp }}"
     targets:
       - android_arm64

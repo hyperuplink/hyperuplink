@@ -1,8 +1,9 @@
 package permissions
 
 import (
+	"xn--gckvb8fzb.com/glides/runtime"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/group"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 func GroupCreate(
@@ -13,7 +14,7 @@ func GroupCreate(
 	grp.ID = in.ID
 	grp.Name = in.Name
 
-	_, err = rt.Repositories.Group.Create(grp)
+	_, err = gh.Repositories(rt).Group.Create(grp)
 
 	return err
 }

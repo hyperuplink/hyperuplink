@@ -4,10 +4,11 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/activity"
 	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func RecordTopicView(
@@ -15,7 +16,7 @@ func RecordTopicView(
 	actorID uuid.UUID,
 	topicID uuid.UUID,
 ) {
-	if err := rt.Activity.Record(
+	if err := gh.Activity(rt).Record(
 		activity.NewTopicView(actorID, topicID),
 	); err != nil {
 		rt.Error("error", err)
@@ -39,7 +40,7 @@ func UnreadTopics(
 	}
 
 	var markers map[uuid.UUID]time.Time
-	markers, err = rt.Repositories.Activity.MarkersForActor(
+	markers, err = gh.Repositories(rt).Activity.MarkersForActor(
 		activity.TopicView,
 		actorID,
 		subjectIDs,

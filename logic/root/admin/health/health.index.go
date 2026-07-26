@@ -1,8 +1,8 @@
 package health
 
 import (
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/config"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/config"
 )
 
 type Issue struct {
@@ -13,7 +13,7 @@ type Issue struct {
 }
 
 func Issues(rt *runtime.Runtime) (issues []Issue, err error) {
-	targets, err := rt.Config.Targets()
+	targets, err := rt.Config().Targets()
 	if err != nil {
 		return nil, err
 	}

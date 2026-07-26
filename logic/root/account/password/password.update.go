@@ -1,9 +1,10 @@
 package password
 
 import (
+	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 type UpdateInput struct {
@@ -36,5 +37,5 @@ func Update(
 		return err
 	}
 
-	return rt.Repositories.User.Update(usr)
+	return gh.Repositories(rt).User.Update(usr)
 }

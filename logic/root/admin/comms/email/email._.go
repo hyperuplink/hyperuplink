@@ -1,8 +1,8 @@
 package email
 
 import (
+	"xn--gckvb8fzb.com/glides/services/config"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
-	"xn--gckvb8fzb.com/hyperuplink/services/config"
 )
 
 type UpdateInput struct {

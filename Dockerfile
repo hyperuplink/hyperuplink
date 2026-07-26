@@ -23,9 +23,9 @@ RUN CGO_ENABLED=0 \
     GOARM="${TARGETVARIANT#v}" \
     go build -trimpath -buildvcs=false \
       -ldflags="-s -w \
-        -X xn--gckvb8fzb.com/hyperuplink/runtime.Version=${VERSION} \
-        -X xn--gckvb8fzb.com/hyperuplink/runtime.Commit=${COMMIT} \
-        -X xn--gckvb8fzb.com/hyperuplink/runtime.Date=${DATE}" \
+        -X main.Version=${VERSION} \
+        -X main.Commit=${COMMIT} \
+        -X main.Date=${DATE}" \
       -o /out/hyperuplink .
 
 # ---[ RUNTIME ]-------------------------------------------------------------- #

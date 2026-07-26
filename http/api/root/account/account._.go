@@ -2,12 +2,12 @@ package account
 
 import (
 	"github.com/gofiber/fiber/v3"
+	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/root/account/password"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/root/account/profile"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/root/account/settings"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/root/account/twofactor"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 type Route struct {

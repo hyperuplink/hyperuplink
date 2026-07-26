@@ -3,10 +3,11 @@ package search
 import (
 	"strings"
 
+	"xn--gckvb8fzb.com/glides/runtime"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/logic/helpers/paging"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/vsearchresult"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	searchrepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/search"
 )
 
@@ -45,7 +46,7 @@ func Query(
 	perms *permission.Resolution,
 	in *Input,
 ) (results *Results, err error) {
-	res, total, err := rt.Repositories.Search.Query(
+	res, total, err := gh.Repositories(rt).Search.Query(
 		in.Query,
 		searchrepo.Options{
 			Title:                in.FTitle,

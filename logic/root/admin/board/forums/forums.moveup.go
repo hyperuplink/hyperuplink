@@ -2,8 +2,9 @@ package forums
 
 import (
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/forum"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 func MoveUp(
@@ -15,5 +16,5 @@ func MoveUp(
 		return err
 	}
 
-	return rt.Repositories.Forum.MoveUp(fum)
+	return gh.Repositories(rt).Forum.MoveUp(fum)
 }

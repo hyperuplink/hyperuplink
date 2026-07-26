@@ -4,7 +4,7 @@ import (
 	"io/fs"
 	"sort"
 
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
+	"xn--gckvb8fzb.com/glides/runtime"
 )
 
 func getPackages(
@@ -13,7 +13,7 @@ func getPackages(
 	file string,
 ) (names []string, err error) {
 	var entries []fs.DirEntry
-	entries, err = fs.ReadDir(rt.Embeds["static"], dir)
+	entries, err = fs.ReadDir(rt.GetEmbed("static"), dir)
 	if err != nil {
 		return nil, err
 	}
@@ -22,7 +22,7 @@ func getPackages(
 	for _, entry := range entries {
 		if entry.IsDir() {
 			if _, serr := fs.Stat(
-				rt.Embeds["static"],
+				rt.GetEmbed("static"),
 				dir+"/"+entry.Name()+"/"+file,
 			); serr != nil {
 				continue

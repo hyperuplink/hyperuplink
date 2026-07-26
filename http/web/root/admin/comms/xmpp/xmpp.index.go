@@ -2,7 +2,7 @@ package xmpp
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	logicxmpp "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/comms/xmpp"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"

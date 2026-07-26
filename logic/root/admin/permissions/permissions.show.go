@@ -2,13 +2,14 @@ package permissions
 
 import (
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func Show(rt *runtime.Runtime) (view *View, err error) {
-	cats, err := rt.Repositories.Category.All(common.QueryOptions{
+	cats, err := gh.Repositories(rt).Category.All(common.QueryOptions{
 		OrderBy: "position",
 		Order:   common.Ascending,
 	})
@@ -16,7 +17,7 @@ func Show(rt *runtime.Runtime) (view *View, err error) {
 		return nil, err
 	}
 
-	groups, err := rt.Repositories.Group.All(common.QueryOptions{
+	groups, err := gh.Repositories(rt).Group.All(common.QueryOptions{
 		OrderBy: "name",
 		Order:   common.Ascending,
 	})
@@ -24,7 +25,7 @@ func Show(rt *runtime.Runtime) (view *View, err error) {
 		return nil, err
 	}
 
-	perms, err := rt.Repositories.Permission.All()
+	perms, err := gh.Repositories(rt).Permission.All()
 	if err != nil {
 		return nil, err
 	}

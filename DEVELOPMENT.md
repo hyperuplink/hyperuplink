@@ -94,9 +94,9 @@ _Optional:_ only needed in order to verify the _XMPP_ path against a real
 server, because day to day the `debug-xmpp` target renders _XMPP_ messages to
 disk and no server is involved.
 
-_Hyperuplink_ requires _StartTLS_ and will not authenticate over an
-unencrypted connection, which means that _Prosody_ needs a certificate even on
-loopback, though a self-signed one is sufficient as long as the target sets
+_Hyperuplink_ requires _StartTLS_ and will not authenticate over an unencrypted
+connection, which means that _Prosody_ needs a certificate even on loopback,
+though a self-signed one is sufficient as long as the target sets
 `XMPP.InsecureSkipVerify = true`.
 
 > **Warning:** `XMPP.InsecureSkipVerify = true` turns off certificate
@@ -178,8 +178,8 @@ make run
 ./build/hyperuplink -c "file://$PWD/hyperuplink.toml"
 ```
 
-The board then answers on <http://localhost:3000>, the [JSON API](#json-api)
-on <http://localhost:3001>, and since both `SIGINT` and `SIGTERM` are trapped,
+The board then answers on <http://localhost:3000>, the [JSON API](#json-api) on
+<http://localhost:3001>, and since both `SIGINT` and `SIGTERM` are trapped,
 either `Ctrl-C` or a plain `kill <pid>`/`killall hyperuplink` will shut it down
 cleanly.
 
@@ -242,9 +242,9 @@ is the fastest way to an account you can log in with:
   --create-user '{"username":"dummy1","email":"dummy1@example.com","password":"mypassword"}'
 ```
 
-The fields are those of `logic/root/session.SignUpInput`, namely
-`username`, `email` and `password`, plus the optional `password_repeat`,
-`email_is_jid` and `language`.
+The fields are those of `logic/root/session.SignUpInput`, namely `username`,
+`email` and `password`, plus the optional `password_repeat`, `email_is_jid` and
+`language`.
 
 For an admin, use an address that is listed under `[Users] PromoteAdmin` in
 `hyperuplink.toml`, where `dummy1@example.com` is already listed, since signup
@@ -254,22 +254,21 @@ promotes those addresses on its own.
 
 Beside the web server _Hyperuplink_ starts a second _fiber_ app that speaks JSON
 on <http://localhost:3001>, configured through an `[API]` section in
-`hyperuplink.toml` whose keys mirror those of `[Web]`, though the API only
-comes up when that section has `Enable = true`, and because `Enable`
-defaults to `false` a missing `[API]` section leaves the JSON API switched off
-entirely, while its port still falls back to `3001` whenever it is enabled
-without an explicit `Port`.
+`hyperuplink.toml` whose keys mirror those of `[Web]`, though the API only comes
+up when that section has `Enable = true`, and because `Enable` defaults to
+`false` a missing `[API]` section leaves the JSON API switched off entirely,
+while its port still falls back to `3001` whenever it is enabled without an
+explicit `Port`.
 
 ### Authentication
 
 Every request includes an API key, either as `Authorization: Bearer <key>` or as
 `X-API-Key: <key>`, and there are no cookies, no server side sessions and no
 CSRF anywhere on this port. A key is a `hup_`-prefixed random secret whose
-SHA-256 is stored in the `apikeys` table, which keeps nothing besides that
-hash, so
-a lost key is replaced rather than recovered. There is no route that signs up,
-signs in or signs out, and a request without a valid key answers `401` across
-the board, guest reads included.
+SHA-256 is stored in the `apikeys` table, which keeps nothing besides that hash,
+so a lost key is replaced rather than recovered. There is no route that signs
+up, signs in or signs out, and a request without a valid key answers `401`
+across the board, guest reads included.
 
 Keys are issued at `/account/api` on the web server, which lists a user's keys,
 issues new ones and soft-deletes old ones, and which shows the secret exactly
@@ -301,13 +300,13 @@ or deleted user takes their keys down with them.
 server carried it in. Reads are `GET`, the forms that `POST` to `/update` on the
 web side are `PUT` here, creation is `POST` and destruction is `DELETE`, with
 the record's id moving into the path where the web form carried it as a hidden
-field. The paths themselves come out of the very same `http/route` table the
+field. The paths themselves come out of the very same `http/routes` table the
 web server reads, which every controller consults through
 `route.For("<id>").Pathname()` rather than spelling its segment out as a
 literal, so the API inherits the sigils the web URLs use, a category reading
 `/_general` and a profile `/~sysop`, and a segment that no web page has yet, of
 which the flat topics feed is so far the only one, gets its own entry in
-`http/route/route._.go` rather than a string in the controller:
+`http/routes/routes.go` rather than a string in the controller:
 
 | Area         | Routes                                                                                      |
 | ------------ | ------------------------------------------------------------------------------------------- |
@@ -320,7 +319,7 @@ which the flat topics feed is so far the only one, gets its own entry in
 | attachments  | `POST /attachments` (multipart), `GET /attachments/:id`                                     |
 | search, docs | `GET /search?q=`, `GET /docs/{about,contact,privacy,terms}`                                 |
 | report       | `GET /report?target=&id=`, `POST /report`                                                   |
-| users        | `GET /~:username`, `POST /~:username/membership`                                             |
+| users        | `GET /~:username`, `POST /~:username/membership`                                            |
 | admin        | `GET`/`PUT` per section under `/admin/...`, users and board records through path ids        |
 
 Everything the web offers is here, except signup, signup confirmation, signin,
@@ -332,16 +331,16 @@ which the shared input structs under `logic/root/` declare as `form`, `json` and
 Three flows differ from their web counterparts, in each case because there is no
 session:
 
-- Attachments are not part of the create request. Upload them first as
-  multipart `attachments=@file` to `POST /attachments`, then pass the returned
-  ids as `attachment_ids` when creating the topic or reply, whereupon the server
+- Attachments are not part of the create request. Upload them first as multipart
+  `attachments=@file` to `POST /attachments`, then pass the returned ids as
+  `attachment_ids` when creating the topic or reply, whereupon the server
   verifies that each id belongs to the caller.
 - Two-factor enrollment cannot store the pending secret in a session, so
   `GET /account/twofactor` returns a fresh enrollment whose `URL` the client
   holds on to and sends back as `otp_url`, together with the `otp_code`, to
   `POST /account/twofactor/enable`.
-- The profile picture is sent as multipart to `/account/profile/picture`
-  rather than inside the JSON `PUT`.
+- The profile picture is sent as multipart to `/account/profile/picture` rather
+  than inside the JSON `PUT`.
 
 ### Errors
 
@@ -354,9 +353,9 @@ additionally name their fields:
 ```
 
 The API returns `401` for a missing or unknown key, `403` for a role the route
-does not accept, `404` for anything that does not
-exist or that the caller may not see, `409` for unique violations such as voting
-twice, and `422` for validation and other rejected input.
+does not accept, `404` for anything that does not exist or that the caller may
+not see, `409` for unique violations such as voting twice, and `422` for
+validation and other rejected input.
 
 ### OpenAPI specification
 
@@ -378,11 +377,11 @@ make swagger       # -> docs/swagger.json
 go tool swag fmt -d http/api -g api._.go   # realign the annotation comments
 ```
 
-The general information, meaning the title, the description, the license and
-the two API key schemes, is declared above `New` in `http/api/api._.go`, while each
-routed action has its own `@Summary`, `@Param`, `@Success` and `@Router`
-block, and the `@Router` paths are written exactly as the route table produces
-them, sigils and all, so a category reads `/_{categories}` and a user reads
+The general information, meaning the title, the description, the license and the
+two API key schemes, is declared above `New` in `http/api/api._.go`, while each
+routed action has its own `@Summary`, `@Param`, `@Success` and `@Router` block,
+and the `@Router` paths are written exactly as the route table produces them,
+sigils and all, so a category reads `/_{categories}` and a user reads
 `/~{user}`. Types are named the way the file that references them imports them,
 which is why the annotations say `logictopics.View` rather than `topics.View`,
 however _swag_ also resolves a bare package name against everything it has
@@ -392,20 +391,20 @@ parsed, so `setting.Profiles` works from a file that never imports it.
 without a generated `docs.go` to import, and it means the file has to exist
 before the binary is compiled. `make build` takes care of that here, however the
 _Dockerfile_, the ebuild and the RPM spec all call `go build` straight, so
-`docs/swagger.json` belongs in the repository rather than in `.gitignore`, and
-a build that is missing it logs a warning and leaves the endpoint unregistered
+`docs/swagger.json` belongs in the repository rather than in `.gitignore`, and a
+build that is missing it logs a warning and leaves the endpoint unregistered
 instead of failing. The version is the one exception to the file being served
-verbatim: it is written as the `{{.Version}}` placeholder that
-`swag.Spec` fills in at startup from the same build version the `-ldflags`
-set, so the UI shows `v0.1.2-15-g81df9f4` rather than whatever was true when
-the specification was last regenerated.
+verbatim: it is written as the `{{.Version}}` placeholder that `swag.Spec` fills
+in at startup from the same build version the `-ldflags` set, so the UI shows
+`v0.1.2-15-g81df9f4` rather than whatever was true when the specification was
+last regenerated.
 
 Editing the annotations has two traps. Anything following a
-`@securityDefinitions` block in the general information is
-swallowed by it, so the `@tag` declarations have to come before the two schemes
-rather than after them, and _swag_ hard-skips every directory named `docs` while
-it walks the tree, which is why the four `/docs/*` static pages are the only
-routes the specification does not describe.
+`@securityDefinitions` block in the general information is swallowed by it, so
+the `@tag` declarations have to come before the two schemes rather than after
+them, and _swag_ hard-skips every directory named `docs` while it walks the
+tree, which is why the four `/docs/*` static pages are the only routes the
+specification does not describe.
 
 ## Configuration
 
@@ -413,10 +412,10 @@ routes the specification does not describe.
 
 - `[General] Mode = "development"` enables debug logging and drops the `Secure`
   flag from the session and CSRF cookies, which is what allows plain-HTTP `curl`
-  to round-trip them, while production mode serves the embedded views and
-  forces HTTPS-only cookies.
-- `[Web] Enable` and `[API] Enable` each gate whether that server boots and
-  both default to `false`, and since a missing section reads as `false` just the
+  to round-trip them, while production mode serves the embedded views and forces
+  HTTPS-only cookies.
+- `[Web] Enable` and `[API] Enable` each gate whether that server boots and both
+  default to `false`, and since a missing section reads as `false` just the
   same, dropping either `[Web]` or `[API]` from the config leaves the
   corresponding server switched off rather than running on its defaults.
 - `[Database] Connection` is the `postgres://` DSN.
@@ -455,8 +454,8 @@ Debug.Path = "/tmp/hyperuplink-messages"
 
 A `debug` target renders through the _same_ template pipeline as the real thing,
 so what is written to disk is what would have gone out, one file per recipient
-with mode `0600` inside a `0700` directory, since the messages contain
-signup tokens.
+with mode `0600` inside a `0700` directory, since the messages contain signup
+tokens.
 
 ```sh
 ls -1 /tmp/hyperuplink-messages/
@@ -520,9 +519,9 @@ the development board are the same board.
 
 Each step is there because the one before it made it possible:
 
-1. `sysop` is created first, since `-create-user` is what runs the
-   migrations and seeds the settings rows, and there are no settings to change
-   until something has done that.
+1. `sysop` is created first, since `-create-user` is what runs the migrations
+   and seeds the settings rows, and there are no settings to change until
+   something has done that.
 2. `tools/seed/settings.sql` then runs, and it has to run _here_, because it
    sets the address type to _Email and JID_ and that is what decides whether
    `email_is_jid` means anything at all. Under the default "email only" a JID is
@@ -546,8 +545,8 @@ breaks the row scan and the forum page renders as an empty root page with HTTP
 200, no error, and nothing in the log to suggest what happened. This needs to be
 fixed.
 
-The materialized views `vforums`, `vtopics` and `vreplies`
-refresh through triggers on insert and update.
+The materialized views `vforums`, `vtopics` and `vreplies` refresh through
+triggers on insert and update.
 
 ## Manual
 
@@ -580,9 +579,9 @@ and external links go through it unharmed. Images are plain relative Markdown
 links, since a screenshot sits in the same directory as the page that shows it,
 and the route serves any non-`.md` file straight out of the embed.
 
-A malformed action, meaning a `{{` that does not parse, fails the page
-with a 500 rather than at build time, so it is worth clicking through a page you
-have just written.
+A malformed action, meaning a `{{` that does not parse, fails the page with a
+500 rather than at build time, so it is worth clicking through a page you have
+just written.
 
 ### Screenshots
 
@@ -634,8 +633,8 @@ That region starts under whatever `Below` names, which for the `site` set is
 `.header`, the div holding the banner, the menu bar and the breadcrumbs. Shot
 from the top of the page instead, every tile would spend a third of its height
 on the same banner and the reader would have four pictures of a banner and very
-little board, while cutting under it leads each tile with its own title bar.
-It is a crop rather than anything hidden in CSS, so the tile is a region of the
+little board, while cutting under it leads each tile with its own title bar. It
+is a crop rather than anything hidden in CSS, so the tile is a region of the
 page as it really renders.
 
 Two things affect where the crop ends up:
@@ -658,9 +657,8 @@ The website is a Hugo project of its own beside this repository, so
 `../pub/static/screenshots`, and exits with an error rather than creating a
 directory somewhere surprising when that path is not there. The four shots it
 writes are the ones `../pub/content/_index.md` names in its `[[screenshots]]`
-blocks, and
-the file names are the contract between the two repositories: rename one here
-and the landing page shows a broken image, so change both together.
+blocks, and the file names are the contract between the two repositories: rename
+one here and the landing page shows a broken image, so change both together.
 
 #### Adding and iterating
 
@@ -934,9 +932,9 @@ The _RPM_ build waits for _Release_ to succeed first, since _GoReleaser_ creates
 the release only once all targets are built and there is nothing to attach the
 packages to before that.
 
-`make release` also does not publish anything when `deploy/nix/package.nix`
-and the tag disagree, which is the backstop for a tag that was made by hand
-instead of by `make release`.
+`make release` also does not publish anything when `deploy/nix/package.nix` and
+the tag disagree, which is the backstop for a tag that was made by hand instead
+of by `make release`.
 
 > **Note:** The Gentoo _Manifest_ hashes the deps tarball that only exists once
 > _Release_ has built and attached it, so it cannot be generated at tag time and
@@ -955,6 +953,23 @@ A handful of these are not apparent from reading the code:
 and anything that composes runtime and logic together, such as the CLI flags or
 the cron registration, belongs in `main`.
 
+### Framework
+
+The lower half of that stack consists of
+[_glides_](https://tty.fail/mrus/glides), which is a framework that came out of
+_Hyperuplink_ and serves as a foundation for it, as well as for other software.
+
+`main` builds a `*glides/runtime.Runtime` with the framework services it asks
+for in `runtime.Services` and then registers the board's own (e.g.
+`repositories`, `activity`, `magick` and `dispatch`) through `rt.AddService`,
+which the typed getters in `helpers` resolve back. `http/route` holds the
+routing table and binds the generic controller types to the framework runtime.
+
+Board-specific configuration has no getter of its own, because the framework
+only declares the keys it reads itself. `Users.PromoteAdmin` is read with
+`rt.Config().Strings()` and the `AuthProvider` blocks with
+`rt.Config().Unmarshal()`, into the `AuthProviders` type that is in `helpers`.
+
 ### `logic/root/` mirrors `http/web/root/`
 
 And `http/api/root/` mirrors both, so one action is three thin packages on the
@@ -962,10 +977,9 @@ same path: the use-case in `logic/root/`, which takes plain values and a
 `*runtime.Runtime`, and one controller per server that binds, authenticates and
 answers in its own format. The input structs are defined with the logic and
 declare `form`, `json` and `validate` tags together, which is what keeps the two
-servers
-validating identically. `logic/helpers/` holds the cross-controller pieces,
-among them the permission resolver, the pagination arithmetic and the attachment
-storage pipeline.
+servers validating identically. `logic/helpers/` holds the cross-controller
+pieces, among them the permission resolver, the pagination arithmetic and the
+attachment storage pipeline.
 
 ### A `v` prefix means materialized view
 
@@ -985,11 +999,11 @@ That last part is why the delete has to walk the tree itself, which
 the topics under them and the replies under those, all guarded by
 `WHERE deleted_at IS NULL` so an earlier deletion keeps its own timestamp.
 
-Leave a child unmarked and it stays visible, because its own
-`deleted_at` is still `NULL` and no read path walks up the tree to check its
-parent. The one place that does walk up is the reply branch of the search query,
-which joins up to the topic, the forum and the category, and it is the exception
-rather than the pattern.
+Leave a child unmarked and it stays visible, because its own `deleted_at` is
+still `NULL` and no read path walks up the tree to check its parent. The one
+place that does walk up is the reply branch of the search query, which joins up
+to the topic, the forum and the category, and it is the exception rather than
+the pattern.
 
 A lookup that comes back `errs.ErrNoRows` is a 404 in the category, forum and
 topic show controllers, so a deleted item is gone for anyone who kept the URL.

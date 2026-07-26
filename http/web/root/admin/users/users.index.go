@@ -2,10 +2,11 @@ package users
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func (r *Route) Index(c fiber.Ctx) (err error) {
@@ -21,7 +22,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	var users *[]user.User
-	users, err = r.Runtime.Repositories.User.All(common.QueryOptions{
+	users, err = gh.Repositories(r.Runtime).User.All(common.QueryOptions{
 		WithBanned:  true,
 		WithDeleted: true,
 		OrderBy:     "created_at",

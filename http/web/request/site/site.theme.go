@@ -4,13 +4,14 @@ import (
 	"path"
 	"strings"
 
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
 func (s *Site) themeSetting() (theme *setting.Theme, ok bool) {
 	settingTheme, err := settingRepo.GetByID[setting.Theme](
-		s.r.GetRuntime().Repositories.Setting,
+		gh.Repositories(s.r.GetRuntime()).Setting,
 		"theme",
 	)
 	if err != nil {
@@ -27,7 +28,7 @@ func (s *Site) customBannerURL() (dlurl string, abs bool, ok bool) {
 	}
 
 	var err error
-	if dlurl, abs, err = s.r.GetRuntime().Storage.GetFileDownloadURL(
+	if dlurl, abs, err = s.r.GetRuntime().Storage().GetFileDownloadURL(
 		theme.ThemeStorageProviderID,
 		path.Join(theme.ThemeStoragePath, theme.CustomBanner),
 	); err != nil {
@@ -57,7 +58,7 @@ func (s *Site) customFaviconURL() (dlurl string, abs bool, ok bool) {
 	}
 
 	var err error
-	if dlurl, abs, err = s.r.GetRuntime().Storage.GetFileDownloadURL(
+	if dlurl, abs, err = s.r.GetRuntime().Storage().GetFileDownloadURL(
 		theme.ThemeStorageProviderID,
 		path.Join(theme.ThemeStoragePath, theme.CustomFavicon),
 	); err != nil {
@@ -87,7 +88,7 @@ func (s *Site) customBackgroundURL() (dlurl string, abs bool, ok bool) {
 	}
 
 	var err error
-	if dlurl, abs, err = s.r.GetRuntime().Storage.GetFileDownloadURL(
+	if dlurl, abs, err = s.r.GetRuntime().Storage().GetFileDownloadURL(
 		theme.ThemeStorageProviderID,
 		path.Join(theme.ThemeStoragePath, theme.CustomBackground),
 	); err != nil {

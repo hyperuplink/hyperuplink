@@ -2,14 +2,15 @@ package topics
 
 import (
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	"xn--gckvb8fzb.com/hyperuplink/logic/helpers/paging"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/vreply"
 	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 type ShowInput struct {
@@ -40,7 +41,7 @@ func Show(
 	in *ShowInput,
 	perms *permission.Resolution,
 ) (view *View, err error) {
-	top, err := rt.Repositories.Topic.VGetBySlugs(
+	top, err := gh.Repositories(rt).Topic.VGetBySlugs(
 		in.ForumSlug,
 		in.TopicSlug,
 		common.QueryOptions{
@@ -61,9 +62,9 @@ func ShowByID(
 ) (view *View, err error) {
 	var top *vtopic.VTopic
 	if id, perr := uuid.Parse(in.ID); perr == nil {
-		top, err = rt.Repositories.Topic.VGetByUUID(id, common.QueryOptions{Limit: 1})
+		top, err = gh.Repositories(rt).Topic.VGetByUUID(id, common.QueryOptions{Limit: 1})
 	} else {
-		top, err = rt.Repositories.Topic.VGetByShortID(in.ID, common.QueryOptions{Limit: 1})
+		top, err = gh.Repositories(rt).Topic.VGetByShortID(in.ID, common.QueryOptions{Limit: 1})
 	}
 	if err != nil {
 		return nil, err
@@ -107,7 +108,7 @@ func viewForTopic(
 		limit -= 1
 		offAdjust = 0
 	}
-	reps, total, err := rt.Repositories.Reply.VAllForTopicUUID(
+	reps, total, err := gh.Repositories(rt).Reply.VAllForTopicUUID(
 		top.ID,
 		common.QueryOptions{
 			OrderBy:   "created_at",

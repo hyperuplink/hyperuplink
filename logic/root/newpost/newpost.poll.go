@@ -5,10 +5,11 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgtype"
+	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/topic"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	repoSetting "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -33,7 +34,7 @@ func PollAllowed(rt *runtime.Runtime) (allowed bool, err error) {
 	var settingTopics *setting.Setting[setting.Topics]
 
 	if settingTopics, err = repoSetting.GetByID[setting.Topics](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		"topics",
 	); err != nil {
 		return false, err

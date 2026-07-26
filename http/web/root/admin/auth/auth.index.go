@@ -2,11 +2,11 @@ package auth
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/services/config"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -24,7 +24,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 
 	var settingAuth *setting.Setting[setting.Auth]
 	settingAuth, err = settingRepo.GetByID[setting.Auth](
-		r.Runtime.Repositories.Setting,
+		gh.Repositories(r.Runtime).Setting,
 		"auth",
 	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
@@ -33,8 +33,8 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 
 	req.SetData("setting_auth", &settingAuth.JSONValue)
 
-	var authProviders config.AuthProviders
-	authProviders, err = r.Runtime.Config.AuthProviders()
+	var authProviders gh.AuthProviders
+	_, err = r.Runtime.Config().Unmarshal("AuthProvider", &authProviders)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

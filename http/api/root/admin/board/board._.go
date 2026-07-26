@@ -2,14 +2,14 @@ package board
 
 import (
 	"github.com/gofiber/fiber/v3"
+	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/root/admin/board/attachments"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/root/admin/board/categories"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/root/admin/board/forums"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/root/admin/board/profiles"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/root/admin/board/themes"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/root/admin/board/topics"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 type Route struct {

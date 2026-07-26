@@ -10,12 +10,27 @@ import (
 	"syscall"
 	"time"
 
-	"xn--gckvb8fzb.com/hyperuplink/cron"
-	"xn--gckvb8fzb.com/hyperuplink/http"
+	"xn--gckvb8fzb.com/glides/cron"
+	glideshttp "xn--gckvb8fzb.com/glides/http"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/worker"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
+	"xn--gckvb8fzb.com/hyperuplink/http/api"
+	"xn--gckvb8fzb.com/hyperuplink/http/routes"
+	"xn--gckvb8fzb.com/hyperuplink/http/web"
 	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	logicsession "xn--gckvb8fzb.com/hyperuplink/logic/root/session"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/worker"
+	"xn--gckvb8fzb.com/hyperuplink/services/activity"
+	"xn--gckvb8fzb.com/hyperuplink/services/dispatch"
+	"xn--gckvb8fzb.com/hyperuplink/services/magick"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories"
+	"xn--gckvb8fzb.com/hyperuplink/worker/targets"
+)
+
+var (
+	Version string
+	Commit  string
+	Date    string
 )
 
 //go:embed migrations/*.sql
@@ -56,8 +71,8 @@ func init() {
 
 func main() {
 	var rt *runtime.Runtime
-	var web *http.HTTP
-	var api *http.HTTP
+	var websrv *glideshttp.HTTP
+	var apisrv *glideshttp.HTTP
 	var wrk *worker.Worker
 	var crn *cron.Cron
 	var err error
@@ -66,18 +81,32 @@ func main() {
 
 	if flagVersion {
 		fmt.Printf("Hyper Uplink %s\nCommit: %s\nBuild date: %s\n",
-			runtime.Version,
-			runtime.Commit,
-			runtime.Date,
+			Version,
+			Commit,
+			Date,
 		)
 		os.Exit(0)
 	}
 
-	rt, err = runtime.New(flagCfgstr)
-	if err != nil {
+	if rt, err = runtime.New(runtime.Opts{
+		Cfgstr:  flagCfgstr,
+		Version: Version,
+		Commit:  Commit,
+		Date:    Date,
+		Services: runtime.Services{
+			Database: true,
+			Storage:  true,
+			Intnat:   true,
+			Markdown: true,
+			Dispatch: true,
+			Cron:     true,
+		},
+	}); err != nil {
 		fmt.Printf("%s\n", err)
 		os.Exit(1)
 	}
+
+	rt.SetBuild(Version, Commit, Date)
 
 	if flagReset != "" {
 		if err = runtime.ValidateResetTime(flagReset, time.Now()); err != nil {
@@ -90,9 +119,10 @@ func main() {
 		os.Exit(0)
 	}
 
+	rt.AddEmbed("migrations", &embedMigrations)
+	rt.Database().SetMigrations(rt.GetEmbed("migrations"))
+
 	if flagCreateUser != "" {
-		rt.Embeds["migrations"] = &embedMigrations
-		rt.Database.SetMigrations(rt.Embeds["migrations"])
 		if err = createUser(rt, flagCreateUser); err != nil {
 			fmt.Printf("%s\n", err)
 			os.Exit(1)
@@ -100,43 +130,96 @@ func main() {
 		os.Exit(0)
 	}
 
-	rt.Embeds["migrations"] = &embedMigrations
-	rt.Embeds["static"] = &embedStaticFiles
-	rt.Embeds["views"] = &embedViews
-	rt.Embeds["locales"] = &embedLocales
-	rt.Embeds["templates"] = &embedTemplates
-	rt.Embeds["docs"] = &embedDocs
+	rt.AddEmbed("static", &embedStaticFiles)
+	rt.AddEmbed("views", &embedViews)
+	rt.AddEmbed("locales", &embedLocales)
+	rt.AddEmbed("templates", &embedTemplates)
+	rt.AddEmbed("docs", &embedDocs)
 
-	rt.Database.SetMigrations(rt.Embeds["migrations"])
-	rt.Intnat.SetLocales(rt.Embeds["locales"])
+	rt.Intnat().SetLocales(rt.GetEmbed("locales"), "en",
+		"de", "en", "es", "fr", "it", "ro")
+
+	var srv any
+	rt.Debug("new", "repositories")
+	if srv, err = repositories.New(rt.Database(), rt.Config()); err != nil {
+		rt.Error("status", "error", "error", err)
+		fmt.Printf("%s\n", err)
+		os.Exit(1)
+	}
+	rt.AddService("repositories", srv)
+
+	rt.Debug("new", "activity")
+	if srv, err = activity.New(rt.Logger(), gh.Repositories(rt).Activity); err != nil {
+		rt.Error("status", "error", "error", err)
+		fmt.Printf("%s\n", err)
+		os.Exit(1)
+	}
+	rt.AddService("activity", srv)
+
+	rt.Debug("new", "magick")
+	if srv, err = magick.New(); err != nil {
+		rt.Error("status", "error", "error", err)
+		fmt.Printf("%s\n", err)
+		os.Exit(1)
+	}
+	rt.AddService("magick", srv)
+
+	rt.Debug("new", "dispatch")
+	if srv, err = dispatch.New(
+		rt.Dispatch(), gh.Repositories(rt).Setting,
+	); err != nil {
+		rt.Error("status", "error", "error", err)
+		fmt.Printf("%s\n", err)
+		os.Exit(1)
+	}
+	rt.AddService("dispatch", srv)
+
+	rt.OnStartup(
+		gh.Repositories(rt).Startup,
+		gh.Activity(rt).Startup,
+		gh.Magick(rt).Startup,
+	)
+	rt.OnShutdown(
+		gh.Magick(rt).Shutdown,
+		gh.Activity(rt).Shutdown,
+		gh.Repositories(rt).Shutdown,
+	)
 
 	err = rt.Startup()
 	rt.NilOrDie(err)
 
+	routes.Use()
+
 	// ---[ WEB ]-------------------------------------------------------------- //
-	if rt.Config.WebEnable() {
-		web, err = http.New(rt, http.IfaceWeb)
+	if rt.Config().WebEnable() {
+		webiface, err := web.New(rt)
 		rt.NilOrDie(err)
 
-		err = web.Startup()
+		websrv, err = glideshttp.New(rt, webiface)
 		rt.NilOrDie(err)
 
-		go web.Run()
+		err = websrv.Startup()
+		rt.NilOrDie(err)
+
+		go websrv.Run()
 	}
 
 	// ---[ API ]-------------------------------------------------------------- //
-	if rt.Config.APIEnable() {
-		api, err = http.New(rt, http.IfaceAPI)
+	if rt.Config().APIEnable() {
+		apiiface, err := api.New(rt)
 		rt.NilOrDie(err)
 
-		err = api.Startup()
+		apisrv, err = glideshttp.New(rt, apiiface)
 		rt.NilOrDie(err)
 
-		go api.Run()
+		err = apisrv.Startup()
+		rt.NilOrDie(err)
+
+		go apisrv.Run()
 	}
 
 	// ---[ WORKER ]----------------------------------------------------------- //
-	wrk, err = worker.New(rt)
+	wrk, err = worker.New(rt, targets.Register)
 	rt.NilOrDie(err)
 
 	err = wrk.Startup()
@@ -161,11 +244,11 @@ func main() {
 	<-quit
 
 	crn.Shutdown()
-	if api != nil {
-		api.Shutdown()
+	if apisrv != nil {
+		apisrv.Shutdown()
 	}
-	if web != nil {
-		web.Shutdown()
+	if websrv != nil {
+		websrv.Shutdown()
 	}
 	wrk.Shutdown()
 
@@ -173,7 +256,7 @@ func main() {
 }
 
 func registerCronFunctions(rt *runtime.Runtime) (err error) {
-	return rt.Cron.Register(
+	return rt.Cron().Register(
 		logicactivity.CleanupAdminLogID,
 		logicactivity.CleanupAdminLogSpec,
 		func() error { return logicactivity.CleanupAdminLog(rt) },
@@ -181,12 +264,12 @@ func registerCronFunctions(rt *runtime.Runtime) (err error) {
 }
 
 func createUser(rt *runtime.Runtime, jsonStr string) error {
-	if err := rt.Database.Startup(); err != nil {
+	if err := rt.Database().Startup(); err != nil {
 		return err
 	}
-	defer rt.Database.Shutdown()
+	defer rt.Database().Shutdown()
 
-	if err := rt.Repositories.Startup(); err != nil {
+	if err := gh.Repositories(rt).Startup(); err != nil {
 		return err
 	}
 

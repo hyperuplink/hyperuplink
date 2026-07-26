@@ -1,9 +1,10 @@
 package profile
 
 import (
+	"xn--gckvb8fzb.com/glides/runtime"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -22,17 +23,17 @@ func Update(
 	if usr.SignatureText == "" {
 		usr.SignatureHTML = ""
 	} else {
-		if usr.SignatureHTML, err = rt.Markdown.Convert(usr.SignatureText); err != nil {
+		if usr.SignatureHTML, err = rt.Markdown().Convert(usr.SignatureText); err != nil {
 			return err
 		}
 	}
 
-	if err = rt.Repositories.User.Update(usr); err != nil {
+	if err = gh.Repositories(rt).User.Update(usr); err != nil {
 		return err
 	}
 
 	settingUserProfile, err := settingRepo.GetOrCreateUserProfile(
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		usr.ID,
 	)
 	if err != nil {
@@ -42,7 +43,7 @@ func Update(
 	settingUserProfile.JSONValue.NotifyOnReply = in.NotifyOnReply
 
 	return settingRepo.Update[setting.UserProfile](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		settingUserProfile,
 	)
 }

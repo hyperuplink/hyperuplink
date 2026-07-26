@@ -2,8 +2,9 @@ package forums
 
 import (
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/forum"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 func Update(
@@ -21,5 +22,5 @@ func Update(
 	}
 	fum.Description = in.Description
 
-	return rt.Repositories.Forum.Update(fum)
+	return gh.Repositories(rt).Forum.Update(fum)
 }

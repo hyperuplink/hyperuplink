@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v3"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/bcn"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
@@ -31,7 +31,7 @@ func (r *Route) sendAsset(c fiber.Ctx, sub string) (err error) {
 
 	var body []byte
 	if body, err = fs.ReadFile(
-		r.Runtime.Embeds["docs"],
+		r.Runtime.GetEmbed("docs"),
 		embedPath,
 	); err != nil {
 		return c.SendStatus(fiber.StatusNotFound)
@@ -70,7 +70,7 @@ func (r *Route) render(c fiber.Ctx, sub string) (err error) {
 	}
 
 	var src []byte
-	src, err = fs.ReadFile(r.Runtime.Embeds["docs"], embedPath)
+	src, err = fs.ReadFile(r.Runtime.GetEmbed("docs"), embedPath)
 	if err != nil {
 		return c.SendStatus(fiber.StatusNotFound)
 	}
@@ -82,7 +82,7 @@ func (r *Route) render(c fiber.Ctx, sub string) (err error) {
 	}
 
 	var html string
-	html, err = r.Runtime.Markdown.ConvertDocs(expanded)
+	html, err = r.Runtime.Markdown().ConvertDocs(expanded)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

@@ -4,9 +4,10 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -25,7 +26,7 @@ func (s *Site) Attachments(ids []uuid.UUID) (views []AttachmentView) {
 
 	var settingAttachments *setting.Setting[setting.Attachments]
 	settingAttachments, err := settingRepo.GetByID[setting.Attachments](
-		s.r.GetRuntime().Repositories.Setting,
+		gh.Repositories(s.r.GetRuntime()).Setting,
 		"attachments",
 	)
 	if err != nil {
@@ -35,7 +36,7 @@ func (s *Site) Attachments(ids []uuid.UUID) (views []AttachmentView) {
 
 	views = make([]AttachmentView, 0, len(ids))
 	for _, id := range ids {
-		model, merr := s.r.GetRuntime().Repositories.Attachment.GetByUUID(
+		model, merr := gh.Repositories(s.r.GetRuntime()).Attachment.GetByUUID(
 			id,
 			common.QueryOptions{},
 		)

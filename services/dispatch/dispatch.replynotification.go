@@ -1,6 +1,7 @@
 package dispatch
 
 import (
+	glidesdispatch "xn--gckvb8fzb.com/glides/services/dispatch"
 	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob"
 	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob/notification/replynotification"
 )
@@ -13,35 +14,17 @@ func (disp *Dispatch) ReplyNotifications(
 		return err
 	}
 
-	r, err := disp.routing()
-	if err != nil {
-		return err
-	}
-
-	byTarget := make(map[string][]*replynotification.ReplyNotification)
 	for _, payload := range payloads {
 		payload.SetSystem(sys)
-
-		targetID := r.targetIDFor(payload.Recipient)
-		byTarget[targetID] = append(byTarget[targetID], payload)
 	}
 
-	for targetID, targetPayloads := range byTarget {
-		j := asyncjob.New(
-			targetID,
-			asyncjob.Notification,
-			asyncjob.Reply,
-		)
-		if err = j.SetPayload(targetPayloads); err != nil {
-			return err
-		}
-
-		if err = disp.Job(j); err != nil {
-			return err
-		}
-	}
-
-	return nil
+	return glidesdispatch.Batch(
+		disp.Dispatch,
+		asyncjob.Notification,
+		asyncjob.Reply,
+		payloads,
+		asyncjob.IsJID[*replynotification.ReplyNotification],
+	)
 }
 
 func (disp *Dispatch) ReplyNotification(

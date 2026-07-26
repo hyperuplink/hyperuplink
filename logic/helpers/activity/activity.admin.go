@@ -5,8 +5,9 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/activity"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 func ChangedFields(before, after any) (changed []string) {
@@ -64,7 +65,7 @@ func RecordAdminVisit(
 		return
 	}
 
-	if err = rt.Activity.Record(rec); err != nil {
+	if err = gh.Activity(rt).Record(rec); err != nil {
 		rt.Error("error", err)
 	}
 }
@@ -86,7 +87,7 @@ func RecordAdminSettingsUpdate(
 		return
 	}
 
-	if err = rt.Activity.Record(rec); err != nil {
+	if err = gh.Activity(rt).Record(rec); err != nil {
 		rt.Error("error", err)
 	}
 }

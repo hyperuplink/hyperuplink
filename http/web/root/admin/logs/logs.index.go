@@ -4,13 +4,14 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v3"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/site"
 	"xn--gckvb8fzb.com/hyperuplink/logic/helpers/paging"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 	"xn--gckvb8fzb.com/hyperuplink/models/vactivity"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func (r *Route) Index(c fiber.Ctx) (err error) {
@@ -35,7 +36,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 
 	var logs *[]vactivity.VActivity
 	var total int64
-	logs, total, err = r.Runtime.Repositories.Activity.VAllAdmin(
+	logs, total, err = gh.Repositories(r.Runtime).Activity.VAllAdmin(
 		common.QueryOptions{
 			OrderBy: "a.created_at",
 			Order:   common.Descending,

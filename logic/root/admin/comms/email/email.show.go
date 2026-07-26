@@ -1,22 +1,23 @@
 package email
 
 import (
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/config"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/config"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
 func Show(rt *runtime.Runtime) (view *View, err error) {
 	settingCommsEmail, err := settingRepo.GetByID[setting.CommsEmail](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		"comms_email",
 	)
 	if err != nil {
 		return nil, err
 	}
 
-	targets, err := rt.Config.Targets()
+	targets, err := rt.Config().Targets()
 	if err != nil {
 		return nil, err
 	}

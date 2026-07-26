@@ -1,22 +1,23 @@
 package asyncjob
 
 import (
-	"encoding/json"
-	"reflect"
-
-	"github.com/google/uuid"
-	"xn--gckvb8fzb.com/hyperuplink/errs"
+	glidesasyncjob "xn--gckvb8fzb.com/glides/models/asyncjob"
+	"xn--gckvb8fzb.com/glides/worker/targets/handler"
+	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob/common"
+	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 )
 
-type JobType string
+type (
+	AsyncJob   = glidesasyncjob.AsyncJob
+	JobType    = glidesasyncjob.JobType
+	JobSubType = glidesasyncjob.JobSubType
+)
 
 const (
 	Confirmation JobType = "confirmation"
 	Notification JobType = "notification"
-	Cron         JobType = "cron"
+	Cron         JobType = glidesasyncjob.Cron
 )
-
-type JobSubType string
 
 const (
 	// Confirmation
@@ -27,52 +28,38 @@ const (
 	Reply   JobSubType = "reply"
 	Mention JobSubType = "mention"
 	// Cron
-	Run JobSubType = "run"
+	Run JobSubType = glidesasyncjob.Run
 )
 
-type AsyncJob struct {
-	ID       uuid.UUID  `json:"id"`
-	TargetID string     `json:"target_id"`
-	Type     JobType    `json:"type"`
-	SubType  JobSubType `json:"sub_type"`
-	Batch    bool       `json:"batch"`
-	Payload  []byte     `json:"payload"`
-	Track    bool       `json:"track"`
+type Payload interface {
+	GetRecipient() *common.Recipient
+	GetSubject() string
+	SetSystem(sys *setting.System)
 }
 
 func New(
 	targetID string,
 	jobType JobType,
 	jobSubType JobSubType,
-) (j *AsyncJob) {
-	j = new(AsyncJob)
-	j.TargetID = targetID
-	j.Type = jobType
-	j.SubType = jobSubType
-
-	return j
+) *AsyncJob {
+	return glidesasyncjob.New(targetID, jobType, jobSubType)
 }
 
-func (j *AsyncJob) SetPayload(payload any) (err error) {
-	if payload == nil {
-		return errs.ErrJobPayloadInvalid
-	}
-
-	if j.Payload, err = json.Marshal(payload); err != nil {
-		return err
-	}
-
-	j.Batch = reflect.ValueOf(payload).Kind() == reflect.Slice
-
-	return nil
+func Payloads[P any](j AsyncJob) ([]P, error) {
+	return glidesasyncjob.Payloads[P](j)
 }
 
-func (j *AsyncJob) SetID() (id uuid.UUID, err error) {
-	if id, err = uuid.NewV7(); err != nil {
-		return id, err
+func Message[P Payload](payload P) handler.Message {
+	rcpt := payload.GetRecipient()
+
+	return handler.Message{
+		Username: rcpt.Username,
+		Address:  rcpt.Address,
+		Lang:     rcpt.Lang,
+		Subject:  payload.GetSubject(),
 	}
+}
 
-	j.ID = id
-
-	return j.ID, nil
+func IsJID[P Payload](payload P) bool {
+	return payload.GetRecipient().IsJID
 }

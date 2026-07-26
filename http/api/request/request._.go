@@ -9,8 +9,9 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	logicperms "xn--gckvb8fzb.com/hyperuplink/logic/helpers/perms"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
@@ -55,7 +56,7 @@ func New(
 	}
 
 	settingSystem, err := settingRepo.GetByID[setting.System](
-		r.GetRuntime().Repositories.Setting,
+		gh.Repositories(r.GetRuntime()).Setting,
 		"system",
 	)
 	if err != nil {
@@ -74,7 +75,7 @@ func New(
 }
 
 func (req *Request) Ts(msg string) string {
-	return req.r.GetRuntime().Intnat.NewLocalizer(req.lang).Get(msg)
+	return req.r.GetRuntime().Intnat().NewLocalizer(req.lang).Get(msg)
 }
 
 func (req *Request) Role() user.Role {

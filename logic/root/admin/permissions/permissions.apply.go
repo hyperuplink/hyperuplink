@@ -3,9 +3,10 @@ package permissions
 import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
+	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 func Apply(
@@ -42,5 +43,5 @@ func Apply(
 		categoryID = pgtype.UUID{Bytes: [16]byte(uid), Valid: true}
 	}
 
-	return rt.Repositories.Permission.Apply(groupID, categoryID, level)
+	return gh.Repositories(rt).Permission.Apply(groupID, categoryID, level)
 }

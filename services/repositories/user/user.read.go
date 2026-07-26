@@ -3,10 +3,10 @@ package user
 import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func (repo *Repository) All(

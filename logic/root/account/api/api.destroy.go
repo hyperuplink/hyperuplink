@@ -2,9 +2,10 @@ package api
 
 import (
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 )
 
 type DestroyInput struct {
@@ -21,7 +22,7 @@ func Destroy(
 		return err
 	}
 
-	key, err := rt.Repositories.APIKey.GetByUUID(id, common.QueryOptions{Limit: 1})
+	key, err := gh.Repositories(rt).APIKey.GetByUUID(id, common.QueryOptions{Limit: 1})
 	if err != nil {
 		return err
 	}
@@ -30,5 +31,5 @@ func Destroy(
 		return errs.ErrNoRows
 	}
 
-	return rt.Repositories.APIKey.Delete(key)
+	return gh.Repositories(rt).APIKey.Delete(key)
 }

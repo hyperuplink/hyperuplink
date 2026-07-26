@@ -4,11 +4,12 @@ import (
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
+	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 const maxTfaAttempts = 5
@@ -55,7 +56,7 @@ func (r *Route) TfaCreate(c fiber.Ctx) (err error) {
 	}
 
 	var usr *user.User
-	usr, err = r.Runtime.Repositories.User.GetByID(
+	usr, err = gh.Repositories(r.Runtime).User.GetByID(
 		userID,
 		common.QueryOptions{
 			WithBanned:  false,

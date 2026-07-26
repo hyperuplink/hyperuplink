@@ -4,11 +4,12 @@ import (
 	"slices"
 
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	logicthemes "xn--gckvb8fzb.com/hyperuplink/logic/helpers/themes"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -33,7 +34,7 @@ func Update(
 		return errs.ErrInvalidColorscheme
 	}
 
-	storages, err := rt.Config.Storages()
+	storages, err := rt.Config().Storages()
 	if err != nil {
 		return err
 	}
@@ -50,7 +51,7 @@ func Update(
 	}
 
 	settingTheme, err := settingRepo.GetByID[setting.Theme](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		"theme",
 	)
 	if err != nil {
@@ -65,7 +66,7 @@ func Update(
 	settingTheme.JSONValue.ThemeStoragePath = in.ThemeStoragePath
 
 	if err = settingRepo.Update[setting.Theme](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		settingTheme,
 	); err != nil {
 		return err

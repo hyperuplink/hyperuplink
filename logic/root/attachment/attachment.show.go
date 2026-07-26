@@ -6,12 +6,13 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/attachment"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -33,12 +34,12 @@ func Open(
 	id uuid.UUID,
 	perms *permission.Resolution,
 ) (file *File, err error) {
-	att, err := rt.Repositories.Attachment.GetByUUID(id, common.QueryOptions{})
+	att, err := gh.Repositories(rt).Attachment.GetByUUID(id, common.QueryOptions{})
 	if err != nil {
 		return nil, errs.ErrNoRows
 	}
 
-	categoryID, found, err := rt.Repositories.Attachment.GetCategoryForAttachment(id)
+	categoryID, found, err := gh.Repositories(rt).Attachment.GetCategoryForAttachment(id)
 	if err != nil || !found {
 		return nil, errs.ErrNoRows
 	}
@@ -48,7 +49,7 @@ func Open(
 	}
 
 	settingAttachments, err := settingRepo.GetByID[setting.Attachments](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		"attachments",
 	)
 	if err != nil {
@@ -56,7 +57,7 @@ func Open(
 	}
 	attachments := settingAttachments.JSONValue
 
-	reader, err := rt.Storage.GetFile(
+	reader, err := rt.Storage().GetFile(
 		attachments.StorageProviderID,
 		path.Join(attachments.StoragePath, id.String()),
 	)

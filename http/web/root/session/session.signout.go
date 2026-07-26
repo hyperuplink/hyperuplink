@@ -3,7 +3,7 @@ package session
 import (
 	"github.com/gofiber/fiber/v3"
 	goth_fiber "github.com/shareed2k/goth_fiber/v2"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )

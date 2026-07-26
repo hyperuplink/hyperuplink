@@ -16,14 +16,15 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/requestid"
 	slogfiber "github.com/samber/slog-fiber"
 	"github.com/swaggo/swag"
+	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/http/validation"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/root"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
-	"xn--gckvb8fzb.com/hyperuplink/http/validation"
 	"xn--gckvb8fzb.com/hyperuplink/models/apikey"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 const (
@@ -89,17 +90,17 @@ func New(
 	srv.app = fiber.New(fiber.Config{
 		StrictRouting:      false,
 		CaseSensitive:      false,
-		BodyLimit:          srv.rt.Config.APIBodyLimit(),
-		Concurrency:        srv.rt.Config.APIConcurrency(),
-		ProxyHeader:        srv.rt.Config.APIProxyHeader(),
-		EnableIPValidation: srv.rt.Config.APIEnableIPValidation(),
-		TrustProxy:         srv.rt.Config.APITrustProxy(),
+		BodyLimit:          srv.rt.Config().APIBodyLimit(),
+		Concurrency:        srv.rt.Config().APIConcurrency(),
+		ProxyHeader:        srv.rt.Config().APIProxyHeader(),
+		EnableIPValidation: srv.rt.Config().APIEnableIPValidation(),
+		TrustProxy:         srv.rt.Config().APITrustProxy(),
 		TrustProxyConfig: fiber.TrustProxyConfig{
-			Loopback: srv.rt.Config.APITrustLoopback(),
-			Proxies:  srv.rt.Config.APITrustProxies(),
+			Loopback: srv.rt.Config().APITrustLoopback(),
+			Proxies:  srv.rt.Config().APITrustProxies(),
 		},
-		ReduceMemoryUsage: srv.rt.Config.APIReduceMemoryUsage(),
-		ServerHeader:      srv.rt.Config.APIServerHeader(),
+		ReduceMemoryUsage: srv.rt.Config().APIReduceMemoryUsage(),
+		ServerHeader:      srv.rt.Config().APIServerHeader(),
 		AppName:           "hyperuplink-api",
 		StructValidator:   validation.NewStructValidator(srv.validator),
 		ErrorHandler: func(c fiber.Ctx, err error) error {
@@ -115,8 +116,8 @@ func New(
 }
 
 func (srv *API) loadMiddlewares() error {
-	srv.app.Use(slogfiber.NewWithConfig(srv.rt.Logger, slogfiber.Config{
-		DefaultLevel:       srv.rt.LoggerLevel,
+	srv.app.Use(slogfiber.NewWithConfig(srv.rt.Logger(), slogfiber.Config{
+		DefaultLevel:       srv.rt.GetLogLevel(),
 		WithRequestID:      true,
 		WithRequestBody:    srv.rt.IsDevelopmentMode(),
 		WithRequestHeader:  true,
@@ -144,7 +145,7 @@ func (srv *API) loadMiddlewares() error {
 }
 
 func (srv *API) loadSwagger() {
-	embedded, ok := srv.rt.Embeds["docs"]
+	embedded, ok := srv.rt.GetEmbedOk("docs")
 	if !ok {
 		srv.rt.Warn("swagger", "no embedded documentation")
 		return
@@ -156,8 +157,9 @@ func (srv *API) loadSwagger() {
 		return
 	}
 
+	version, _, _, _ := srv.rt.GetBuild()
 	swag.Register(swag.Name, &swag.Spec{
-		Version:         srv.rt.Build.Version,
+		Version:         version,
 		SwaggerTemplate: string(doc),
 	})
 
@@ -174,7 +176,7 @@ func (srv *API) authenticate(c fiber.Ctx) error {
 		return unauthorized(c)
 	}
 
-	key, err := srv.rt.Repositories.APIKey.GetBySecretHash(
+	key, err := gh.Repositories(srv.rt).APIKey.GetBySecretHash(
 		apikey.HashSecret(secret),
 		common.QueryOptions{Limit: 1},
 	)
@@ -182,7 +184,7 @@ func (srv *API) authenticate(c fiber.Ctx) error {
 		return unauthorized(c)
 	}
 
-	usr, err := srv.rt.Repositories.User.GetByID(
+	usr, err := gh.Repositories(srv.rt).User.GetByID(
 		key.UserID.String(),
 		common.QueryOptions{
 			WithBanned:  false,
@@ -195,7 +197,7 @@ func (srv *API) authenticate(c fiber.Ctx) error {
 		return unauthorized(c)
 	}
 
-	if terr := srv.rt.Repositories.APIKey.TouchLastUsed(key.ID); terr != nil {
+	if terr := gh.Repositories(srv.rt).APIKey.TouchLastUsed(key.ID); terr != nil {
 		srv.rt.Warn("error", terr)
 	}
 
@@ -251,8 +253,8 @@ func (srv *API) Startup() (err error) {
 func (srv *API) Run() error {
 	listenAddr := fmt.Sprintf(
 		"%s:%d",
-		srv.rt.Config.APIBindIP(),
-		srv.rt.Config.APIPort(),
+		srv.rt.Config().APIBindIP(),
+		srv.rt.Config().APIPort(),
 	)
 	if err := srv.app.Listen(listenAddr, fiber.ListenConfig{
 		DisableStartupMessage: true,

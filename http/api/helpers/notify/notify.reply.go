@@ -1,10 +1,11 @@
 package notify
 
 import (
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	logictopics "xn--gckvb8fzb.com/hyperuplink/logic/root/categories/forums/topics"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func Reply(
@@ -13,7 +14,7 @@ func Reply(
 	byUsername string,
 	subject string,
 ) {
-	cat, err := rt.Repositories.Category.GetByUUID(
+	cat, err := gh.Repositories(rt).Category.GetByUUID(
 		created.Forum.CategoryID,
 		common.QueryOptions{Limit: 1},
 	)

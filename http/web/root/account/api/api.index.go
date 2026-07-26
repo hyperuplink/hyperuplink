@@ -2,7 +2,7 @@ package api
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	logicapi "xn--gckvb8fzb.com/hyperuplink/logic/root/account/api"
 	"xn--gckvb8fzb.com/hyperuplink/models/apikey"

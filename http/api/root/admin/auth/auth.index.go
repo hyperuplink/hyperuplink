@@ -2,6 +2,7 @@ package auth
 
 import (
 	"github.com/gofiber/fiber/v3"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
@@ -27,14 +28,15 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	settingAuth, err := settingRepo.GetByID[setting.Auth](
-		r.Runtime.Repositories.Setting,
+		gh.Repositories(r.Runtime).Setting,
 		"auth",
 	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
 
-	authProviders, err := r.Runtime.Config.AuthProviders()
+	var authProviders gh.AuthProviders
+	_, err = r.Runtime.Config().Unmarshal("AuthProvider", &authProviders)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

@@ -14,8 +14,6 @@
 #     --define "commit  <sha>" \
 #     --define "date    <iso-8601>"
 
-%global goipath xn--gckvb8fzb.com/hyperuplink
-
 %global debug_package %{nil}
 %global __os_install_post %{nil}
 
@@ -101,9 +99,9 @@ go build \
     -trimpath \
     -buildvcs=false \
     -ldflags "-s -w \
-        -X %{goipath}/runtime.Version=%{version} \
-        -X %{goipath}/runtime.Commit=%{commit} \
-        -X %{goipath}/runtime.Date=%{date}" \
+        -X main.Version=%{version} \
+        -X main.Commit=%{commit} \
+        -X main.Date=%{date}" \
     -o %{name} .
 
 %install

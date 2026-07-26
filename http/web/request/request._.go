@@ -8,8 +8,10 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
+	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/bcn"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/data"
@@ -22,7 +24,6 @@ import (
 	logicperms "xn--gckvb8fzb.com/hyperuplink/logic/helpers/perms"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -88,7 +89,7 @@ func New(
 	req.Data = data.New(req.c)
 
 	settingSystem, err := settingRepo.GetByID[setting.System](
-		req.r.GetRuntime().Repositories.Setting,
+		gh.Repositories(req.r.GetRuntime()).Setting,
 		"system",
 	)
 	if err != nil {
@@ -97,7 +98,7 @@ func New(
 	req.System = &settingSystem.JSONValue
 
 	settingTheme, err := settingRepo.GetByID[setting.Theme](
-		req.r.GetRuntime().Repositories.Setting,
+		gh.Repositories(req.r.GetRuntime()).Setting,
 		"theme",
 	)
 	if err != nil {
@@ -106,7 +107,7 @@ func New(
 	req.Theme = &settingTheme.JSONValue
 
 	settingGeneral, err := settingRepo.GetByID[setting.General](
-		req.r.GetRuntime().Repositories.Setting,
+		gh.Repositories(req.r.GetRuntime()).Setting,
 		"general",
 	)
 	if err != nil {
@@ -119,7 +120,7 @@ func New(
 	req.UserProfile = &defaultUserProfile
 
 	if userID, ok := req.Session.GetUserID(); ok {
-		usr, err := req.r.GetRuntime().Repositories.User.GetByID(
+		usr, err := gh.Repositories(req.r.GetRuntime()).User.GetByID(
 			userID,
 			common.QueryOptions{
 				WithBanned:  false,
@@ -140,7 +141,7 @@ func New(
 			req.Session.SetCurrentUser(usr)
 
 			settingUserProfile, err := settingRepo.GetOrCreateUserProfile(
-				req.r.GetRuntime().Repositories.Setting,
+				gh.Repositories(req.r.GetRuntime()).Setting,
 				usr.ID,
 			)
 			if err != nil {

@@ -4,7 +4,7 @@ import (
 	"strings"
 	"text/template"
 
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 )
 

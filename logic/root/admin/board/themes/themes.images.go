@@ -8,9 +8,10 @@ import (
 
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/lithammer/shortuuid/v4"
+	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -24,7 +25,7 @@ func UploadImage(
 	}
 
 	settingTheme, err := settingRepo.GetByID[setting.Theme](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		"theme",
 	)
 	if err != nil {
@@ -40,7 +41,7 @@ func UploadImage(
 		return kind.errAlreadySet
 	}
 
-	storages, err := rt.Config.Storages()
+	storages, err := rt.Config().Storages()
 	if err != nil {
 		return err
 	}
@@ -76,7 +77,7 @@ func UploadImage(
 
 	imageFilename := shortuuid.New() + mtype.Extension()
 
-	if err = rt.Storage.StoreFile(
+	if err = rt.Storage().StoreFile(
 		theme.ThemeStorageProviderID,
 		imageFile,
 		path.Join(theme.ThemeStoragePath, imageFilename),
@@ -87,7 +88,7 @@ func UploadImage(
 	*kind.field(&settingTheme.JSONValue) = imageFilename
 
 	return settingRepo.Update[setting.Theme](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		settingTheme,
 	)
 }
@@ -97,7 +98,7 @@ func RemoveImage(
 	kind ImageKind,
 ) (err error) {
 	settingTheme, err := settingRepo.GetByID[setting.Theme](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		"theme",
 	)
 	if err != nil {
@@ -107,7 +108,7 @@ func RemoveImage(
 
 	filename := *kind.field(&theme)
 	if filename != "" && theme.ThemeStorageProviderID != "" {
-		if derr := rt.Storage.DeleteFile(
+		if derr := rt.Storage().DeleteFile(
 			theme.ThemeStorageProviderID,
 			path.Join(theme.ThemeStoragePath, filename),
 		); derr != nil {
@@ -118,7 +119,7 @@ func RemoveImage(
 	*kind.field(&settingTheme.JSONValue) = ""
 
 	return settingRepo.Update[setting.Theme](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		settingTheme,
 	)
 }

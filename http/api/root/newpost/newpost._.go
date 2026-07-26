@@ -2,9 +2,9 @@ package newpost
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/runtime"
 	logicnewpost "xn--gckvb8fzb.com/hyperuplink/logic/root/newpost"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 type Route struct {

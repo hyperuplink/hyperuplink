@@ -1,12 +1,13 @@
 package root
 
 import (
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/vforum"
 	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 type CategoryWithForums struct {
@@ -23,7 +24,7 @@ func BoardView(
 	rt *runtime.Runtime,
 	perms *permission.Resolution,
 ) (board *Board, err error) {
-	cats, err := rt.Repositories.Category.All(common.QueryOptions{
+	cats, err := gh.Repositories(rt).Category.All(common.QueryOptions{
 		OrderBy: "position",
 		Order:   common.Ascending,
 	})
@@ -31,7 +32,7 @@ func BoardView(
 		return nil, err
 	}
 
-	fums, err := rt.Repositories.Forum.VAll(common.QueryOptions{
+	fums, err := gh.Repositories(rt).Forum.VAll(common.QueryOptions{
 		OrderBy: "position",
 		Order:   common.Ascending,
 	})
@@ -55,7 +56,7 @@ func BoardView(
 		board.CategoriesForums = append(board.CategoriesForums, catfum)
 	}
 
-	tops, err := rt.Repositories.Topic.VAll(
+	tops, err := gh.Repositories(rt).Topic.VAll(
 		common.QueryOptions{
 			OrderBy: "updated_at",
 			Order:   common.Descending,

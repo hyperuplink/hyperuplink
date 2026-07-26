@@ -60,3 +60,11 @@ func (entity *Signup) SetSignup(token string, path string) {
 func (entity *Signup) SetURL(baseURL string) {
 	entity.URL = fmt.Sprintf("%s/%s", baseURL, entity.Path)
 }
+
+func (entity *SignupConfirmation) GetRecipient() *common.Recipient {
+	return entity.Recipient
+}
+
+func (entity *SignupConfirmation) GetSubject() string {
+	return entity.Subject
+}

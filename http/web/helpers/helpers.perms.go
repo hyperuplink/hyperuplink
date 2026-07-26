@@ -2,10 +2,11 @@ package helpers
 
 import (
 	"github.com/gofiber/fiber/v3"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request/session"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func CurrentUserRoleAndGroups(
@@ -19,7 +20,7 @@ func CurrentUserRoleAndGroups(
 		return user.GuestRole, nil
 	}
 
-	usr, err := rt.Repositories.User.GetByID(userID, common.QueryOptions{
+	usr, err := gh.Repositories(rt).User.GetByID(userID, common.QueryOptions{
 		WithBanned:  false,
 		WithSpammed: false,
 		WithDeleted: false,

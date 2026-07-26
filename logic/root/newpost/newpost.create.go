@@ -5,12 +5,13 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/lithammer/shortuuid/v4"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/topic"
 	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 type CreateInput struct {
@@ -38,7 +39,7 @@ func Create(
 		return nil, err
 	}
 
-	fum, err := rt.Repositories.Forum.GetByUUID(
+	fum, err := gh.Repositories(rt).Forum.GetByUUID(
 		top.ForumID,
 		common.QueryOptions{Limit: 1},
 	)
@@ -53,7 +54,7 @@ func Create(
 	top.Kind = topic.Regular
 	top.Anonymous = false
 	top.Text = in.Text
-	if top.HTML, err = rt.Markdown.Convert(top.Text); err != nil {
+	if top.HTML, err = rt.Markdown().Convert(top.Text); err != nil {
 		return nil, err
 	}
 
@@ -73,11 +74,11 @@ func Create(
 		}
 	}
 
-	if _, err = rt.Repositories.Topic.Create(top); err != nil {
+	if _, err = gh.Repositories(rt).Topic.Create(top); err != nil {
 		return nil, err
 	}
 
-	return rt.Repositories.Topic.VGetByForumUUIDSlug(
+	return gh.Repositories(rt).Topic.VGetByForumUUIDSlug(
 		top.ForumID,
 		top.Slug,
 		common.QueryOptions{

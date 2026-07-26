@@ -7,10 +7,11 @@ import (
 
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/lithammer/shortuuid/v4"
+	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -31,7 +32,7 @@ func StorePicture(
 	fh *multipart.FileHeader,
 ) (err error) {
 	settingProfiles, err := settingRepo.GetByID[setting.Profiles](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		"profiles",
 	)
 	if err != nil {
@@ -72,7 +73,7 @@ func StorePicture(
 		return errs.ErrPictureFormatNotAllowed
 	}
 
-	converted, convertedName, err := rt.Magick.ConvertProfilePicture(
+	converted, convertedName, err := gh.Magick(rt).ConvertProfilePicture(
 		pictureFile,
 		profiles.PictureFormat,
 	)
@@ -82,7 +83,7 @@ func StorePicture(
 
 	pictureID := shortuuid.New()
 
-	if err = rt.Storage.StoreFile(
+	if err = rt.Storage().StoreFile(
 		profiles.PictureStorageProviderID,
 		converted,
 		profiles.PictureStoragePath+"/"+pictureID+"."+profiles.PictureFormat,

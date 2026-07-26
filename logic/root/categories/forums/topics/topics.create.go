@@ -3,14 +3,15 @@ package topics
 import (
 	"github.com/google/uuid"
 	"github.com/lithammer/shortuuid/v4"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/logic/helpers/paging"
 	"xn--gckvb8fzb.com/hyperuplink/models/forum"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/reply"
 	"xn--gckvb8fzb.com/hyperuplink/models/topic"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 type CreateReplyInput struct {
@@ -38,14 +39,14 @@ func CreateReply(
 		return nil, err
 	}
 
-	top, err := rt.Repositories.Topic.GetByUUID(
+	top, err := gh.Repositories(rt).Topic.GetByUUID(
 		rep.TopicID,
 		common.QueryOptions{Limit: 1},
 	)
 	if err != nil {
 		return nil, err
 	}
-	fum, err := rt.Repositories.Forum.GetByUUID(
+	fum, err := gh.Repositories(rt).Forum.GetByUUID(
 		top.ForumID,
 		common.QueryOptions{Limit: 1},
 	)
@@ -73,7 +74,7 @@ func CreateReply(
 	}
 	rep.AuthorID = authorID
 	rep.Text = in.Text
-	if rep.HTML, err = rt.Markdown.Convert(rep.Text); err != nil {
+	if rep.HTML, err = rt.Markdown().Convert(rep.Text); err != nil {
 		return nil, err
 	}
 
@@ -83,7 +84,7 @@ func CreateReply(
 		}
 	}
 
-	if rep.ID, err = rt.Repositories.Reply.Create(rep); err != nil {
+	if rep.ID, err = gh.Repositories(rt).Reply.Create(rep); err != nil {
 		return nil, err
 	}
 
@@ -99,7 +100,7 @@ func ReplyPages(
 	topicID uuid.UUID,
 	perPage int,
 ) (pages int, err error) {
-	total, err := rt.Repositories.Reply.VAllCountForTopicUUID(
+	total, err := gh.Repositories(rt).Reply.VAllCountForTopicUUID(
 		topicID,
 		common.QueryOptions{},
 	)

@@ -6,7 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/kaptinlin/go-i18n"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
 )
 
 type Internationalization struct {
@@ -41,7 +41,7 @@ func (i *Internationalization) T(msg string) template.HTML {
 
 func (i *Internationalization) SetLang(lang string) {
 	i.acceptLang = lang
-	i.I18n = i.r.GetRuntime().Intnat.NewLocalizer(i.acceptLang)
+	i.I18n = i.r.GetRuntime().Intnat().NewLocalizer(i.acceptLang)
 }
 
 func (i *Internationalization) Lang() string {

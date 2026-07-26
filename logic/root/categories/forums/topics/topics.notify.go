@@ -4,10 +4,11 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob/notification/replynotification"
 	"xn--gckvb8fzb.com/hyperuplink/models/reply"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 type ReplyLocation struct {
@@ -34,7 +35,7 @@ func SendReplyNotifications(
 	subject string,
 	loc ReplyLocation,
 ) error {
-	recipients, err := rt.Repositories.User.AllToNotifyForReply(
+	recipients, err := gh.Repositories(rt).User.AllToNotifyForReply(
 		loc.TopicID,
 		rep.ID,
 		rep.AuthorID,
@@ -64,5 +65,5 @@ func SendReplyNotifications(
 		payloads = append(payloads, payload)
 	}
 
-	return rt.Dispatch.ReplyNotifications(payloads)
+	return gh.Dispatch(rt).ReplyNotifications(payloads)
 }

@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"xn--gckvb8fzb.com/hyperuplink/services/config"
-	"xn--gckvb8fzb.com/hyperuplink/services/database"
+	"xn--gckvb8fzb.com/glides/services/config"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/activity"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/apikey"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/attachment"

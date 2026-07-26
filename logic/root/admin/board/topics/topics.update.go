@@ -2,9 +2,10 @@ package topics
 
 import (
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -20,7 +21,7 @@ func Update(
 	in *UpdateInput,
 ) (err error) {
 	settingTopics, err := settingRepo.GetByID[setting.Topics](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		"topics",
 	)
 	if err != nil {
@@ -34,7 +35,7 @@ func Update(
 	settingTopics.JSONValue.AllowKindRSVP = in.AllowKindRSVP
 
 	if err = settingRepo.Update[setting.Topics](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		settingTopics,
 	); err != nil {
 		return err

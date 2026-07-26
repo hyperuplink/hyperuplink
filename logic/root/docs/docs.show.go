@@ -1,9 +1,10 @@
 package docs
 
 import (
+	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -12,7 +13,7 @@ func Show(
 	page string,
 ) (view *Page, err error) {
 	settingGeneral, err := settingRepo.GetByID[setting.General](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		"general",
 	)
 	if err != nil {
@@ -44,7 +45,7 @@ func Show(
 		Page: page,
 		Text: text,
 	}
-	if view.HTML, err = rt.Markdown.Convert(text); err != nil {
+	if view.HTML, err = rt.Markdown().Convert(text); err != nil {
 		return nil, err
 	}
 

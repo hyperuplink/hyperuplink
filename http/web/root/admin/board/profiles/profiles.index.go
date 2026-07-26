@@ -2,7 +2,8 @@ package profiles
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
@@ -23,14 +24,14 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 
 	var settingProfiles *setting.Setting[setting.Profiles]
 	settingProfiles, err = settingRepo.GetByID[setting.Profiles](
-		r.Runtime.Repositories.Setting,
+		gh.Repositories(r.Runtime).Setting,
 		"profiles",
 	)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
 
-	storages, err := r.Runtime.Config.Storages()
+	storages, err := r.Runtime.Config().Storages()
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

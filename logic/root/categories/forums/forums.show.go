@@ -2,14 +2,15 @@ package forums
 
 import (
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	"xn--gckvb8fzb.com/hyperuplink/logic/helpers/paging"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/vforum"
 	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 type ShowInput struct {
@@ -32,7 +33,7 @@ func Show(
 	in *ShowInput,
 	perms *permission.Resolution,
 ) (view *View, err error) {
-	fum, err := rt.Repositories.Forum.VGetBySlug(
+	fum, err := gh.Repositories(rt).Forum.VGetBySlug(
 		in.ForumSlug,
 		common.QueryOptions{
 			Limit: 1,
@@ -46,7 +47,7 @@ func Show(
 		return nil, errs.ErrForbidden
 	}
 
-	tops, total, err := rt.Repositories.Topic.VAllForForumUUID(
+	tops, total, err := gh.Repositories(rt).Topic.VAllForForumUUID(
 		fum.ID,
 		common.QueryOptions{
 			OrderBy: "updated_at",

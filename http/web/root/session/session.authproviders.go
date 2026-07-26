@@ -10,15 +10,15 @@ import (
 	"github.com/markbates/goth/providers/reddit"
 	"github.com/markbates/goth/providers/slack"
 
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/config"
+	"xn--gckvb8fzb.com/glides/runtime"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 )
 
 func authProviderCallbackURL(baseURL, name string) string {
 	return strings.TrimRight(baseURL, "/") + "/session/" + name + "/callback"
 }
 
-func buildAuthProvider(ap config.AuthProvider, baseURL string) goth.Provider {
+func buildAuthProvider(ap gh.AuthProvider, baseURL string) goth.Provider {
 	name := strings.ToLower(ap.Type)
 	callbackURL := authProviderCallbackURL(baseURL, name)
 
@@ -40,13 +40,14 @@ func buildAuthProvider(ap config.AuthProvider, baseURL string) goth.Provider {
 }
 
 func RegisterAuthProviders(rt *runtime.Runtime, baseURL string) error {
-	providers, err := rt.Config.AuthProviders()
+	var authProviders gh.AuthProviders
+	_, err := rt.Config().Unmarshal("AuthProvider", &authProviders)
 	if err != nil {
 		return err
 	}
 
 	var built []goth.Provider
-	for _, ap := range providers {
+	for _, ap := range authProviders {
 		if ap.Key == "" || ap.Secret == "" {
 			continue
 		}

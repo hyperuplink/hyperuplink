@@ -3,9 +3,10 @@ package request
 import (
 	"slices"
 
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func (req *Request) AccessControl(roles ...user.Role) (mustReturn bool, err error) {
@@ -23,7 +24,7 @@ func (req *Request) GetUser() (usr *user.User, err error) {
 		return nil, errs.ErrUserIDNotFound
 	}
 
-	usr, err = req.r.GetRuntime().Repositories.User.GetByID(
+	usr, err = gh.Repositories(req.r.GetRuntime()).User.GetByID(
 		userID,
 		common.QueryOptions{
 			WithBanned:  false,

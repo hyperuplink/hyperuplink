@@ -1,15 +1,16 @@
 package themes
 
 import (
+	"xn--gckvb8fzb.com/glides/runtime"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	logicthemes "xn--gckvb8fzb.com/hyperuplink/logic/helpers/themes"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
 func Show(rt *runtime.Runtime) (view *View, err error) {
 	settingTheme, err := settingRepo.GetByID[setting.Theme](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		"theme",
 	)
 	if err != nil {
@@ -27,7 +28,7 @@ func Show(rt *runtime.Runtime) (view *View, err error) {
 		return nil, err
 	}
 
-	storages, err := rt.Config.Storages()
+	storages, err := rt.Config().Storages()
 	if err != nil {
 		return nil, err
 	}

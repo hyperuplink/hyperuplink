@@ -5,13 +5,6 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const (
-	HashMem    = 64 * 1024
-	HashIter   = 3
-	HashSaltln = 16
-	HashKeyln  = 32
-)
-
 type User struct {
 	ID       uuid.UUID `json:"id"`
 	Username string    `json:"username"`

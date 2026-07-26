@@ -4,10 +4,11 @@ import (
 	"reflect"
 
 	"github.com/gofiber/fiber/v3"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 type ConfirmResendForm struct {
@@ -46,7 +47,7 @@ func (r *Route) ConfirmResendCreate(c fiber.Ctx) (err error) {
 	r.Runtime.Debug("form", frm)
 
 	var usr *user.User
-	usr, err = r.Runtime.Repositories.User.GetByEmail(
+	usr, err = gh.Repositories(r.Runtime).User.GetByEmail(
 		frm.CurrentEmail,
 		common.QueryOptions{
 			WithBanned:  false,
@@ -73,7 +74,7 @@ func (r *Route) ConfirmResendCreate(c fiber.Ctx) (err error) {
 		return req.RespondError(err)
 	}
 
-	err = r.Runtime.Repositories.User.Update(usr)
+	err = gh.Repositories(r.Runtime).User.Update(usr)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

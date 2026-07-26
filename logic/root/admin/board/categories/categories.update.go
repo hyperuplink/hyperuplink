@@ -2,8 +2,9 @@ package categories
 
 import (
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 func Update(
@@ -17,5 +18,5 @@ func Update(
 	cat.Name = in.Name
 	cat.Slug = in.Slug
 
-	return rt.Repositories.Category.Update(cat)
+	return gh.Repositories(rt).Category.Update(cat)
 }

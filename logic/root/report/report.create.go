@@ -2,8 +2,9 @@ package report
 
 import (
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/postevent"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 func Create(
@@ -24,7 +25,7 @@ func Create(
 	event.ReplyID = post.ReplyID
 	event.Selection = in.ReportType
 
-	_, err = rt.Repositories.PostEvent.Create(event)
+	_, err = gh.Repositories(rt).PostEvent.Create(event)
 
 	return err
 }

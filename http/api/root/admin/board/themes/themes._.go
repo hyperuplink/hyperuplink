@@ -4,11 +4,11 @@ import (
 	"mime/multipart"
 
 	"github.com/gofiber/fiber/v3"
+	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	logicthemes "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/board/themes"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 type Route struct {

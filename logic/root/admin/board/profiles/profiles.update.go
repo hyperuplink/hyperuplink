@@ -2,10 +2,11 @@ package profiles
 
 import (
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -23,7 +24,7 @@ func Update(
 	actorID uuid.NullUUID,
 	in *UpdateInput,
 ) (err error) {
-	storages, err := rt.Config.Storages()
+	storages, err := rt.Config().Storages()
 	if err != nil {
 		return err
 	}
@@ -40,7 +41,7 @@ func Update(
 	}
 
 	settingProfiles, err := settingRepo.GetByID[setting.Profiles](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		"profiles",
 	)
 	if err != nil {
@@ -57,7 +58,7 @@ func Update(
 	settingProfiles.JSONValue.PictureStoragePath = in.PictureStoragePath
 
 	if err = settingRepo.Update[setting.Profiles](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		settingProfiles,
 	); err != nil {
 		return err

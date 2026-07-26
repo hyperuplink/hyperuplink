@@ -1,9 +1,9 @@
 package setting
 
 import (
+	"xn--gckvb8fzb.com/glides/services/config"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
-	"xn--gckvb8fzb.com/hyperuplink/services/config"
-	"xn--gckvb8fzb.com/hyperuplink/services/database"
 )
 
 type Repository struct {

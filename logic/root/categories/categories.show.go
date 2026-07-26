@@ -1,12 +1,13 @@
 package categories
 
 import (
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/vforum"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 type View struct {
@@ -19,7 +20,7 @@ func Show(
 	slug string,
 	perms *permission.Resolution,
 ) (view *View, err error) {
-	cat, err := rt.Repositories.Category.GetBySlug(
+	cat, err := gh.Repositories(rt).Category.GetBySlug(
 		slug,
 		common.QueryOptions{
 			Limit: 1,
@@ -33,7 +34,7 @@ func Show(
 		return nil, errs.ErrForbidden
 	}
 
-	fums, err := rt.Repositories.Forum.VAllForCategoryUUID(
+	fums, err := gh.Repositories(rt).Forum.VAllForCategoryUUID(
 		cat.ID,
 		common.QueryOptions{
 			OrderBy: "position",

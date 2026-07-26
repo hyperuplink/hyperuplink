@@ -2,10 +2,11 @@ package report
 
 import (
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/postevent"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 type ResolvedPost struct {
@@ -29,7 +30,7 @@ func ResolvePost(
 ) (*ResolvedPost, error) {
 	switch postevent.PostEventTarget(target) {
 	case postevent.Topic:
-		top, err := rt.Repositories.Topic.GetByShortID(
+		top, err := gh.Repositories(rt).Topic.GetByShortID(
 			shortID,
 			common.QueryOptions{Limit: 1},
 		)
@@ -43,7 +44,7 @@ func ResolvePost(
 			AuthorID: top.AuthorID,
 		}, nil
 	case postevent.Reply:
-		rep, err := rt.Repositories.Reply.GetByShortID(
+		rep, err := gh.Repositories(rt).Reply.GetByShortID(
 			shortID,
 			common.QueryOptions{Limit: 1},
 		)

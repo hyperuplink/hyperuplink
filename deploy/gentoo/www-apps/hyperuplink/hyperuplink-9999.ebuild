@@ -89,21 +89,22 @@ src_compile() {
   # All embedded assets (static/, views/, locales/, templates/, docs/,
   # migrations/) are compiled into the binary via go:embed, so the single
   # executable is fully self-contained.
-  local modpath="xn--gckvb8fzb.com/hyperuplink"
+  # The linker names a main package's symbols main.X whatever the module path
+  # is, so these carry no import path.
   local ldflags=(
     -s -w
-    -X "${modpath}/runtime.Version=${PV}"
+    -X "main.Version=${PV}"
   )
 
   if [[ ${PV} == *9999 ]]; then
     ldflags+=(
-      -X "${modpath}/runtime.Commit=${EGIT_VERSION}"
-      -X "${modpath}/runtime.Date=live"
+      -X "main.Commit=${EGIT_VERSION}"
+      -X "main.Date=live"
     )
   else
     ldflags+=(
-      -X "${modpath}/runtime.Commit=v${PV}"
-      -X "${modpath}/runtime.Date=release"
+      -X "main.Commit=v${PV}"
+      -X "main.Date=release"
     )
   fi
 

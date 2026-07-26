@@ -2,9 +2,10 @@ package auth
 
 import (
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -18,7 +19,7 @@ func Update(
 	in *UpdateInput,
 ) (err error) {
 	settingAuth, err := settingRepo.GetByID[setting.Auth](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		"auth",
 	)
 	if err != nil {
@@ -30,7 +31,7 @@ func Update(
 	settingAuth.JSONValue.AddressType = setting.AddressType(in.AddressType)
 
 	if err = settingRepo.Update[setting.Auth](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		settingAuth,
 	); err != nil {
 		return err

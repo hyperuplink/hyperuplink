@@ -24,8 +24,6 @@
 }:
 
 let
-  goipath = "xn--gckvb8fzb.com/hyperuplink";
-
   # Only what the compiler and go:embed actually read, explicitly keeping out
   # deploy/, testdata/ and the working tree's build/
   # so editing this packaging does not rebuild the binary. Override it
@@ -36,15 +34,14 @@ let
       ../../go.mod
       ../../go.sum
       ../../hyperuplink.go
-      ../../cron
       ../../docs
       ../../errs
+      ../../helpers
       ../../http
       ../../locales
       ../../logic
       ../../migrations
       ../../models
-      ../../runtime
       ../../services
       ../../static
       ../../templates
@@ -70,9 +67,9 @@ buildGoModule (finalAttrs: {
   ldflags = [
     "-s"
     "-w"
-    "-X ${goipath}/runtime.Version=${finalAttrs.version}"
-    "-X ${goipath}/runtime.Commit=${rev}"
-    "-X ${goipath}/runtime.Date=${date}"
+    "-X main.Version=${finalAttrs.version}"
+    "-X main.Commit=${rev}"
+    "-X main.Date=${date}"
   ];
 
   nativeBuildInputs = [ makeBinaryWrapper ];

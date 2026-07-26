@@ -7,8 +7,9 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 
+	"xn--gckvb8fzb.com/glides/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	logicsession "xn--gckvb8fzb.com/hyperuplink/logic/root/session"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
@@ -26,7 +27,7 @@ func (r *Route) SignUpShow(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	settingAuth, err := repoSetting.GetByID[setting.Auth](r.Runtime.Repositories.Setting, "auth")
+	settingAuth, err := repoSetting.GetByID[setting.Auth](gh.Repositories(r.Runtime).Setting, "auth")
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
@@ -47,7 +48,7 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	settingAuth, err := repoSetting.GetByID[setting.Auth](r.Runtime.Repositories.Setting, "auth")
+	settingAuth, err := repoSetting.GetByID[setting.Auth](gh.Repositories(r.Runtime).Setting, "auth")
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

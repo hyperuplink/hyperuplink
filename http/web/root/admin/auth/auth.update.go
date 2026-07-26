@@ -5,7 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	logicauth "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/auth"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"

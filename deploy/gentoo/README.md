@@ -135,7 +135,7 @@ proxy, in `Mode = "production"` so that the session cookie is HTTPS-only.
 - `make release VERSION=<new>` writes `hyperuplink-<new>.ebuild` for you, as a
   copy of the live one. The Manifest is not part of that, because it hashes the
   deps tarball that only exists once the Release workflow has attached it to the
-  new tag, so regenerate it here afterwards. The `-ldflags -X …/runtime.Version`
+  new tag, so regenerate it here afterwards. The `-ldflags -X main.Version`
   value is wired to `${PV}`, so `hyperuplink -v` reports the ebuild version (the
   live ebuild reports `9999` plus the checked-out commit).
 - GitHub's tag archive extracts to `hyperuplink-<version>/`, which is

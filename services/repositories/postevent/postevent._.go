@@ -1,7 +1,7 @@
 package postevent
 
 import (
-	"xn--gckvb8fzb.com/hyperuplink/services/database"
+	"xn--gckvb8fzb.com/glides/services/database"
 )
 
 type Repository struct {

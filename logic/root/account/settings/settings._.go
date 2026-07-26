@@ -1,10 +1,11 @@
 package settings
 
 import (
+	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -19,7 +20,7 @@ func Update(
 ) (err error) {
 	usr.Timezone = in.Timezone
 
-	return rt.Repositories.User.Update(usr)
+	return gh.Repositories(rt).User.Update(usr)
 }
 
 func viewToggle(profile *setting.UserProfile, view string) *bool {
@@ -41,7 +42,7 @@ func ToggleView(
 	view string,
 ) (enabled bool, err error) {
 	settingUserProfile, err := settingRepo.GetOrCreateUserProfile(
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		usr.ID,
 	)
 	if err != nil {
@@ -55,7 +56,7 @@ func ToggleView(
 	*toggle = !*toggle
 
 	if err = settingRepo.Update[setting.UserProfile](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		settingUserProfile,
 	); err != nil {
 		return false, err

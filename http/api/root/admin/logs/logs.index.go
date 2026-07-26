@@ -4,11 +4,12 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v3"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
 	"xn--gckvb8fzb.com/hyperuplink/logic/helpers/paging"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 // @Summary	List the audit log
@@ -38,7 +39,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 
 	perPage := req.System.GetTopicsPerPage()
 
-	logs, total, err := r.Runtime.Repositories.Activity.VAllAdmin(
+	logs, total, err := gh.Repositories(r.Runtime).Activity.VAllAdmin(
 		common.QueryOptions{
 			OrderBy: "a.created_at",
 			Order:   common.Descending,

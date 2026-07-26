@@ -4,11 +4,12 @@ import (
 	"math"
 
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/postevent"
 	"xn--gckvb8fzb.com/hyperuplink/models/topic"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 type PollOption struct {
@@ -49,7 +50,7 @@ func PollView(
 	}
 
 	var tally map[int]int
-	tally, err = rt.Repositories.PostEvent.TallyForTopicUUID(
+	tally, err = gh.Repositories(rt).PostEvent.TallyForTopicUUID(
 		postevent.PollVote,
 		in.Topic.ID,
 		common.QueryOptions{},
@@ -66,7 +67,7 @@ func PollView(
 		var selection int
 		var voted bool
 
-		selection, voted, err = rt.Repositories.PostEvent.SelectionForTopicUUID(
+		selection, voted, err = gh.Repositories(rt).PostEvent.SelectionForTopicUUID(
 			postevent.PollVote,
 			in.Topic.ID,
 			in.ViewerID.UUID,
@@ -128,7 +129,7 @@ func PollVote(
 	event.TopicID = uuid.NullUUID{UUID: in.Topic.ID, Valid: true}
 	event.Selection = in.Selection
 
-	_, err = rt.Repositories.PostEvent.Create(event)
+	_, err = gh.Repositories(rt).PostEvent.Create(event)
 
 	return err
 }

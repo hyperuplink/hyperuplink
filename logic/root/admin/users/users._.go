@@ -1,9 +1,10 @@
 package users
 
 import (
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 type UserInput struct {
@@ -11,7 +12,7 @@ type UserInput struct {
 }
 
 func getUser(rt *runtime.Runtime, id string) (*user.User, error) {
-	return rt.Repositories.User.GetByID(
+	return gh.Repositories(rt).User.GetByID(
 		id,
 		common.QueryOptions{
 			WithBanned:  true,

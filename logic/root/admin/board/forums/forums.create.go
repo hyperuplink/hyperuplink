@@ -2,8 +2,9 @@ package forums
 
 import (
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/forum"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 func Create(
@@ -17,5 +18,5 @@ func Create(
 		return uuid.Nil, err
 	}
 
-	return rt.Repositories.Forum.Create(fum)
+	return gh.Repositories(rt).Forum.Create(fum)
 }

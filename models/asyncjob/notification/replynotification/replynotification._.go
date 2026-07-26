@@ -132,3 +132,11 @@ func (entity *Forum) SetURL(baseURL string) {
 func (entity *Topic) SetURL(baseURL string) {
 	entity.URL = fmt.Sprintf("%s/%s", baseURL, entity.Path)
 }
+
+func (entity *ReplyNotification) GetRecipient() *common.Recipient {
+	return entity.Recipient
+}
+
+func (entity *ReplyNotification) GetSubject() string {
+	return entity.Subject
+}

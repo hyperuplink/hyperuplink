@@ -1,34 +1,41 @@
 package errs
 
-import "errors"
+import (
+	"errors"
+
+	glideserrs "xn--gckvb8fzb.com/glides/errs"
+)
 
 var (
-	ErrNotImplemented error = errors.New(
-		"err_not_implemented",
-	)
+	ErrNotImplemented          = glideserrs.ErrNotImplemented
+	ErrConfigTypeUnsupported   = glideserrs.ErrConfigTypeUnsupported
+	ErrNoRows                  = glideserrs.ErrNoRows
+	ErrUniqueViolationOn       = glideserrs.ErrUniqueViolationOn
+	ErrHashInvalid             = glideserrs.ErrHashInvalid
+	ErrHashVariantIncompatible = glideserrs.ErrHashVariantIncompatible
+	ErrHashVersionIncompatible = glideserrs.ErrHashVersionIncompatible
+	ErrTargetIDNotFound        = glideserrs.ErrTargetIDNotFound
+	ErrNoSuchTargetType        = glideserrs.ErrNoSuchTargetType
+	ErrStorageIDNotFound       = glideserrs.ErrStorageIDNotFound
+	ErrStorageTypeInvalid      = glideserrs.ErrStorageTypeInvalid
+	ErrFilePathInvalid         = glideserrs.ErrFilePathInvalid
+	ErrJobTypeInvalid          = glideserrs.ErrJobTypeInvalid
+	ErrJobSubTypeInvalid       = glideserrs.ErrJobSubTypeInvalid
+	ErrJobPayloadInvalid       = glideserrs.ErrJobPayloadInvalid
+	ErrCronFunctionIDExists    = glideserrs.ErrCronFunctionIDExists
+	ErrCronFunctionIDNotFound  = glideserrs.ErrCronFunctionIDNotFound
+	ErrCronFunctionInvalid     = glideserrs.ErrCronFunctionInvalid
+)
+
+var (
 	ErrUserIDNotFound error = errors.New(
 		"err_user_id_not_found",
 	)
 	ErrPasswordWrong error = errors.New(
 		"err_password_wrong",
 	)
-	ErrConfigTypeUnsupported error = errors.New(
-		"err_config_type_unsupported",
-	)
 	ErrIfaceTypeUnsupported error = errors.New(
 		"err_iface_type_unsupported",
-	)
-	ErrTargetIDNotFound error = errors.New(
-		"err_target_id_not_found",
-	)
-	ErrStorageIDNotFound error = errors.New(
-		"err_storage_id_not_found",
-	)
-	ErrStorageTypeInvalid error = errors.New(
-		"err_storage_type_invalid",
-	)
-	ErrFilePathInvalid error = errors.New(
-		"err_file_path_invalid",
 	)
 	ErrRedisAddrsEmpty error = errors.New(
 		"err_redis_addrs_empty",
@@ -36,29 +43,8 @@ var (
 	ErrRedisAddrsMalformed error = errors.New(
 		"err_redis_addrs_malformed",
 	)
-	ErrHashInvalid error = errors.New(
-		"err_hash_invalid",
-	)
-	ErrHashVariantIncompatible error = errors.New(
-		"err_hash_variant_incompatible",
-	)
-	ErrHashVersionIncompatible error = errors.New(
-		"err_hash_version_incompatible",
-	)
 	ErrFormInvalid error = errors.New(
 		"err_form_invalid",
-	)
-	ErrJobTypeInvalid error = errors.New(
-		"err_job_type_invalid",
-	)
-	ErrJobSubTypeInvalid error = errors.New(
-		"err_job_sub_type_invalid",
-	)
-	ErrJobPayloadInvalid error = errors.New(
-		"err_job_payload_invalid",
-	)
-	ErrNoRows error = errors.New(
-		"no_rows",
 	)
 	ErrUsernamePasswordWrong error = errors.New(
 		"username_password_wrong",
@@ -141,14 +127,8 @@ var (
 	ErrUnauthorized error = errors.New(
 		"err_unauthorized",
 	)
-	ErrUniqueViolationOn error = errors.New(
-		"unique_violation_on",
-	)
 	ErrValidation error = errors.New(
 		"validation",
-	)
-	ErrNoSuchTargetType error = errors.New(
-		"err_no_such_target_type",
 	)
 	ErrOTPCodeWrong error = errors.New(
 		"err_otp_code_wrong",
@@ -167,15 +147,6 @@ var (
 	)
 	ErrOAuthEmailUnverified error = errors.New(
 		"err_oauth_email_unverified",
-	)
-	ErrCronFunctionIDExists error = errors.New(
-		"err_cron_function_id_exists",
-	)
-	ErrCronFunctionIDNotFound error = errors.New(
-		"err_cron_function_id_not_found",
-	)
-	ErrCronFunctionInvalid error = errors.New(
-		"err_cron_function_invalid",
 	)
 	ErrPollKindInvalid error = errors.New(
 		"err_poll_kind_invalid",

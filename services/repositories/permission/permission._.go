@@ -4,9 +4,9 @@ import (
 	"errors"
 
 	"github.com/jackc/pgx/v5/pgtype"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
-	"xn--gckvb8fzb.com/hyperuplink/services/database"
 )
 
 type Repository struct {

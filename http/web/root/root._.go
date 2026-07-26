@@ -2,7 +2,8 @@ package root
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/account"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/admin"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/attachment"
@@ -13,7 +14,6 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/search"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/session"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root/user"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 type Route struct {

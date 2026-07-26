@@ -2,6 +2,7 @@ package topics
 
 import (
 	"github.com/gofiber/fiber/v3"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
@@ -27,7 +28,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	settingTopics, err := settingRepo.GetByID[setting.Topics](
-		r.Runtime.Repositories.Setting,
+		gh.Repositories(r.Runtime).Setting,
 		"topics",
 	)
 	if ret, rerr := req.RespondOnError(err); ret == true {

@@ -3,8 +3,9 @@ package user
 import (
 	"slices"
 
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 )
 
 type MembershipInput struct {
@@ -16,7 +17,7 @@ func UpdateMembership(
 	username string,
 	in *MembershipInput,
 ) (err error) {
-	usr, err := rt.Repositories.User.GetByUsername(
+	usr, err := gh.Repositories(rt).User.GetByUsername(
 		username,
 		common.QueryOptions{
 			WithBanned:  false,
@@ -29,7 +30,7 @@ func UpdateMembership(
 		return err
 	}
 
-	groups, err := rt.Repositories.Group.All(common.QueryOptions{})
+	groups, err := gh.Repositories(rt).Group.All(common.QueryOptions{})
 	if err != nil {
 		return err
 	}
@@ -42,5 +43,5 @@ func UpdateMembership(
 	}
 	usr.MemberOf = memberOf
 
-	return rt.Repositories.User.Update(usr)
+	return gh.Repositories(rt).User.Update(usr)
 }

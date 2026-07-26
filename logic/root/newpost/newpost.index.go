@@ -1,14 +1,15 @@
 package newpost
 
 import (
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
 	"xn--gckvb8fzb.com/hyperuplink/models/forum"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/reply"
 	"xn--gckvb8fzb.com/hyperuplink/models/vforum"
 	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 type CategoryWithForums struct {
@@ -36,7 +37,7 @@ func View(
 	perms *permission.Resolution,
 	in *FormViewInput,
 ) (view *FormView, err error) {
-	cats, err := rt.Repositories.Category.All(common.QueryOptions{
+	cats, err := gh.Repositories(rt).Category.All(common.QueryOptions{
 		OrderBy: "position",
 		Order:   common.Ascending,
 	})
@@ -44,7 +45,7 @@ func View(
 		return nil, err
 	}
 
-	fums, err := rt.Repositories.Forum.All(common.QueryOptions{
+	fums, err := gh.Repositories(rt).Forum.All(common.QueryOptions{
 		OrderBy: "position",
 		Order:   common.Ascending,
 	})
@@ -75,7 +76,7 @@ func View(
 
 	var writableTopic *vtopic.VTopic
 	if in.ForumSlug != "" {
-		fum, ferr := rt.Repositories.Forum.VGetBySlug(
+		fum, ferr := gh.Repositories(rt).Forum.VGetBySlug(
 			in.ForumSlug,
 			common.QueryOptions{
 				Limit: 1,
@@ -89,7 +90,7 @@ func View(
 			view.Forum = fum
 
 			if in.TopicSlug != "" {
-				top, terr := rt.Repositories.Topic.VGetByForumUUIDSlug(
+				top, terr := gh.Repositories(rt).Topic.VGetByForumUUIDSlug(
 					fum.ID,
 					in.TopicSlug,
 					common.QueryOptions{
@@ -107,7 +108,7 @@ func View(
 	}
 
 	if in.ReplyID != "" && writableTopic != nil {
-		rep, rerr := rt.Repositories.Reply.GetByID(
+		rep, rerr := gh.Repositories(rt).Reply.GetByID(
 			in.ReplyID,
 			common.QueryOptions{
 				Limit: 1,

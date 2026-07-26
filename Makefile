@@ -6,8 +6,6 @@ GOOS := $(shell go env GOOS)
 GOARCH := $(shell go env GOARCH)
 
 NAME := hyperuplink
-PREFIX := xn--gckvb8fzb.com/
-PROJECT := $(PREFIX)$(NAME)
 VERSION := $(shell git describe --tags 2>/dev/null || echo "dev")
 
 # The ebuild takes its version from its filename and the RPM spec from
@@ -53,12 +51,15 @@ swagger: ## generate the OpenAPI specification the API serves at /_internal/swag
 		--parseDependency \
 		--parseDepth 2
 
+# Version, Commit and Date are declared in hyperuplink.go. The linker names a
+# main package's symbols `main.X` whatever the module path is, so an -X that
+# spells out the import path silently sets nothing and `-v` prints blanks.
 build: swagger ## build
 	@echo "Building with the following parameters:"
 	@echo "VERSION = $(VERSION)"
 	@echo "COMMIT  = $(COMMIT)"
 	@echo "DATE    = $(DATE)"
-	@CGO_ENABLED=0 GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags "-s -w -X \"${PROJECT}/runtime.Version=${VERSION}\" -X \"${PROJECT}/runtime.Commit=${COMMIT}\" -X \"${PROJECT}/runtime.Date=${DATE}\"" -o $(PWD)/build/$(NAME)
+	@CGO_ENABLED=0 GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags "-s -w -X \"main.Version=${VERSION}\" -X \"main.Commit=${COMMIT}\" -X \"main.Date=${DATE}\"" -o $(PWD)/build/$(NAME)
 
 db\:drop: ## clear development database (drop all tables and content, keep the database)
 	psql -h localhost -p 5432 -U postgres -d hyperuplink_dev -c "DROP SCHEMA public CASCADE;" -c "CREATE SCHEMA public;"

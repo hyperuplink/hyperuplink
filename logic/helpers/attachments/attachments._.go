@@ -10,11 +10,12 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/attachment"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 
 	"github.com/gabriel-vasile/mimetype"
@@ -24,7 +25,7 @@ const FormField = "attachments"
 
 func Settings(rt *runtime.Runtime) (*setting.Attachments, error) {
 	settingAttachments, err := settingRepo.GetByID[setting.Attachments](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		"attachments",
 	)
 	if err != nil {
@@ -128,7 +129,7 @@ func Store(
 		Checksum:           checksum,
 		OnUploadHookOutput: output,
 	}
-	if id, err = rt.Repositories.Attachment.Create(att); err != nil {
+	if id, err = gh.Repositories(rt).Attachment.Create(att); err != nil {
 		if strings.HasPrefix(err.Error(), "unique_violation") {
 			return uuid.Nil, errs.ErrAttachmentDuplicate
 		}
@@ -141,7 +142,7 @@ func Store(
 	}
 	defer f.Close()
 
-	if err = rt.Storage.StoreFile(
+	if err = rt.Storage().StoreFile(
 		attachments.StorageProviderID,
 		f,
 		path.Join(attachments.StoragePath, id.String()),
@@ -164,7 +165,7 @@ func ResolveOwned(
 			return nil, errs.ErrAttachmentNotFound
 		}
 
-		att, aerr := rt.Repositories.Attachment.GetByUUID(id, common.QueryOptions{})
+		att, aerr := gh.Repositories(rt).Attachment.GetByUUID(id, common.QueryOptions{})
 		if aerr != nil {
 			return nil, errs.ErrAttachmentNotFound
 		}

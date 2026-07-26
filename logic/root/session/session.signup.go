@@ -7,12 +7,13 @@ import (
 
 	"github.com/go-playground/validator/v10"
 
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob/confirmation/signupconfirmation"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 	repoSetting "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -66,7 +67,7 @@ func SignUp(
 		return nil, err
 	}
 
-	settingAuth, err := repoSetting.GetByID[setting.Auth](rt.Repositories.Setting, "auth")
+	settingAuth, err := repoSetting.GetByID[setting.Auth](gh.Repositories(rt).Setting, "auth")
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +111,7 @@ func SignUp(
 		usr.Language = "en"
 	}
 
-	promoteAdmin := rt.Config.UsersPromoteAdmin()
+	promoteAdmin := rt.Config().Strings("Users.PromoteAdmin")
 	if slices.Index(promoteAdmin, strings.ToLower(usr.Email)) > -1 {
 		usr.Role = user.AdminRole
 	}
@@ -119,7 +120,7 @@ func SignUp(
 		return nil, err
 	}
 
-	usr.ID, err = rt.Repositories.User.Create(usr)
+	usr.ID, err = gh.Repositories(rt).User.Create(usr)
 	if err != nil {
 		return nil, err
 	}
@@ -128,14 +129,14 @@ func SignUp(
 		return usr, nil
 	}
 
-	activated, err := rt.Repositories.User.GetByUUID(usr.ID, common.QueryOptions{Limit: 1})
+	activated, err := gh.Repositories(rt).User.GetByUUID(usr.ID, common.QueryOptions{Limit: 1})
 	if err != nil {
 		return nil, err
 	}
 	if err = activated.ConfirmEmail(activated.EmailConfirmationToken); err != nil {
 		return nil, err
 	}
-	if err = rt.Repositories.User.Update(activated); err != nil {
+	if err = gh.Repositories(rt).User.Update(activated); err != nil {
 		return nil, err
 	}
 
@@ -158,5 +159,5 @@ func SendSignupConfirmation(
 		return err
 	}
 
-	return rt.Dispatch.SignupConfirmation(sc)
+	return gh.Dispatch(rt).SignupConfirmation(sc)
 }

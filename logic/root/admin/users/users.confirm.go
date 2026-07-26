@@ -3,7 +3,8 @@ package users
 import (
 	"time"
 
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
+	"xn--gckvb8fzb.com/glides/runtime"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 )
 
 func Confirm(rt *runtime.Runtime, in *UserInput) (err error) {
@@ -14,5 +15,5 @@ func Confirm(rt *runtime.Runtime, in *UserInput) (err error) {
 
 	usr.SetConfirmedAt(time.Now())
 
-	return rt.Repositories.User.Update(usr)
+	return gh.Repositories(rt).User.Update(usr)
 }

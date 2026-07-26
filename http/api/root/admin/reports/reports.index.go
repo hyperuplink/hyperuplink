@@ -2,9 +2,10 @@ package reports
 
 import (
 	"github.com/gofiber/fiber/v3"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 // @Summary	List the reported posts
@@ -25,7 +26,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	reports, err := r.Runtime.Repositories.PostEvent.VAllReports(common.QueryOptions{
+	reports, err := gh.Repositories(r.Runtime).PostEvent.VAllReports(common.QueryOptions{
 		OrderBy: "pe.created_at",
 		Order:   common.Descending,
 	})

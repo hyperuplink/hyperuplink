@@ -10,7 +10,8 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/csrf"
 	"github.com/jackc/pgx/v5/pgtype"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
@@ -105,7 +106,7 @@ func (s *Site) HrefRoute(routes ...string) string {
 }
 
 func (s *Site) StaticFile(filename string) string {
-	hash := s.r.GetRuntime().Build.Hash
+	_, _, _, hash := s.r.GetRuntime().GetBuild()
 
 	if s.r.GetRuntime().IsDevelopmentMode() {
 		hash = strconv.FormatInt(time.Now().UnixMilli(), 10)
@@ -133,7 +134,7 @@ func (s *Site) ProfilePicture(id string) (dlurl string) {
 
 	var settingProfiles *setting.Setting[setting.Profiles]
 	settingProfiles, err = settingRepo.GetByID[setting.Profiles](
-		s.r.GetRuntime().Repositories.Setting,
+		gh.Repositories(s.r.GetRuntime()).Setting,
 		"profiles",
 	)
 	if err != nil {
@@ -145,7 +146,7 @@ func (s *Site) ProfilePicture(id string) (dlurl string) {
 		return staticPicture
 	}
 
-	if dlurl, abs, err = s.r.GetRuntime().Storage.GetFileDownloadURL(
+	if dlurl, abs, err = s.r.GetRuntime().Storage().GetFileDownloadURL(
 		profiles.PictureStorageProviderID,
 		profiles.PictureStoragePath+"/"+id+"."+profiles.PictureFormat,
 	); err != nil {
@@ -167,8 +168,9 @@ func (s *Site) GetRoute() route.Route {
 	return s.rt
 }
 
-func (s *Site) Version() string {
-	return s.r.GetRuntime().Build.Version
+func (s *Site) Version() (version string) {
+	version, _, _, _ = s.r.GetRuntime().GetBuild()
+	return version
 }
 
 func (s *Site) Title() string {

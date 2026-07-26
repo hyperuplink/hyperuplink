@@ -4,12 +4,13 @@ import (
 	"mime/multipart"
 
 	"github.com/gofiber/fiber/v3"
+	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
 	logicprofile "xn--gckvb8fzb.com/hyperuplink/logic/root/account/profile"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 )
 
 type Route struct {
@@ -87,7 +88,7 @@ func (r *Route) PictureUpload(c fiber.Ctx) (err error) {
 		return req.RespondError(err)
 	}
 
-	err = r.Runtime.Repositories.User.Update(req.User)
+	err = gh.Repositories(r.Runtime).User.Update(req.User)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

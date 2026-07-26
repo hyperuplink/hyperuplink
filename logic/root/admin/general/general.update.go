@@ -2,9 +2,10 @@ package general
 
 import (
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/runtime"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
-	"xn--gckvb8fzb.com/hyperuplink/runtime"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
@@ -37,7 +38,7 @@ func Update(
 	in *UpdateInput,
 ) (err error) {
 	settingSystem, err := settingRepo.GetByID[setting.System](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		"system",
 	)
 	if err != nil {
@@ -53,14 +54,14 @@ func Update(
 	settingSystem.JSONValue.AdminLogRetentionDays = in.AdminLogRetentionDays
 
 	if err = settingRepo.Update[setting.System](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		settingSystem,
 	); err != nil {
 		return err
 	}
 
 	settingGeneral, err := settingRepo.GetByID[setting.General](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		"general",
 	)
 	if err != nil {
@@ -81,7 +82,7 @@ func Update(
 	settingGeneral.JSONValue.QuitURL = in.QuitURL
 
 	if err = settingRepo.Update[setting.General](
-		rt.Repositories.Setting,
+		gh.Repositories(rt).Setting,
 		settingGeneral,
 	); err != nil {
 		return err

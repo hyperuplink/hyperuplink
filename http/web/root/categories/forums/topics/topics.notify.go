@@ -2,13 +2,14 @@ package topics
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"xn--gckvb8fzb.com/hyperuplink/http/route"
+	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	logictopics "xn--gckvb8fzb.com/hyperuplink/logic/root/categories/forums/topics"
 	"xn--gckvb8fzb.com/hyperuplink/models/forum"
 	"xn--gckvb8fzb.com/hyperuplink/models/reply"
 	"xn--gckvb8fzb.com/hyperuplink/models/topic"
-	"xn--gckvb8fzb.com/hyperuplink/services/repositories/common"
 )
 
 func (r *Route) notifyReply(
@@ -18,7 +19,7 @@ func (r *Route) notifyReply(
 	top *topic.Topic,
 	fum *forum.Forum,
 ) {
-	cat, err := r.Runtime.Repositories.Category.GetBySlug(
+	cat, err := gh.Repositories(r.Runtime).Category.GetBySlug(
 		c.Params("categories"),
 		common.QueryOptions{Limit: 1},
 	)
