@@ -46,66 +46,27 @@ dependencies, 100% JavaScript free, and based on modern HTML5/CSS.
 
 **More info here:** [hyperup.link](https://hyperup.link)
 
-## Features
-
-- A single static binary, compiled with `make build`. Without runtime
-  dependencies, without interpreters, and without bloated frameworks. And
-  because it's written purely in Go, it cross-compiles to Linux, macOS, FreeBSD,
-  NetBSD, OpenBSD, and probably to whatever runs on your toaster these days.
-- PostgreSQL-native, and cluster-friendly. Talks to Postgres over a plain
-  connection string via [pgx](https://github.com/jackc/pgx), so it points at a
-  single server _or_ a full-blown HA cluster. Hot read paths (forum and topic
-  listings) are backed by _materialized views_ so the front page stays snappy
-  under load. Schema migrations run automatically on startup and they're fully
-  embedded, so there are no external migration files to take care of.
-- 100% JavaScript-free. Simple and beautiful HTML5 and CSS, without the browser
-  having to run a single line of code. And of course, nothing that tracks how
-  your cursor gravitates for the third time towards that post on _"why pineapple
-  actually belongs on pizza"_.
-- Ships with a wardrobe of retro themes, and a few more _modern_ ones for
-  everyone who's trying to host a ~~boring~~ serious discussion forum. Oh and
-  the colorschemes, those are interchangable. Ever seen a _Gruvbox_ colored
-  macOS 9 interface?
-- Relatively fine-grained, additive access control with user groups, so you can
-  make _the good stuff_ only available to _the good people_.
-- Password sign-in with optional TOTP two-factor authentication (compatible with
-  any standard authenticator app), plus OAuth sign-in, so you can easily
-  convince your friends on other platforms to join your _Taylor Swift fans
-  forum_.
-- Feeling like email is too _boomer_ for you? No biggie, use XMPP for sign-ups
-  (and notifications!) instead.
-- Write posts in _Markdown_. Yeah, that's it, what more do you need?
-- Profile pictures and post attachments, stored either on the local disk or in
-  any S3-compatible object store.
-- Moderation features included, so users can report posts and admins can take
-  action if necessary.
-- Ships with a UI in English and a handful of other languages that I wasn't
-  afraid to butcher along the way. And for everything I couldn't translate it
-  gracefully falls back to English.
-- And there's a lot more where those parlor tricks came from!
-
 ## Building
 
 Hyperuplink is actively developed on
-[Codeberg](https://codeberg.org/hyperuplink/hyperuplink).
+[tty.fail](https://tty.fail/hyperuplink/hyperuplink).
 [GitHub](https://github.com/hyperuplink/hyperuplink) is a mirror that provides
 pre-built binaries.
 
 ### Requirements
 
-- [Go](https://go.dev) 1.26 or newer
-- A [PostgreSQL](https://www.postgresql.org) server
-- A [Redis](https://redis.io)-compatible server (Redis, Valkey, KeyDB, ...)
-- _Optional:_ an S3-compatible object store (e.g. [MinIO](https://min.io)) if
-  you'd rather keep uploads off the local disk
+- [Go](https://go.dev)
+- [PostgreSQL](https://www.postgresql.org) server
+- [Redis](https://redis.io)-compatible server (Redis, Valkey, KeyDB, ...)
+- _Optional:_ S3-compatible object store (e.g. [MinIO](https://min.io))
 
 ### From Source
 
 Clone this repository
 
-- from [Codeberg](https://codeberg.org/hyperuplink/hyperuplink) (primary):
+- from [tty.fail](https://tty.fail/hyperuplink/hyperuplink) (primary):
   ```sh
-  $ git clone https://codeberg.org/hyperuplink/hyperuplink.git
+  $ git clone https://tty.fail/hyperuplink/hyperuplink.git
   ```
 - from [GitHub](https://github.com/hyperuplink/hyperuplink) (mirror):
   ```sh
@@ -129,70 +90,11 @@ $ ./build/hyperuplink -v
 
 ## Configuration
 
-Hyperuplink is configured through a single TOML file, which you hand to the
-binary as a `file://` URI (see [Running](#running)). A minimal configuration
-looks roughly like this:
-
-```toml
-[General]
-Mode = "production"
-
-[Logging]
-Level = "info"
-
-[Redis]
-Addresses = ["127.0.0.1:6379"]
-
-[Database]
-Connection = "postgres://user:pass@localhost:5432/hyperuplink?sslmode=disable"
-
-[Web]
-Enable = true
-BindIP = "0.0.0.0"
-Port   = 3000
-
-[Users]
-# The e-mail address(es) here are automatically promoted to admin on sign-up
-PromoteAdmin = ["you@example.com"]
-
-# --- Optional: sign in with GitHub ------------------------------------------
-[[AuthProvider]]
-Type   = "github"
-Key    = "your-oauth-app-key"
-Secret = "your-oauth-app-secret"
-Scopes = ["read:user", "user:email"]
-
-# --- Optional: where uploads live -------------------------------------------
-[[Storage]]
-ID   = "local-storage"
-Type = "Local"
-Local.Path      = "/var/lib/hyperuplink/media"
-Local.PublicURI = "/media"
-
-# --- Optional: an S3-compatible store instead of / in addition to local -----
-[[Storage]]
-ID   = "remote-storage"
-Type = "S3"
-S3.Endpoint  = "http://localhost:9000"
-S3.Region    = "us-east-1"
-S3.AccessKey = "minioadmin"
-S3.SecretKey = "minioadmin"
-
-# --- Optional: email notifications ------------------------------------------
-[[Target]]
-ID   = "notifications"
-Type = "email"
-Email.SMTPServer   = "smtp.example.org"
-Email.SMTPUsername = "user"
-Email.SMTPPassword = "pass"
-Email.From.Email   = "reply@example.org"
-Email.From.Name    = "Example.org"
-```
-
-A complete, commented reference lives in [`hyperuplink.toml`](hyperuplink.toml).
-Almost everything else, like the board name, theme, colorscheme, permissions,
-groups, is configured live from the `/admin` panel once the board is running and
-you've created your admin account (the one you specified in `PromoteAdmin`).
+Hyperuplink is configured through a single TOML file. A complete, commented
+reference can be found in [`hyperuplink.toml`](hyperuplink.toml). Almost
+everything else, like the board name, theme, colorscheme, permissions, groups,
+is configured live from the `/admin` panel once the board is running and you've
+created your admin account.
 
 > **Note:** For S3 attachment storage, use a **private** bucket. The gated
 > attachment route serves objects with server-side credentials, so a private
@@ -211,6 +113,8 @@ starts the web server and the background worker, and starts serving. Open your
 browser at the address you configured (e.g. `http://localhost:3000`), sign up
 with the e-mail you listed under `[Users] PromoteAdmin`, and you'll be set up as
 the board's first administrator.
+
+## Developing
 
 During development you can build and run in a single step:
 
@@ -231,8 +135,7 @@ it.
 
 ## License
 
-Copyright © 2025-2026 [マリウス](https://xn--gckvb8fzb.com) and the Hyperuplink
-Authors
+Copyright © 2025-2026 [マリウス](https://xn--gckvb8fzb.com)
 
 Hyperuplink is released under Version 1.1 of the
 [SEGV License](https://xn--gckvb8fzb.com/segv/), whose full text is included in
