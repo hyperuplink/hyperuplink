@@ -44,7 +44,8 @@ Hyperuplink is a modern internet bulletin board reimagined as a single,
 dependency-free binary, supporting PostgreSQL clusters and without any runtime
 dependencies, 100% JavaScript free, and based on modern HTML5/CSS.
 
-**More info here:** [hyperup.link](https://hyperup.link)
+More info [here](https://xn--gckvb8fzb.com/hyperuplink-discuss-like-its-1998/)
+and at [hyperup.link](https://hyperup.link).
 
 ## Building
 
