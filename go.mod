@@ -21,7 +21,6 @@ require (
 	github.com/shareed2k/goth_fiber/v2 v2.0.4
 	github.com/swaggo/swag v1.16.6
 	github.com/zlasd/tzloc v1.16.16
-	xn--gckvb8fzb.com/glides v0.0.0
 )
 
 require (
@@ -114,8 +113,7 @@ require (
 	google.golang.org/protobuf v1.36.10 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
+	xn--gckvb8fzb.com/glides v0.0.0-20260726203307-d8ab6000f0d6 // indirect
 )
-
-replace xn--gckvb8fzb.com/glides => ../../@mrus/glides
 
 tool github.com/swaggo/swag/cmd/swag
