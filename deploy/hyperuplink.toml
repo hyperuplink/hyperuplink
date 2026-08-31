@@ -21,6 +21,10 @@ EnableIPValidation = false
 TrustProxy         = false
 TrustLoopback      = true
 TrustProxies       = []
+# If you're running Hyperuplink behind a proxy, you'd want something like this:
+# TrustProxy         = true
+# TrustLoopback      = true
+# TrustProxies       = ["127.0.0.0/8", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fc00::/7"]
 ReduceMemoryUsage  = false
 ServerHeader       = ""
 
@@ -35,6 +39,10 @@ EnableIPValidation = false
 TrustProxy         = false
 TrustLoopback      = true
 TrustProxies       = []
+# If you're running Hyperuplink behind a proxy, you'd want something like this:
+# TrustProxy         = true
+# TrustLoopback      = true
+# TrustProxies       = ["127.0.0.0/8", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fc00::/7"]
 ReduceMemoryUsage  = false
 ServerHeader       = ""
 
