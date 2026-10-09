@@ -40,3 +40,22 @@ func TestEveryRouteResolves(t *testing.T) {
 		}
 	}
 }
+
+func TestAPIRoutesProduceTheVersionedPrefix(t *testing.T) {
+	Use()
+
+	if got, want := route.For("APIV1").AsURL(), "api/v1"; got != want {
+		t.Errorf("APIV1.AsURL() = %q, want %q", got, want)
+	}
+
+	got := route.For("APIV1Topic").Fill(map[string]string{
+		"topic": "0192b1c2-7d3e-7f40-8a51-00000000beef",
+	}).AsURL()
+	if want := "api/v1/topics/0192b1c2-7d3e-7f40-8a51-00000000beef"; got != want {
+		t.Errorf("APIV1Topic.Fill().AsURL() = %q, want %q", got, want)
+	}
+
+	if !route.CollidesWithRoute("/api/anything") {
+		t.Error("CollidesWithRoute(\"/api/anything\") = false, want true")
+	}
+}
