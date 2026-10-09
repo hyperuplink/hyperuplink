@@ -58,7 +58,7 @@ func BoardView(
 
 	tops, err := gh.Repositories(rt).Topic.VAll(
 		common.QueryOptions{
-			OrderBy: "updated_at",
+			OrderBy: "last_activity_at",
 			Order:   common.Descending,
 			Limit:   5,
 		},

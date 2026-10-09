@@ -4,7 +4,6 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/glides/http/route"
 	"xn--gckvb8fzb.com/glides/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/http/api/root/categories/forums"
 )
 
 type Route struct {
@@ -19,15 +18,12 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = route.For("Categories").Pathname()
+	r.Path = route.For("APIV1Categories").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
-		base.Get("/", r.Show).Name("show")
-
-		forumsRoute, err := forums.New(r.Runtime, base)
-		r.Runtime.NilOrDie(err)
-		r.Routes = append(r.Routes, forumsRoute)
+		base.Get("", r.Index).Name("index")
+		base.Get("/"+route.For("APIV1Category").Pathname(), r.Show).Name("show")
 	}, r.Path+".")
 
 	return r, nil

@@ -50,3 +50,26 @@ func (repo *Repository) GetByID(
 
 	return &mod, repo.db.ConvertError(err)
 }
+
+func (repo *Repository) AllByIDs(
+	ids []string,
+	qo common.QueryOptions,
+) (model *[]group.Group, err error) {
+	var rows pgx.Rows
+	var mod []group.Group
+
+	rows, err = repo.db.Query(context.Background(), qo.Query(
+		`SELECT * FROM groups WHERE id = ANY($1)`,
+		common.QueryCapabilities{
+			HasDeleted: true,
+		}),
+		ids,
+	)
+	if err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+
+	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[group.Group])
+
+	return &mod, repo.db.ConvertError(err)
+}

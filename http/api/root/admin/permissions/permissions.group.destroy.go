@@ -4,35 +4,30 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
 	logicpermissions "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/permissions"
-	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
-// @Summary	Delete a group
-// @Tags		admin
-// @Produce	json
-// @Param		id	path		string	true	"The group identifier"
-// @Success	200	{object}	request.StatusResponse
-// @Failure	401	{object}	request.ErrorResponse
-// @Failure	403	{object}	request.ErrorResponse
-// @Failure	404	{object}	request.ErrorResponse
-// @Security	BearerAuth
-// @Security	APIKeyAuth
-// @Router		/admin/permissions/group/{id} [delete]
+// @Summary		Delete a group
+// @Tags			admin
+// @Param			group	path	string	true	"The group id"
+// @Success		204
+// @Failure		401	{object}	problem.Problem
+// @Failure		403	{object}	problem.Problem
+// @Failure		404	{object}	problem.Problem
+// @Security		BearerAuth
+// @Router			/admin/permissions/groups/{group} [delete]
 func (r *Route) GroupDestroy(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	if ret, rerr := req.AccessControl(
-		user.AdminRole,
-	); ret {
+	if ret, rerr := req.RequireAdmin(); ret {
 		return rerr
 	}
 
 	err = logicpermissions.GroupDestroy(r.Runtime, &logicpermissions.GroupDestroyInput{
-		ID: c.Params("id"),
+		ID: c.Params("group"),
 	})
-	if ret, rerr := req.RespondOnError(err); ret == true {
+	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}
 
-	return req.RespondOK()
+	return req.RespondNoContent()
 }

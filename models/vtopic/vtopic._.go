@@ -25,6 +25,7 @@ type VTopic struct {
 	AuthorSignatureHTML  string           `json:"author_signature_html"`
 	AuthorJoinedAt       pgtype.Timestamp `json:"author_joined_at"`
 
-	Replies     int              `json:"replies"`
-	LastReplyAt pgtype.Timestamp `json:"last_reply_at"`
+	Replies        int              `json:"replies"`
+	LastReplyAt    pgtype.Timestamp `json:"last_reply_at"`
+	LastActivityAt pgtype.Timestamp `json:"last_activity_at"`
 }

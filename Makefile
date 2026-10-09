@@ -1,4 +1,4 @@
-.PHONY: all help test swagger build db\:drop db\:seed run release manual\:screenshots site\:screenshots
+.PHONY: all help test test\:db swagger build db\:drop db\:seed run release manual\:screenshots site\:screenshots
 PWD := $(shell pwd)
 GOPATH := $(shell go env GOPATH)
 
@@ -36,10 +36,20 @@ help: ## print this help
 test: ## test
 	go test -v ./...
 
+# The API tests build the real app against a database they wipe, so they are
+# skipped unless HUP_TEST_DATABASE names one. They need the Redis of the
+# development stack too, on database index 15.
+TEST_DATABASE ?= postgres://postgres:postgres@localhost:5432/hyperuplink_test?sslmode=disable
+
+test\:db: ## run every test, including the API tests against PostgreSQL and Redis (TEST_DATABASE=...)
+	@psql -h localhost -p 5432 -U postgres -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname = 'hyperuplink_test'" | grep -q 1 \
+		|| createdb -h localhost -p 5432 -U postgres hyperuplink_test
+	HUP_TEST_DATABASE="$(TEST_DATABASE)" go test -count=1 ./...
+
 # The specification lands in docs/, which is already embedded, so the build
 # picks it up without any further wiring. Only the JSON is generated: the
 # handler reads the embedded file, so swag's docs.go would be dead weight.
-swagger: ## generate the OpenAPI specification the API serves at /_internal/swagger
+swagger: ## generate the OpenAPI specification the API serves at /api/v1/openapi.json
 	@go tool swag init \
 		--quiet \
 		--generalInfo http/api/api._.go \

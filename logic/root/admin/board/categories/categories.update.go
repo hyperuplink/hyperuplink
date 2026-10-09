@@ -3,6 +3,7 @@ package categories
 import (
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
 )
@@ -17,6 +18,10 @@ func Update(
 	}
 	cat.Name = in.Name
 	cat.Slug = in.Slug
+
+	if _, err = gh.Repositories(rt).Category.GetByUUID(cat.ID, common.QueryOptions{Limit: 1}); err != nil {
+		return err
+	}
 
 	return gh.Repositories(rt).Category.Update(cat)
 }

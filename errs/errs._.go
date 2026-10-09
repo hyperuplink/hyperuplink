@@ -11,6 +11,7 @@ var (
 	ErrConfigTypeUnsupported   = glideserrs.ErrConfigTypeUnsupported
 	ErrNoRows                  = glideserrs.ErrNoRows
 	ErrUniqueViolationOn       = glideserrs.ErrUniqueViolationOn
+	ErrUnavailable             = glideserrs.ErrUnavailable
 	ErrHashInvalid             = glideserrs.ErrHashInvalid
 	ErrHashVariantIncompatible = glideserrs.ErrHashVariantIncompatible
 	ErrHashVersionIncompatible = glideserrs.ErrHashVersionIncompatible
@@ -174,5 +175,26 @@ var (
 	)
 	ErrPollEndsAtPast error = errors.New(
 		"err_poll_ends_at_past",
+	)
+	ErrAuthenticationRequired error = errors.New(
+		"err_authentication_required",
+	)
+	ErrOTPRequired error = errors.New(
+		"err_otp_required",
+	)
+	ErrRateLimited error = errors.New(
+		"err_rate_limited",
+	)
+	ErrInternal error = errors.New(
+		"err_internal",
+	)
+	ErrAttachmentsDisabled error = errors.New(
+		"err_attachments_disabled",
+	)
+	ErrReplyParentInvalid error = errors.New(
+		"err_reply_parent_invalid",
+	)
+	ErrPicturesDisabled error = errors.New(
+		"err_pictures_disabled",
 	)
 )

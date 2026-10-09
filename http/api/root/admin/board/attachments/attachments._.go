@@ -18,7 +18,7 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = route.For("AdminBoardAttachments").Pathname()
+	r.Path = route.For("APIV1AdminBoardAttachments").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {

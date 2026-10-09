@@ -142,6 +142,9 @@ func (repo *Repository) AllToNotifyForReply(
 			u.role = $4
 			OR GREATEST(
 				COALESCE((SELECT bits::int FROM permissions
+					WHERE group_id IS NULL AND category_id = $5
+					AND deleted_at IS NULL),
+				(SELECT bits::int FROM permissions
 					WHERE group_id IS NULL AND category_id IS NULL
 					AND deleted_at IS NULL), 0),
 				COALESCE((SELECT MAX(bits::int) FROM permissions
@@ -172,4 +175,32 @@ func (repo *Repository) AllToNotifyForReply(
 	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[user.User])
 
 	return &mod, repo.db.ConvertError(err)
+}
+
+func (repo *Repository) CountAll(qo common.QueryOptions) (total int64, err error) {
+	var rows pgx.Rows
+
+	qoc := qo
+	qoc.OrderBy = ""
+	qoc.Limit = 0
+	qoc.Page = 0
+	rows, err = repo.db.Query(context.Background(), qoc.Query(
+		`SELECT COUNT(id) AS total FROM users`,
+		common.QueryCapabilities{
+			HasBanned:  true,
+			HasDeleted: true,
+		}),
+	)
+	if err != nil {
+		return total, repo.db.ConvertError(err)
+	}
+
+	var pag map[string]any
+	pag, err = pgx.CollectOneRow(rows, pgx.RowToMap)
+	if err != nil {
+		return total, repo.db.ConvertError(err)
+	}
+	total = pag["total"].(int64)
+
+	return total, nil
 }

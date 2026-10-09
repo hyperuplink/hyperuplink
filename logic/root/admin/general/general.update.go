@@ -15,6 +15,7 @@ type UpdateInput struct {
 	TopicsPerPage         int    `json:"topics_per_page" form:"topics_per_page" validate:"required,min=1,max=200"`
 	PostsPerPage          int    `json:"posts_per_page" form:"posts_per_page" validate:"required,min=1,max=200"`
 	AdminLogRetentionDays int    `json:"admin_log_retention_days" form:"admin_log_retention_days" validate:"required,min=1,max=3650"`
+	AllowAPIGuests        bool   `json:"allow_api_guests" form:"allow_api_guests"`
 
 	EnableAbout bool   `json:"enable_about" form:"enable_about"`
 	About       string `json:"about" form:"about" validate:"required_if=EnableAbout true"`
@@ -52,6 +53,7 @@ func Update(
 	settingSystem.JSONValue.TopicsPerPage = in.TopicsPerPage
 	settingSystem.JSONValue.PostsPerPage = in.PostsPerPage
 	settingSystem.JSONValue.AdminLogRetentionDays = in.AdminLogRetentionDays
+	settingSystem.JSONValue.AllowAPIGuests = in.AllowAPIGuests
 
 	if err = settingRepo.Update[setting.System](
 		gh.Repositories(rt).Setting,

@@ -16,7 +16,10 @@ func Remove(
 		return perr
 	}
 
-	groupID := pgtype.Text{String: in.GroupID, Valid: true}
+	var groupID pgtype.Text
+	if in.GroupID != "" {
+		groupID = pgtype.Text{String: in.GroupID, Valid: true}
+	}
 	categoryID := pgtype.UUID{Bytes: [16]byte(uid), Valid: true}
 
 	return gh.Repositories(rt).Permission.Remove(groupID, categoryID)

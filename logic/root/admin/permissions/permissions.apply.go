@@ -14,14 +14,22 @@ func Apply(
 	in *ApplyInput,
 ) (err error) {
 	isDefault := in.GroupID == "" && in.CategoryID == ""
+	isCategoryDefault := in.GroupID == "" && in.CategoryID != ""
 	isGroupMapping := in.GroupID != "" && in.CategoryID != ""
 
-	if isDefault == false && isGroupMapping == false {
+	if !isDefault && !isCategoryDefault && !isGroupMapping {
 		return errs.ErrValidation
 	}
 
 	if isGroupMapping && in.Level == permission.LevelNone {
 		return errs.ErrValidation
+	}
+
+	if in.Level == LevelInherit {
+		if !isCategoryDefault {
+			return errs.ErrValidation
+		}
+		return Remove(rt, &RemoveInput{CategoryID: in.CategoryID})
 	}
 
 	level, ok := permission.LevelFromString(in.Level)

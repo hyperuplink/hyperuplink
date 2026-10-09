@@ -3,36 +3,38 @@ package root
 import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
-	logicroot "xn--gckvb8fzb.com/hyperuplink/logic/root"
-	"xn--gckvb8fzb.com/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/http/api/view"
 )
 
-// @Summary		Show the board
-// @Description	Lists every category the caller may see together with the forums
-// @Description	inside it and the board-wide counters.
+// @Summary		Describe the API
+// @Description	The board's name, the API version, the build, whether requests
+// @Description	without a key are served, and the paths of the main collections.
+// @Description	This is the one document a client may always read.
 // @Tags			board
 // @Produce		json
-// @Success		200	{object}	logicroot.Board
-// @Failure		403	{object}	request.ErrorResponse
-// @Failure		500	{object}	request.ErrorResponse
-// @Security		BearerAuth
-// @Security		APIKeyAuth
+// @Success		200	{object}	view.Discovery
 // @Router			/ [get]
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	if ret, rerr := req.AccessControl(
-		user.UserRole,
-		user.AdminRole,
-	); ret {
-		return rerr
-	}
+	version, _, _, _ := r.Runtime.GetBuild()
 
-	var board *logicroot.Board
-	board, err = logicroot.BoardView(r.Runtime, req.Perms())
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	return req.Respond(board)
+	return req.Respond(view.Discovery{
+		Name:    req.System.Name,
+		API:     view.Version,
+		Version: version,
+		Guests:  req.System.AllowAPIGuests,
+		BaseURL: req.System.BaseURL,
+		Links: map[string]string{
+			"openapi": view.APIPath("APIV1OpenAPI", nil),
+			"docs":    view.APIPath("APIV1Docs", nil) + "/",
+			"session": view.APIPath("APIV1Session", nil),
+			"board":   view.APIPath("APIV1Board", nil),
+			"forums":  view.APIPath("APIV1Forums", nil),
+			"topics":  view.APIPath("APIV1Topics", nil),
+			"search":  view.APIPath("APIV1Search", nil),
+			"users":   view.APIPath("APIV1Users", nil),
+			"account": view.APIPath("APIV1Account", nil),
+		},
+	})
 }

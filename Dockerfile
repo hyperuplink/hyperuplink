@@ -43,8 +43,8 @@ COPY hyperuplink.toml /etc/hyperuplink.toml
 # Run rootless (numeric UID:GID works with Podman and arbitrary-UID remapping)
 USER 10001:10001
 
-# Non-privileged port so rootless Podman can bind it without extra capabilities
-EXPOSE 3000
+# Non-privileged ports (web, API) so rootless Podman can bind them without extra capabilities
+EXPOSE 3000 3001
 
 ENTRYPOINT ["/usr/local/bin/hyperuplink"]
 CMD ["-c", "file:///etc/hyperuplink.toml"]

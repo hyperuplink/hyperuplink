@@ -47,6 +47,9 @@ func Create(
 	if err != nil {
 		return nil, err
 	}
+	if !perms.CanReadID(fum.CategoryID) {
+		return nil, errs.ErrNoRows
+	}
 	if !perms.CanWriteID(fum.CategoryID) {
 		return nil, errs.ErrForbidden
 	}

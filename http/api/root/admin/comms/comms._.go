@@ -20,11 +20,10 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = route.For("AdminComms").Pathname()
+	r.Path = route.For("APIV1AdminComms").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
-		base.Get("", r.Index).Name("index")
 
 		emailRoute, err := email.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)

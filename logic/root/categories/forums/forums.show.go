@@ -50,7 +50,7 @@ func Show(
 	tops, total, err := gh.Repositories(rt).Topic.VAllForForumUUID(
 		fum.ID,
 		common.QueryOptions{
-			OrderBy: "updated_at",
+			OrderBy: "last_activity_at",
 			Order:   common.Descending,
 			Limit:   in.PerPage,
 			Page:    in.Page,

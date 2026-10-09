@@ -24,11 +24,10 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = route.For("AdminBoard").Pathname()
+	r.Path = route.For("APIV1AdminBoard").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
-		base.Get("", r.Index).Name("index")
 
 		attachmentsRoute, err := attachments.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)

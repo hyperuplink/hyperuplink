@@ -7,6 +7,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/postevent"
+	"xn--gckvb8fzb.com/hyperuplink/models/reply"
+	"xn--gckvb8fzb.com/hyperuplink/models/topic"
 )
 
 type ResolvedPost struct {
@@ -27,13 +29,17 @@ func ResolvePost(
 	rt *runtime.Runtime,
 	target string,
 	shortID string,
-) (*ResolvedPost, error) {
+) (post *ResolvedPost, err error) {
+	id, perr := uuid.Parse(shortID)
+
 	switch postevent.PostEventTarget(target) {
 	case postevent.Topic:
-		top, err := gh.Repositories(rt).Topic.GetByShortID(
-			shortID,
-			common.QueryOptions{Limit: 1},
-		)
+		var top *topic.Topic
+		if perr == nil {
+			top, err = gh.Repositories(rt).Topic.GetByUUID(id, common.QueryOptions{Limit: 1})
+		} else {
+			top, err = gh.Repositories(rt).Topic.GetByShortID(shortID, common.QueryOptions{Limit: 1})
+		}
 		if err != nil {
 			return nil, err
 		}
@@ -44,10 +50,12 @@ func ResolvePost(
 			AuthorID: top.AuthorID,
 		}, nil
 	case postevent.Reply:
-		rep, err := gh.Repositories(rt).Reply.GetByShortID(
-			shortID,
-			common.QueryOptions{Limit: 1},
-		)
+		var rep *reply.Reply
+		if perr == nil {
+			rep, err = gh.Repositories(rt).Reply.GetByUUID(id, common.QueryOptions{Limit: 1})
+		} else {
+			rep, err = gh.Repositories(rt).Reply.GetByShortID(shortID, common.QueryOptions{Limit: 1})
+		}
 		if err != nil {
 			return nil, err
 		}

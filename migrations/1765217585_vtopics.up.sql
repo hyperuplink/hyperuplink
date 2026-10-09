@@ -9,6 +9,13 @@ SELECT
      FROM replies r
      WHERE r.topic_id = t.id) AS "last_reply_at",
 
+    GREATEST(
+      t.created_at,
+      (SELECT MAX(r.created_at)
+       FROM replies r
+       WHERE r.topic_id = t.id)
+    ) AS "last_activity_at",
+
     COALESCE((SELECT COUNT(*)
       FROM activities a
       WHERE a.kind = 'topic_view' AND a.subject = 'topic'

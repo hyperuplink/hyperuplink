@@ -12,10 +12,11 @@ import (
 )
 
 type View struct {
-	User    *user.User
-	Groups  *[]group.Group
-	Topics  []vtopic.VTopic
-	Replies []vreply.VReplyWithTopic
+	User       *user.User
+	Groups     *[]group.Group
+	Membership []group.Group
+	Topics     []vtopic.VTopic
+	Replies    []vreply.VReplyWithTopic
 }
 
 func Show(
@@ -42,6 +43,18 @@ func Show(
 	})
 	if err != nil {
 		return nil, err
+	}
+
+	membership := []group.Group{}
+	if len(usr.MemberOf) > 0 {
+		var own *[]group.Group
+		if own, err = gh.Repositories(rt).Group.AllByIDs(usr.MemberOf, common.QueryOptions{
+			OrderBy: "name",
+			Order:   common.Ascending,
+		}); err != nil {
+			return nil, err
+		}
+		membership = *own
 	}
 
 	topics, err := gh.Repositories(rt).Topic.VAllForAuthorUUID(
@@ -83,9 +96,10 @@ func Show(
 	}
 
 	return &View{
-		User:    usr,
-		Groups:  groups,
-		Topics:  visibleTopics,
-		Replies: visibleReplies,
+		User:       usr,
+		Groups:     groups,
+		Membership: membership,
+		Topics:     visibleTopics,
+		Replies:    visibleReplies,
 	}, nil
 }

@@ -3,9 +3,12 @@ package user
 import (
 	"slices"
 
+	"github.com/google/uuid"
+
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
+	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 type MembershipInput struct {
@@ -17,15 +20,12 @@ func UpdateMembership(
 	username string,
 	in *MembershipInput,
 ) (err error) {
-	usr, err := gh.Repositories(rt).User.GetByUsername(
-		username,
-		common.QueryOptions{
-			WithBanned:  false,
-			WithSpammed: false,
-			WithDeleted: false,
-			Limit:       1,
-		},
-	)
+	var usr *user.User
+	if id, perr := uuid.Parse(username); perr == nil {
+		usr, err = gh.Repositories(rt).User.GetByUUID(id, common.QueryOptions{Limit: 1})
+	} else {
+		usr, err = gh.Repositories(rt).User.GetByUsername(username, common.QueryOptions{Limit: 1})
+	}
 	if err != nil {
 		return err
 	}

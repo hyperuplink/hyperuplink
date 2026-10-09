@@ -10,13 +10,13 @@ type Route struct {
 	route.RouteController
 }
 
-type TwofactorEnableInput struct {
-	OTPURL  string `json:"otp_url" form:"otp_url" validate:"required"`
-	OTPCode string `json:"otp_code" form:"otp_code" validate:"required,numeric,len=6"`
+type EnableBody struct {
+	OTPURL  string `json:"otp_url" validate:"required"`
+	OTPCode string `json:"otp_code" validate:"required,numeric,len=6"`
 }
 
-type TwofactorDisableInput struct {
-	CurrentPassword string `json:"current_password" form:"current_password" validate:"required,min=8,max=64"`
+type DisableBody struct {
+	CurrentPassword string `json:"current_password" validate:"required,min=8,max=64"`
 }
 
 func New(
@@ -27,13 +27,13 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = route.For("AccountTwofactor").Pathname()
+	r.Path = route.For("APIV1AccountTwofactor").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
-		base.Get("", r.Index).Name("show")
-		base.Post("/enable", r.Enable).Name("enable")
-		base.Post("/disable", r.Disable).Name("disable")
+		base.Get("", r.Index).Name("index")
+		base.Post("", r.Create).Name("create")
+		base.Delete("", r.Destroy).Name("destroy")
 	}, r.Path+".")
 
 	return r, nil

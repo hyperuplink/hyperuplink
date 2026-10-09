@@ -4,35 +4,33 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
 	logiccategories "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/board/categories"
-	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
-// @Summary	Move a category up
-// @Tags		admin
-// @Produce	json
-// @Param		id	path		string	true	"The category identifier"
-// @Success	200	{object}	request.StatusResponse
-// @Failure	401	{object}	request.ErrorResponse
-// @Failure	403	{object}	request.ErrorResponse
-// @Failure	404	{object}	request.ErrorResponse
-// @Security	BearerAuth
-// @Security	APIKeyAuth
-// @Router		/admin/board/categories/{id}/moveup [post]
+// @Summary		Move a category up
+// @Tags			admin
+// @Param			category	path	string	true	"The category UUID"
+// @Success		204
+// @Failure		401	{object}	problem.Problem
+// @Failure		403	{object}	problem.Problem
+// @Failure		404	{object}	problem.Problem
+// @Security		BearerAuth
+// @Router			/admin/board/categories/{category}/moveup [post]
 func (r *Route) MoveUp(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	if ret, rerr := req.AccessControl(
-		user.AdminRole,
-	); ret {
+	if ret, rerr := req.RequireAdmin(); ret {
 		return rerr
 	}
 
-	err = logiccategories.MoveUp(r.Runtime, &logiccategories.MoveInput{
-		ID: c.Params("id"),
-	})
-	if ret, rerr := req.RespondOnError(err); ret == true {
+	id, ret, rerr := req.ParamUUID("category")
+	if ret {
 		return rerr
 	}
 
-	return req.RespondOK()
+	err = logiccategories.MoveUp(r.Runtime, &logiccategories.MoveInput{ID: id.String()})
+	if ret, rerr := req.RespondOnError(err); ret {
+		return rerr
+	}
+
+	return req.RespondNoContent()
 }

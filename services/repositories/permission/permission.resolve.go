@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgtype"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
@@ -24,35 +25,33 @@ func (repo *Repository) Resolve(
 		return res, nil
 	}
 
-	def, err := repo.GetDefault()
-	if err != nil && !errors.Is(err, errs.ErrNoRows) {
-		return nil, err
-	}
-	if err == nil && def != nil {
-		res.Default = def.Level()
+	rows, err := repo.db.Query(context.Background(), `SELECT * FROM permissions
+		WHERE (group_id IS NULL OR group_id = ANY($1))
+		AND deleted_at IS NULL`,
+		memberOf,
+	)
+	if err != nil {
+		return nil, repo.db.ConvertError(err)
 	}
 
+	perms, err := pgx.CollectRows(rows, pgx.RowToStructByName[permission.Permission])
+	if err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+
+	categoryDefault := map[uuid.UUID]byte{}
 	groupMax := map[uuid.UUID]byte{}
-	if len(memberOf) > 0 {
-		var rows pgx.Rows
-		rows, err = repo.db.Query(context.Background(), `SELECT * FROM permissions
-			WHERE group_id = ANY($1)
-			AND category_id IS NOT NULL
-			AND deleted_at IS NULL`,
-			memberOf,
-		)
-		if err != nil {
-			return nil, repo.db.ConvertError(err)
-		}
-
-		perms, cerr := pgx.CollectRows(rows, pgx.RowToStructByName[permission.Permission])
-		if cerr != nil {
-			return nil, repo.db.ConvertError(cerr)
-		}
-
-		for i := range perms {
-			id := uuid.UUID(perms[i].CategoryID.Bytes)
-			if lvl := perms[i].Level(); lvl > groupMax[id] {
+	for i := range perms {
+		p := &perms[i]
+		lvl := p.Level()
+		switch {
+		case !p.GroupID.Valid && !p.CategoryID.Valid:
+			res.Default = lvl
+		case !p.GroupID.Valid:
+			categoryDefault[uuid.UUID(p.CategoryID.Bytes)] = lvl
+		case p.CategoryID.Valid:
+			id := uuid.UUID(p.CategoryID.Bytes)
+			if lvl > groupMax[id] {
 				groupMax[id] = lvl
 			}
 		}
@@ -61,6 +60,9 @@ func (repo *Repository) Resolve(
 	if cats != nil {
 		for _, cat := range *cats {
 			level := res.Default
+			if lvl, ok := categoryDefault[cat.ID]; ok {
+				level = lvl
+			}
 			if lvl, ok := groupMax[cat.ID]; ok && lvl > level {
 				level = lvl
 			}
@@ -85,12 +87,19 @@ func (repo *Repository) EffectiveLevel(
 		level = def.Level()
 	}
 
+	catDef, err := repo.GetFor(pgtype.Text{}, pgtype.UUID{Bytes: categoryID, Valid: true})
+	if err != nil && !errors.Is(err, errs.ErrNoRows) {
+		return permission.None, err
+	}
+	if err == nil && catDef != nil {
+		level = catDef.Level()
+	}
+
 	if len(memberOf) == 0 {
 		return level, nil
 	}
 
-	var rows pgx.Rows
-	rows, err = repo.db.Query(context.Background(), `SELECT * FROM permissions
+	rows, err := repo.db.Query(context.Background(), `SELECT * FROM permissions
 		WHERE group_id = ANY($1)
 		AND category_id = $2
 		AND deleted_at IS NULL`,

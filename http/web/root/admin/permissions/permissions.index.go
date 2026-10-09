@@ -27,6 +27,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	req.SetData("default_level", view.DefaultLevel)
+	req.SetData("categories", view.Categories)
 	req.SetData("groups", view.Groups)
 	req.SetData("has_categories", view.HasCategories)
 

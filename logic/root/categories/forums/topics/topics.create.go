@@ -54,6 +54,9 @@ func CreateReply(
 	if err != nil {
 		return nil, err
 	}
+	if !perms.CanReadID(fum.CategoryID) {
+		return nil, errs.ErrNoRows
+	}
 	if !perms.CanWriteID(fum.CategoryID) {
 		return nil, errs.ErrForbidden
 	}
@@ -61,7 +64,14 @@ func CreateReply(
 	if in.ReplyID != "" {
 		var replyUUID uuid.UUID
 		if replyUUID, err = uuid.Parse(in.ReplyID); err != nil {
-			return nil, err
+			return nil, errs.ErrReplyParentInvalid
+		}
+		parent, perr := gh.Repositories(rt).Reply.GetByUUID(
+			replyUUID,
+			common.QueryOptions{Limit: 1},
+		)
+		if perr != nil || parent.TopicID != rep.TopicID {
+			return nil, errs.ErrReplyParentInvalid
 		}
 		rep.ReplyID = uuid.NullUUID{
 			UUID:  replyUUID,

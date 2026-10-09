@@ -21,13 +21,6 @@ type ShowInput struct {
 	ViewerID  uuid.NullUUID
 }
 
-type ShowByIDInput struct {
-	ID       string
-	Page     int
-	PerPage  int
-	ViewerID uuid.NullUUID
-}
-
 type View struct {
 	Topic   *vtopic.VTopic   `json:"topic"`
 	Poll    *Poll            `json:"poll,omitempty"`
@@ -48,24 +41,6 @@ func Show(
 			Limit: 1,
 		},
 	)
-	if err != nil {
-		return nil, err
-	}
-
-	return viewForTopic(rt, top, in.Page, in.PerPage, in.ViewerID, perms)
-}
-
-func ShowByID(
-	rt *runtime.Runtime,
-	in *ShowByIDInput,
-	perms *permission.Resolution,
-) (view *View, err error) {
-	var top *vtopic.VTopic
-	if id, perr := uuid.Parse(in.ID); perr == nil {
-		top, err = gh.Repositories(rt).Topic.VGetByUUID(id, common.QueryOptions{Limit: 1})
-	} else {
-		top, err = gh.Repositories(rt).Topic.VGetByShortID(in.ID, common.QueryOptions{Limit: 1})
-	}
 	if err != nil {
 		return nil, err
 	}

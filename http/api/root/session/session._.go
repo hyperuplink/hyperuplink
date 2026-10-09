@@ -4,10 +4,16 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/glides/http/route"
 	"xn--gckvb8fzb.com/glides/runtime"
+	logicsession "xn--gckvb8fzb.com/hyperuplink/logic/root/session"
 )
 
 type Route struct {
 	route.RouteController
+}
+
+type SignInBody struct {
+	logicsession.SignInInput
+	Name string `json:"name" validate:"omitempty,max=64"`
 }
 
 func New(
@@ -18,11 +24,13 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = route.For("Session").Pathname()
+	r.Path = route.For("APIV1Session").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
 		base.Get("", r.Index).Name("index")
+		base.Post("", r.Create).Name("create")
+		base.Delete("", r.Destroy).Name("destroy")
 	}, r.Path+".")
 
 	return r, nil

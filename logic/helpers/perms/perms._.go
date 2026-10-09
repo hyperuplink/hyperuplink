@@ -29,5 +29,9 @@ func Resolve(
 		return permission.NewResolution()
 	}
 
+	if role == user.GuestRole {
+		res.Cap(permission.ReadOnly)
+	}
+
 	return res
 }

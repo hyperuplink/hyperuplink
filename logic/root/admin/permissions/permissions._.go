@@ -1,8 +1,6 @@
 package permissions
 
-import (
-	"xn--gckvb8fzb.com/hyperuplink/models/category"
-)
+import ()
 
 type PermissionRow struct {
 	CategoryID   string `json:"category_id"`
@@ -10,23 +8,33 @@ type PermissionRow struct {
 	Level        string `json:"level"`
 }
 
+const LevelInherit = "inherit"
+
+type CategoryView struct {
+	ID    string `json:"id"`
+	Name  string `json:"name"`
+	Slug  string `json:"slug"`
+	Level string `json:"level,omitempty"`
+}
+
 type GroupView struct {
-	ID          string              `json:"id"`
-	Name        string              `json:"name"`
-	Rows        []PermissionRow     `json:"rows"`
-	AddableCats []category.Category `json:"addable_categories"`
+	ID          string          `json:"id"`
+	Name        string          `json:"name"`
+	Rows        []PermissionRow `json:"rows"`
+	AddableCats []CategoryView  `json:"addable_categories"`
 }
 
 type View struct {
-	DefaultLevel  string      `json:"default_level"`
-	Groups        []GroupView `json:"groups"`
-	HasCategories bool        `json:"has_categories"`
+	DefaultLevel  string         `json:"default_level"`
+	Categories    []CategoryView `json:"categories"`
+	Groups        []GroupView    `json:"groups"`
+	HasCategories bool           `json:"has_categories"`
 }
 
 type ApplyInput struct {
 	GroupID    string `json:"group_id" form:"group_id" validate:"omitempty,slug,max=32"`
 	CategoryID string `json:"category_id" form:"category_id" validate:"omitempty,uuid"`
-	Level      string `json:"level" form:"level" validate:"required,oneof=none read read_write read_write_moderate"`
+	Level      string `json:"level" form:"level" validate:"required,oneof=none read read_write read_write_moderate inherit"`
 }
 
 type GroupCreateInput struct {
@@ -39,6 +47,6 @@ type GroupDestroyInput struct {
 }
 
 type RemoveInput struct {
-	GroupID    string `json:"group_id" form:"group_id" validate:"required,slug,max=32"`
+	GroupID    string `json:"group_id" form:"group_id" validate:"omitempty,slug,max=32"`
 	CategoryID string `json:"category_id" form:"category_id" validate:"required,uuid"`
 }

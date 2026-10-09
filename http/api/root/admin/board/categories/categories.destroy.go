@@ -4,37 +4,34 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
 	logiccategories "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/board/categories"
-	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 // @Summary		Delete a category
-// @Description	The delete is soft and propagates down to the forums, topics and
-// @Description	replies the category holds.
+// @Description	The delete is soft and propagates to everything below.
 // @Tags			admin
-// @Produce		json
-// @Param			id	path		string	true	"The category identifier"
-// @Success		200	{object}	request.StatusResponse
-// @Failure		401	{object}	request.ErrorResponse
-// @Failure		403	{object}	request.ErrorResponse
-// @Failure		404	{object}	request.ErrorResponse
+// @Param			category	path	string	true	"The category UUID"
+// @Success		204
+// @Failure		401	{object}	problem.Problem
+// @Failure		403	{object}	problem.Problem
+// @Failure		404	{object}	problem.Problem
 // @Security		BearerAuth
-// @Security		APIKeyAuth
-// @Router			/admin/board/categories/{id} [delete]
+// @Router			/admin/board/categories/{category} [delete]
 func (r *Route) Destroy(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	if ret, rerr := req.AccessControl(
-		user.AdminRole,
-	); ret {
+	if ret, rerr := req.RequireAdmin(); ret {
 		return rerr
 	}
 
-	err = logiccategories.Destroy(r.Runtime, &logiccategories.DestroyInput{
-		ID: c.Params("id"),
-	})
-	if ret, rerr := req.RespondOnError(err); ret == true {
+	id, ret, rerr := req.ParamUUID("category")
+	if ret {
 		return rerr
 	}
 
-	return req.RespondOK()
+	err = logiccategories.Destroy(r.Runtime, &logiccategories.DestroyInput{ID: id.String()})
+	if ret, rerr := req.RespondOnError(err); ret {
+		return rerr
+	}
+
+	return req.RespondNoContent()
 }

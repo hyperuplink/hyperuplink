@@ -25,10 +25,7 @@ func (repo *Repository) Startup() (err error) {
 	if settingSystem, err = GetByID[setting.System](repo, "system"); err != nil {
 		settingSystem = new(setting.Setting[setting.System])
 		settingSystem.ID = "system"
-		settingSystem.JSONValue = setting.System{
-			Name:    "Hyperuplink",
-			BaseURL: "http://localhost:3000",
-		}
+		settingSystem.JSONValue = setting.NewSystem()
 		if _, err = Create(repo, settingSystem); err != nil {
 			return err
 		}

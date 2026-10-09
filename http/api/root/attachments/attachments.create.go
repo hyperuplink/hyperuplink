@@ -3,39 +3,39 @@ package attachments
 import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
+	"xn--gckvb8fzb.com/hyperuplink/http/api/problem"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
 	logicattachments "xn--gckvb8fzb.com/hyperuplink/logic/helpers/attachments"
-	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 // @Summary		Upload attachments
-// @Description	Files are uploaded on their own and come back as identifiers, which
-// @Description	are then passed as attachment_ids when the post that carries them is
-// @Description	created.
+// @Description	Stores one or more files sent as the multipart field "attachments"
+// @Description	and returns them with their ids, which a topic or a reply then names
+// @Description	in attachment_ids. Uploads are rejected when the board has
+// @Description	attachments disabled.
 // @Tags			board
 // @Accept			mpfd
 // @Produce		json
-// @Param			attachments	formData	file	true	"One or more files to store"
-// @Success		201			{object}	object{ids=[]string}
-// @Failure		401			{object}	request.ErrorResponse
-// @Failure		403			{object}	request.ErrorResponse
-// @Failure		422			{object}	request.ErrorResponse
+// @Param			attachments	formData	file	true	"One or more files"
+// @Success		201			{object}	object{attachments=[]view.Attachment}
+// @Failure		400			{object}	problem.Problem
+// @Failure		401			{object}	problem.Problem
+// @Failure		422			{object}	problem.Problem
 // @Security		BearerAuth
-// @Security		APIKeyAuth
 // @Router			/attachments [post]
 func (r *Route) Create(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	if ret, rerr := req.AccessControl(
-		user.UserRole,
-		user.AdminRole,
-	); ret {
+	if ret, rerr := req.RequireUser(); ret {
 		return rerr
 	}
 
-	authorID, ok := req.UserUUID()
-	if !ok {
-		return req.RespondError(errs.ErrForbidden)
+	settings, err := logicattachments.Settings(r.Runtime)
+	if ret, rerr := req.RespondOnError(err); ret {
+		return rerr
+	}
+	if !settings.EnableAttachments {
+		return req.RespondError(errs.ErrAttachmentsDisabled)
 	}
 
 	form, ferr := c.MultipartForm()
@@ -45,15 +45,18 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 
 	files := form.File[logicattachments.FormField]
 	if len(files) == 0 {
-		return req.RespondError(errs.ErrFormInvalid)
+		return req.RespondProblem(problem.Validation(map[string][]string{
+			logicattachments.FormField: {"required"},
+		}))
 	}
 
-	ids, err := logicattachments.StoreAll(r.Runtime, authorID, files)
-	if ret, rerr := req.RespondOnError(err); ret == true {
+	ids, err := logicattachments.StoreAll(r.Runtime, req.User().ID, files)
+	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}
 
-	return req.RespondCreated(fiber.Map{
-		"ids": ids,
-	})
+	m := req.Views()
+	m.PrefetchAttachments(ids)
+
+	return req.RespondCreated(fiber.Map{"attachments": m.Attachments(ids)})
 }

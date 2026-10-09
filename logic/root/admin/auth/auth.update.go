@@ -10,7 +10,7 @@ import (
 )
 
 type UpdateInput struct {
-	AddressType int `json:"address_type" form:"address_type" validate:"oneof=0 1 2"`
+	AddressType int `json:"allowed_address_type" form:"address_type" validate:"oneof=0 1 2"`
 }
 
 func Update(

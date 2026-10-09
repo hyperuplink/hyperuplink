@@ -4,44 +4,36 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
 	logicpassword "xn--gckvb8fzb.com/hyperuplink/logic/root/account/password"
-	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
-// @Summary		Change the account password
-// @Description	The current password has to be sent along with the new one, and a
-// @Description	user with two-factor authentication enabled has to add a current
-// @Description	one-time code as well.
+// @Summary		Change the password
+// @Description	The current password has to be sent with the new one and its
+// @Description	repetition, and an account with two-factor authentication adds
+// @Description	the current code. Keys stay valid.
 // @Tags			account
 // @Accept			json
-// @Produce		json
-// @Param			request	body		logicpassword.UpdateInput	true	"The current and the new password"
-// @Success		200		{object}	request.StatusResponse
-// @Failure		401		{object}	request.ErrorResponse
-// @Failure		403		{object}	request.ErrorResponse
-// @Failure		422		{object}	request.ValidationErrorResponse
+// @Param			request	body	logicpassword.UpdateInput	true	"The current and the new password"
+// @Success		204
+// @Failure		401	{object}	problem.Problem
+// @Failure		422	{object}	problem.Problem
 // @Security		BearerAuth
-// @Security		APIKeyAuth
 // @Router			/account/password [put]
 func (r *Route) Update(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	if ret, rerr := req.AccessControl(
-		user.UserRole,
-		user.AdminRole,
-	); ret {
+	if ret, rerr := req.RequireUser(); ret {
 		return rerr
 	}
 
 	in := new(logicpassword.UpdateInput)
-
 	if ret, rerr := req.BindJSON(in); ret {
 		return rerr
 	}
 
-	err = logicpassword.Update(r.Runtime, req.User, in)
-	if ret, rerr := req.RespondOnError(err); ret == true {
+	err = logicpassword.Update(r.Runtime, req.User(), in)
+	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}
 
-	return req.RespondOK()
+	return req.RespondNoContent()
 }

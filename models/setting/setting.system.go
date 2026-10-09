@@ -1,5 +1,7 @@
 package setting
 
+import "encoding/json"
+
 const (
 	DEFAULT_TOPICS_PER_PAGE          int = 10
 	DEFAULT_POSTS_PER_PAGE           int = 10
@@ -12,6 +14,28 @@ type System struct {
 	TopicsPerPage         int    `json:"topics_per_page"`
 	PostsPerPage          int    `json:"posts_per_page"`
 	AdminLogRetentionDays int    `json:"admin_log_retention_days"`
+	AllowAPIGuests        bool   `json:"allow_api_guests"`
+}
+
+func NewSystem() System {
+	return System{
+		Name:           "Hyperuplink",
+		BaseURL:        "http://localhost:3000",
+		AllowAPIGuests: true,
+	}
+}
+
+func (sys *System) UnmarshalJSON(data []byte) error {
+	type system System
+
+	stored := system(NewSystem())
+	if err := json.Unmarshal(data, &stored); err != nil {
+		return err
+	}
+
+	*sys = System(stored)
+
+	return nil
 }
 
 func (sys *System) GetTopicsPerPage() (pp int) {

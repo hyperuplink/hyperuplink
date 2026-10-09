@@ -18,15 +18,15 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = route.For("AdminPermissions").Pathname()
+	r.Path = route.For("APIV1AdminPermissions").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
 		base.Get("", r.Index).Name("index")
-		base.Post("/group", r.GroupCreate).Name("group_create")
-		base.Delete("/group/:id", r.GroupDestroy).Name("group_destroy")
-		base.Post("/apply", r.Apply).Name("apply")
-		base.Post("/remove", r.Remove).Name("remove")
+		base.Post("/"+route.For("APIV1AdminPermissionsApply").Pathname(), r.Apply).Name("apply")
+		base.Post("/"+route.For("APIV1AdminPermissionsRemove").Pathname(), r.Remove).Name("remove")
+		base.Post("/"+route.For("APIV1AdminPermissionsGroups").Pathname(), r.GroupCreate).Name("groups.create")
+		base.Delete("/"+route.For("APIV1AdminPermissionsGroups").Pathname()+"/"+route.For("APIV1AdminPermissionsGroup").Pathname(), r.GroupDestroy).Name("groups.destroy")
 	}, r.Path+".")
 
 	return r, nil

@@ -4,35 +4,33 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
 	logicforums "xn--gckvb8fzb.com/hyperuplink/logic/root/admin/board/forums"
-	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
-// @Summary	Move a forum down
-// @Tags		admin
-// @Produce	json
-// @Param		id	path		string	true	"The forum identifier"
-// @Success	200	{object}	request.StatusResponse
-// @Failure	401	{object}	request.ErrorResponse
-// @Failure	403	{object}	request.ErrorResponse
-// @Failure	404	{object}	request.ErrorResponse
-// @Security	BearerAuth
-// @Security	APIKeyAuth
-// @Router		/admin/board/forums/{id}/movedown [post]
+// @Summary		Move a forum down
+// @Tags			admin
+// @Param			forum	path	string	true	"The forum UUID"
+// @Success		204
+// @Failure		401	{object}	problem.Problem
+// @Failure		403	{object}	problem.Problem
+// @Failure		404	{object}	problem.Problem
+// @Security		BearerAuth
+// @Router			/admin/board/forums/{forum}/movedown [post]
 func (r *Route) MoveDown(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	if ret, rerr := req.AccessControl(
-		user.AdminRole,
-	); ret {
+	if ret, rerr := req.RequireAdmin(); ret {
 		return rerr
 	}
 
-	err = logicforums.MoveDown(r.Runtime, &logicforums.MoveInput{
-		ID: c.Params("id"),
-	})
-	if ret, rerr := req.RespondOnError(err); ret == true {
+	id, ret, rerr := req.ParamUUID("forum")
+	if ret {
 		return rerr
 	}
 
-	return req.RespondOK()
+	err = logicforums.MoveDown(r.Runtime, &logicforums.MoveInput{ID: id.String()})
+	if ret, rerr := req.RespondOnError(err); ret {
+		return rerr
+	}
+
+	return req.RespondNoContent()
 }

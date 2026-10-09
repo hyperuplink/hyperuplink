@@ -93,39 +93,10 @@ func main() {
 		os.Exit(0)
 	}
 
-	if rt, err = runtime.New(runtime.Opts{
-		Cfgstr:   flagCfgstr,
-		Version:  Version,
-		Commit:   Commit,
-		Date:     Date,
-		Database: true,
-	}); err != nil {
+	if rt, err = newRuntime(flagCfgstr); err != nil {
 		fmt.Printf("%s\n", err)
 		os.Exit(1)
 	}
-
-	if _, err = storage.Register(rt); err != nil {
-		fmt.Printf("%s\n", err)
-		os.Exit(1)
-	}
-	if _, err = intnat.Register(rt); err != nil {
-		fmt.Printf("%s\n", err)
-		os.Exit(1)
-	}
-	if _, err = markdown.Register(rt); err != nil {
-		fmt.Printf("%s\n", err)
-		os.Exit(1)
-	}
-	if _, err = glidesdispatch.Register(rt); err != nil {
-		fmt.Printf("%s\n", err)
-		os.Exit(1)
-	}
-	if _, err = servicescron.Register(rt); err != nil {
-		fmt.Printf("%s\n", err)
-		os.Exit(1)
-	}
-
-	rt.SetBuild(Version, Commit, Date)
 
 	if flagReset != "" {
 		if err = runtime.ValidateResetTime(flagReset, time.Now()); err != nil {
@@ -149,60 +120,8 @@ func main() {
 		os.Exit(0)
 	}
 
-	rt.AddEmbed("static", &embedStaticFiles)
-	rt.AddEmbed("views", &embedViews)
-	rt.AddEmbed("locales", &embedLocales)
-	rt.AddEmbed("templates", &embedTemplates)
-	rt.AddEmbed("docs", &embedDocs)
-
-	intnat.From(rt).SetLocales(rt.GetEmbed("locales"), "en",
-		"de", "en", "es", "fr", "it", "ro")
-
-	var srv any
-	rt.Debug("new", "repositories")
-	if srv, err = repositories.New(rt.Database(), rt.Config()); err != nil {
-		rt.Error("status", "error", "error", err)
-		fmt.Printf("%s\n", err)
-		os.Exit(1)
-	}
-	rt.AddService("repositories", srv)
-
-	rt.Debug("new", "activity")
-	if srv, err = activity.New(rt.Logger(), gh.Repositories(rt).Activity); err != nil {
-		rt.Error("status", "error", "error", err)
-		fmt.Printf("%s\n", err)
-		os.Exit(1)
-	}
-	rt.AddService("activity", srv)
-
-	rt.Debug("new", "magick")
-	if srv, err = magick.New(); err != nil {
-		rt.Error("status", "error", "error", err)
-		fmt.Printf("%s\n", err)
-		os.Exit(1)
-	}
-	rt.AddService("magick", srv)
-
-	rt.Debug("new", "dispatch")
-	if srv, err = dispatch.New(
-		glidesdispatch.From(rt), gh.Repositories(rt).Setting,
-	); err != nil {
-		rt.Error("status", "error", "error", err)
-		fmt.Printf("%s\n", err)
-		os.Exit(1)
-	}
-	rt.AddService("dispatch", srv)
-
-	rt.OnStartup(
-		gh.Repositories(rt).Startup,
-		gh.Activity(rt).Startup,
-		gh.Magick(rt).Startup,
-	)
-	rt.OnShutdown(
-		gh.Magick(rt).Shutdown,
-		gh.Activity(rt).Shutdown,
-		gh.Repositories(rt).Shutdown,
-	)
+	err = prepare(rt)
+	rt.NilOrDie(err)
 
 	err = rt.Startup()
 	rt.NilOrDie(err)
@@ -224,8 +143,11 @@ func main() {
 	}
 
 	// ---[ API ]-------------------------------------------------------------- //
-	if rt.Config().APIEnable() {
-		apiiface, err := api.New(rt)
+	apicfg, err := gh.APIConfigFrom(rt.Config())
+	rt.NilOrDie(err)
+
+	if apicfg.Enable {
+		apiiface, err := api.New(rt, apicfg)
 		rt.NilOrDie(err)
 
 		apisrv, err = glideshttp.New(rt, apiiface)
@@ -274,6 +196,89 @@ func main() {
 	rt.Exit(0)
 }
 
+func newRuntime(cfgstr string) (rt *runtime.Runtime, err error) {
+	if rt, err = runtime.New(runtime.Opts{
+		Cfgstr:   cfgstr,
+		Version:  Version,
+		Commit:   Commit,
+		Date:     Date,
+		Database: true,
+	}); err != nil {
+		return nil, err
+	}
+
+	if _, err = storage.Register(rt); err != nil {
+		return nil, err
+	}
+	if _, err = intnat.Register(rt); err != nil {
+		return nil, err
+	}
+	if _, err = markdown.Register(rt); err != nil {
+		return nil, err
+	}
+	if _, err = glidesdispatch.Register(rt); err != nil {
+		return nil, err
+	}
+	if _, err = servicescron.Register(rt); err != nil {
+		return nil, err
+	}
+
+	rt.SetBuild(Version, Commit, Date)
+
+	return rt, nil
+}
+
+func prepare(rt *runtime.Runtime) (err error) {
+	rt.AddEmbed("static", &embedStaticFiles)
+	rt.AddEmbed("views", &embedViews)
+	rt.AddEmbed("locales", &embedLocales)
+	rt.AddEmbed("templates", &embedTemplates)
+	rt.AddEmbed("docs", &embedDocs)
+
+	intnat.From(rt).SetLocales(rt.GetEmbed("locales"), "en",
+		"de", "en", "es", "fr", "it", "ro")
+
+	var srv any
+	rt.Debug("new", "repositories")
+	if srv, err = repositories.New(rt.Database(), rt.Config()); err != nil {
+		return err
+	}
+	rt.AddService("repositories", srv)
+
+	rt.Debug("new", "activity")
+	if srv, err = activity.New(rt.Logger(), gh.Repositories(rt).Activity); err != nil {
+		return err
+	}
+	rt.AddService("activity", srv)
+
+	rt.Debug("new", "magick")
+	if srv, err = magick.New(); err != nil {
+		return err
+	}
+	rt.AddService("magick", srv)
+
+	rt.Debug("new", "dispatch")
+	if srv, err = dispatch.New(
+		glidesdispatch.From(rt), gh.Repositories(rt).Setting,
+	); err != nil {
+		return err
+	}
+	rt.AddService("dispatch", srv)
+
+	rt.OnStartup(
+		gh.Repositories(rt).Startup,
+		gh.Activity(rt).Startup,
+		gh.Magick(rt).Startup,
+	)
+	rt.OnShutdown(
+		gh.Magick(rt).Shutdown,
+		gh.Activity(rt).Shutdown,
+		gh.Repositories(rt).Shutdown,
+	)
+
+	return nil
+}
+
 func registerCronFunctions(rt *runtime.Runtime) (err error) {
 	return servicescron.From(rt).Register(
 		logicactivity.CleanupAdminLogID,
@@ -283,6 +288,10 @@ func registerCronFunctions(rt *runtime.Runtime) (err error) {
 }
 
 func createUser(rt *runtime.Runtime, jsonStr string) error {
+	if err := prepare(rt); err != nil {
+		return err
+	}
+
 	if err := rt.Database().Startup(); err != nil {
 		return err
 	}

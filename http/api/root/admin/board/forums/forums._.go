@@ -18,16 +18,16 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = route.For("AdminBoardForums").Pathname()
+	r.Path = route.For("APIV1AdminBoardForums").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
 		base.Get("", r.Index).Name("index")
 		base.Post("", r.Create).Name("create")
-		base.Put("/:id", r.Update).Name("update")
-		base.Delete("/:id", r.Destroy).Name("destroy")
-		base.Post("/:id/moveup", r.MoveUp).Name("moveup")
-		base.Post("/:id/movedown", r.MoveDown).Name("movedown")
+		base.Put("/"+route.For("APIV1AdminBoardForum").Pathname(), r.Update).Name("update")
+		base.Delete("/"+route.For("APIV1AdminBoardForum").Pathname(), r.Destroy).Name("destroy")
+		base.Post("/"+route.For("APIV1AdminBoardForum").Pathname()+"/"+route.For("APIV1AdminBoardForumMoveUp").Pathname(), r.MoveUp).Name("moveup")
+		base.Post("/"+route.For("APIV1AdminBoardForum").Pathname()+"/"+route.For("APIV1AdminBoardForumMoveDown").Pathname(), r.MoveDown).Name("movedown")
 	}, r.Path+".")
 
 	return r, nil

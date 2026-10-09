@@ -3,49 +3,39 @@ package twofactor
 import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
+	"xn--gckvb8fzb.com/hyperuplink/http/api/view"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 // @Summary		Show the two-factor state
-// @Description	When two-factor authentication is off this hands out a fresh
-// @Description	enrollment with the secret and the otpauth URL to scan, and when it
-// @Description	is already on only the enabled flag comes back.
+// @Description	Whether two-factor authentication is on. While it is off, a fresh
+// @Description	enrollment comes along, with the otpauth URL to scan, its secret
+// @Description	and a QR code as a data URI; the client sends the URL back with a
+// @Description	code to turn it on.
 // @Tags			account
 // @Produce		json
-// @Success		200	{object}	object{enabled=boolean,enrollment=user.OTPEnrollment}
-// @Failure		401	{object}	request.ErrorResponse
-// @Failure		403	{object}	request.ErrorResponse
+// @Success		200	{object}	object{enabled=boolean,enrollment=view.OTPEnrollment}
+// @Failure		401	{object}	problem.Problem
 // @Security		BearerAuth
-// @Security		APIKeyAuth
 // @Router			/account/twofactor [get]
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	if ret, rerr := req.AccessControl(
-		user.UserRole,
-		user.AdminRole,
-	); ret {
+	if ret, rerr := req.RequireUser(); ret {
 		return rerr
 	}
 
-	if req.User.OTPEnabled {
-		return req.Respond(fiber.Map{
-			"enabled": true,
-		})
+	if req.User().OTPEnabled {
+		return req.Respond(fiber.Map{"enabled": true})
 	}
 
-	var enrollment *user.OTPEnrollment
-	enrollment, err = user.NewOTPEnrollment(
-		req.System.Name,
-		req.User.Username,
-		"",
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
+	enrollment, err := user.NewOTPEnrollment(req.System.Name, req.User().Username, "")
+	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}
 
 	return req.Respond(fiber.Map{
 		"enabled":    false,
-		"enrollment": enrollment,
+		"enrollment": view.OTPEnrollmentFrom(enrollment),
 	})
 }

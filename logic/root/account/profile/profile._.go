@@ -27,6 +27,18 @@ type View struct {
 	UserProfile *setting.UserProfile `json:"user_profile"`
 }
 
+func PicturesEnabled(rt *runtime.Runtime) (enabled bool, err error) {
+	settingProfiles, err := settingRepo.GetByID[setting.Profiles](
+		gh.Repositories(rt).Setting,
+		"profiles",
+	)
+	if err != nil {
+		return false, err
+	}
+
+	return settingProfiles.JSONValue.EnablePicture, nil
+}
+
 func StorePicture(
 	rt *runtime.Runtime,
 	usr *user.User,

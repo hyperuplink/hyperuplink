@@ -72,3 +72,27 @@ func (repo *Repository) GetByID(
 
 	return repo.GetByUUID(uuID, qo)
 }
+
+func (repo *Repository) AllByUUIDs(
+	ids []uuid.UUID,
+	qo common.QueryOptions,
+) (model *[]attachment.Attachment, err error) {
+	var rows pgx.Rows
+	var mod []attachment.Attachment
+
+	rows, err = repo.db.Query(context.Background(), qo.Query(
+		`SELECT * FROM attachments WHERE id = ANY($1)`,
+		common.QueryCapabilities{
+			HasSpammed: true,
+			HasDeleted: true,
+		}),
+		ids,
+	)
+	if err != nil {
+		return nil, repo.db.ConvertError(err)
+	}
+
+	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[attachment.Attachment])
+
+	return &mod, repo.db.ConvertError(err)
+}

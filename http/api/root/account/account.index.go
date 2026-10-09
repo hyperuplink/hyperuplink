@@ -3,29 +3,23 @@ package account
 import (
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
-	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
-// @Summary	Show the account
-// @Tags		account
-// @Produce	json
-// @Success	200	{object}	object{user=user.Detail}
-// @Failure	401	{object}	request.ErrorResponse
-// @Failure	403	{object}	request.ErrorResponse
-// @Security	BearerAuth
-// @Security	APIKeyAuth
-// @Router		/account [get]
+// @Summary		Show the account
+// @Description	The signed-in user's own record, with the email address, the
+// @Description	timezone, the groups and the notification preference.
+// @Tags			account
+// @Produce		json
+// @Success		200	{object}	object{user=view.Account}
+// @Failure		401	{object}	problem.Problem
+// @Security		BearerAuth
+// @Router			/account [get]
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	if ret, rerr := req.AccessControl(
-		user.UserRole,
-		user.AdminRole,
-	); ret {
+	if ret, rerr := req.RequireUser(); ret {
 		return rerr
 	}
 
-	return req.Respond(fiber.Map{
-		"user": req.User.AsDetail(),
-	})
+	return r.respondAccount(req)
 }

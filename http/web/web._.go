@@ -6,8 +6,6 @@ import (
 	"io/fs"
 	"net/http"
 	"os"
-	runt "runtime"
-	"strconv"
 	"strings"
 	"time"
 
@@ -27,14 +25,13 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/session"
 	"github.com/gofiber/fiber/v3/middleware/static"
 
-	"github.com/gofiber/storage/redis/v3"
 	html "github.com/gofiber/template/html/v3"
 	slogfiber "github.com/samber/slog-fiber"
 	"xn--gckvb8fzb.com/glides/http/route"
 	"xn--gckvb8fzb.com/glides/http/validation"
 	"xn--gckvb8fzb.com/glides/runtime"
-	"xn--gckvb8fzb.com/hyperuplink/errs"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
+	"xn--gckvb8fzb.com/hyperuplink/http/helpers/redisstorage"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
@@ -114,7 +111,7 @@ func (srv *Web) loadMiddlewares() error {
 		srv.app.Use(cache.New(cache.ConfigDefault))
 	}
 
-	storage, err := srv.getSessionStorage()
+	storage, err := redisstorage.New(srv.rt.Config())
 	if err != nil {
 		return err
 	}
@@ -152,43 +149,6 @@ func (srv *Web) loadMiddlewares() error {
 	}))
 
 	return nil
-}
-
-func (srv *Web) getSessionStorage() (storage fiber.Storage, err error) {
-	redisConfig := redis.Config{
-		MasterName: srv.rt.Config().RedisMasterName(),
-		Username:   srv.rt.Config().RedisUsername(),
-		Password:   srv.rt.Config().RedisPassword(),
-		Database:   srv.rt.Config().RedisDatabase(),
-		Reset:      srv.rt.Config().RedisReset(),
-	}
-
-	addrs := srv.rt.Config().RedisAddresses()
-	addrsl := len(addrs)
-	if addrsl == 0 {
-		return nil, errs.ErrRedisAddrsEmpty
-	} else if addrsl == 1 {
-		hostPort := strings.Split(addrs[0], ":")
-		if len(hostPort) != 2 {
-			return nil, errs.ErrRedisAddrsMalformed
-		}
-		redisConfig.Host = hostPort[0]
-		if redisConfig.Port, err = strconv.Atoi(hostPort[1]); err != nil {
-			return nil, errs.ErrRedisAddrsMalformed
-		}
-	} else if addrsl > 1 {
-		redisConfig.Addrs = addrs
-	}
-
-	poolSize := srv.rt.Config().RedisPoolsize()
-	if poolSize <= 0 {
-		poolSize = 10 * runt.GOMAXPROCS(0)
-	}
-	redisConfig.PoolSize = poolSize
-
-	storage = redis.New(redisConfig)
-
-	return storage, nil
 }
 
 func (srv *Web) getViewsEngine() (*html.Engine, error) {

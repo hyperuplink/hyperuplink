@@ -1,4 +1,5 @@
 {{ $default := .Data.Get "default_level" }}
+{{ $categories := .Data.Get "categories" }}
 {{ $groups := .Data.Get "groups" }}
 {{ $hasCategories := .Data.Get "has_categories" }}
 <!-- DEFAULT PERMISSION -->
@@ -33,6 +34,35 @@
         </div>
       </form>
     </div>
+    {{ range $cat := $categories }}
+    <!-- CATEGORY DEFAULT -->
+    <div class="raised padding margin post flex-row gap">
+      <form method="post"
+            action="{{$.Site.GetFormAction "apply"}}"
+            class="flex-row grow gap">
+        <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
+        <input type="hidden" name="group_id" value="">
+        <input type="hidden" name="category_id" value="{{$cat.ID}}">
+        <div class="flex-column grow justify-center">{{$cat.Name}}</div>
+        <div class="flex-column grow">
+          <div class="dropdown">
+            <select name="level" size="1">
+              <option value="inherit" {{ if eq $cat.Level "inherit" }}selected{{ end }}>{{$._.T "level_inherit"}}</option>
+              <option value="none" {{ if eq $cat.Level "none" }}selected{{ end }}>{{$._.T "level_none"}}</option>
+              <option value="read" {{ if eq $cat.Level "read" }}selected{{ end }}>{{$._.T "level_read"}}</option>
+              <option value="read_write" {{ if eq $cat.Level "read_write" }}selected{{ end }}>{{$._.T "level_read_write"}}</option>
+              <option value="read_write_moderate" {{ if eq $cat.Level "read_write_moderate" }}selected{{ end }}>{{$._.T "level_read_write_moderate"}}</option>
+            </select>
+            <div class="dropdown-button"></div>
+          </div>
+        </div>
+        <div class="flex-column">
+          <button type="submit" class="affirmative" title="{{$._.T "apply"}}">{{$._.T "apply"}}</button>
+        </div>
+      </form>
+    </div>
+    <!-- END -->
+    {{ end }}
   </div>
 </div>
 <!-- GROUPS -->

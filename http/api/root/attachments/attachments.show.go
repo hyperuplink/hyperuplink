@@ -8,32 +8,22 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
 	logicattachment "xn--gckvb8fzb.com/hyperuplink/logic/root/attachment"
-	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 // @Summary		Download an attachment
-// @Description	The file is streamed back under the name it was uploaded with, and
-// @Description	callers who cannot read the category the attachment was posted in
-// @Description	are answered as though it did not exist.
+// @Description	The file is streamed back under the name it was uploaded with. An
+// @Description	attachment of a post the viewer may not read is reported as not
+// @Description	found.
 // @Tags			board
 // @Produce		octet-stream
-// @Param			attachment	path		string	true	"The attachment identifier"
+// @Param			attachment	path		string	true	"The attachment UUID"
 // @Success		200			{file}		binary
-// @Failure		401			{object}	request.ErrorResponse
-// @Failure		403			{object}	request.ErrorResponse
-// @Failure		404			{object}	request.ErrorResponse
+// @Failure		401			{object}	problem.Problem
+// @Failure		404			{object}	problem.Problem
 // @Security		BearerAuth
-// @Security		APIKeyAuth
 // @Router			/attachments/{attachment} [get]
 func (r *Route) Show(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
-
-	if ret, rerr := req.AccessControl(
-		user.UserRole,
-		user.AdminRole,
-	); ret {
-		return rerr
-	}
 
 	id, err := uuid.Parse(c.Params("attachment"))
 	if err != nil {
@@ -41,15 +31,15 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 	}
 
 	file, err := logicattachment.Open(r.Runtime, id, req.Perms())
-	if ret, rerr := req.RespondOnError(err); ret == true {
+	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}
 
 	c.Set("X-Content-Type-Options", "nosniff")
 	if file.Attachment.MimeType != "" {
-		c.Set("Content-Type", file.Attachment.MimeType)
+		c.Set(fiber.HeaderContentType, file.Attachment.MimeType)
 	}
-	c.Set("Content-Disposition", fmt.Sprintf(
+	c.Set(fiber.HeaderContentDisposition, fmt.Sprintf(
 		"%s; filename=\"%s\"",
 		file.Disposition,
 		logicattachment.SanitizeFilename(file.Attachment.Filename),

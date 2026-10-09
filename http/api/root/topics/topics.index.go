@@ -1,72 +1,55 @@
 package topics
 
 import (
-	"errors"
-	"strconv"
-
 	"github.com/gofiber/fiber/v3"
-	"github.com/google/uuid"
-	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
+	"xn--gckvb8fzb.com/hyperuplink/http/api/view"
 	topicsfeed "xn--gckvb8fzb.com/hyperuplink/logic/root/topics"
-	"xn--gckvb8fzb.com/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/models/topic"
 )
 
-// @Summary		List topics
-// @Description	The board-wide feed of topics, newest activity first, narrowed to one
-// @Description	forum when forum_id is given.
+// @Summary		List topics across the board
+// @Description	One page of topics from every forum the viewer may read, pinned
+// @Description	ones first, in the requested order: active (the default, newest
+// @Description	activity first), new (newest topic first) or replies (most replies
+// @Description	first).
 // @Tags			board
 // @Produce		json
-// @Param			forum_id	query		string	false	"Only list topics in this forum"
-// @Param			page		query		integer	false	"The page to return, counting from one"
-// @Success		200			{object}	topicsfeed.View
-// @Failure		401			{object}	request.ErrorResponse
-// @Failure		403			{object}	request.ErrorResponse
-// @Failure		404			{object}	request.ErrorResponse
-// @Failure		422			{object}	request.ErrorResponse
+// @Param			sort		query		string	false	"active, new or replies"
+// @Param			page		query		integer	false	"The page, counting from one"
+// @Param			per_page	query		integer	false	"Topics per page, at most 100"
+// @Success		200			{object}	object{topics=[]view.Topic,pagination=view.Pagination}
+// @Failure		401			{object}	problem.Problem
+// @Failure		422			{object}	problem.Problem
 // @Security		BearerAuth
-// @Security		APIKeyAuth
 // @Router			/topics [get]
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	if ret, rerr := req.AccessControl(
-		user.UserRole,
-		user.AdminRole,
-	); ret {
+	page, perPage, ret, rerr := req.Page(req.System.GetTopicsPerPage())
+	if ret {
+		return rerr
+	}
+	sort, ret, rerr := req.Sort(string(topic.SortActive), topic.Sorts()...)
+	if ret {
 		return rerr
 	}
 
-	var activePage int
-	if activePage, err = strconv.Atoi(c.Query("page", "1")); err != nil {
-		return req.RespondError(errs.ErrFormInvalid)
-	}
-
-	forumID := uuid.NullUUID{}
-	if raw := c.Query("forum_id"); raw != "" {
-		id, perr := uuid.Parse(raw)
-		if perr != nil {
-			return req.RespondError(errs.ErrFormInvalid)
-		}
-		forumID.UUID, forumID.Valid = id, true
-	}
-
-	viewerID := uuid.NullUUID{}
-	viewerID.UUID, viewerID.Valid = req.UserUUID()
-
-	var view *topicsfeed.View
-	view, err = topicsfeed.Index(r.Runtime, &topicsfeed.Input{
-		ForumID:  forumID,
-		Page:     activePage,
-		PerPage:  req.System.GetTopicsPerPage(),
-		ViewerID: viewerID,
+	feed, err := topicsfeed.Index(r.Runtime, &topicsfeed.Input{
+		Sort:     topic.Sort(sort),
+		Page:     page,
+		PerPage:  perPage,
+		ViewerID: req.ViewerID(),
 	}, req.Perms())
-	if errors.Is(err, errs.ErrForbidden) {
-		return req.RespondError(errs.ErrNoRows)
-	}
-	if ret, rerr := req.RespondOnError(err); ret == true {
+	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}
 
-	return req.Respond(view)
+	tops := req.Views().Topics(*feed.Topics)
+	view.AttachUnread(tops, feed.Unread)
+
+	return req.Respond(fiber.Map{
+		"topics":     tops,
+		"pagination": view.NewPagination(page, perPage, feed.Total),
+	})
 }

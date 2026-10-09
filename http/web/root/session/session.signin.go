@@ -5,10 +5,8 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/glides/http/route"
-	"xn--gckvb8fzb.com/glides/services/repositories/common"
-	"xn--gckvb8fzb.com/hyperuplink/errs"
-	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
+	logicsession "xn--gckvb8fzb.com/hyperuplink/logic/root/session"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
@@ -52,25 +50,7 @@ func (r *Route) SignInCreate(c fiber.Ctx) (err error) {
 	r.Runtime.Debug("form", frm)
 
 	var usr *user.User
-	usr, err = gh.Repositories(r.Runtime).User.GetByUsername(
-		frm.Username,
-		common.QueryOptions{
-			WithBanned:  false,
-			WithSpammed: false,
-			WithDeleted: false,
-			Limit:       1,
-		},
-	)
-	if ret, rerr := req.RespondOnError(err); ret == true {
-		return rerr
-	}
-
-	var match bool = false
-	if match, _, err = usr.CheckPassword(frm.Password); !match {
-		if err == nil {
-			err = errs.ErrUsernamePasswordWrong
-		}
-	}
+	usr, err = logicsession.CheckPassword(r.Runtime, frm.Username, frm.Password)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

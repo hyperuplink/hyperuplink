@@ -41,6 +41,15 @@
           </div>
         </div>
       </div>
+      <fieldset class="margin padding">
+        <div class="field flex-column justify-end">
+          <span class="checkbox-row">
+            <input type="checkbox" id="allow_api_guests" name="allow_api_guests" value="1"
+                  {{ if $.System.AllowAPIGuests }}checked{{ end }}>
+            <label for="allow_api_guests">{{$._.T "allow_api_guests"}}</label>
+          </span>
+        </div>
+      </fieldset>
       {{ $general := .Data.Get "setting_general" }}
       <fieldset class="margin padding">
         <div class="field flex-column justify-end">

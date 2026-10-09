@@ -2,46 +2,88 @@ package request
 
 import (
 	"errors"
-	"fmt"
+	"reflect"
 	"slices"
+	"strconv"
 	"strings"
-	"xn--gckvb8fzb.com/glides/services/intnat"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/intnat"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
+	"xn--gckvb8fzb.com/hyperuplink/http/api/problem"
+	"xn--gckvb8fzb.com/hyperuplink/http/api/view"
 	logicperms "xn--gckvb8fzb.com/hyperuplink/logic/helpers/perms"
+	"xn--gckvb8fzb.com/hyperuplink/models/apikey"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
-const UserLocal = "api_user"
+const (
+	PrincipalLocal = "api_principal"
+	SystemLocal    = "api_system"
 
-type StatusResponse struct {
-	Status string `json:"status" example:"ok"`
+	MaxPerPage = 100
+)
+
+type Principal struct {
+	User *user.User
+	Key  *apikey.APIKey
 }
 
-type ErrorResponse struct {
-	Error string `json:"error" example:"forbidden"`
+func (p Principal) IsGuest() bool {
+	return p.User == nil
 }
 
-type ValidationErrorResponse struct {
-	Error  string            `json:"error" example:"validation"`
-	Fields map[string]string `json:"fields"`
+func (p Principal) Role() user.Role {
+	if p.User == nil {
+		return user.GuestRole
+	}
+	return p.User.Role
+}
+
+func PrincipalFrom(c fiber.Ctx) Principal {
+	if p, ok := c.Locals(PrincipalLocal).(Principal); ok {
+		return p
+	}
+	return Principal{}
+}
+
+func SystemFrom(c fiber.Ctx, rt *runtime.Runtime) *setting.System {
+	if sys, ok := c.Locals(SystemLocal).(*setting.System); ok && sys != nil {
+		return sys
+	}
+
+	settingSystem, err := settingRepo.GetByID[setting.System](
+		gh.Repositories(rt).Setting,
+		"system",
+	)
+	if err != nil {
+		rt.Error("error", err)
+		sys := setting.NewSystem()
+		return &sys
+	}
+
+	sys := settingSystem.JSONValue
+	c.Locals(SystemLocal, &sys)
+
+	return &sys
 }
 
 type Request struct {
-	r      route.IRouteController
-	c      fiber.Ctx
-	User   *user.User
-	System *setting.System
-	perms  *permission.Resolution
-	lang   string
+	r         route.IRouteController
+	c         fiber.Ctx
+	Principal Principal
+	System    *setting.System
+	perms     *permission.Resolution
+	views     *view.Mapper
+	lang      string
 }
 
 func New(
@@ -51,22 +93,8 @@ func New(
 	req := new(Request)
 	req.r = r
 	req.c = c
-
-	if usr, ok := c.Locals(UserLocal).(*user.User); ok {
-		req.User = usr
-	}
-
-	settingSystem, err := settingRepo.GetByID[setting.System](
-		gh.Repositories(r.GetRuntime()).Setting,
-		"system",
-	)
-	if err != nil {
-		r.GetRuntime().Error("error", err)
-		defaultSystem := setting.System{}
-		req.System = &defaultSystem
-	} else {
-		req.System = &settingSystem.JSONValue
-	}
+	req.Principal = PrincipalFrom(c)
+	req.System = SystemFrom(c, r.GetRuntime())
 
 	al := c.Get("Accept-Language", "en")
 	als := strings.Split(al, "-")
@@ -75,22 +103,36 @@ func New(
 	return req
 }
 
+func (req *Request) Ctx() fiber.Ctx {
+	return req.c
+}
+
 func (req *Request) Ts(msg string) string {
 	return intnat.From(req.r.GetRuntime()).NewLocalizer(req.lang).Get(msg)
 }
 
 func (req *Request) Role() user.Role {
-	if req.User == nil {
-		return user.GuestRole
-	}
-	return req.User.Role
+	return req.Principal.Role()
+}
+
+func (req *Request) IsGuest() bool {
+	return req.Principal.IsGuest()
+}
+
+func (req *Request) User() *user.User {
+	return req.Principal.User
 }
 
 func (req *Request) UserUUID() (uuid.UUID, bool) {
-	if req.User == nil {
+	if req.Principal.User == nil {
 		return uuid.Nil, false
 	}
-	return req.User.ID, true
+	return req.Principal.User.ID, true
+}
+
+func (req *Request) ViewerID() (viewerID uuid.NullUUID) {
+	viewerID.UUID, viewerID.Valid = req.UserUUID()
+	return viewerID
 }
 
 func (req *Request) Perms() *permission.Resolution {
@@ -99,8 +141,8 @@ func (req *Request) Perms() *permission.Resolution {
 	}
 
 	var memberOf []string
-	if req.User != nil {
-		memberOf = req.User.MemberOf
+	if req.Principal.User != nil {
+		memberOf = req.Principal.User.MemberOf
 	}
 
 	req.perms = logicperms.Resolve(
@@ -111,52 +153,132 @@ func (req *Request) Perms() *permission.Resolution {
 	return req.perms
 }
 
-func (req *Request) AccessControl(roles ...user.Role) (mustReturn bool, err error) {
-	if slices.Index(roles, req.Role()) < 0 {
+func (req *Request) Views() *view.Mapper {
+	if req.views == nil {
+		req.views = view.NewMapper(req.r.GetRuntime(), req.System)
+	}
+	return req.views
+}
+
+func (req *Request) RequireUser() (mustReturn bool, err error) {
+	if req.IsGuest() {
+		return true, req.RespondError(errs.ErrAuthenticationRequired)
+	}
+
+	return false, nil
+}
+
+func (req *Request) RequireAdmin() (mustReturn bool, err error) {
+	if req.IsGuest() {
+		return true, req.RespondError(errs.ErrAuthenticationRequired)
+	}
+	if req.Role() != user.AdminRole {
 		return true, req.RespondError(errs.ErrForbidden)
 	}
 
 	return false, nil
 }
 
+func (req *Request) Page(defaultPerPage int) (page int, perPage int, mustReturn bool, err error) {
+	fields := map[string][]string{}
+
+	page = 1
+	if raw := req.c.Query("page"); raw != "" {
+		if page, err = strconv.Atoi(raw); err != nil {
+			fields["page"] = []string{"number"}
+		} else if page < 1 {
+			fields["page"] = []string{"min"}
+		}
+	}
+
+	perPage = defaultPerPage
+	if raw := req.c.Query("per_page"); raw != "" {
+		if perPage, err = strconv.Atoi(raw); err != nil {
+			fields["per_page"] = []string{"number"}
+		} else if perPage < 1 {
+			fields["per_page"] = []string{"min"}
+		} else if perPage > MaxPerPage {
+			fields["per_page"] = []string{"max"}
+		}
+	}
+
+	if len(fields) > 0 {
+		return 0, 0, true, req.RespondProblem(problem.Validation(fields))
+	}
+
+	return page, perPage, false, nil
+}
+
+func (req *Request) Sort(fallback string, allowed ...string) (sort string, mustReturn bool, err error) {
+	sort = req.c.Query("sort", fallback)
+	if !slices.Contains(allowed, sort) {
+		return "", true, req.RespondProblem(problem.Validation(map[string][]string{
+			"sort": {"oneof"},
+		}))
+	}
+
+	return sort, false, nil
+}
+
+func (req *Request) ParamUUID(name string) (id uuid.UUID, mustReturn bool, err error) {
+	if id, err = uuid.Parse(req.c.Params(name)); err != nil {
+		return uuid.Nil, true, req.RespondError(errs.ErrNoRows)
+	}
+
+	return id, false, nil
+}
+
 func (req *Request) BindJSON(in any) (mustReturn bool, err error) {
 	if berr := req.c.Bind().JSON(in); berr != nil {
-		return true, req.respondBindError(berr, "json")
+		return true, req.respondBindError(in, berr)
 	}
 
 	return false, nil
 }
 
-func (req *Request) BindForm(in any) (mustReturn bool, err error) {
-	if berr := req.c.Bind().Form(in); berr != nil {
-		return true, req.respondBindError(berr, "form")
-	}
-
-	return false, nil
-}
-
-func (req *Request) respondBindError(berr error, tag string) error {
+func (req *Request) respondBindError(in any, berr error) error {
 	var valErrs validator.ValidationErrors
 	if errors.As(berr, &valErrs) {
-		fields := make(map[string]string)
+		fields := map[string][]string{}
 		for _, e := range valErrs {
-			fields[strings.ToLower(e.Field())] = fmt.Sprintf(
-				"%s_%s_%s",
-				errs.ErrValidation.Error(),
-				strings.ToLower(e.Field()),
-				e.Tag(),
-			)
+			name := jsonFieldName(reflect.TypeOf(in), e.StructNamespace())
+			fields[name] = append(fields[name], e.Tag())
 		}
 
-		return req.c.Status(fiber.StatusUnprocessableEntity).JSON(ValidationErrorResponse{
-			Error:  errs.ErrValidation.Error(),
-			Fields: fields,
-		})
+		return req.RespondProblem(problem.Validation(fields))
 	}
 
-	return req.c.Status(fiber.StatusBadRequest).JSON(ErrorResponse{
-		Error: errs.ErrFormInvalid.Error(),
-	})
+	return req.RespondError(errs.ErrFormInvalid)
+}
+
+func jsonFieldName(t reflect.Type, namespace string) string {
+	parts := strings.Split(namespace, ".")
+	if len(parts) > 1 {
+		parts = parts[1:]
+	}
+
+	var field reflect.StructField
+	for _, part := range parts {
+		for t.Kind() == reflect.Pointer {
+			t = t.Elem()
+		}
+		if t.Kind() != reflect.Struct {
+			return strings.ToLower(parts[len(parts)-1])
+		}
+
+		var ok bool
+		if field, ok = t.FieldByName(part); !ok {
+			return strings.ToLower(parts[len(parts)-1])
+		}
+		t = field.Type
+	}
+
+	name := strings.Split(field.Tag.Get("json"), ",")[0]
+	if name == "" || name == "-" {
+		return strings.ToLower(field.Name)
+	}
+
+	return name
 }
 
 func (req *Request) Respond(data any) error {
@@ -167,14 +289,24 @@ func (req *Request) RespondCreated(data any) error {
 	return req.c.Status(fiber.StatusCreated).JSON(data)
 }
 
-func (req *Request) RespondOK() error {
-	return req.c.JSON(StatusResponse{Status: "ok"})
+func (req *Request) RespondNoContent() error {
+	return req.c.SendStatus(fiber.StatusNoContent)
+}
+
+func (req *Request) RespondProblem(p problem.Problem) error {
+	return problem.Respond(req.c, p)
 }
 
 func (req *Request) RespondError(err error) error {
-	return req.c.Status(statusForError(err)).JSON(ErrorResponse{
-		Error: err.Error(),
-	})
+	return req.RespondProblem(problem.From(err))
+}
+
+func (req *Request) RespondOnReadError(err error) (mustReturn bool, rerr error) {
+	if errors.Is(err, errs.ErrForbidden) {
+		err = errs.ErrNoRows
+	}
+
+	return req.RespondOnError(err)
 }
 
 func (req *Request) RespondOnError(err error) (mustReturn bool, rerr error) {
@@ -183,61 +315,4 @@ func (req *Request) RespondOnError(err error) (mustReturn bool, rerr error) {
 	}
 
 	return true, req.RespondError(err)
-}
-
-// TODO: Find a different solution for this, e.g. integrating the fiber.Status
-// into the error itself.
-func statusForError(err error) int {
-	switch {
-	case errors.Is(err, errs.ErrNoRows),
-		errors.Is(err, errs.ErrUserIDNotFound),
-		errors.Is(err, errs.ErrTargetIDNotFound):
-		return fiber.StatusNotFound
-	case errors.Is(err, errs.ErrUnauthorized),
-		errors.Is(err, errs.ErrAPIKeyInvalid):
-		return fiber.StatusUnauthorized
-	case errors.Is(err, errs.ErrForbidden):
-		return fiber.StatusForbidden
-	case errors.Is(err, errs.ErrUniqueViolationOn):
-		return fiber.StatusConflict
-	case errors.Is(err, errs.ErrValidation),
-		errors.Is(err, errs.ErrFormInvalid),
-		errors.Is(err, errs.ErrPasswordWrong),
-		errors.Is(err, errs.ErrOTPCodeWrong),
-		errors.Is(err, errs.ErrOTPSetupExpired),
-		errors.Is(err, errs.ErrInvalidUploadFormat),
-		errors.Is(err, errs.ErrInvalidStorageProvider),
-		errors.Is(err, errs.ErrInvalidTheme),
-		errors.Is(err, errs.ErrInvalidColorscheme),
-		errors.Is(err, errs.ErrThemeStorageNotConfigured),
-		errors.Is(err, errs.ErrBackgroundUploadFailed),
-		errors.Is(err, errs.ErrBackgroundAlreadySet),
-		errors.Is(err, errs.ErrBackgroundFormatNotAllowed),
-		errors.Is(err, errs.ErrBannerUploadFailed),
-		errors.Is(err, errs.ErrBannerAlreadySet),
-		errors.Is(err, errs.ErrBannerFormatNotAllowed),
-		errors.Is(err, errs.ErrFaviconUploadFailed),
-		errors.Is(err, errs.ErrFaviconAlreadySet),
-		errors.Is(err, errs.ErrFaviconFormatNotAllowed),
-		errors.Is(err, errs.ErrPictureTooLarge),
-		errors.Is(err, errs.ErrPictureFormatNotAllowed),
-		errors.Is(err, errs.ErrAttachmentTooLarge),
-		errors.Is(err, errs.ErrAttachmentFormatNotAllowed),
-		errors.Is(err, errs.ErrAttachmentHookFailed),
-		errors.Is(err, errs.ErrAttachmentDuplicate),
-		errors.Is(err, errs.ErrAttachmentNotFound),
-		errors.Is(err, errs.ErrAttachmentUploadFailed),
-		errors.Is(err, errs.ErrPollKindInvalid),
-		errors.Is(err, errs.ErrPollEnded),
-		errors.Is(err, errs.ErrPollSelectionInvalid),
-		errors.Is(err, errs.ErrPollNotAllowed),
-		errors.Is(err, errs.ErrPollOptionsTooFew),
-		errors.Is(err, errs.ErrPollOptionsTooMany),
-		errors.Is(err, errs.ErrPollOptionTooLong),
-		errors.Is(err, errs.ErrPollEndsAtInvalid),
-		errors.Is(err, errs.ErrPollEndsAtPast):
-		return fiber.StatusUnprocessableEntity
-	default:
-		return fiber.StatusInternalServerError
-	}
 }

@@ -8,6 +8,7 @@ import (
 
 	"github.com/pquerna/otp"
 	"github.com/pquerna/otp/totp"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
 )
 
 const (
@@ -82,7 +83,10 @@ func otpQRDataURI(key *otp.Key) (string, error) {
 func OTPSecretFromURL(uri string) (string, error) {
 	key, err := otp.NewKeyFromURL(uri)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("%w_otp_url_url", errs.ErrValidation)
+	}
+	if key.Type() != "totp" || key.Secret() == "" {
+		return "", fmt.Errorf("%w_otp_url_url", errs.ErrValidation)
 	}
 
 	return key.Secret(), nil

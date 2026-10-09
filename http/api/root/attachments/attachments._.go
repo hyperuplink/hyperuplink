@@ -18,12 +18,12 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = route.For("Attachments").Pathname()
+	r.Path = route.For("APIV1Attachments").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
-		base.Get("/:attachment", r.Show).Name("show")
 		base.Post("", r.Create).Name("create")
+		base.Get("/"+route.For("APIV1Attachment").Pathname(), r.Show).Name("show")
 	}, r.Path+".")
 
 	return r, nil

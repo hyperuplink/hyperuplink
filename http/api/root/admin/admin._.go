@@ -30,49 +30,47 @@ func New(
 
 	r.Runtime = rt
 	r.Router = router
-	r.Path = route.For("Admin").Pathname()
+	r.Path = route.For("APIV1Admin").Pathname()
 	r.Env = route.NewEnv()
 
 	r.Router.Route("/"+r.Path, func(base fiber.Router) {
 		base.Use(r.RecordVisit)
 
-		base.Get("", r.Index).Name("index")
-
-		adminAuthRoute, err := auth.New(r.Runtime, base)
+		authRoute, err := auth.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
-		r.Routes = append(r.Routes, adminAuthRoute)
+		r.Routes = append(r.Routes, authRoute)
 
-		adminBoardRoute, err := board.New(r.Runtime, base)
+		boardRoute, err := board.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
-		r.Routes = append(r.Routes, adminBoardRoute)
+		r.Routes = append(r.Routes, boardRoute)
 
-		adminCommsRoute, err := comms.New(r.Runtime, base)
+		commsRoute, err := comms.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
-		r.Routes = append(r.Routes, adminCommsRoute)
+		r.Routes = append(r.Routes, commsRoute)
 
-		adminGeneralRoute, err := general.New(r.Runtime, base)
+		generalRoute, err := general.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
-		r.Routes = append(r.Routes, adminGeneralRoute)
+		r.Routes = append(r.Routes, generalRoute)
 
-		adminHealthRoute, err := health.New(r.Runtime, base)
+		healthRoute, err := health.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
-		r.Routes = append(r.Routes, adminHealthRoute)
+		r.Routes = append(r.Routes, healthRoute)
 
-		adminLogsRoute, err := logs.New(r.Runtime, base)
+		logsRoute, err := logs.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
-		r.Routes = append(r.Routes, adminLogsRoute)
+		r.Routes = append(r.Routes, logsRoute)
 
-		adminUsersRoute, err := users.New(r.Runtime, base)
+		permissionsRoute, err := permissions.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
-		r.Routes = append(r.Routes, adminUsersRoute)
+		r.Routes = append(r.Routes, permissionsRoute)
 
-		adminPermissionsRoute, err := permissions.New(r.Runtime, base)
+		reportsRoute, err := reports.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
-		r.Routes = append(r.Routes, adminPermissionsRoute)
+		r.Routes = append(r.Routes, reportsRoute)
 
-		adminReportsRoute, err := reports.New(r.Runtime, base)
+		usersRoute, err := users.New(r.Runtime, base)
 		r.Runtime.NilOrDie(err)
-		r.Routes = append(r.Routes, adminReportsRoute)
+		r.Routes = append(r.Routes, usersRoute)
 	}, r.Path+".")
 
 	return r, nil
@@ -95,16 +93,12 @@ func (r *Route) RecordVisit(c fiber.Ctx) (err error) {
 		return c.Next()
 	}
 
-	usr, ok := c.Locals(request.UserLocal).(*user.User)
-	if !ok || usr == nil {
+	principal := request.PrincipalFrom(c)
+	if principal.User == nil || principal.User.Role != user.AdminRole {
 		return c.Next()
 	}
 
-	if usr.Role != user.AdminRole {
-		return c.Next()
-	}
-
-	logicactivity.RecordAdminVisit(r.Runtime, usr.ID, c.Path())
+	logicactivity.RecordAdminVisit(r.Runtime, principal.User.ID, c.Path())
 
 	return c.Next()
 }

@@ -1,63 +1,44 @@
 package topics
 
 import (
-	"errors"
-	"strconv"
-
 	"github.com/gofiber/fiber/v3"
-	"github.com/google/uuid"
-	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/request"
-	logictopics "xn--gckvb8fzb.com/hyperuplink/logic/root/categories/forums/topics"
-	"xn--gckvb8fzb.com/hyperuplink/models/user"
+	"xn--gckvb8fzb.com/hyperuplink/http/api/view"
+	topicsfeed "xn--gckvb8fzb.com/hyperuplink/logic/root/topics"
 )
 
-// @Summary		Show a topic by identifier
-// @Description	The same view the slug path returns, addressed by identifier instead,
-// @Description	which saves a caller that already holds one from knowing the slugs.
+// @Summary		Show a topic
+// @Description	One topic with its poll, addressed by UUID or short id, without its
+// @Description	replies, which are a collection of their own. A signed-in viewer
+// @Description	gets the read marker and the vote state as well. A topic the viewer
+// @Description	may not read is reported as not found.
 // @Tags			board
 // @Produce		json
-// @Param			id		path		string	true	"The topic identifier"
-// @Param			page	query		integer	false	"The page to return, counting from one"
-// @Success		200		{object}	logictopics.View
-// @Failure		401		{object}	request.ErrorResponse
-// @Failure		403		{object}	request.ErrorResponse
-// @Failure		404		{object}	request.ErrorResponse
-// @Failure		422		{object}	request.ErrorResponse
+// @Param			topic	path		string	true	"The topic UUID or short id"
+// @Success		200		{object}	object{topic=view.Topic}
+// @Failure		401		{object}	problem.Problem
+// @Failure		404		{object}	problem.Problem
 // @Security		BearerAuth
-// @Security		APIKeyAuth
-// @Router			/topics/{id} [get]
+// @Router			/topics/{topic} [get]
 func (r *Route) Show(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	if ret, rerr := req.AccessControl(
-		user.UserRole,
-		user.AdminRole,
-	); ret {
-		return rerr
-	}
-
-	var activePage int
-	if activePage, err = strconv.Atoi(c.Query("page", "1")); err != nil {
-		return req.RespondError(errs.ErrFormInvalid)
-	}
-
-	viewerID := uuid.NullUUID{}
-	viewerID.UUID, viewerID.Valid = req.UserUUID()
-
-	var view *logictopics.View
-	view, err = logictopics.ShowByID(r.Runtime, &logictopics.ShowByIDInput{
-		ID:       c.Params("id"),
-		Page:     activePage,
-		PerPage:  req.System.GetPostsPerPage(),
-		ViewerID: viewerID,
+	shown, err := topicsfeed.Show(r.Runtime, &topicsfeed.ShowInput{
+		ID:       c.Params("topic"),
+		ViewerID: req.ViewerID(),
 	}, req.Perms())
-	if errors.Is(err, errs.ErrForbidden) {
-		return req.RespondError(errs.ErrNoRows)
-	}
-	if ret, rerr := req.RespondOnError(err); ret == true {
+	if ret, rerr := req.RespondOnReadError(err); ret {
 		return rerr
 	}
 
-	return req.Respond(view)
+	m := req.Views()
+	m.PrefetchAttachments(shown.Topic.AttachmentIDs)
+
+	top := m.Topic(shown.Topic)
+	top.Poll = view.PollFrom(shown.Poll, shown.Topic.EndedAt, !req.IsGuest())
+	if !req.IsGuest() {
+		top.Viewer = &view.TopicViewer{Unread: shown.Unread}
+	}
+
+	return req.Respond(fiber.Map{"topic": top})
 }

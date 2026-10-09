@@ -27,6 +27,31 @@ func (r *Resolution) SetCategory(id uuid.UUID, slug string, level byte) {
 	r.levelBySlug[slug] = level
 }
 
+func (r *Resolution) Cap(level byte) {
+	r.Default = min(r.Default, level)
+	for id, lvl := range r.levelByID {
+		r.levelByID[id] = min(lvl, level)
+	}
+	for slug, lvl := range r.levelBySlug {
+		r.levelBySlug[slug] = min(lvl, level)
+	}
+}
+
+func (r *Resolution) Levels() map[uuid.UUID]byte {
+	levels := make(map[uuid.UUID]byte, len(r.levelByID))
+	for id := range r.levelByID {
+		levels[id] = r.LevelByID(id)
+	}
+	return levels
+}
+
+func (r *Resolution) DefaultLevel() byte {
+	if r.IsAdmin {
+		return Moderate
+	}
+	return r.Default
+}
+
 func (r *Resolution) LevelByID(id uuid.UUID) byte {
 	if r.IsAdmin {
 		return Moderate
@@ -72,7 +97,18 @@ func (r *Resolution) CanModerateSlug(slug string) bool {
 }
 
 func (r *Resolution) ReadAll() bool {
-	return r.IsAdmin || r.Default >= ReadOnly
+	if r.IsAdmin {
+		return true
+	}
+	if r.Default < ReadOnly {
+		return false
+	}
+	for _, lvl := range r.levelByID {
+		if lvl < ReadOnly {
+			return false
+		}
+	}
+	return true
 }
 
 func (r *Resolution) CanWriteAny() bool {

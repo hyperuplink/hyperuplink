@@ -1,6 +1,7 @@
 package categories
 
 import (
+	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
@@ -15,17 +16,23 @@ type View struct {
 	Forums   *[]vforum.VForum   `json:"forums"`
 }
 
+func Resolve(
+	rt *runtime.Runtime,
+	idOrSlug string,
+) (cat *category.Category, err error) {
+	if id, perr := uuid.Parse(idOrSlug); perr == nil {
+		return gh.Repositories(rt).Category.GetByUUID(id, common.QueryOptions{Limit: 1})
+	}
+
+	return gh.Repositories(rt).Category.GetBySlug(idOrSlug, common.QueryOptions{Limit: 1})
+}
+
 func Show(
 	rt *runtime.Runtime,
-	slug string,
+	idOrSlug string,
 	perms *permission.Resolution,
 ) (view *View, err error) {
-	cat, err := gh.Repositories(rt).Category.GetBySlug(
-		slug,
-		common.QueryOptions{
-			Limit: 1,
-		},
-	)
+	cat, err := Resolve(rt, idOrSlug)
 	if err != nil {
 		return nil, err
 	}
