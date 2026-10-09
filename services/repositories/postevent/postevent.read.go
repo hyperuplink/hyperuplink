@@ -1,6 +1,7 @@
 package postevent
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -18,7 +19,7 @@ func (repo *Repository) GetByUUID(
 	var rows pgx.Rows
 	var mod postevent.PostEvent
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM postevents WHERE id = $1`,
 		common.QueryCapabilities{
 			HasDeleted: true,
@@ -61,7 +62,7 @@ func (repo *Repository) TallyForTopicUUID(
 	qoc.Limit = 0
 	qoc.Page = 0
 
-	rows, err = repo.db.Query(fmt.Sprintf(
+	rows, err = repo.db.Query(context.Background(), fmt.Sprintf(
 		`SELECT selection, COUNT(*) AS votes FROM (%s) selections GROUP BY selection`,
 		qoc.Query(
 			`SELECT selection FROM postevents
@@ -99,7 +100,7 @@ func (repo *Repository) SelectionForTopicUUID(
 	authorID uuid.UUID,
 	qo common.QueryOptions,
 ) (selection int, ok bool, err error) {
-	err = repo.db.QueryRow(qo.Query(
+	err = repo.db.QueryRow(context.Background(), qo.Query(
 		`SELECT selection FROM postevents
 		WHERE type = $1 AND target = $2 AND topic_id = $3 AND author_id = $4`,
 		common.QueryCapabilities{

@@ -1,6 +1,7 @@
 package search
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -132,6 +133,7 @@ func (repo *Repository) Count(term string, opts Options) (total int64, err error
 
 	var rows pgx.Rows
 	rows, err = repo.db.Query(
+		context.Background(),
 		"SELECT COUNT(*) AS total FROM ("+strings.Join(parts, " UNION ALL ")+") results",
 		args...,
 	)
@@ -185,6 +187,7 @@ func (repo *Repository) Query(
 
 	var rows pgx.Rows
 	rows, err = repo.db.Query(
+		context.Background(),
 		`SELECT kind, category_slug, forum_slug, topic_slug, topic_name,
 		        author_username, created_at, reply_short_id, reply_position
 		 FROM (`+strings.Join(parts, " UNION ALL ")+`) results

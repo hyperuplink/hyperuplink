@@ -5,6 +5,7 @@ import (
 	"mime/multipart"
 	"path"
 	"strings"
+	"xn--gckvb8fzb.com/glides/services/storage"
 
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/lithammer/shortuuid/v4"
@@ -77,7 +78,7 @@ func UploadImage(
 
 	imageFilename := shortuuid.New() + mtype.Extension()
 
-	if err = rt.Storage().StoreFile(
+	if err = storage.From(rt).StoreFile(
 		theme.ThemeStorageProviderID,
 		imageFile,
 		path.Join(theme.ThemeStoragePath, imageFilename),
@@ -108,7 +109,7 @@ func RemoveImage(
 
 	filename := *kind.field(&theme)
 	if filename != "" && theme.ThemeStorageProviderID != "" {
-		if derr := rt.Storage().DeleteFile(
+		if derr := storage.From(rt).DeleteFile(
 			theme.ThemeStorageProviderID,
 			path.Join(theme.ThemeStoragePath, filename),
 		); derr != nil {

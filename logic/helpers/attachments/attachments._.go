@@ -8,6 +8,7 @@ import (
 	"os"
 	"path"
 	"strings"
+	"xn--gckvb8fzb.com/glides/services/storage"
 
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
@@ -142,7 +143,7 @@ func Store(
 	}
 	defer f.Close()
 
-	if err = rt.Storage().StoreFile(
+	if err = storage.From(rt).StoreFile(
 		attachments.StorageProviderID,
 		f,
 		path.Join(attachments.StoragePath, id.String()),

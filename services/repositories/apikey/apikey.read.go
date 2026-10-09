@@ -1,6 +1,7 @@
 package apikey
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -14,7 +15,7 @@ func (repo *Repository) GetBySecretHash(
 	var rows pgx.Rows
 	var mod apikey.APIKey
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM apikeys WHERE secret_hash = $1`,
 		common.QueryCapabilities{
 			HasDeleted: true,
@@ -37,7 +38,7 @@ func (repo *Repository) GetByUUID(
 	var rows pgx.Rows
 	var mod apikey.APIKey
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM apikeys WHERE id = $1`,
 		common.QueryCapabilities{
 			HasDeleted: true,
@@ -60,7 +61,7 @@ func (repo *Repository) AllForUserUUID(
 	var rows pgx.Rows
 	var mod []apikey.APIKey
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM apikeys WHERE user_id = $1`,
 		common.QueryCapabilities{
 			HasDeleted: true,

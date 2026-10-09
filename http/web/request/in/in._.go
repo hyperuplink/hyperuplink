@@ -3,6 +3,7 @@ package in
 import (
 	"html/template"
 	"strings"
+	"xn--gckvb8fzb.com/glides/services/intnat"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/kaptinlin/go-i18n"
@@ -41,7 +42,7 @@ func (i *Internationalization) T(msg string) template.HTML {
 
 func (i *Internationalization) SetLang(lang string) {
 	i.acceptLang = lang
-	i.I18n = i.r.GetRuntime().Intnat().NewLocalizer(i.acceptLang)
+	i.I18n = intnat.From(i.r.GetRuntime()).NewLocalizer(i.acceptLang)
 }
 
 func (i *Internationalization) Lang() string {

@@ -1,6 +1,7 @@
 package setting
 
 import (
+	"context"
 	"github.com/jackc/pgx/v5"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 )
@@ -12,7 +13,7 @@ func GetByID[T any](
 	var rows pgx.Rows
 	var mod setting.Setting[T]
 
-	rows, err = repo.db.Query(`SELECT * FROM settings
+	rows, err = repo.db.Query(context.Background(), `SELECT * FROM settings
 		WHERE id = $1
 		LIMIT 1`,
 		id,

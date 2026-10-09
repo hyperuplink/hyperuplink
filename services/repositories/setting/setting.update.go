@@ -1,6 +1,7 @@
 package setting
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 )
 
@@ -8,7 +9,7 @@ func Update[T any](
 	repo *Repository,
 	model *setting.Setting[T],
 ) (err error) {
-	_, err = repo.db.Exec(`UPDATE settings SET
+	_, err = repo.db.Exec(context.Background(), `UPDATE settings SET
 		 string_value = $2
 		,int_value =    $3
 		,json_value =   $4

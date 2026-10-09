@@ -3,6 +3,7 @@ package site
 import (
 	"path"
 	"strings"
+	"xn--gckvb8fzb.com/glides/services/storage"
 
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
@@ -28,7 +29,7 @@ func (s *Site) customBannerURL() (dlurl string, abs bool, ok bool) {
 	}
 
 	var err error
-	if dlurl, abs, err = s.r.GetRuntime().Storage().GetFileDownloadURL(
+	if dlurl, abs, err = storage.From(s.r.GetRuntime()).GetFileDownloadURL(
 		theme.ThemeStorageProviderID,
 		path.Join(theme.ThemeStoragePath, theme.CustomBanner),
 	); err != nil {
@@ -58,7 +59,7 @@ func (s *Site) customFaviconURL() (dlurl string, abs bool, ok bool) {
 	}
 
 	var err error
-	if dlurl, abs, err = s.r.GetRuntime().Storage().GetFileDownloadURL(
+	if dlurl, abs, err = storage.From(s.r.GetRuntime()).GetFileDownloadURL(
 		theme.ThemeStorageProviderID,
 		path.Join(theme.ThemeStoragePath, theme.CustomFavicon),
 	); err != nil {
@@ -88,7 +89,7 @@ func (s *Site) customBackgroundURL() (dlurl string, abs bool, ok bool) {
 	}
 
 	var err error
-	if dlurl, abs, err = s.r.GetRuntime().Storage().GetFileDownloadURL(
+	if dlurl, abs, err = storage.From(s.r.GetRuntime()).GetFileDownloadURL(
 		theme.ThemeStorageProviderID,
 		path.Join(theme.ThemeStoragePath, theme.CustomBackground),
 	); err != nil {

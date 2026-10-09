@@ -1,6 +1,7 @@
 package forum
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -11,7 +12,7 @@ func (repo *Repository) VAll(qo common.QueryOptions) (model *[]vforum.VForum, er
 	var rows pgx.Rows
 	var mod []vforum.VForum
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM vforums`,
 		common.QueryCapabilities{
 			HasDeleted: true,
@@ -34,6 +35,7 @@ func (repo *Repository) VAllForCategoryUUID(
 	var mod []vforum.VForum
 
 	rows, err = repo.db.Query(
+		context.Background(),
 		qo.Query(`SELECT * FROM vforums
 		WHERE category_id = $1`,
 			common.QueryCapabilities{
@@ -72,6 +74,7 @@ func (repo *Repository) VGetBySlug(
 	var mod vforum.VForum
 
 	rows, err = repo.db.Query(
+		context.Background(),
 		qo.Query(
 			`SELECT * FROM vforums
 			WHERE slug = $1`,
@@ -98,6 +101,7 @@ func (repo *Repository) VGetByUUID(
 	var mod vforum.VForum
 
 	rows, err = repo.db.Query(
+		context.Background(),
 		qo.Query(
 			`SELECT * FROM vforums
 			WHERE id = $1`,

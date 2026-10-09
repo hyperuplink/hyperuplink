@@ -1,12 +1,13 @@
 package user
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
-	err = repo.db.QueryRow(`INSERT INTO users (
+	err = repo.db.QueryRow(context.Background(), `INSERT INTO users (
 		 username
 		,role
 		,member_of

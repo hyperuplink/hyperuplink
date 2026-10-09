@@ -9,6 +9,11 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+	servicescron "xn--gckvb8fzb.com/glides/services/cron"
+	glidesdispatch "xn--gckvb8fzb.com/glides/services/dispatch"
+	"xn--gckvb8fzb.com/glides/services/intnat"
+	"xn--gckvb8fzb.com/glides/services/markdown"
+	"xn--gckvb8fzb.com/glides/services/storage"
 
 	"xn--gckvb8fzb.com/glides/cron"
 	glideshttp "xn--gckvb8fzb.com/glides/http"
@@ -89,19 +94,33 @@ func main() {
 	}
 
 	if rt, err = runtime.New(runtime.Opts{
-		Cfgstr:  flagCfgstr,
-		Version: Version,
-		Commit:  Commit,
-		Date:    Date,
-		Services: runtime.Services{
-			Database: true,
-			Storage:  true,
-			Intnat:   true,
-			Markdown: true,
-			Dispatch: true,
-			Cron:     true,
-		},
+		Cfgstr:   flagCfgstr,
+		Version:  Version,
+		Commit:   Commit,
+		Date:     Date,
+		Database: true,
 	}); err != nil {
+		fmt.Printf("%s\n", err)
+		os.Exit(1)
+	}
+
+	if _, err = storage.Register(rt); err != nil {
+		fmt.Printf("%s\n", err)
+		os.Exit(1)
+	}
+	if _, err = intnat.Register(rt); err != nil {
+		fmt.Printf("%s\n", err)
+		os.Exit(1)
+	}
+	if _, err = markdown.Register(rt); err != nil {
+		fmt.Printf("%s\n", err)
+		os.Exit(1)
+	}
+	if _, err = glidesdispatch.Register(rt); err != nil {
+		fmt.Printf("%s\n", err)
+		os.Exit(1)
+	}
+	if _, err = servicescron.Register(rt); err != nil {
 		fmt.Printf("%s\n", err)
 		os.Exit(1)
 	}
@@ -136,7 +155,7 @@ func main() {
 	rt.AddEmbed("templates", &embedTemplates)
 	rt.AddEmbed("docs", &embedDocs)
 
-	rt.Intnat().SetLocales(rt.GetEmbed("locales"), "en",
+	intnat.From(rt).SetLocales(rt.GetEmbed("locales"), "en",
 		"de", "en", "es", "fr", "it", "ro")
 
 	var srv any
@@ -166,7 +185,7 @@ func main() {
 
 	rt.Debug("new", "dispatch")
 	if srv, err = dispatch.New(
-		rt.Dispatch(), gh.Repositories(rt).Setting,
+		glidesdispatch.From(rt), gh.Repositories(rt).Setting,
 	); err != nil {
 		rt.Error("status", "error", "error", err)
 		fmt.Printf("%s\n", err)
@@ -256,7 +275,7 @@ func main() {
 }
 
 func registerCronFunctions(rt *runtime.Runtime) (err error) {
-	return rt.Cron().Register(
+	return servicescron.From(rt).Register(
 		logicactivity.CleanupAdminLogID,
 		logicactivity.CleanupAdminLogSpec,
 		func() error { return logicactivity.CleanupAdminLog(rt) },

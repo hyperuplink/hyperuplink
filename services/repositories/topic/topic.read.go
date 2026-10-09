@@ -1,6 +1,7 @@
 package topic
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -13,7 +14,7 @@ func (repo *Repository) All(
 	var rows pgx.Rows
 	var mod []topic.Topic
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM topics`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -36,7 +37,7 @@ func (repo *Repository) AllForForumUUID(
 	var rows pgx.Rows
 	var mod []topic.Topic
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM topics WHERE forum_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -73,7 +74,7 @@ func (repo *Repository) GetByUUID(
 	var rows pgx.Rows
 	var mod topic.Topic
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM topics WHERE id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -110,7 +111,7 @@ func (repo *Repository) GetByShortID(
 	var rows pgx.Rows
 	var mod topic.Topic
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM topics WHERE short_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,

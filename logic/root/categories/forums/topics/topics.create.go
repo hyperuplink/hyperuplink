@@ -4,6 +4,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/lithammer/shortuuid/v4"
 	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/markdown"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
@@ -74,7 +75,7 @@ func CreateReply(
 	}
 	rep.AuthorID = authorID
 	rep.Text = in.Text
-	if rep.HTML, err = rt.Markdown().Convert(rep.Text); err != nil {
+	if rep.HTML, err = markdown.From(rt).Convert(rep.Text); err != nil {
 		return nil, err
 	}
 

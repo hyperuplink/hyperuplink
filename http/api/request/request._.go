@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"slices"
 	"strings"
+	"xn--gckvb8fzb.com/glides/services/intnat"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
@@ -75,7 +76,7 @@ func New(
 }
 
 func (req *Request) Ts(msg string) string {
-	return req.r.GetRuntime().Intnat().NewLocalizer(req.lang).Get(msg)
+	return intnat.From(req.r.GetRuntime()).NewLocalizer(req.lang).Get(msg)
 }
 
 func (req *Request) Role() user.Role {

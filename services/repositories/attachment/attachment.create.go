@@ -1,12 +1,13 @@
 package attachment
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/models/attachment"
 )
 
 func (repo *Repository) Create(model *attachment.Attachment) (rowID uuid.UUID, err error) {
-	err = repo.db.QueryRow(`INSERT INTO attachments (
+	err = repo.db.QueryRow(context.Background(), `INSERT INTO attachments (
 		author_id
 		,filename
 		,mime_type

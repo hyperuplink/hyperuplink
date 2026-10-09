@@ -1,6 +1,7 @@
 package attachment
 
 import (
+	"context"
 	"errors"
 
 	"github.com/google/uuid"
@@ -12,7 +13,7 @@ import (
 func (repo *Repository) GetCategoryForAttachment(
 	id uuid.UUID,
 ) (categoryID uuid.UUID, found bool, err error) {
-	err = repo.db.QueryRow(`
+	err = repo.db.QueryRow(context.Background(), `
 		SELECT f.category_id FROM topics t
 		JOIN forums f ON f.id = t.forum_id
 		WHERE $1 = ANY(t.attachment_ids) AND t.deleted_at IS NULL
@@ -42,7 +43,7 @@ func (repo *Repository) GetByUUID(
 	var rows pgx.Rows
 	var mod attachment.Attachment
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM attachments WHERE id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,

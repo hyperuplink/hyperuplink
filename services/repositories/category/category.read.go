@@ -1,6 +1,7 @@
 package category
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -13,7 +14,7 @@ func (repo *Repository) All(
 	var rows pgx.Rows
 	var mod []category.Category
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM categories`,
 		common.QueryCapabilities{
 			HasDeleted: true,
@@ -36,6 +37,7 @@ func (repo *Repository) GetBySlug(
 	var mod category.Category
 
 	rows, err = repo.db.Query(
+		context.Background(),
 		qo.Query(
 			`SELECT * FROM categories
 			WHERE slug = $1`,
@@ -62,6 +64,7 @@ func (repo *Repository) GetByUUID(
 	var mod category.Category
 
 	rows, err = repo.db.Query(
+		context.Background(),
 		qo.Query(
 			`SELECT * FROM categories
 			WHERE id = $1`,

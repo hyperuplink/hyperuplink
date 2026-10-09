@@ -1,12 +1,13 @@
 package postevent
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/models/postevent"
 )
 
 func (repo *Repository) Create(model *postevent.PostEvent) (rowID uuid.UUID, err error) {
-	err = repo.db.QueryRow(`INSERT INTO postevents (
+	err = repo.db.QueryRow(context.Background(), `INSERT INTO postevents (
 		 type
 		,author_id
 		,target

@@ -2,6 +2,7 @@ package docs
 
 import (
 	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/markdown"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
@@ -45,7 +46,7 @@ func Show(
 		Page: page,
 		Text: text,
 	}
-	if view.HTML, err = rt.Markdown().Convert(text); err != nil {
+	if view.HTML, err = markdown.From(rt).Convert(text); err != nil {
 		return nil, err
 	}
 

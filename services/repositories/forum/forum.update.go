@@ -1,11 +1,12 @@
 package forum
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/hyperuplink/models/forum"
 )
 
 func (repo *Repository) Update(model *forum.Forum) (err error) {
-	_, err = repo.db.Exec(`UPDATE forums SET
+	_, err = repo.db.Exec(context.Background(), `UPDATE forums SET
 		 name =                        $1
 		,slug =                        $2
 		,position = CASE

@@ -1,6 +1,7 @@
 package user
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -15,7 +16,7 @@ func (repo *Repository) All(
 	var rows pgx.Rows
 	var mod []user.User
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM users`,
 		common.QueryCapabilities{
 			HasBanned:  true,
@@ -38,7 +39,7 @@ func (repo *Repository) GetByUUID(
 	var rows pgx.Rows
 	var mod user.User
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM users WHERE id = $1`,
 		common.QueryCapabilities{
 			HasBanned:  true,
@@ -75,7 +76,7 @@ func (repo *Repository) GetByUsername(
 	var rows pgx.Rows
 	var mod user.User
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM users WHERE username = $1`,
 		common.QueryCapabilities{
 			HasBanned:  true,
@@ -99,7 +100,7 @@ func (repo *Repository) GetByEmail(
 	var rows pgx.Rows
 	var mod user.User
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM users WHERE email = $1`,
 		common.QueryCapabilities{
 			HasBanned:  true,
@@ -126,7 +127,7 @@ func (repo *Repository) AllToNotifyForReply(
 	var rows pgx.Rows
 	var mod []user.User
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT u.* FROM users u
 		JOIN (
 			SELECT author_id FROM topics WHERE id = $1

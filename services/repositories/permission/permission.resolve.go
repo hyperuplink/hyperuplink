@@ -1,6 +1,7 @@
 package permission
 
 import (
+	"context"
 	"errors"
 
 	"github.com/google/uuid"
@@ -34,7 +35,7 @@ func (repo *Repository) Resolve(
 	groupMax := map[uuid.UUID]byte{}
 	if len(memberOf) > 0 {
 		var rows pgx.Rows
-		rows, err = repo.db.Query(`SELECT * FROM permissions
+		rows, err = repo.db.Query(context.Background(), `SELECT * FROM permissions
 			WHERE group_id = ANY($1)
 			AND category_id IS NOT NULL
 			AND deleted_at IS NULL`,
@@ -89,7 +90,7 @@ func (repo *Repository) EffectiveLevel(
 	}
 
 	var rows pgx.Rows
-	rows, err = repo.db.Query(`SELECT * FROM permissions
+	rows, err = repo.db.Query(context.Background(), `SELECT * FROM permissions
 		WHERE group_id = ANY($1)
 		AND category_id = $2
 		AND deleted_at IS NULL`,

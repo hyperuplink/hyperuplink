@@ -1,6 +1,7 @@
 package reply
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -14,7 +15,7 @@ func (repo *Repository) AllForTopicUUID(
 	var rows pgx.Rows
 	var mod []reply.Reply
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM replies WHERE topic_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -51,7 +52,7 @@ func (repo *Repository) GetByUUID(
 	var rows pgx.Rows
 	var mod reply.Reply
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM replies WHERE id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -88,7 +89,7 @@ func (repo *Repository) GetByShortID(
 	var rows pgx.Rows
 	var mod reply.Reply
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM replies WHERE short_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,

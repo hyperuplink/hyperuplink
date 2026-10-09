@@ -4,6 +4,7 @@ import (
 	"io/fs"
 	"path"
 	"strings"
+	"xn--gckvb8fzb.com/glides/services/markdown"
 
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/glides/http/route"
@@ -82,7 +83,7 @@ func (r *Route) render(c fiber.Ctx, sub string) (err error) {
 	}
 
 	var html string
-	html, err = r.Runtime.Markdown().ConvertDocs(expanded)
+	html, err = markdown.From(r.Runtime).ConvertDocs(expanded)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

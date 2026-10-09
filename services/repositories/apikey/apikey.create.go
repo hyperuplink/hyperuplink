@@ -1,12 +1,13 @@
 package apikey
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/models/apikey"
 )
 
 func (repo *Repository) Create(model *apikey.APIKey) (rowID uuid.UUID, err error) {
-	err = repo.db.QueryRow(`INSERT INTO apikeys (
+	err = repo.db.QueryRow(context.Background(), `INSERT INTO apikeys (
 		 user_id
 		,name
 		,secret_hash

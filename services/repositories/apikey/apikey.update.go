@@ -1,11 +1,13 @@
 package apikey
 
 import (
+	"context"
 	"github.com/google/uuid"
 )
 
 func (repo *Repository) TouchLastUsed(id uuid.UUID) (err error) {
 	_, err = repo.db.Exec(
+		context.Background(),
 		`UPDATE apikeys SET last_used_at = NOW() WHERE id = $1`,
 		id,
 	)

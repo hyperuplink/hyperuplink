@@ -1,6 +1,7 @@
 package activity
 
 import (
+	"context"
 	"time"
 
 	"github.com/google/uuid"
@@ -23,7 +24,7 @@ func (repo *Repository) MarkersForActor(
 	}
 
 	var rows pgx.Rows
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT
 			 subject_id
 			,updated_at

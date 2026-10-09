@@ -1,12 +1,13 @@
 package reply
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/models/reply"
 )
 
 func (repo *Repository) Create(model *reply.Reply) (rowID uuid.UUID, err error) {
-	err = repo.db.QueryRow(`INSERT INTO replies (
+	err = repo.db.QueryRow(context.Background(), `INSERT INTO replies (
 		short_id
 		,topic_id
 		,reply_id

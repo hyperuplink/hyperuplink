@@ -1,12 +1,13 @@
 package topic
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/models/topic"
 )
 
 func (repo *Repository) Create(model *topic.Topic) (rowID uuid.UUID, err error) {
-	err = repo.db.QueryRow(`INSERT INTO topics (
+	err = repo.db.QueryRow(context.Background(), `INSERT INTO topics (
 		short_id
 		,name
 		,slug

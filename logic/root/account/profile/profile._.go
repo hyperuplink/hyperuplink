@@ -4,6 +4,7 @@ import (
 	"io"
 	"mime/multipart"
 	"os"
+	"xn--gckvb8fzb.com/glides/services/storage"
 
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/lithammer/shortuuid/v4"
@@ -83,7 +84,7 @@ func StorePicture(
 
 	pictureID := shortuuid.New()
 
-	if err = rt.Storage().StoreFile(
+	if err = storage.From(rt).StoreFile(
 		profiles.PictureStorageProviderID,
 		converted,
 		profiles.PictureStoragePath+"/"+pictureID+"."+profiles.PictureFormat,

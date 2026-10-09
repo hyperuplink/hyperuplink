@@ -4,6 +4,7 @@ import (
 	"io"
 	"path"
 	"strings"
+	"xn--gckvb8fzb.com/glides/services/storage"
 
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
@@ -57,7 +58,7 @@ func Open(
 	}
 	attachments := settingAttachments.JSONValue
 
-	reader, err := rt.Storage().GetFile(
+	reader, err := storage.From(rt).GetFile(
 		attachments.StorageProviderID,
 		path.Join(attachments.StoragePath, id.String()),
 	)

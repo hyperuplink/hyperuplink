@@ -1,6 +1,7 @@
 package activity
 
 import (
+	"context"
 	"fmt"
 	"slices"
 	"strings"
@@ -57,7 +58,7 @@ func (repo *Repository) Upsert(recs []activity.Record) (err error) {
 	for chunk := range slices.Chunk(recs, maxRecordsPerStatement) {
 		vals, args := repo.values(chunk)
 
-		if _, err = repo.db.Exec(fmt.Sprintf(`INSERT INTO activities (
+		if _, err = repo.db.Exec(context.Background(), fmt.Sprintf(`INSERT INTO activities (
 			 kind
 			,actor_id
 			,subject
@@ -84,7 +85,7 @@ func (repo *Repository) Append(recs []activity.Record) (err error) {
 	for chunk := range slices.Chunk(recs, maxRecordsPerStatement) {
 		vals, args := repo.values(chunk)
 
-		if _, err = repo.db.Exec(fmt.Sprintf(`INSERT INTO activities (
+		if _, err = repo.db.Exec(context.Background(), fmt.Sprintf(`INSERT INTO activities (
 			 kind
 			,actor_id
 			,subject

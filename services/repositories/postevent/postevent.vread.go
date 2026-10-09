@@ -1,6 +1,7 @@
 package postevent
 
 import (
+	"context"
 	"github.com/jackc/pgx/v5"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/models/vpostevent"
@@ -12,7 +13,7 @@ func (repo *Repository) VAllReports(
 	var rows pgx.Rows
 	var mod []vpostevent.VPostEvent
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT
 			 pe.*
 			,COALESCE(t.text, r.text, '') AS target_text

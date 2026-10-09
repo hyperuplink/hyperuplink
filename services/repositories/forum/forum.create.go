@@ -1,18 +1,19 @@
 package forum
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/models/forum"
 )
 
 func (repo *Repository) Create(model *forum.Forum) (rowID uuid.UUID, err error) {
-	tx, err := repo.db.Tx()
+	tx, err := repo.db.Tx(context.Background())
 	if err != nil {
 		return rowID, repo.db.ConvertError(err)
 	}
-	defer tx.End()
+	defer tx.End(context.Background())
 
-	err = tx.QueryRow(`INSERT INTO forums (
+	err = tx.QueryRow(context.Background(), `INSERT INTO forums (
 		 name
 		,slug
 		,position
@@ -38,5 +39,5 @@ func (repo *Repository) Create(model *forum.Forum) (rowID uuid.UUID, err error) 
 		return rowID, repo.db.ConvertError(err)
 	}
 
-	return rowID, repo.db.ConvertError(tx.Commit())
+	return rowID, repo.db.ConvertError(tx.Commit(context.Background()))
 }

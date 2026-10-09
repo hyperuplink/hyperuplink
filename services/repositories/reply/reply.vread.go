@@ -1,6 +1,7 @@
 package reply
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -17,7 +18,7 @@ func (repo *Repository) VAllCountForTopicUUID(
 	qoc.OrderBy = ""
 	qoc.Limit = 0
 	qoc.Page = 0
-	rows, err = repo.db.Query(qoc.Query(
+	rows, err = repo.db.Query(context.Background(), qoc.Query(
 		`SELECT COUNT(id) AS total FROM vreplies WHERE topic_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -48,7 +49,7 @@ func (repo *Repository) VAllForTopicUUID(
 
 	total, err = repo.VAllCountForTopicUUID(id, qo)
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM vreplies WHERE topic_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -85,7 +86,7 @@ func (repo *Repository) VAllWithTopicForAuthorUUID(
 	var rows pgx.Rows
 	var mod []vreply.VReplyWithTopic
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT vr.*,
 			t.name AS topic_name,
 			t.slug AS topic_slug,

@@ -1,11 +1,12 @@
 package category
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
 )
 
 func (repo *Repository) MoveUp(model *category.Category) (err error) {
-	_, err = repo.db.Exec(`WITH moved_up AS (
+	_, err = repo.db.Exec(context.Background(), `WITH moved_up AS (
 		SELECT id, position
 		FROM categories
 		WHERE id = $1
@@ -26,7 +27,7 @@ func (repo *Repository) MoveUp(model *category.Category) (err error) {
 }
 
 func (repo *Repository) MoveDown(model *category.Category) (err error) {
-	_, err = repo.db.Exec(`WITH moved_down AS (
+	_, err = repo.db.Exec(context.Background(), `WITH moved_down AS (
 		SELECT id, position
 		FROM categories
 		WHERE id = $1

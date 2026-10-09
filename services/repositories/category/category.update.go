@@ -1,11 +1,12 @@
 package category
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
 )
 
 func (repo *Repository) Update(model *category.Category) (err error) {
-	_, err = repo.db.Exec(`UPDATE categories SET
+	_, err = repo.db.Exec(context.Background(), `UPDATE categories SET
 		 name =                        $1
 		,slug =                        $2
 		,updated_at =                  NOW()

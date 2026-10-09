@@ -1,6 +1,7 @@
 package setting
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 )
 
@@ -8,7 +9,7 @@ func Create[T any](
 	repo *Repository,
 	model *setting.Setting[T],
 ) (rowID string, err error) {
-	err = repo.db.QueryRow(`INSERT INTO settings (
+	err = repo.db.QueryRow(context.Background(), `INSERT INTO settings (
   id
   ,string_value
   ,int_value

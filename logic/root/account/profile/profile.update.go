@@ -2,6 +2,7 @@ package profile
 
 import (
 	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/markdown"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
@@ -23,7 +24,7 @@ func Update(
 	if usr.SignatureText == "" {
 		usr.SignatureHTML = ""
 	} else {
-		if usr.SignatureHTML, err = rt.Markdown().Convert(usr.SignatureText); err != nil {
+		if usr.SignatureHTML, err = markdown.From(rt).Convert(usr.SignatureText); err != nil {
 			return err
 		}
 	}

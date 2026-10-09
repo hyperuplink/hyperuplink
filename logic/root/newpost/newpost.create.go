@@ -2,6 +2,7 @@ package newpost
 
 import (
 	"time"
+	"xn--gckvb8fzb.com/glides/services/markdown"
 
 	"github.com/google/uuid"
 	"github.com/lithammer/shortuuid/v4"
@@ -54,7 +55,7 @@ func Create(
 	top.Kind = topic.Regular
 	top.Anonymous = false
 	top.Text = in.Text
-	if top.HTML, err = rt.Markdown().Convert(top.Text); err != nil {
+	if top.HTML, err = markdown.From(rt).Convert(top.Text); err != nil {
 		return nil, err
 	}
 

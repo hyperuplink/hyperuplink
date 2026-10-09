@@ -1,6 +1,7 @@
 package topic
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -17,7 +18,7 @@ func (repo *Repository) VAllCountForForumUUID(
 	qoc.OrderBy = ""
 	qoc.Limit = 0
 	qoc.Page = 0
-	rows, err = repo.db.Query(qoc.Query(
+	rows, err = repo.db.Query(context.Background(), qoc.Query(
 		`SELECT COUNT(id) AS total FROM vtopics WHERE forum_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -57,7 +58,7 @@ func (repo *Repository) VAllCountForReadableSlugs(
 		args = append(args, slugs)
 	}
 
-	rows, err = repo.db.Query(qoc.Query(
+	rows, err = repo.db.Query(context.Background(), qoc.Query(
 		base,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -98,7 +99,7 @@ func (repo *Repository) VAllForReadableSlugs(
 		args = append(args, slugs)
 	}
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		base,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -121,7 +122,7 @@ func (repo *Repository) VAll(
 	var rows pgx.Rows
 	var mod []vtopic.VTopic
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM vtopics`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -146,7 +147,7 @@ func (repo *Repository) VAllForForumUUID(
 
 	total, err = repo.VAllCountForForumUUID(id, qo)
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM vtopics WHERE forum_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -183,7 +184,7 @@ func (repo *Repository) VGetByUUID(
 	var rows pgx.Rows
 	var mod vtopic.VTopic
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM vtopics WHERE id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -207,7 +208,7 @@ func (repo *Repository) VGetByShortID(
 	var rows pgx.Rows
 	var mod vtopic.VTopic
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM vtopics WHERE short_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -233,6 +234,7 @@ func (repo *Repository) VGetByForumUUIDSlug(
 	var mod vtopic.VTopic
 
 	rows, err = repo.db.Query(
+		context.Background(),
 		qo.Query(
 			`SELECT * FROM vtopics
 			WHERE forum_id = $1 AND slug = $2`,
@@ -276,6 +278,7 @@ func (repo *Repository) VGetBySlugs(
 	var mod vtopic.VTopic
 
 	rows, err = repo.db.Query(
+		context.Background(),
 		qo.Query(
 			`SELECT * FROM vtopics
 			WHERE forum_slug = $1 AND slug = $2`,
@@ -303,7 +306,7 @@ func (repo *Repository) VAllForAuthorUUID(
 	var rows pgx.Rows
 	var mod []vtopic.VTopic
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM vtopics WHERE author_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,

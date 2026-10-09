@@ -1,5 +1,7 @@
 package activity
 
+import "context"
+
 func (repo *Repository) DeleteOlderThanDays(
 	kinds []string,
 	days int,
@@ -8,7 +10,7 @@ func (repo *Repository) DeleteOlderThanDays(
 		return 0, nil
 	}
 
-	tag, err := repo.db.Exec(`DELETE FROM activities
+	tag, err := repo.db.Exec(context.Background(), `DELETE FROM activities
 		WHERE kind = ANY($1)
 		AND created_at < NOW() - make_interval(days => $2)`,
 		kinds,

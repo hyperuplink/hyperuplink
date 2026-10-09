@@ -1,11 +1,12 @@
 package user
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 func (repo *Repository) Update(model *user.User) (err error) {
-	_, err = repo.db.Exec(`UPDATE users SET
+	_, err = repo.db.Exec(context.Background(), `UPDATE users SET
 		 username =                    $1
 		,role =                        $2
 		,member_of =                   $3

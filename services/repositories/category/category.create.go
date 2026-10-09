@@ -1,12 +1,13 @@
 package category
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
 )
 
 func (repo *Repository) Create(model *category.Category) (rowID uuid.UUID, err error) {
-	err = repo.db.QueryRow(`INSERT INTO categories (
+	err = repo.db.QueryRow(context.Background(), `INSERT INTO categories (
 		 name
 		,slug
 		,position

@@ -1,6 +1,7 @@
 package permission
 
 import (
+	"context"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
@@ -10,7 +11,7 @@ func (repo *Repository) All() (model *[]permission.Permission, err error) {
 	var rows pgx.Rows
 	var mod []permission.Permission
 
-	rows, err = repo.db.Query(`SELECT * FROM permissions
+	rows, err = repo.db.Query(context.Background(), `SELECT * FROM permissions
 		WHERE deleted_at IS NULL`)
 	if err != nil {
 		return nil, repo.db.ConvertError(err)
@@ -27,7 +28,7 @@ func (repo *Repository) AllForGroup(
 	var rows pgx.Rows
 	var mod []permission.Permission
 
-	rows, err = repo.db.Query(`SELECT * FROM permissions
+	rows, err = repo.db.Query(context.Background(), `SELECT * FROM permissions
 		WHERE group_id = $1
 		AND deleted_at IS NULL`,
 		groupID,
@@ -52,7 +53,7 @@ func (repo *Repository) GetFor(
 	var rows pgx.Rows
 	var mod permission.Permission
 
-	rows, err = repo.db.Query(`SELECT * FROM permissions
+	rows, err = repo.db.Query(context.Background(), `SELECT * FROM permissions
 		WHERE group_id IS NOT DISTINCT FROM $1
 		AND category_id IS NOT DISTINCT FROM $2
 		AND deleted_at IS NULL

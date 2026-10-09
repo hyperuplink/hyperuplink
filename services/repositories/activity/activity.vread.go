@@ -1,6 +1,7 @@
 package activity
 
 import (
+	"context"
 	"github.com/jackc/pgx/v5"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/models/activity"
@@ -17,7 +18,7 @@ func (repo *Repository) VAllAdminCount(
 	qoc.Limit = 0
 	qoc.Page = 0
 
-	rows, err = repo.db.Query(qoc.Query(
+	rows, err = repo.db.Query(context.Background(), qoc.Query(
 		`SELECT COUNT(a.id) AS total FROM activities a WHERE a.kind = ANY($1)`,
 		common.QueryCapabilities{
 			Table:      "a",
@@ -48,7 +49,7 @@ func (repo *Repository) VAllAdmin(
 		return nil, total, err
 	}
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT
 			 a.*
 			,COALESCE(u.username, '') AS actor_username

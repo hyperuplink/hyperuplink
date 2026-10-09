@@ -1,6 +1,7 @@
 package permission
 
 import (
+	"context"
 	"github.com/jackc/pgx/v5/pgtype"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 )
@@ -12,13 +13,13 @@ func (repo *Repository) Apply(
 ) (err error) {
 	bits := permission.LevelToBitString(level)
 
-	tx, err := repo.db.Tx()
+	tx, err := repo.db.Tx(context.Background())
 	if err != nil {
 		return repo.db.ConvertError(err)
 	}
-	defer tx.End()
+	defer tx.End(context.Background())
 
-	tag, err := tx.Exec(`UPDATE permissions SET
+	tag, err := tx.Exec(context.Background(), `UPDATE permissions SET
 		 bits =       $3::BIT(3)
 		,updated_at = NOW()
 		WHERE group_id IS NOT DISTINCT FROM $1
@@ -33,7 +34,7 @@ func (repo *Repository) Apply(
 	}
 
 	if tag.RowsAffected() == 0 {
-		_, err = tx.Exec(`INSERT INTO permissions (
+		_, err = tx.Exec(context.Background(), `INSERT INTO permissions (
 			 group_id
 			,category_id
 			,bits
@@ -51,5 +52,5 @@ func (repo *Repository) Apply(
 		}
 	}
 
-	return repo.db.ConvertError(tx.Commit())
+	return repo.db.ConvertError(tx.Commit(context.Background()))
 }

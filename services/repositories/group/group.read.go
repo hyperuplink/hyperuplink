@@ -1,6 +1,7 @@
 package group
 
 import (
+	"context"
 	"github.com/jackc/pgx/v5"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/models/group"
@@ -12,7 +13,7 @@ func (repo *Repository) All(
 	var rows pgx.Rows
 	var mod []group.Group
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM groups`,
 		common.QueryCapabilities{
 			HasDeleted: true,
@@ -34,7 +35,7 @@ func (repo *Repository) GetByID(
 	var rows pgx.Rows
 	var mod group.Group
 
-	rows, err = repo.db.Query(qo.Query(
+	rows, err = repo.db.Query(context.Background(), qo.Query(
 		`SELECT * FROM groups WHERE id = $1`,
 		common.QueryCapabilities{
 			HasDeleted: true,

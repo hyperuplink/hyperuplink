@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"xn--gckvb8fzb.com/glides/services/storage"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/csrf"
@@ -146,7 +147,7 @@ func (s *Site) ProfilePicture(id string) (dlurl string) {
 		return staticPicture
 	}
 
-	if dlurl, abs, err = s.r.GetRuntime().Storage().GetFileDownloadURL(
+	if dlurl, abs, err = storage.From(s.r.GetRuntime()).GetFileDownloadURL(
 		profiles.PictureStorageProviderID,
 		profiles.PictureStoragePath+"/"+id+"."+profiles.PictureFormat,
 	); err != nil {
