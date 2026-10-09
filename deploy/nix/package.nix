@@ -56,7 +56,7 @@ buildGoModule (finalAttrs: {
   inherit version;
   src = source;
 
-  vendorHash = "sha256-8ZmwefRGqDopsO4jifLYzpVCNa5bnSWPTqJzvZ7kYxI=";
+  vendorHash = "sha256-+0Xvodkh22umkMYXPIh2Rh5nFtUBi7PbUYWsdLnIK50=";
 
   # go.mod requires Go 1.26.4 and the nixpkgs Go builder pins GOTOOLCHAIN=local,
   # so nixpkgs' Go has to be new enough.

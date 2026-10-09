@@ -85,7 +85,8 @@ Add the flake as an input and import the module:
 ```
 
 `enable = true` also provisions a PostgreSQL server and a Redis server, runs the
-migrations on first start, and leaves the board listening on port `3000`.
+migrations on first start, and leaves the board listening on port `3000` and
+its JSON API on port `3001`.
 
 | Path                            | Contents                                             |
 | ------------------------------- | ---------------------------------------------------- |
@@ -140,6 +141,7 @@ services.nginx.virtualHosts."board.example.com" = {
   enableACME = true;
   forceSSL = true;
   locations."/".proxyPass = "http://127.0.0.1:3000";
+  locations."/api/".proxyPass = "http://127.0.0.1:3001";
 };
 ```
 

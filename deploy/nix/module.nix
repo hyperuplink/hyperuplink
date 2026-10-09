@@ -114,9 +114,10 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to open {option}`services.hyperuplink.settings.Web.Port` in
-        the firewall. Leave this off when a reverse proxy on the same host
-        terminates TLS, which is the recommended setup.
+        Whether to open {option}`services.hyperuplink.settings.Web.Port` and
+        {option}`services.hyperuplink.settings.API.Port` in the firewall.
+        Leave this off when a reverse proxy on the same host terminates TLS,
+        which is the recommended setup.
       '';
     };
 
@@ -191,6 +192,15 @@ in
         TrustLoopback = lib.mkDefault true;
       };
 
+      API = {
+        Enable = lib.mkDefault true;
+        BindIP = lib.mkDefault "0.0.0.0";
+        Port = lib.mkDefault 3001;
+        BodyLimit = lib.mkDefault 67108864;
+        Concurrency = lib.mkDefault 262144;
+        TrustLoopback = lib.mkDefault true;
+      };
+
       # A local Postgres is reached over its socket as the service user, which
       # peer authentication accepts without a password.
       Database.Connection = lib.mkIf cfg.database.createLocally (lib.mkDefault localDatabaseConnection);
@@ -245,7 +255,9 @@ in
       port = cfg.redis.port;
     };
 
-    networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [ cfg.settings.Web.Port ];
+    networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall (
+      [ cfg.settings.Web.Port ] ++ lib.optional cfg.settings.API.Enable cfg.settings.API.Port
+    );
 
     systemd.services.hyperuplink = {
       description = "Hyperuplink";

@@ -69,6 +69,11 @@ pkgs.testers.runNixOSTest {
         # Static assets are served out of the binary, not off the disk.
         machine.succeed("curl -sSf -o /dev/null http://localhost:3000/static/css/hyperuplink.css")
 
+        # The JSON API listens beside the web server and describes itself to
+        # a request without a key.
+        machine.wait_for_open_port(3001)
+        machine.succeed("curl -sSf http://localhost:3001/api/v1 | grep -F '\"guests\":true'")
+
         # The schema really landed in the provisioned database.
         machine.succeed("sudo -u postgres psql -d hyperuplink -c 'SELECT * FROM users LIMIT 1'")
 
