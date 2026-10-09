@@ -45,6 +45,10 @@ TrustProxies       = []
 # TrustProxies       = ["127.0.0.0/8", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fc00::/7"]
 ReduceMemoryUsage  = false
 ServerHeader       = ""
+RateLimitGuest     = 120 # requests per minute and client address for requests without a key, 0 disables
+RateLimitUser      = 600 # requests per minute and API key, 0 disables
+RateLimitAuth      = 10  # sign-ins per minute and client address, 0 disables
+CORSOrigins        = []  # browser origins that may call the API, e.g. ["https://board.example"]; empty means no CORS headers
 
 [Users]
 # The account registered with this e-mail is promoted to admin on sign-up
