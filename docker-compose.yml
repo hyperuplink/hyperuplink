@@ -24,6 +24,7 @@ services:
         condition: service_healthy
     ports:
       - "3000:3000"
+      - "3001:3001"
     volumes:
       # On SELinux-enforcing hosts (Fedora/RHEL) append ",z": ...:ro,z
       - ./deploy/hyperuplink.toml:/etc/hyperuplink.toml:ro

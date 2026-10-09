@@ -31,6 +31,7 @@ services:
         condition: service_healthy
     ports:
       - "3000:3000"
+      - "3001:3001"
     volumes:
       - ./deploy/hyperuplink.toml:/etc/hyperuplink.toml:ro,z
       - mediadata:/var/lib/hyperuplink/media
