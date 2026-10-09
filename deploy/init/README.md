@@ -36,10 +36,10 @@ file always needs the `file://` prefix.
 
 ## Notes
 
-- The port defaults to `3000` (non-privileged). To bind `<1024` directly, see
-  the capability note in `hyperuplink.service`. On the BSDs/OpenRC run behind a
-  reverse proxy instead. Actually, better always run behind a proxy, regardless
-  of the system.
+- The web port defaults to `3000` and the API port to `3001` (both
+  non-privileged). To bind `<1024` directly, see the capability note in
+  `hyperuplink.service`. On the BSDs/OpenRC run behind a reverse proxy instead.
+  Actually, better always run behind a proxy, regardless of the system.
 - In `Mode = "production"` the session cookie is HTTPS-only, so terminate TLS in
   front of the app (reverse proxy) or cookies will crumble.
 - All scripts supervise the process and restart it on failure, which also covers
