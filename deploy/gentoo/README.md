@@ -111,8 +111,9 @@ Either way, `emerge` creates the `hyperuplink` user/group, installs the binary
 to `/usr/bin/hyperuplink`, a starter config to `/etc/hyperuplink.toml`, an
 OpenRC service, a systemd unit, and the data directory `/var/lib/hyperuplink`.
 
-Edit `/etc/hyperuplink.toml` (database DSN, Redis address, `PromoteAdmin`, …)
-as root, since it holds the database password and is installed `0640
+Edit `/etc/hyperuplink.toml` (database DSN, Redis address, `PromoteAdmin`, …) as
+root, since it holds the database password and is installed
+`0640
 root:hyperuplink`, then:
 
 ```sh
@@ -124,14 +125,16 @@ rc-service hyperuplink start
 systemctl enable --now hyperuplink.service
 ```
 
-The service listens on port `3000`. Run it behind a TLS-terminating reverse
-proxy, in `Mode = "production"` so that the session cookie is HTTPS-only.
+The service listens on port `3000` and its JSON API on port `3001`. Run it
+behind a TLS-terminating reverse proxy that forwards `/api/` (or the `api.`
+subdomain) to port 3001, in `Mode = "production"` so that the session cookie is
+HTTPS-only.
 
 ## Notes
 
-- Hyperuplink is under the custom, non-OSI **SEGV** license, whose text
-  (version 1.1) is in `licenses/SEGV-1.1`. `::gentoo` does not carry it, which
-  is why it is bundled here and must be accepted via `package.license`.
+- Hyperuplink is under the **SEGV** license, whose text (version 1.1) is in
+  `licenses/SEGV-1.1`. `::gentoo` does not carry it, which is why it is bundled
+  here and must be accepted via `package.license`.
 - `make release VERSION=<new>` writes `hyperuplink-<new>.ebuild` for you, as a
   copy of the live one. The Manifest is not part of that, because it hashes the
   deps tarball that only exists once the Release workflow has attached it to the

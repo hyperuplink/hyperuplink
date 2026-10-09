@@ -159,6 +159,7 @@ pkg_postinst() {
   elog "systemd:"
   elog "  systemctl enable --now ${PN}.service"
   elog
-  elog "The service listens on port 3000 by default. Terminate TLS in front"
-  elog "of it with a reverse proxy, especially in Mode = \"production\"."
+  elog "The service listens on port 3000 and its JSON API on port 3001 by"
+  elog "default. Terminate TLS in front of both with a reverse proxy that"
+  elog "forwards /api/ to 3001, especially in Mode = \"production\"."
 }
