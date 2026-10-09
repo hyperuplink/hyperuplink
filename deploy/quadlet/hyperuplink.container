@@ -12,6 +12,7 @@ AutoUpdate=registry
 Network=hyperuplink.network
 NetworkAlias=hyperuplink
 PublishPort=3000:3000
+PublishPort=3001:3001
 UserNS=keep-id:uid=10001,gid=10001
 
 # Edit the host path to wherever you placed hyperuplink.toml. %h expands to the

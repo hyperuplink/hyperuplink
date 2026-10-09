@@ -28,7 +28,7 @@ Requires Podman 4.4+ (validated against 5.x).
 ## Rootless install (recommended)
 
 Runs under your own user account without the need for root. The app listens on
-`:3000` and everything runs as a non-root user.
+`:3000`, its JSON API on `:3001`, and everything runs as a non-root user.
 
 1. Copy the sample config and edit the credentials (Postgres password,
    `PromoteAdmin` e-mail, etc.):
@@ -74,7 +74,8 @@ Runs under your own user account without the need for root. The app listens on
    loginctl enable-linger "$USER"
    ```
 
-Hyperuplink is now on <http://localhost:3000>.
+Hyperuplink is now on <http://localhost:3000> and its JSON API on
+<http://localhost:3001/api/v1>.
 
 ---
 
@@ -151,8 +152,8 @@ systemctl --user stop \
 
 ## Notes
 
-- The app publishes `3000`, MinIO `9000`/`9001`, which are all >1024, so
-  rootless Podman binds them without extra privileges.
+- The app publishes `3000` and `3001`, MinIO `9000`/`9001`, which are all
+  >1024, so rootless Podman binds them without extra privileges.
 - Behind a reverse proxy, set `ProxyHeader`/`TrustProxy` in `hyperuplink.toml`.
 - Change the Postgres password (and MinIO keys, if used) in both the
   `.container` file **and** the matching values in `hyperuplink.toml` before
