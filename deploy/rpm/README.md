@@ -88,5 +88,4 @@ PostgreSQL and Redis/Valkey works after filling in credentials. Then:
 sudo systemctl enable --now hyperuplink.service
 ```
 
-The service listens on port `3000`. Run it behind a TLS-terminating reverse
-proxy, in `Mode = "production"` so the session cookie is HTTPS-only.
+The service listens on port `3000` and its JSON API on port `3001`.
