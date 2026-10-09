@@ -34,6 +34,9 @@ config point at them.
   working sign-in flow.
 {{- end }}
 
+   The JSON API is served under /api/v1 of the same host when the Ingress has
+   the `/api` path, and on the Service port {{ .Values.service.apiPort }} otherwise.
+
 2. Check rollout status:
   kubectl --namespace {{ .Release.Namespace }} rollout status deployment/{{ include "hyperuplink.fullname" . }}
 

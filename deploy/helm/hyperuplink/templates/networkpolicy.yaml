@@ -21,6 +21,8 @@ spec:
     - ports:
         - port: http
           protocol: TCP
+        - port: api
+          protocol: TCP
       {{- with .Values.networkPolicy.ingressFrom }}
       from:
         {{- toYaml . | nindent 8 }}

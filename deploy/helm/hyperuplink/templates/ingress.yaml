@@ -1,6 +1,7 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "hyperuplink.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
+{{- $apiPort := .Values.service.apiPort -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -32,7 +33,7 @@ spec:
               service:
                 name: {{ $fullName }}
                 port:
-                  number: {{ $svcPort }}
+                  number: {{ if eq (default "http" .backend) "api" }}{{ $apiPort }}{{ else }}{{ $svcPort }}{{ end }}
           {{- end }}
     {{- end }}
 {{- end }}

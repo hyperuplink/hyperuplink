@@ -32,6 +32,7 @@
     "envFrom": { "type": "array" },
     "extraArgs": { "type": "array" },
     "containerPort": { "type": "integer", "minimum": 1, "maximum": 65535 },
+    "apiContainerPort": { "type": "integer", "minimum": 1, "maximum": 65535 },
     "strategy": { "type": "object" },
     "serviceAccount": {
       "type": "object",
@@ -84,6 +85,7 @@
           "enum": ["ClusterIP", "NodePort", "LoadBalancer", "ExternalName"]
         },
         "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+        "apiPort": { "type": "integer", "minimum": 1, "maximum": 65535 },
         "annotations": { "type": "object" }
       }
     },

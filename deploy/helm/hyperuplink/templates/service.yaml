@@ -16,5 +16,9 @@ spec:
       port: {{ .Values.service.port }}
       targetPort: http
       protocol: TCP
+    - name: api
+      port: {{ .Values.service.apiPort }}
+      targetPort: api
+      protocol: TCP
   selector:
     {{- include "hyperuplink.selectorLabels" . | nindent 4 }}

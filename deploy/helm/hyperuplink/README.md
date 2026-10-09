@@ -61,12 +61,14 @@ responsible for restarting pods after editing the Secret.
 | `existingConfigSecret`          | `""`                              | Use an existing config Secret instead of `config`.  |
 | `configFileKey`                 | `hyperuplink.toml`                | Key/filename of the config in the Secret.           |
 | `configMountPath`               | `/etc/hyperuplink`                | Where the config Secret is mounted.                 |
-| `containerPort`                 | `3000`                            | Must match `Web.Port` in the config.             |
+| `containerPort`                 | `3000`                            | Must match `Web.Port` in the config.                |
+| `apiContainerPort`              | `3001`                            | Must match `API.Port` in the config.                |
 | `strategy.type`                 | `Recreate`                        | Deployment strategy (RWO-safe default).             |
 | `persistence.enabled`           | `true`                            | PVC backing the `Local` storage provider.           |
 | `persistence.size`              | `10Gi`                            | PVC size.                                           |
-| `service.type` / `service.port` | `ClusterIP` / `3000`              | Service exposure.                                   |
-| `ingress.enabled`               | `false`                           | Ingress (enable TLS for production mode).           |
+| `service.type` / `service.port` | `ClusterIP` / `3000`              | Service exposure of the board.                      |
+| `service.apiPort`               | `3001`                            | Service port of the JSON API.                       |
+| `ingress.enabled`               | `false`                           | Ingress (enable TLS for production mode); `/api` goes to the API port. |
 | `autoscaling.enabled`           | `false`                           | HPA. Requires S3 storage (not local).               |
 | `podDisruptionBudget.enabled`   | `false`                           | PDB for the deployment.                             |
 | `networkPolicy.enabled`         | `false`                           | NetworkPolicy (egress left open by default).        |

@@ -33,3 +33,17 @@ spec:
         - --spider
         - --timeout=5
         - http://{{ include "hyperuplink.fullname" . }}:{{ .Values.service.port }}/_internal/health/readyz
+    - name: api-readyz
+      image: busybox:stable
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+            - ALL
+      command:
+        - wget
+      args:
+        - --spider
+        - --timeout=5
+        - http://{{ include "hyperuplink.fullname" . }}:{{ .Values.service.apiPort }}/_internal/health/readyz

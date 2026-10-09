@@ -80,6 +80,24 @@ config: |-
   ReduceMemoryUsage  = false
   ServerHeader       = ""
 
+  [API]
+  Enable             = true
+  BindIP             = "0.0.0.0"
+  Port               = 3001
+  BodyLimit          = 67108864
+  Concurrency        = 262144
+  ProxyHeader        = "X-Forwarded-For" # set behind a reverse proxy / Ingress
+  EnableIPValidation = false
+  TrustProxy         = true
+  TrustLoopback      = true
+  TrustProxies       = []
+  ReduceMemoryUsage  = false
+  ServerHeader       = ""
+  RateLimitGuest     = 120 # requests per minute and client address without a key, 0 disables
+  RateLimitUser      = 600 # requests per minute and API key, 0 disables
+  RateLimitAuth      = 10  # sign-ins per minute and client address, 0 disables
+  CORSOrigins        = []  # browser origins that may call the API; empty means no CORS headers
+
   [Users]
   # The account registered with this e-mail is promoted to admin on sign-up.
   PromoteAdmin = ["admin@example.com"]
@@ -98,6 +116,11 @@ config: |-
 # -- Port the container listens on. MUST match `Web.Port` in the config
 # above. Exposed as the named port `http` and targeted by the Service/probes.
 containerPort: 3000
+
+# -- Port the JSON API listens on. MUST match `API.Port` in the config above.
+# Exposed as the named port `api`; the Ingress path with `backend: api` and the
+# Service port `service.apiPort` point at it.
+apiContainerPort: 3001
 
 # -- Deployment update strategy. `Recreate` is the safe default because the
 # `persistence` volume is ReadWriteOnce: during a RollingUpdate the new pod
@@ -220,6 +243,8 @@ persistence:
 service:
   type: ClusterIP
   port: 3000
+  # -- Service port for the JSON API, forwarded to the `api` container port.
+  apiPort: 3001
   annotations: {}
 
 # ---------------------------------------------------------------------------
@@ -235,6 +260,11 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
+        # `backend: api` sends a path to the API port, so that clients reach
+        # the API at https://<host>/api/v1 next to the board.
+        - path: /api
+          pathType: Prefix
+          backend: api
   tls: []
   #  - secretName: hyperuplink-tls
   #    hosts:

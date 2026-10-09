@@ -73,6 +73,9 @@ spec:
             - name: http
               containerPort: {{ .Values.containerPort }}
               protocol: TCP
+            - name: api
+              containerPort: {{ .Values.apiContainerPort }}
+              protocol: TCP
           {{- if .Values.startupProbe.enabled }}
           startupProbe:
             {{- toYaml (omit .Values.startupProbe "enabled") | nindent 12 }}
