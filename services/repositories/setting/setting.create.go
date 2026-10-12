@@ -2,6 +2,7 @@ package setting
 
 import (
 	"context"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 )
 
@@ -9,7 +10,7 @@ func Create[T any](
 	repo *Repository,
 	model *setting.Setting[T],
 ) (rowID string, err error) {
-	err = repo.db.QueryRow(context.Background(), `INSERT INTO settings (
+	return database.Value[string](context.Background(), repo.db, `INSERT INTO settings (
   id
   ,string_value
   ,int_value
@@ -27,6 +28,5 @@ func Create[T any](
 		model.IntValue,
 		model.JSONValue,
 		model.TimeValue,
-	).Scan(&rowID)
-	return rowID, repo.db.ConvertError(err)
+	)
 }

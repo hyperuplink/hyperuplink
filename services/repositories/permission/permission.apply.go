@@ -3,6 +3,7 @@ package permission
 import (
 	"context"
 	"github.com/jackc/pgx/v5/pgtype"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 )
 
@@ -15,11 +16,11 @@ func (repo *Repository) Apply(
 
 	tx, err := repo.db.Tx(context.Background())
 	if err != nil {
-		return repo.db.ConvertError(err)
+		return database.ConvertError(err)
 	}
 	defer tx.End(context.Background())
 
-	tag, err := tx.Exec(context.Background(), `UPDATE permissions SET
+	tag, err := database.Exec(context.Background(), tx, `UPDATE permissions SET
 		 bits =       $3::BIT(3)
 		,updated_at = NOW()
 		WHERE group_id IS NOT DISTINCT FROM $1
@@ -30,11 +31,11 @@ func (repo *Repository) Apply(
 		bits,
 	)
 	if err != nil {
-		return repo.db.ConvertError(err)
+		return err
 	}
 
 	if tag.RowsAffected() == 0 {
-		_, err = tx.Exec(context.Background(), `INSERT INTO permissions (
+		_, err = database.Exec(context.Background(), tx, `INSERT INTO permissions (
 			 group_id
 			,category_id
 			,bits
@@ -48,9 +49,9 @@ func (repo *Repository) Apply(
 			bits,
 		)
 		if err != nil {
-			return repo.db.ConvertError(err)
+			return err
 		}
 	}
 
-	return repo.db.ConvertError(tx.Commit(context.Background()))
+	return database.ConvertError(tx.Commit(context.Background()))
 }

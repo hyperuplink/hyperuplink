@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/jackc/pgx/v5"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/vsearchresult"
 )
 
@@ -131,24 +131,12 @@ func (repo *Repository) Count(term string, opts Options) (total int64, err error
 		parts = append(parts, "SELECT 1"+replyFrom+" WHERE "+replyWhere)
 	}
 
-	var rows pgx.Rows
-	rows, err = repo.db.Query(
+	return database.Value[int64](
 		context.Background(),
+		repo.db,
 		"SELECT COUNT(*) AS total FROM ("+strings.Join(parts, " UNION ALL ")+") results",
 		args...,
 	)
-	if err != nil {
-		return total, repo.db.ConvertError(err)
-	}
-
-	var pag map[string]any
-	pag, err = pgx.CollectOneRow(rows, pgx.RowToMap)
-	if err != nil {
-		return total, repo.db.ConvertError(err)
-	}
-	total = pag["total"].(int64)
-
-	return total, nil
 }
 
 func (repo *Repository) Query(
@@ -159,7 +147,7 @@ func (repo *Repository) Query(
 ) (model *[]vsearchresult.VSearchResult, total int64, err error) {
 	total, err = repo.Count(term, opts)
 	if err != nil {
-		return nil, 0, repo.db.ConvertError(err)
+		return nil, 0, err
 	}
 	if total == 0 {
 		empty := []vsearchresult.VSearchResult{}
@@ -185,9 +173,9 @@ func (repo *Repository) Query(
 	offsetPh := fmt.Sprintf("$%d", len(args)+2)
 	args = append(args, limit, offset)
 
-	var rows pgx.Rows
-	rows, err = repo.db.Query(
+	mod, err := database.Rows[vsearchresult.VSearchResult](
 		context.Background(),
+		repo.db,
 		`SELECT kind, category_slug, forum_slug, topic_slug, topic_name,
 		        author_username, created_at, reply_short_id, reply_position
 		 FROM (`+strings.Join(parts, " UNION ALL ")+`) results
@@ -195,11 +183,6 @@ func (repo *Repository) Query(
 		 LIMIT `+limitPh+` OFFSET `+offsetPh,
 		args...,
 	)
-	if err != nil {
-		return nil, 0, repo.db.ConvertError(err)
-	}
 
-	mod, err := pgx.CollectRows(rows, pgx.RowToStructByName[vsearchresult.VSearchResult])
-
-	return &mod, total, repo.db.ConvertError(err)
+	return &mod, total, err
 }

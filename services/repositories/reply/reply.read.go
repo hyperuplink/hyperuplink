@@ -3,7 +3,7 @@ package reply
 import (
 	"context"
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/models/reply"
 )
@@ -12,10 +12,9 @@ func (repo *Repository) AllForTopicUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *[]reply.Reply, err error) {
-	var rows pgx.Rows
 	var mod []reply.Reply
 
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	mod, err = database.Rows[reply.Reply](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM replies WHERE topic_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -23,13 +22,8 @@ func (repo *Repository) AllForTopicUUID(
 		}),
 		id,
 	)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
 
-	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[reply.Reply])
-
-	return &mod, repo.db.ConvertError(err)
+	return &mod, err
 }
 
 func (repo *Repository) AllForTopicID(
@@ -39,7 +33,7 @@ func (repo *Repository) AllForTopicID(
 	var uuID uuid.UUID
 
 	if uuID, err = uuid.Parse(id); err != nil {
-		return nil, repo.db.ConvertError(err)
+		return nil, database.ConvertError(err)
 	}
 
 	return repo.AllForTopicUUID(uuID, qo)
@@ -49,10 +43,7 @@ func (repo *Repository) GetByUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *reply.Reply, err error) {
-	var rows pgx.Rows
-	var mod reply.Reply
-
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	return database.Row[reply.Reply](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM replies WHERE id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -60,13 +51,6 @@ func (repo *Repository) GetByUUID(
 		}),
 		id,
 	)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
-
-	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[reply.Reply])
-
-	return &mod, repo.db.ConvertError(err)
 }
 
 func (repo *Repository) GetByID(
@@ -76,7 +60,7 @@ func (repo *Repository) GetByID(
 	var uuID uuid.UUID
 
 	if uuID, err = uuid.Parse(id); err != nil {
-		return nil, repo.db.ConvertError(err)
+		return nil, database.ConvertError(err)
 	}
 
 	return repo.GetByUUID(uuID, qo)
@@ -86,10 +70,7 @@ func (repo *Repository) GetByShortID(
 	shortID string,
 	qo common.QueryOptions,
 ) (model *reply.Reply, err error) {
-	var rows pgx.Rows
-	var mod reply.Reply
-
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	return database.Row[reply.Reply](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM replies WHERE short_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -97,11 +78,4 @@ func (repo *Repository) GetByShortID(
 		}),
 		shortID,
 	)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
-
-	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[reply.Reply])
-
-	return &mod, repo.db.ConvertError(err)
 }

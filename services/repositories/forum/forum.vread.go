@@ -3,39 +3,33 @@ package forum
 import (
 	"context"
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/models/vforum"
 )
 
 func (repo *Repository) VAll(qo common.QueryOptions) (model *[]vforum.VForum, err error) {
-	var rows pgx.Rows
 	var mod []vforum.VForum
 
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	mod, err = database.Rows[vforum.VForum](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM vforums`,
 		common.QueryCapabilities{
 			HasDeleted: true,
 		},
 	))
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
 
-	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[vforum.VForum])
-
-	return &mod, repo.db.ConvertError(err)
+	return &mod, err
 }
 
 func (repo *Repository) VAllForCategoryUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *[]vforum.VForum, err error) {
-	var rows pgx.Rows
 	var mod []vforum.VForum
 
-	rows, err = repo.db.Query(
+	mod, err = database.Rows[vforum.VForum](
 		context.Background(),
+		repo.db,
 		qo.Query(`SELECT * FROM vforums
 		WHERE category_id = $1`,
 			common.QueryCapabilities{
@@ -44,13 +38,8 @@ func (repo *Repository) VAllForCategoryUUID(
 		),
 		id,
 	)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
 
-	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[vforum.VForum])
-
-	return &mod, repo.db.ConvertError(err)
+	return &mod, err
 }
 
 func (repo *Repository) VAllForCategoryID(
@@ -60,7 +49,7 @@ func (repo *Repository) VAllForCategoryID(
 	var uuID uuid.UUID
 
 	if uuID, err = uuid.Parse(id); err != nil {
-		return nil, repo.db.ConvertError(err)
+		return nil, database.ConvertError(err)
 	}
 
 	return repo.VAllForCategoryUUID(uuID, qo)
@@ -70,11 +59,9 @@ func (repo *Repository) VGetBySlug(
 	slug string,
 	qo common.QueryOptions,
 ) (model *vforum.VForum, err error) {
-	var rows pgx.Rows
-	var mod vforum.VForum
-
-	rows, err = repo.db.Query(
+	return database.Row[vforum.VForum](
 		context.Background(),
+		repo.db,
 		qo.Query(
 			`SELECT * FROM vforums
 			WHERE slug = $1`,
@@ -84,24 +71,15 @@ func (repo *Repository) VGetBySlug(
 		),
 		slug,
 	)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
-
-	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[vforum.VForum])
-
-	return &mod, repo.db.ConvertError(err)
 }
 
 func (repo *Repository) VGetByUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *vforum.VForum, err error) {
-	var rows pgx.Rows
-	var mod vforum.VForum
-
-	rows, err = repo.db.Query(
+	return database.Row[vforum.VForum](
 		context.Background(),
+		repo.db,
 		qo.Query(
 			`SELECT * FROM vforums
 			WHERE id = $1`,
@@ -111,11 +89,4 @@ func (repo *Repository) VGetByUUID(
 		),
 		id,
 	)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
-
-	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[vforum.VForum])
-
-	return &mod, repo.db.ConvertError(err)
 }

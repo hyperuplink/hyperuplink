@@ -2,7 +2,7 @@ package postevent
 
 import (
 	"context"
-	"github.com/jackc/pgx/v5"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/models/vpostevent"
 )
@@ -10,10 +10,9 @@ import (
 func (repo *Repository) VAllReports(
 	qo common.QueryOptions,
 ) (model *[]vpostevent.VPostEvent, err error) {
-	var rows pgx.Rows
 	var mod []vpostevent.VPostEvent
 
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	mod, err = database.Rows[vpostevent.VPostEvent](context.Background(), repo.db, qo.Query(
 		`SELECT
 			 pe.*
 			,COALESCE(t.text, r.text, '') AS target_text
@@ -38,11 +37,6 @@ func (repo *Repository) VAllReports(
 			HasDeleted: true,
 		}),
 	)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
 
-	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[vpostevent.VPostEvent])
-
-	return &mod, repo.db.ConvertError(err)
+	return &mod, err
 }

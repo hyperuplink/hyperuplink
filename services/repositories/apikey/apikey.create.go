@@ -3,11 +3,12 @@ package apikey
 import (
 	"context"
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/apikey"
 )
 
 func (repo *Repository) Create(model *apikey.APIKey) (rowID uuid.UUID, err error) {
-	err = repo.db.QueryRow(context.Background(), `INSERT INTO apikeys (
+	return database.Value[uuid.UUID](context.Background(), repo.db, `INSERT INTO apikeys (
 		 user_id
 		,name
 		,secret_hash
@@ -23,6 +24,5 @@ func (repo *Repository) Create(model *apikey.APIKey) (rowID uuid.UUID, err error
 		model.UserID,
 		model.Name,
 		model.SecretHash,
-	).Scan(&rowID)
-	return rowID, repo.db.ConvertError(err)
+	)
 }

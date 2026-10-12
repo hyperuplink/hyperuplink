@@ -3,11 +3,12 @@ package user
 import (
 	"context"
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
-	err = repo.db.QueryRow(context.Background(), `INSERT INTO users (
+	return database.Value[uuid.UUID](context.Background(), repo.db, `INSERT INTO users (
 		 username
 		,role
 		,member_of
@@ -44,6 +45,5 @@ func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
 		model.EmailConfirmationSentAt,
 		model.EmailIsJID,
 		model.Language,
-	).Scan(&rowID)
-	return rowID, repo.db.ConvertError(err)
+	)
 }

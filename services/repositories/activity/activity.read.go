@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/models/activity"
 )
@@ -38,7 +39,7 @@ func (repo *Repository) MarkersForActor(
 		subjectIDs,
 	)
 	if err != nil {
-		return nil, repo.db.ConvertError(err)
+		return nil, database.ConvertError(err)
 	}
 	defer rows.Close()
 
@@ -47,7 +48,7 @@ func (repo *Repository) MarkersForActor(
 		var updatedAt pgtype.Timestamp
 
 		if err = rows.Scan(&subjectID, &updatedAt); err != nil {
-			return nil, repo.db.ConvertError(err)
+			return nil, database.ConvertError(err)
 		}
 
 		if updatedAt.Valid {
@@ -55,5 +56,5 @@ func (repo *Repository) MarkersForActor(
 		}
 	}
 
-	return markers, repo.db.ConvertError(rows.Err())
+	return markers, database.ConvertError(rows.Err())
 }

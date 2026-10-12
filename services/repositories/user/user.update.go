@@ -2,11 +2,12 @@ package user
 
 import (
 	"context"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
 func (repo *Repository) Update(model *user.User) (err error) {
-	_, err = repo.db.Exec(context.Background(), `UPDATE users SET
+	_, err = database.Exec(context.Background(), repo.db, `UPDATE users SET
 		 username =                    $1
 		,role =                        $2
 		,member_of =                   $3
@@ -67,5 +68,5 @@ func (repo *Repository) Update(model *user.User) (err error) {
 		// WHERE id =
 		model.ID,
 	)
-	return repo.db.ConvertError(err)
+	return err
 }

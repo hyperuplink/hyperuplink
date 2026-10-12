@@ -2,11 +2,12 @@ package forum
 
 import (
 	"context"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/forum"
 )
 
 func (repo *Repository) Update(model *forum.Forum) (err error) {
-	_, err = repo.db.Exec(context.Background(), `UPDATE forums SET
+	_, err = database.Exec(context.Background(), repo.db, `UPDATE forums SET
 		 name =                        $1
 		,slug =                        $2
 		,position = CASE
@@ -23,5 +24,5 @@ func (repo *Repository) Update(model *forum.Forum) (err error) {
 		model.Description,
 		model.ID,
 	)
-	return repo.db.ConvertError(err)
+	return err
 }

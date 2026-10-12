@@ -2,17 +2,18 @@ package category
 
 import (
 	"context"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
 )
 
 func (repo *Repository) Delete(model *category.Category) (err error) {
 	tx, err := repo.db.Tx(context.Background())
 	if err != nil {
-		return repo.db.ConvertError(err)
+		return database.ConvertError(err)
 	}
 	defer tx.End(context.Background())
 
-	_, err = tx.Exec(context.Background(), `
+	_, err = database.Exec(context.Background(), tx, `
 		UPDATE replies SET
 			updated_at = NOW(),
 			deleted_at = NOW()
@@ -26,10 +27,10 @@ func (repo *Repository) Delete(model *category.Category) (err error) {
 		model.ID,
 	)
 	if err != nil {
-		return repo.db.ConvertError(err)
+		return err
 	}
 
-	_, err = tx.Exec(context.Background(), `
+	_, err = database.Exec(context.Background(), tx, `
 		UPDATE topics SET
 			updated_at = NOW(),
 			deleted_at = NOW()
@@ -42,10 +43,10 @@ func (repo *Repository) Delete(model *category.Category) (err error) {
 		model.ID,
 	)
 	if err != nil {
-		return repo.db.ConvertError(err)
+		return err
 	}
 
-	_, err = tx.Exec(context.Background(), `
+	_, err = database.Exec(context.Background(), tx, `
 		UPDATE forums SET
 			updated_at = NOW(),
 			deleted_at = NOW()
@@ -55,10 +56,10 @@ func (repo *Repository) Delete(model *category.Category) (err error) {
 		model.ID,
 	)
 	if err != nil {
-		return repo.db.ConvertError(err)
+		return err
 	}
 
-	_, err = tx.Exec(context.Background(), `
+	_, err = database.Exec(context.Background(), tx, `
 		UPDATE categories SET
 			updated_at = NOW(),
 			deleted_at = NOW()
@@ -67,9 +68,9 @@ func (repo *Repository) Delete(model *category.Category) (err error) {
 		model.ID,
 	)
 	if err != nil {
-		return repo.db.ConvertError(err)
+		return err
 	}
-	_, err = tx.Exec(context.Background(), `
+	_, err = database.Exec(context.Background(), tx, `
 		WITH ordered_categories AS (
 			SELECT id, ROW_NUMBER() OVER (ORDER BY position) - 1 AS new_position
 			FROM categories
@@ -82,8 +83,8 @@ func (repo *Repository) Delete(model *category.Category) (err error) {
 		`,
 	)
 	if err != nil {
-		return repo.db.ConvertError(err)
+		return err
 	}
 
-	return repo.db.ConvertError(tx.Commit(context.Background()))
+	return database.ConvertError(tx.Commit(context.Background()))
 }

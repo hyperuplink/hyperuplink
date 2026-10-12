@@ -5,8 +5,8 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
@@ -25,18 +25,13 @@ func (repo *Repository) Resolve(
 		return res, nil
 	}
 
-	rows, err := repo.db.Query(context.Background(), `SELECT * FROM permissions
+	perms, err := database.Rows[permission.Permission](context.Background(), repo.db, `SELECT * FROM permissions
 		WHERE (group_id IS NULL OR group_id = ANY($1))
 		AND deleted_at IS NULL`,
 		memberOf,
 	)
 	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
-
-	perms, err := pgx.CollectRows(rows, pgx.RowToStructByName[permission.Permission])
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
+		return nil, err
 	}
 
 	categoryDefault := map[uuid.UUID]byte{}
@@ -99,7 +94,7 @@ func (repo *Repository) EffectiveLevel(
 		return level, nil
 	}
 
-	rows, err := repo.db.Query(context.Background(), `SELECT * FROM permissions
+	perms, err := database.Rows[permission.Permission](context.Background(), repo.db, `SELECT * FROM permissions
 		WHERE group_id = ANY($1)
 		AND category_id = $2
 		AND deleted_at IS NULL`,
@@ -107,12 +102,7 @@ func (repo *Repository) EffectiveLevel(
 		categoryID,
 	)
 	if err != nil {
-		return level, repo.db.ConvertError(err)
-	}
-
-	perms, err := pgx.CollectRows(rows, pgx.RowToStructByName[permission.Permission])
-	if err != nil {
-		return level, repo.db.ConvertError(err)
+		return level, err
 	}
 
 	for i := range perms {

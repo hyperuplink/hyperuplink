@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/models/postevent"
@@ -16,23 +17,13 @@ func (repo *Repository) GetByUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *postevent.PostEvent, err error) {
-	var rows pgx.Rows
-	var mod postevent.PostEvent
-
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	return database.Row[postevent.PostEvent](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM postevents WHERE id = $1`,
 		common.QueryCapabilities{
 			HasDeleted: true,
 		}),
 		id,
 	)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
-
-	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[postevent.PostEvent])
-
-	return &mod, repo.db.ConvertError(err)
 }
 
 func (repo *Repository) GetByID(
@@ -42,7 +33,7 @@ func (repo *Repository) GetByID(
 	var uuID uuid.UUID
 
 	if uuID, err = uuid.Parse(id); err != nil {
-		return nil, repo.db.ConvertError(err)
+		return nil, database.ConvertError(err)
 	}
 
 	return repo.GetByUUID(uuID, qo)
@@ -76,7 +67,7 @@ func (repo *Repository) TallyForTopicUUID(
 		id,
 	)
 	if err != nil {
-		return nil, repo.db.ConvertError(err)
+		return nil, database.ConvertError(err)
 	}
 	defer rows.Close()
 
@@ -85,13 +76,13 @@ func (repo *Repository) TallyForTopicUUID(
 		var votes int64
 
 		if err = rows.Scan(&selection, &votes); err != nil {
-			return nil, repo.db.ConvertError(err)
+			return nil, database.ConvertError(err)
 		}
 
 		tally[selection] = int(votes)
 	}
 
-	return tally, repo.db.ConvertError(rows.Err())
+	return tally, database.ConvertError(rows.Err())
 }
 
 func (repo *Repository) SelectionForTopicUUID(
@@ -112,7 +103,7 @@ func (repo *Repository) SelectionForTopicUUID(
 		authorID,
 	).Scan(&selection)
 	if err != nil {
-		if err = repo.db.ConvertError(err); errors.Is(err, errs.ErrNoRows) {
+		if err = database.ConvertError(err); errors.Is(err, errs.ErrNoRows) {
 			return -1, false, nil
 		}
 		return -1, false, err

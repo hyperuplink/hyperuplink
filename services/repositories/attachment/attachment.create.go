@@ -3,11 +3,12 @@ package attachment
 import (
 	"context"
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/attachment"
 )
 
 func (repo *Repository) Create(model *attachment.Attachment) (rowID uuid.UUID, err error) {
-	err = repo.db.QueryRow(context.Background(), `INSERT INTO attachments (
+	return database.Value[uuid.UUID](context.Background(), repo.db, `INSERT INTO attachments (
 		author_id
 		,filename
 		,mime_type
@@ -27,6 +28,5 @@ func (repo *Repository) Create(model *attachment.Attachment) (rowID uuid.UUID, e
 		model.MimeType,
 		model.Checksum,
 		model.OnUploadHookOutput,
-	).Scan(&rowID)
-	return rowID, repo.db.ConvertError(err)
+	)
 }

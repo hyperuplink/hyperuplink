@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/models/vreply"
 )
@@ -14,7 +14,6 @@ func (repo *Repository) VAllForTopicUUIDOrdered(
 	limit int,
 	page int,
 ) (model *[]vreply.VReply, total int64, err error) {
-	var rows pgx.Rows
 	var mod []vreply.VReply
 
 	if total, err = repo.VAllCountForTopicUUID(id, common.QueryOptions{}); err != nil {
@@ -25,7 +24,7 @@ func (repo *Repository) VAllForTopicUUIDOrdered(
 		page = 1
 	}
 
-	rows, err = repo.db.Query(context.Background(),
+	mod, err = database.Rows[vreply.VReply](context.Background(), repo.db,
 		`SELECT * FROM vreplies
 		WHERE topic_id = $1
 		AND spammed_at IS NULL
@@ -36,23 +35,15 @@ func (repo *Repository) VAllForTopicUUIDOrdered(
 		limit,
 		(page-1)*limit,
 	)
-	if err != nil {
-		return nil, 0, repo.db.ConvertError(err)
-	}
 
-	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[vreply.VReply])
-
-	return &mod, total, repo.db.ConvertError(err)
+	return &mod, total, err
 }
 
 func (repo *Repository) VGetByUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *vreply.VReply, err error) {
-	var rows pgx.Rows
-	var mod vreply.VReply
-
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	return database.Row[vreply.VReply](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM vreplies WHERE id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -60,23 +51,13 @@ func (repo *Repository) VGetByUUID(
 		}),
 		id,
 	)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
-
-	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[vreply.VReply])
-
-	return &mod, repo.db.ConvertError(err)
 }
 
 func (repo *Repository) VGetByShortID(
 	shortID string,
 	qo common.QueryOptions,
 ) (model *vreply.VReply, err error) {
-	var rows pgx.Rows
-	var mod vreply.VReply
-
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	return database.Row[vreply.VReply](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM vreplies WHERE short_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -84,13 +65,6 @@ func (repo *Repository) VGetByShortID(
 		}),
 		shortID,
 	)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
-
-	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[vreply.VReply])
-
-	return &mod, repo.db.ConvertError(err)
 }
 
 func (repo *Repository) PositionForUUID(id uuid.UUID) (position int64, err error) {
@@ -105,5 +79,5 @@ func (repo *Repository) PositionForUUID(id uuid.UUID) (position int64, err error
 		id,
 	).Scan(&position)
 
-	return position, repo.db.ConvertError(err)
+	return position, database.ConvertError(err)
 }

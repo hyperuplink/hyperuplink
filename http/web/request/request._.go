@@ -94,6 +94,7 @@ func New(
 	)
 	if err != nil {
 		req.r.GetRuntime().Error("error", err)
+		settingSystem = new(setting.Setting[setting.System])
 	}
 	req.System = &settingSystem.JSONValue
 
@@ -103,6 +104,7 @@ func New(
 	)
 	if err != nil {
 		req.r.GetRuntime().Error("error", err)
+		settingTheme = new(setting.Setting[setting.Theme])
 	}
 	req.Theme = &settingTheme.JSONValue
 
@@ -112,6 +114,7 @@ func New(
 	)
 	if err != nil {
 		req.r.GetRuntime().Error("error", err)
+		settingGeneral = new(setting.Setting[setting.General])
 	}
 
 	_, req.absPath, req.relRoot = helpers.GetPaths(req.c)

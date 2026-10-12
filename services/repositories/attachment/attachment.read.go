@@ -5,15 +5,16 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
 	"xn--gckvb8fzb.com/hyperuplink/models/attachment"
 )
 
 func (repo *Repository) GetCategoryForAttachment(
 	id uuid.UUID,
 ) (categoryID uuid.UUID, found bool, err error) {
-	err = repo.db.QueryRow(context.Background(), `
+	categoryID, err = database.Value[uuid.UUID](context.Background(), repo.db, `
 		SELECT f.category_id FROM topics t
 		JOIN forums f ON f.id = t.forum_id
 		WHERE $1 = ANY(t.attachment_ids) AND t.deleted_at IS NULL
@@ -25,12 +26,12 @@ func (repo *Repository) GetCategoryForAttachment(
 		AND r.deleted_at IS NULL AND t.deleted_at IS NULL
 		LIMIT 1`,
 		id,
-	).Scan(&categoryID)
+	)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
+		if errors.Is(err, errs.ErrNoRows) {
 			return categoryID, false, nil
 		}
-		return categoryID, false, repo.db.ConvertError(err)
+		return categoryID, false, err
 	}
 
 	return categoryID, true, nil
@@ -40,10 +41,7 @@ func (repo *Repository) GetByUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *attachment.Attachment, err error) {
-	var rows pgx.Rows
-	var mod attachment.Attachment
-
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	return database.Row[attachment.Attachment](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM attachments WHERE id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -51,13 +49,6 @@ func (repo *Repository) GetByUUID(
 		}),
 		id,
 	)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
-
-	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[attachment.Attachment])
-
-	return &mod, repo.db.ConvertError(err)
 }
 
 func (repo *Repository) GetByID(
@@ -67,7 +58,7 @@ func (repo *Repository) GetByID(
 	var uuID uuid.UUID
 
 	if uuID, err = uuid.Parse(id); err != nil {
-		return nil, repo.db.ConvertError(err)
+		return nil, database.ConvertError(err)
 	}
 
 	return repo.GetByUUID(uuID, qo)
@@ -77,10 +68,9 @@ func (repo *Repository) AllByUUIDs(
 	ids []uuid.UUID,
 	qo common.QueryOptions,
 ) (model *[]attachment.Attachment, err error) {
-	var rows pgx.Rows
 	var mod []attachment.Attachment
 
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	mod, err = database.Rows[attachment.Attachment](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM attachments WHERE id = ANY($1)`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -88,11 +78,6 @@ func (repo *Repository) AllByUUIDs(
 		}),
 		ids,
 	)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
 
-	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[attachment.Attachment])
-
-	return &mod, repo.db.ConvertError(err)
+	return &mod, err
 }

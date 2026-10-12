@@ -3,7 +3,7 @@ package reply
 import (
 	"context"
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/models/vreply"
 )
@@ -12,13 +12,12 @@ func (repo *Repository) VAllCountForTopicUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (total int64, err error) {
-	var rows pgx.Rows
 
 	qoc := qo
 	qoc.OrderBy = ""
 	qoc.Limit = 0
 	qoc.Page = 0
-	rows, err = repo.db.Query(context.Background(), qoc.Query(
+	return database.Value[int64](context.Background(), repo.db, qoc.Query(
 		`SELECT COUNT(id) AS total FROM vreplies WHERE topic_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -26,30 +25,19 @@ func (repo *Repository) VAllCountForTopicUUID(
 		}),
 		id,
 	)
-	if err != nil {
-		return total, repo.db.ConvertError(err)
-	}
-
-	var pag map[string]any
-	pag, err = pgx.CollectOneRow(rows, pgx.RowToMap)
-	if err != nil {
-		return total, repo.db.ConvertError(err)
-	}
-	total = pag["total"].(int64)
-
-	return total, nil
 }
 
 func (repo *Repository) VAllForTopicUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *[]vreply.VReply, total int64, err error) {
-	var rows pgx.Rows
 	var mod []vreply.VReply
 
-	total, err = repo.VAllCountForTopicUUID(id, qo)
+	if total, err = repo.VAllCountForTopicUUID(id, qo); err != nil {
+		return nil, 0, err
+	}
 
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	mod, err = database.Rows[vreply.VReply](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM vreplies WHERE topic_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -57,13 +45,8 @@ func (repo *Repository) VAllForTopicUUID(
 		}),
 		id,
 	)
-	if err != nil {
-		return nil, total, repo.db.ConvertError(err)
-	}
 
-	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[vreply.VReply])
-
-	return &mod, total, repo.db.ConvertError(err)
+	return &mod, total, err
 }
 
 func (repo *Repository) VAllForTopicID(
@@ -73,7 +56,7 @@ func (repo *Repository) VAllForTopicID(
 	var uuID uuid.UUID
 
 	if uuID, err = uuid.Parse(id); err != nil {
-		return nil, total, repo.db.ConvertError(err)
+		return nil, total, database.ConvertError(err)
 	}
 
 	return repo.VAllForTopicUUID(uuID, qo)
@@ -83,10 +66,9 @@ func (repo *Repository) VAllWithTopicForAuthorUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *[]vreply.VReplyWithTopic, err error) {
-	var rows pgx.Rows
 	var mod []vreply.VReplyWithTopic
 
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	mod, err = database.Rows[vreply.VReplyWithTopic](context.Background(), repo.db, qo.Query(
 		`SELECT vr.*,
 			t.name AS topic_name,
 			t.slug AS topic_slug,
@@ -104,11 +86,6 @@ func (repo *Repository) VAllWithTopicForAuthorUUID(
 		}),
 		id,
 	)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
 
-	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[vreply.VReplyWithTopic])
-
-	return &mod, repo.db.ConvertError(err)
+	return &mod, err
 }

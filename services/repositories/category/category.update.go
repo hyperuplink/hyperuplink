@@ -2,11 +2,12 @@ package category
 
 import (
 	"context"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
 )
 
 func (repo *Repository) Update(model *category.Category) (err error) {
-	_, err = repo.db.Exec(context.Background(), `UPDATE categories SET
+	_, err = database.Exec(context.Background(), repo.db, `UPDATE categories SET
 		 name =                        $1
 		,slug =                        $2
 		,updated_at =                  NOW()
@@ -16,5 +17,5 @@ func (repo *Repository) Update(model *category.Category) (err error) {
 		// WHERE id =
 		model.ID,
 	)
-	return repo.db.ConvertError(err)
+	return err
 }

@@ -2,7 +2,7 @@ package activity
 
 import (
 	"context"
-	"github.com/jackc/pgx/v5"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/models/activity"
 	"xn--gckvb8fzb.com/hyperuplink/models/vactivity"
@@ -11,14 +11,12 @@ import (
 func (repo *Repository) VAllAdminCount(
 	qo common.QueryOptions,
 ) (total int64, err error) {
-	var rows pgx.Rows
-
 	qoc := qo
 	qoc.OrderBy = ""
 	qoc.Limit = 0
 	qoc.Page = 0
 
-	rows, err = repo.db.Query(context.Background(), qoc.Query(
+	return database.Value[int64](context.Background(), repo.db, qoc.Query(
 		`SELECT COUNT(a.id) AS total FROM activities a WHERE a.kind = ANY($1)`,
 		common.QueryCapabilities{
 			Table:      "a",
@@ -26,30 +24,18 @@ func (repo *Repository) VAllAdminCount(
 		}),
 		activity.AdminKinds(),
 	)
-	if err != nil {
-		return total, repo.db.ConvertError(err)
-	}
-
-	var pag map[string]any
-	if pag, err = pgx.CollectOneRow(rows, pgx.RowToMap); err != nil {
-		return total, repo.db.ConvertError(err)
-	}
-	total = pag["total"].(int64)
-
-	return total, nil
 }
 
 func (repo *Repository) VAllAdmin(
 	qo common.QueryOptions,
 ) (model *[]vactivity.VActivity, total int64, err error) {
-	var rows pgx.Rows
 	var mod []vactivity.VActivity
 
 	if total, err = repo.VAllAdminCount(qo); err != nil {
 		return nil, total, err
 	}
 
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	mod, err = database.Rows[vactivity.VActivity](context.Background(), repo.db, qo.Query(
 		`SELECT
 			 a.*
 			,COALESCE(u.username, '') AS actor_username
@@ -62,11 +48,6 @@ func (repo *Repository) VAllAdmin(
 		}),
 		activity.AdminKinds(),
 	)
-	if err != nil {
-		return nil, total, repo.db.ConvertError(err)
-	}
 
-	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[vactivity.VActivity])
-
-	return &mod, total, repo.db.ConvertError(err)
+	return &mod, total, err
 }

@@ -3,11 +3,12 @@ package postevent
 import (
 	"context"
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/postevent"
 )
 
 func (repo *Repository) Create(model *postevent.PostEvent) (rowID uuid.UUID, err error) {
-	err = repo.db.QueryRow(context.Background(), `INSERT INTO postevents (
+	return database.Value[uuid.UUID](context.Background(), repo.db, `INSERT INTO postevents (
 		 type
 		,author_id
 		,target
@@ -32,6 +33,5 @@ func (repo *Repository) Create(model *postevent.PostEvent) (rowID uuid.UUID, err
 		model.TopicID,
 		model.ReplyID,
 		model.Selection,
-	).Scan(&rowID)
-	return rowID, repo.db.ConvertError(err)
+	)
 }

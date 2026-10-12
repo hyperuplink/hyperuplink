@@ -6,6 +6,7 @@ import (
 	"slices"
 	"strings"
 
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/activity"
 )
 
@@ -58,7 +59,7 @@ func (repo *Repository) Upsert(recs []activity.Record) (err error) {
 	for chunk := range slices.Chunk(recs, maxRecordsPerStatement) {
 		vals, args := repo.values(chunk)
 
-		if _, err = repo.db.Exec(context.Background(), fmt.Sprintf(`INSERT INTO activities (
+		if _, err = database.Exec(context.Background(), repo.db, fmt.Sprintf(`INSERT INTO activities (
 			 kind
 			,actor_id
 			,subject
@@ -74,7 +75,7 @@ func (repo *Repository) Upsert(recs []activity.Record) (err error) {
 			,updated_at = NOW()`, vals),
 			args...,
 		); err != nil {
-			return repo.db.ConvertError(err)
+			return err
 		}
 	}
 
@@ -85,7 +86,7 @@ func (repo *Repository) Append(recs []activity.Record) (err error) {
 	for chunk := range slices.Chunk(recs, maxRecordsPerStatement) {
 		vals, args := repo.values(chunk)
 
-		if _, err = repo.db.Exec(context.Background(), fmt.Sprintf(`INSERT INTO activities (
+		if _, err = database.Exec(context.Background(), repo.db, fmt.Sprintf(`INSERT INTO activities (
 			 kind
 			,actor_id
 			,subject
@@ -96,7 +97,7 @@ func (repo *Repository) Append(recs []activity.Record) (err error) {
 		) VALUES %s`, vals),
 			args...,
 		); err != nil {
-			return repo.db.ConvertError(err)
+			return err
 		}
 	}
 

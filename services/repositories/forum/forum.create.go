@@ -3,13 +3,14 @@ package forum
 import (
 	"context"
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/forum"
 )
 
 func (repo *Repository) Create(model *forum.Forum) (rowID uuid.UUID, err error) {
 	tx, err := repo.db.Tx(context.Background())
 	if err != nil {
-		return rowID, repo.db.ConvertError(err)
+		return rowID, database.ConvertError(err)
 	}
 	defer tx.End(context.Background())
 
@@ -36,8 +37,8 @@ func (repo *Repository) Create(model *forum.Forum) (rowID uuid.UUID, err error) 
 		model.Description,
 	).Scan(&rowID)
 	if err != nil {
-		return rowID, repo.db.ConvertError(err)
+		return rowID, database.ConvertError(err)
 	}
 
-	return rowID, repo.db.ConvertError(tx.Commit(context.Background()))
+	return rowID, database.ConvertError(tx.Commit(context.Background()))
 }

@@ -2,17 +2,18 @@ package forum
 
 import (
 	"context"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/forum"
 )
 
 func (repo *Repository) Delete(model *forum.Forum) (err error) {
 	tx, err := repo.db.Tx(context.Background())
 	if err != nil {
-		return repo.db.ConvertError(err)
+		return database.ConvertError(err)
 	}
 	defer tx.End(context.Background())
 
-	_, err = tx.Exec(context.Background(), `
+	_, err = database.Exec(context.Background(), tx, `
 		UPDATE replies SET
 			updated_at = NOW(),
 			deleted_at = NOW()
@@ -25,10 +26,10 @@ func (repo *Repository) Delete(model *forum.Forum) (err error) {
 		model.ID,
 	)
 	if err != nil {
-		return repo.db.ConvertError(err)
+		return err
 	}
 
-	_, err = tx.Exec(context.Background(), `
+	_, err = database.Exec(context.Background(), tx, `
 		UPDATE topics SET
 			updated_at = NOW(),
 			deleted_at = NOW()
@@ -38,10 +39,10 @@ func (repo *Repository) Delete(model *forum.Forum) (err error) {
 		model.ID,
 	)
 	if err != nil {
-		return repo.db.ConvertError(err)
+		return err
 	}
 
-	_, err = tx.Exec(context.Background(), `
+	_, err = database.Exec(context.Background(), tx, `
 		UPDATE forums SET
 			updated_at = NOW(),
 			deleted_at = NOW()
@@ -50,10 +51,10 @@ func (repo *Repository) Delete(model *forum.Forum) (err error) {
 		model.ID,
 	)
 	if err != nil {
-		return repo.db.ConvertError(err)
+		return err
 	}
 
-	_, err = tx.Exec(context.Background(), `
+	_, err = database.Exec(context.Background(), tx, `
 		WITH ordered_forums AS (
 			SELECT id, ROW_NUMBER() OVER (PARTITION BY category_id ORDER BY position) - 1 AS new_position
 			FROM forums
@@ -66,8 +67,8 @@ func (repo *Repository) Delete(model *forum.Forum) (err error) {
 		`,
 	)
 	if err != nil {
-		return repo.db.ConvertError(err)
+		return err
 	}
 
-	return repo.db.ConvertError(tx.Commit(context.Background()))
+	return database.ConvertError(tx.Commit(context.Background()))
 }

@@ -3,7 +3,7 @@ package user
 import (
 	"context"
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
@@ -13,33 +13,24 @@ import (
 func (repo *Repository) All(
 	qo common.QueryOptions,
 ) (model *[]user.User, err error) {
-	var rows pgx.Rows
 	var mod []user.User
 
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	mod, err = database.Rows[user.User](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM users`,
 		common.QueryCapabilities{
 			HasBanned:  true,
 			HasDeleted: true,
 		}),
 	)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
 
-	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[user.User])
-
-	return &mod, repo.db.ConvertError(err)
+	return &mod, err
 }
 
 func (repo *Repository) GetByUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *user.User, err error) {
-	var rows pgx.Rows
-	var mod user.User
-
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	return database.Row[user.User](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM users WHERE id = $1`,
 		common.QueryCapabilities{
 			HasBanned:  true,
@@ -47,13 +38,6 @@ func (repo *Repository) GetByUUID(
 		}),
 		id,
 	)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
-
-	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[user.User])
-
-	return &mod, repo.db.ConvertError(err)
 }
 
 func (repo *Repository) GetByID(
@@ -63,7 +47,7 @@ func (repo *Repository) GetByID(
 	var uuID uuid.UUID
 
 	if uuID, err = uuid.Parse(id); err != nil {
-		return nil, repo.db.ConvertError(err)
+		return nil, database.ConvertError(err)
 	}
 
 	return repo.GetByUUID(uuID, qo)
@@ -73,48 +57,28 @@ func (repo *Repository) GetByUsername(
 	username string,
 	qo common.QueryOptions,
 ) (model *user.User, err error) {
-	var rows pgx.Rows
-	var mod user.User
-
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	return database.Row[user.User](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM users WHERE username = $1`,
 		common.QueryCapabilities{
 			HasBanned:  true,
 			HasDeleted: true,
 		}),
-		username)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
-	defer rows.Close()
-
-	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[user.User])
-
-	return &mod, repo.db.ConvertError(err)
+		username,
+	)
 }
 
 func (repo *Repository) GetByEmail(
 	email string,
 	qo common.QueryOptions,
 ) (model *user.User, err error) {
-	var rows pgx.Rows
-	var mod user.User
-
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	return database.Row[user.User](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM users WHERE email = $1`,
 		common.QueryCapabilities{
 			HasBanned:  true,
 			HasDeleted: true,
 		}),
-		email)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
-	defer rows.Close()
-
-	mod, err = pgx.CollectOneRow(rows, pgx.RowToStructByName[user.User])
-
-	return &mod, repo.db.ConvertError(err)
+		email,
+	)
 }
 
 func (repo *Repository) AllToNotifyForReply(
@@ -124,10 +88,9 @@ func (repo *Repository) AllToNotifyForReply(
 	categoryID uuid.UUID,
 	qo common.QueryOptions,
 ) (model *[]user.User, err error) {
-	var rows pgx.Rows
 	var mod []user.User
 
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	mod, err = database.Rows[user.User](context.Background(), repo.db, qo.Query(
 		`SELECT u.* FROM users u
 		JOIN (
 			SELECT author_id FROM topics WHERE id = $1
@@ -167,40 +130,21 @@ func (repo *Repository) AllToNotifyForReply(
 		setting.UserProfileNotifyOnReplyKey,
 		setting.NewUserProfile().NotifyOnReply,
 	)
-	if err != nil {
-		return nil, repo.db.ConvertError(err)
-	}
-	defer rows.Close()
 
-	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[user.User])
-
-	return &mod, repo.db.ConvertError(err)
+	return &mod, err
 }
 
 func (repo *Repository) CountAll(qo common.QueryOptions) (total int64, err error) {
-	var rows pgx.Rows
 
 	qoc := qo
 	qoc.OrderBy = ""
 	qoc.Limit = 0
 	qoc.Page = 0
-	rows, err = repo.db.Query(context.Background(), qoc.Query(
+	return database.Value[int64](context.Background(), repo.db, qoc.Query(
 		`SELECT COUNT(id) AS total FROM users`,
 		common.QueryCapabilities{
 			HasBanned:  true,
 			HasDeleted: true,
 		}),
 	)
-	if err != nil {
-		return total, repo.db.ConvertError(err)
-	}
-
-	var pag map[string]any
-	pag, err = pgx.CollectOneRow(rows, pgx.RowToMap)
-	if err != nil {
-		return total, repo.db.ConvertError(err)
-	}
-	total = pag["total"].(int64)
-
-	return total, nil
 }

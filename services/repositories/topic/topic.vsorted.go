@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/models/topic"
 	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
@@ -35,14 +35,13 @@ func (repo *Repository) VAllForForumUUIDSorted(
 	limit int,
 	page int,
 ) (model *[]vtopic.VTopic, total int64, err error) {
-	var rows pgx.Rows
 	var mod []vtopic.VTopic
 
 	if total, err = repo.VAllCountForForumUUID(id, common.QueryOptions{}); err != nil {
 		return nil, 0, err
 	}
 
-	rows, err = repo.db.Query(context.Background(),
+	mod, err = database.Rows[vtopic.VTopic](context.Background(), repo.db,
 		`SELECT * FROM vtopics
 		WHERE forum_id = $1
 		AND spammed_at IS NULL
@@ -53,13 +52,8 @@ func (repo *Repository) VAllForForumUUIDSorted(
 		limit,
 		offsetFor(limit, page),
 	)
-	if err != nil {
-		return nil, 0, repo.db.ConvertError(err)
-	}
 
-	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[vtopic.VTopic])
-
-	return &mod, total, repo.db.ConvertError(err)
+	return &mod, total, err
 }
 
 func (repo *Repository) VAllForReadableSlugsSorted(
@@ -68,7 +62,6 @@ func (repo *Repository) VAllForReadableSlugsSorted(
 	limit int,
 	page int,
 ) (model *[]vtopic.VTopic, total int64, err error) {
-	var rows pgx.Rows
 	var mod []vtopic.VTopic
 
 	if total, err = repo.VAllCountForReadableSlugs(slugs, common.QueryOptions{}); err != nil {
@@ -85,12 +78,7 @@ func (repo *Repository) VAllForReadableSlugsSorted(
 	}
 	query += ` ORDER BY ` + orderFor(sort) + ` LIMIT $1 OFFSET $2`
 
-	rows, err = repo.db.Query(context.Background(), query, args...)
-	if err != nil {
-		return nil, 0, repo.db.ConvertError(err)
-	}
+	mod, err = database.Rows[vtopic.VTopic](context.Background(), repo.db, query, args...)
 
-	mod, err = pgx.CollectRows(rows, pgx.RowToStructByName[vtopic.VTopic])
-
-	return &mod, total, repo.db.ConvertError(err)
+	return &mod, total, err
 }
