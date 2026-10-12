@@ -7,27 +7,19 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 )
 
-func (repo *Repository) All() (model *[]permission.Permission, err error) {
-	var mod []permission.Permission
-
-	mod, err = database.Rows[permission.Permission](context.Background(), repo.db, `SELECT * FROM permissions
+func (repo *Repository) All() (model []permission.Permission, err error) {
+	return database.Rows[permission.Permission](context.Background(), repo.db, `SELECT * FROM permissions
 		WHERE deleted_at IS NULL`)
-
-	return &mod, err
 }
 
 func (repo *Repository) AllForGroup(
 	groupID string,
-) (model *[]permission.Permission, err error) {
-	var mod []permission.Permission
-
-	mod, err = database.Rows[permission.Permission](context.Background(), repo.db, `SELECT * FROM permissions
+) (model []permission.Permission, err error) {
+	return database.Rows[permission.Permission](context.Background(), repo.db, `SELECT * FROM permissions
 		WHERE group_id = $1
 		AND deleted_at IS NULL`,
 		groupID,
 	)
-
-	return &mod, err
 }
 
 func (repo *Repository) GetDefault() (model *permission.Permission, err error) {

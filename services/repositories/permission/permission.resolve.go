@@ -16,7 +16,7 @@ import (
 func (repo *Repository) Resolve(
 	role user.Role,
 	memberOf []string,
-	cats *[]category.Category,
+	cats []category.Category,
 ) (res *permission.Resolution, err error) {
 	res = permission.NewResolution()
 
@@ -53,7 +53,7 @@ func (repo *Repository) Resolve(
 	}
 
 	if cats != nil {
-		for _, cat := range *cats {
+		for _, cat := range cats {
 			level := res.Default
 			if lvl, ok := categoryDefault[cat.ID]; ok {
 				level = lvl

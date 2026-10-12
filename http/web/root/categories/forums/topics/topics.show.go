@@ -90,7 +90,7 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 			req.SetData("reply_to", top)
 			req.SetData("reply_to_type", "topic")
 		} else {
-			for _, rep := range *reps {
+			for _, rep := range reps {
 				if rep.ShortID == replyTo {
 					req.SetData("reply_to", rep)
 					req.SetData("reply_to_type", "reply")

@@ -36,7 +36,7 @@ func UpdateMembership(
 	}
 
 	memberOf := []string{}
-	for _, grp := range *groups {
+	for _, grp := range groups {
 		if slices.Contains(in.MemberOf, grp.ID) {
 			memberOf = append(memberOf, grp.ID)
 		}

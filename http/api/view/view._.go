@@ -130,8 +130,8 @@ func (m *Mapper) PrefetchAttachments(idLists ...[]uuid.UUID) {
 		return
 	}
 
-	for i := range *atts {
-		att := &(*atts)[i]
+	for i := range atts {
+		att := &atts[i]
 		m.attachments[att.ID] = att
 	}
 }

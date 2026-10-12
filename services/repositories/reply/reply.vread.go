@@ -30,7 +30,7 @@ func (repo *Repository) VAllCountForTopicUUID(
 func (repo *Repository) VAllForTopicUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
-) (model *[]vreply.VReply, total int64, err error) {
+) (model []vreply.VReply, total int64, err error) {
 	var mod []vreply.VReply
 
 	if total, err = repo.VAllCountForTopicUUID(id, qo); err != nil {
@@ -46,13 +46,13 @@ func (repo *Repository) VAllForTopicUUID(
 		id,
 	)
 
-	return &mod, total, err
+	return mod, total, err
 }
 
 func (repo *Repository) VAllForTopicID(
 	id string,
 	qo common.QueryOptions,
-) (model *[]vreply.VReply, total int64, err error) {
+) (model []vreply.VReply, total int64, err error) {
 	var uuID uuid.UUID
 
 	if uuID, err = uuid.Parse(id); err != nil {
@@ -65,10 +65,8 @@ func (repo *Repository) VAllForTopicID(
 func (repo *Repository) VAllWithTopicForAuthorUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
-) (model *[]vreply.VReplyWithTopic, err error) {
-	var mod []vreply.VReplyWithTopic
-
-	mod, err = database.Rows[vreply.VReplyWithTopic](context.Background(), repo.db, qo.Query(
+) (model []vreply.VReplyWithTopic, err error) {
+	return database.Rows[vreply.VReplyWithTopic](context.Background(), repo.db, qo.Query(
 		`SELECT vr.*,
 			t.name AS topic_name,
 			t.slug AS topic_slug,
@@ -86,6 +84,4 @@ func (repo *Repository) VAllWithTopicForAuthorUUID(
 		}),
 		id,
 	)
-
-	return &mod, err
 }

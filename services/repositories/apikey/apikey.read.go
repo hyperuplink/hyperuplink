@@ -37,16 +37,12 @@ func (repo *Repository) GetByUUID(
 func (repo *Repository) AllForUserUUID(
 	userID uuid.UUID,
 	qo common.QueryOptions,
-) (model *[]apikey.APIKey, err error) {
-	var mod []apikey.APIKey
-
-	mod, err = database.Rows[apikey.APIKey](context.Background(), repo.db, qo.Query(
+) (model []apikey.APIKey, err error) {
+	return database.Rows[apikey.APIKey](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM apikeys WHERE user_id = $1`,
 		common.QueryCapabilities{
 			HasDeleted: true,
 		}),
 		userID,
 	)
-
-	return &mod, err
 }

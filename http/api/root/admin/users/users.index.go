@@ -50,7 +50,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	return req.Respond(fiber.Map{
-		"users":      req.Views().AdminUsers(*users),
+		"users":      req.Views().AdminUsers(users),
 		"pagination": view.NewPagination(page, perPage, total),
 	})
 }

@@ -45,7 +45,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	return req.Respond(fiber.Map{
-		"replies":    req.Views().Replies(*listed.Replies, top.CategorySlug, top.ForumSlug, top.Slug),
+		"replies":    req.Views().Replies(listed.Replies, top.CategorySlug, top.ForumSlug, top.Slug),
 		"pagination": view.NewPagination(page, perPage, listed.Total),
 	})
 }

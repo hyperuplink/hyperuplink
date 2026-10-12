@@ -22,11 +22,11 @@ type ShowInput struct {
 }
 
 type View struct {
-	Topic   *vtopic.VTopic   `json:"topic"`
-	Poll    *Poll            `json:"poll,omitempty"`
-	Replies *[]vreply.VReply `json:"replies"`
-	Total   int64            `json:"total"`
-	Pages   int              `json:"pages"`
+	Topic   *vtopic.VTopic  `json:"topic"`
+	Poll    *Poll           `json:"poll,omitempty"`
+	Replies []vreply.VReply `json:"replies"`
+	Total   int64           `json:"total"`
+	Pages   int             `json:"pages"`
 }
 
 func Show(

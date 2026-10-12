@@ -11,7 +11,7 @@ import (
 func List(
 	rt *runtime.Runtime,
 	userID uuid.UUID,
-) (keys *[]apikey.APIKey, err error) {
+) (keys []apikey.APIKey, err error) {
 	return gh.Repositories(rt).APIKey.AllForUserUUID(
 		userID,
 		common.QueryOptions{

@@ -45,7 +45,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	tops := req.Views().Topics(*feed.Topics)
+	tops := req.Views().Topics(feed.Topics)
 	view.AttachUnread(tops, feed.Unread)
 
 	return req.Respond(fiber.Map{

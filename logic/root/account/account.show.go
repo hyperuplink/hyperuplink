@@ -22,14 +22,14 @@ func Show(
 	view = &View{Groups: []group.Group{}}
 
 	if len(usr.MemberOf) > 0 {
-		var groups *[]group.Group
+		var groups []group.Group
 		if groups, err = gh.Repositories(rt).Group.AllByIDs(usr.MemberOf, common.QueryOptions{
 			OrderBy: "name",
 			Order:   common.Ascending,
 		}); err != nil {
 			return nil, err
 		}
-		view.Groups = *groups
+		view.Groups = groups
 	}
 
 	profile, err := settingRepo.GetOrCreateUserProfile(gh.Repositories(rt).Setting, usr.ID)

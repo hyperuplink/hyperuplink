@@ -144,14 +144,13 @@ func (repo *Repository) Query(
 	opts Options,
 	limit int,
 	page int,
-) (model *[]vsearchresult.VSearchResult, total int64, err error) {
+) (model []vsearchresult.VSearchResult, total int64, err error) {
 	total, err = repo.Count(term, opts)
 	if err != nil {
 		return nil, 0, err
 	}
 	if total == 0 {
-		empty := []vsearchresult.VSearchResult{}
-		return &empty, 0, nil
+		return []vsearchresult.VSearchResult{}, 0, nil
 	}
 
 	args, authorPh, catPh := buildArgs(term, opts)
@@ -184,5 +183,5 @@ func (repo *Repository) Query(
 		args...,
 	)
 
-	return &mod, total, err
+	return mod, total, err
 }

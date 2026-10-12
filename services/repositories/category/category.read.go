@@ -10,17 +10,13 @@ import (
 
 func (repo *Repository) All(
 	qo common.QueryOptions,
-) (model *[]category.Category, err error) {
-	var mod []category.Category
-
-	mod, err = database.Rows[category.Category](context.Background(), repo.db, qo.Query(
+) (model []category.Category, err error) {
+	return database.Rows[category.Category](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM categories`,
 		common.QueryCapabilities{
 			HasDeleted: true,
 		},
 	))
-
-	return &mod, err
 }
 
 func (repo *Repository) GetBySlug(

@@ -32,9 +32,9 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	m := req.Views()
-	views := make([]view.Category, 0, len(*cats))
-	for i := range *cats {
-		views = append(views, m.Category(&(*cats)[i], nil, req.Perms()))
+	views := make([]view.Category, 0, len(cats))
+	for i := range cats {
+		views = append(views, m.Category(&cats[i], nil, req.Perms()))
 	}
 
 	return req.Respond(fiber.Map{"categories": views})

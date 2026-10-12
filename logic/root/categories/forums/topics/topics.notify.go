@@ -46,13 +46,13 @@ func SendReplyNotifications(
 		return err
 	}
 
-	if recipients == nil || len(*recipients) == 0 {
+	if len(recipients) == 0 {
 		return nil
 	}
 
-	payloads := make([]*replynotification.ReplyNotification, 0, len(*recipients))
-	for i := range *recipients {
-		payload, perr := replynotification.New(&(*recipients)[i], subject)
+	payloads := make([]*replynotification.ReplyNotification, 0, len(recipients))
+	for i := range recipients {
+		payload, perr := replynotification.New(&recipients[i], subject)
 		if perr != nil {
 			return perr
 		}

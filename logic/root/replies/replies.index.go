@@ -14,7 +14,7 @@ type IndexInput struct {
 }
 
 type Page struct {
-	Replies *[]vreply.VReply
+	Replies []vreply.VReply
 	Total   int64
 }
 

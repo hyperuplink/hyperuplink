@@ -22,7 +22,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var reports *[]vpostevent.VPostEvent
+	var reports []vpostevent.VPostEvent
 	reports, err = gh.Repositories(r.Runtime).PostEvent.VAllReports(common.QueryOptions{
 		OrderBy: "pe.created_at",
 		Order:   common.Descending,

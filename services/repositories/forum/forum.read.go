@@ -8,26 +8,20 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/forum"
 )
 
-func (repo *Repository) All(qo common.QueryOptions) (model *[]forum.Forum, err error) {
-	var mod []forum.Forum
-
-	mod, err = database.Rows[forum.Forum](context.Background(), repo.db, qo.Query(
+func (repo *Repository) All(qo common.QueryOptions) (model []forum.Forum, err error) {
+	return database.Rows[forum.Forum](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM forums`,
 		common.QueryCapabilities{
 			HasDeleted: true,
 		},
 	))
-
-	return &mod, err
 }
 
 func (repo *Repository) AllForCategoryUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
-) (model *[]forum.Forum, err error) {
-	var mod []forum.Forum
-
-	mod, err = database.Rows[forum.Forum](
+) (model []forum.Forum, err error) {
+	return database.Rows[forum.Forum](
 		context.Background(),
 		repo.db,
 		qo.Query(`SELECT * FROM forums
@@ -38,14 +32,12 @@ func (repo *Repository) AllForCategoryUUID(
 		),
 		id,
 	)
-
-	return &mod, err
 }
 
 func (repo *Repository) AllForCategoryID(
 	id string,
 	qo common.QueryOptions,
-) (model *[]forum.Forum, err error) {
+) (model []forum.Forum, err error) {
 	var uuID uuid.UUID
 
 	if uuID, err = uuid.Parse(id); err != nil {

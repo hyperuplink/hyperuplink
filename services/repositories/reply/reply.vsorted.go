@@ -13,7 +13,7 @@ func (repo *Repository) VAllForTopicUUIDOrdered(
 	id uuid.UUID,
 	limit int,
 	page int,
-) (model *[]vreply.VReply, total int64, err error) {
+) (model []vreply.VReply, total int64, err error) {
 	var mod []vreply.VReply
 
 	if total, err = repo.VAllCountForTopicUUID(id, common.QueryOptions{}); err != nil {
@@ -36,7 +36,7 @@ func (repo *Repository) VAllForTopicUUIDOrdered(
 		(page-1)*limit,
 	)
 
-	return &mod, total, err
+	return mod, total, err
 }
 
 func (repo *Repository) VGetByUUID(

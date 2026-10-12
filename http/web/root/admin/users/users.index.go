@@ -21,7 +21,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var users *[]user.User
+	var users []user.User
 	users, err = gh.Repositories(r.Runtime).User.All(common.QueryOptions{
 		WithBanned:  true,
 		WithDeleted: true,

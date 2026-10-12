@@ -9,10 +9,8 @@ import (
 
 func (repo *Repository) VAllReports(
 	qo common.QueryOptions,
-) (model *[]vpostevent.VPostEvent, err error) {
-	var mod []vpostevent.VPostEvent
-
-	mod, err = database.Rows[vpostevent.VPostEvent](context.Background(), repo.db, qo.Query(
+) (model []vpostevent.VPostEvent, err error) {
+	return database.Rows[vpostevent.VPostEvent](context.Background(), repo.db, qo.Query(
 		`SELECT
 			 pe.*
 			,COALESCE(t.text, r.text, '') AS target_text
@@ -37,6 +35,4 @@ func (repo *Repository) VAllReports(
 			HasDeleted: true,
 		}),
 	)
-
-	return &mod, err
 }

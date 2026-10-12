@@ -30,5 +30,5 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	return req.Respond(fiber.Map{"reports": req.Views().Reports(*reports)})
+	return req.Respond(fiber.Map{"reports": req.Views().Reports(reports)})
 }

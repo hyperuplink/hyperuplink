@@ -64,7 +64,7 @@ func Show(
 
 	if in.ViewerID.Valid {
 		var unread map[string]bool
-		if unread, err = logicactivity.UnreadTopics(rt, in.ViewerID.UUID, &[]vtopic.VTopic{*top}); err != nil {
+		if unread, err = logicactivity.UnreadTopics(rt, in.ViewerID.UUID, []vtopic.VTopic{*top}); err != nil {
 			return nil, err
 		}
 		shown.Unread = unread[top.ID.String()]

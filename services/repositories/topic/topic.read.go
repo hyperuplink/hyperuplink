@@ -10,27 +10,21 @@ import (
 
 func (repo *Repository) All(
 	qo common.QueryOptions,
-) (model *[]topic.Topic, err error) {
-	var mod []topic.Topic
-
-	mod, err = database.Rows[topic.Topic](context.Background(), repo.db, qo.Query(
+) (model []topic.Topic, err error) {
+	return database.Rows[topic.Topic](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM topics`,
 		common.QueryCapabilities{
 			HasSpammed: true,
 			HasDeleted: true,
 		}),
 	)
-
-	return &mod, err
 }
 
 func (repo *Repository) AllForForumUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
-) (model *[]topic.Topic, err error) {
-	var mod []topic.Topic
-
-	mod, err = database.Rows[topic.Topic](context.Background(), repo.db, qo.Query(
+) (model []topic.Topic, err error) {
+	return database.Rows[topic.Topic](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM topics WHERE forum_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -38,14 +32,12 @@ func (repo *Repository) AllForForumUUID(
 		}),
 		id,
 	)
-
-	return &mod, err
 }
 
 func (repo *Repository) AllForForumID(
 	id string,
 	qo common.QueryOptions,
-) (model *[]topic.Topic, err error) {
+) (model []topic.Topic, err error) {
 	var uuID uuid.UUID
 
 	if uuID, err = uuid.Parse(id); err != nil {

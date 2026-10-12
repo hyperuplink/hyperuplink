@@ -8,26 +8,20 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/vforum"
 )
 
-func (repo *Repository) VAll(qo common.QueryOptions) (model *[]vforum.VForum, err error) {
-	var mod []vforum.VForum
-
-	mod, err = database.Rows[vforum.VForum](context.Background(), repo.db, qo.Query(
+func (repo *Repository) VAll(qo common.QueryOptions) (model []vforum.VForum, err error) {
+	return database.Rows[vforum.VForum](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM vforums`,
 		common.QueryCapabilities{
 			HasDeleted: true,
 		},
 	))
-
-	return &mod, err
 }
 
 func (repo *Repository) VAllForCategoryUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
-) (model *[]vforum.VForum, err error) {
-	var mod []vforum.VForum
-
-	mod, err = database.Rows[vforum.VForum](
+) (model []vforum.VForum, err error) {
+	return database.Rows[vforum.VForum](
 		context.Background(),
 		repo.db,
 		qo.Query(`SELECT * FROM vforums
@@ -38,14 +32,12 @@ func (repo *Repository) VAllForCategoryUUID(
 		),
 		id,
 	)
-
-	return &mod, err
 }
 
 func (repo *Repository) VAllForCategoryID(
 	id string,
 	qo common.QueryOptions,
-) (model *[]vforum.VForum, err error) {
+) (model []vforum.VForum, err error) {
 	var uuID uuid.UUID
 
 	if uuID, err = uuid.Parse(id); err != nil {

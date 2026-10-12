@@ -28,5 +28,5 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	return req.Respond(fiber.Map{"keys": view.Keys(*keys)})
+	return req.Respond(fiber.Map{"keys": view.Keys(keys)})
 }

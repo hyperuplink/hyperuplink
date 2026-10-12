@@ -41,14 +41,14 @@ func BoardView(
 	}
 
 	board = new(Board)
-	for _, cat := range *cats {
+	for _, cat := range cats {
 		if !perms.CanReadID(cat.ID) {
 			continue
 		}
 		catfum := CategoryWithForums{
 			Category: cat,
 		}
-		for _, fum := range *fums {
+		for _, fum := range fums {
 			if fum.CategoryID == cat.ID {
 				catfum.Forums = append(catfum.Forums, fum)
 			}
@@ -68,7 +68,7 @@ func BoardView(
 	}
 
 	board.RecentTopics = []vtopic.VTopic{}
-	for _, top := range *tops {
+	for _, top := range tops {
 		if perms.CanReadSlug(top.CategorySlug) {
 			board.RecentTopics = append(board.RecentTopics, top)
 		}

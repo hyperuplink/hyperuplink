@@ -13,7 +13,7 @@ import (
 
 type View struct {
 	User       *user.User
-	Groups     *[]group.Group
+	Groups     []group.Group
 	Membership []group.Group
 	Topics     []vtopic.VTopic
 	Replies    []vreply.VReplyWithTopic
@@ -47,14 +47,14 @@ func Show(
 
 	membership := []group.Group{}
 	if len(usr.MemberOf) > 0 {
-		var own *[]group.Group
+		var own []group.Group
 		if own, err = gh.Repositories(rt).Group.AllByIDs(usr.MemberOf, common.QueryOptions{
 			OrderBy: "name",
 			Order:   common.Ascending,
 		}); err != nil {
 			return nil, err
 		}
-		membership = *own
+		membership = own
 	}
 
 	topics, err := gh.Repositories(rt).Topic.VAllForAuthorUUID(
@@ -70,7 +70,7 @@ func Show(
 	}
 
 	visibleTopics := []vtopic.VTopic{}
-	for _, top := range *topics {
+	for _, top := range topics {
 		if perms.CanReadSlug(top.CategorySlug) {
 			visibleTopics = append(visibleTopics, top)
 		}
@@ -89,7 +89,7 @@ func Show(
 	}
 
 	visibleReplies := []vreply.VReplyWithTopic{}
-	for _, rep := range *replies {
+	for _, rep := range replies {
 		if perms.CanReadSlug(rep.CategorySlug) {
 			visibleReplies = append(visibleReplies, rep)
 		}

@@ -23,11 +23,11 @@ func View(rt *runtime.Runtime) (catsfums []CategoryWithForums, err error) {
 		return nil, err
 	}
 
-	for _, cat := range *cats {
+	for _, cat := range cats {
 		catfum := CategoryWithForums{
 			Category: cat,
 		}
-		for _, fum := range *fums {
+		for _, fum := range fums {
 			if fum.CategoryID == cat.ID {
 				catfum.Forums = append(catfum.Forums, fum)
 			}

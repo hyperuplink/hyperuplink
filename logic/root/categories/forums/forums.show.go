@@ -21,11 +21,11 @@ type ShowInput struct {
 }
 
 type View struct {
-	Forum  *vforum.VForum   `json:"forum"`
-	Topics *[]vtopic.VTopic `json:"topics"`
-	Total  int64            `json:"total"`
-	Pages  int              `json:"pages"`
-	Unread map[string]bool  `json:"unread,omitempty"`
+	Forum  *vforum.VForum  `json:"forum"`
+	Topics []vtopic.VTopic `json:"topics"`
+	Total  int64           `json:"total"`
+	Pages  int             `json:"pages"`
+	Unread map[string]bool `json:"unread,omitempty"`
 }
 
 func Show(

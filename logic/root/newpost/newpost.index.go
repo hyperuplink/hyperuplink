@@ -54,14 +54,14 @@ func View(
 	}
 
 	view = new(FormView)
-	for _, cat := range *cats {
+	for _, cat := range cats {
 		if !perms.CanWriteID(cat.ID) {
 			continue
 		}
 		catfum := CategoryWithForums{
 			Category: cat,
 		}
-		for _, fum := range *fums {
+		for _, fum := range fums {
 			if fum.CategoryID == cat.ID {
 				catfum.Forums = append(catfum.Forums, fum)
 			}

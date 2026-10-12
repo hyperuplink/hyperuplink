@@ -43,7 +43,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	return req.Respond(fiber.Map{
-		"logs":       view.Logs(*logs),
+		"logs":       view.Logs(logs),
 		"pagination": view.NewPagination(page, perPage, total),
 	})
 }

@@ -67,10 +67,8 @@ func (repo *Repository) GetByID(
 func (repo *Repository) AllByUUIDs(
 	ids []uuid.UUID,
 	qo common.QueryOptions,
-) (model *[]attachment.Attachment, err error) {
-	var mod []attachment.Attachment
-
-	mod, err = database.Rows[attachment.Attachment](context.Background(), repo.db, qo.Query(
+) (model []attachment.Attachment, err error) {
+	return database.Rows[attachment.Attachment](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM attachments WHERE id = ANY($1)`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -78,6 +76,4 @@ func (repo *Repository) AllByUUIDs(
 		}),
 		ids,
 	)
-
-	return &mod, err
 }

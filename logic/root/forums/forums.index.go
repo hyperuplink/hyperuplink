@@ -31,13 +31,13 @@ func Index(
 		return nil, err
 	}
 
-	positions := make(map[uuid.UUID]int, len(*cats))
-	for _, cat := range *cats {
+	positions := make(map[uuid.UUID]int, len(cats))
+	for _, cat := range cats {
 		positions[cat.ID] = cat.Position
 	}
 
-	forums = make([]vforum.VForum, 0, len(*fums))
-	for _, fum := range *fums {
+	forums = make([]vforum.VForum, 0, len(fums))
+	for _, fum := range fums {
 		if perms.CanReadID(fum.CategoryID) {
 			forums = append(forums, fum)
 		}

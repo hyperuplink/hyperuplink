@@ -22,7 +22,7 @@ type TopicsInput struct {
 }
 
 type Topics struct {
-	Topics *[]vtopic.VTopic
+	Topics []vtopic.VTopic
 	Total  int64
 	Unread map[string]bool
 }

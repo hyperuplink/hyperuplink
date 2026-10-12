@@ -23,9 +23,9 @@ type Input struct {
 }
 
 type Results struct {
-	Results *[]vsearchresult.VSearchResult `json:"results"`
-	Total   int64                          `json:"total"`
-	Pages   int                            `json:"pages"`
+	Results []vsearchresult.VSearchResult `json:"results"`
+	Total   int64                         `json:"total"`
+	Pages   int                           `json:"pages"`
 }
 
 func (in *Input) Normalize() {

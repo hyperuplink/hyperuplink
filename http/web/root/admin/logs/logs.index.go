@@ -34,7 +34,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	var logs *[]vactivity.VActivity
+	var logs []vactivity.VActivity
 	var total int64
 	logs, total, err = gh.Repositories(r.Runtime).Activity.VAllAdmin(
 		common.QueryOptions{

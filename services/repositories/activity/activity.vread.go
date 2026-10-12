@@ -28,7 +28,7 @@ func (repo *Repository) VAllAdminCount(
 
 func (repo *Repository) VAllAdmin(
 	qo common.QueryOptions,
-) (model *[]vactivity.VActivity, total int64, err error) {
+) (model []vactivity.VActivity, total int64, err error) {
 	var mod []vactivity.VActivity
 
 	if total, err = repo.VAllAdminCount(qo); err != nil {
@@ -49,5 +49,5 @@ func (repo *Repository) VAllAdmin(
 		activity.AdminKinds(),
 	)
 
-	return &mod, total, err
+	return mod, total, err
 }

@@ -26,16 +26,16 @@ func RecordTopicView(
 func UnreadTopics(
 	rt *runtime.Runtime,
 	actorID uuid.UUID,
-	topics *[]vtopic.VTopic,
+	topics []vtopic.VTopic,
 ) (unread map[string]bool, err error) {
 	unread = make(map[string]bool)
 
-	if topics == nil || len(*topics) == 0 {
+	if len(topics) == 0 {
 		return unread, nil
 	}
 
-	subjectIDs := make([]uuid.UUID, 0, len(*topics))
-	for _, top := range *topics {
+	subjectIDs := make([]uuid.UUID, 0, len(topics))
+	for _, top := range topics {
 		subjectIDs = append(subjectIDs, top.ID)
 	}
 
@@ -50,7 +50,7 @@ func UnreadTopics(
 		return nil, err
 	}
 
-	for _, top := range *topics {
+	for _, top := range topics {
 		readAt, ok := markers[top.ID]
 		if !ok {
 			unread[top.ID.String()] = true

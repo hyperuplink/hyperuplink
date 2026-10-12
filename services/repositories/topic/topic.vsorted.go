@@ -34,7 +34,7 @@ func (repo *Repository) VAllForForumUUIDSorted(
 	sort topic.Sort,
 	limit int,
 	page int,
-) (model *[]vtopic.VTopic, total int64, err error) {
+) (model []vtopic.VTopic, total int64, err error) {
 	var mod []vtopic.VTopic
 
 	if total, err = repo.VAllCountForForumUUID(id, common.QueryOptions{}); err != nil {
@@ -53,7 +53,7 @@ func (repo *Repository) VAllForForumUUIDSorted(
 		offsetFor(limit, page),
 	)
 
-	return &mod, total, err
+	return mod, total, err
 }
 
 func (repo *Repository) VAllForReadableSlugsSorted(
@@ -61,7 +61,7 @@ func (repo *Repository) VAllForReadableSlugsSorted(
 	sort topic.Sort,
 	limit int,
 	page int,
-) (model *[]vtopic.VTopic, total int64, err error) {
+) (model []vtopic.VTopic, total int64, err error) {
 	var mod []vtopic.VTopic
 
 	if total, err = repo.VAllCountForReadableSlugs(slugs, common.QueryOptions{}); err != nil {
@@ -80,5 +80,5 @@ func (repo *Repository) VAllForReadableSlugsSorted(
 
 	mod, err = database.Rows[vtopic.VTopic](context.Background(), repo.db, query, args...)
 
-	return &mod, total, err
+	return mod, total, err
 }

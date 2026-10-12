@@ -56,7 +56,7 @@ func (repo *Repository) VAllCountForReadableSlugs(
 func (repo *Repository) VAllForReadableSlugs(
 	slugs []string,
 	qo common.QueryOptions,
-) (model *[]vtopic.VTopic, total int64, err error) {
+) (model []vtopic.VTopic, total int64, err error) {
 	var mod []vtopic.VTopic
 
 	total, err = repo.VAllCountForReadableSlugs(slugs, qo)
@@ -80,29 +80,25 @@ func (repo *Repository) VAllForReadableSlugs(
 		args...,
 	)
 
-	return &mod, total, err
+	return mod, total, err
 }
 
 func (repo *Repository) VAll(
 	qo common.QueryOptions,
-) (model *[]vtopic.VTopic, err error) {
-	var mod []vtopic.VTopic
-
-	mod, err = database.Rows[vtopic.VTopic](context.Background(), repo.db, qo.Query(
+) (model []vtopic.VTopic, err error) {
+	return database.Rows[vtopic.VTopic](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM vtopics`,
 		common.QueryCapabilities{
 			HasSpammed: true,
 			HasDeleted: true,
 		}),
 	)
-
-	return &mod, err
 }
 
 func (repo *Repository) VAllForForumUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
-) (model *[]vtopic.VTopic, total int64, err error) {
+) (model []vtopic.VTopic, total int64, err error) {
 	var mod []vtopic.VTopic
 
 	if total, err = repo.VAllCountForForumUUID(id, qo); err != nil {
@@ -118,13 +114,13 @@ func (repo *Repository) VAllForForumUUID(
 		id,
 	)
 
-	return &mod, total, err
+	return mod, total, err
 }
 
 func (repo *Repository) VAllForForumID(
 	id string,
 	qo common.QueryOptions,
-) (model *[]vtopic.VTopic, total int64, err error) {
+) (model []vtopic.VTopic, total int64, err error) {
 	var uuID uuid.UUID
 
 	if uuID, err = uuid.Parse(id); err != nil {
@@ -221,10 +217,8 @@ func (repo *Repository) VGetBySlugs(
 func (repo *Repository) VAllForAuthorUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
-) (model *[]vtopic.VTopic, err error) {
-	var mod []vtopic.VTopic
-
-	mod, err = database.Rows[vtopic.VTopic](context.Background(), repo.db, qo.Query(
+) (model []vtopic.VTopic, err error) {
+	return database.Rows[vtopic.VTopic](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM vtopics WHERE author_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -232,6 +226,4 @@ func (repo *Repository) VAllForAuthorUUID(
 		}),
 		id,
 	)
-
-	return &mod, err
 }

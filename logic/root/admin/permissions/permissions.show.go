@@ -33,8 +33,8 @@ func Show(rt *runtime.Runtime) (view *View, err error) {
 	defaultLevel := permission.LevelToString(permission.ReadWrite)
 	categoryDefaults := map[uuid.UUID]string{}
 	groupPerms := map[string]map[uuid.UUID]byte{}
-	for i := range *perms {
-		p := (*perms)[i]
+	for i := range perms {
+		p := perms[i]
 		if p.GroupID.Valid == false {
 			if p.CategoryID.Valid == false {
 				defaultLevel = p.LevelString()
@@ -53,7 +53,7 @@ func Show(rt *runtime.Runtime) (view *View, err error) {
 	}
 
 	categoryViews := []CategoryView{}
-	for _, cat := range *cats {
+	for _, cat := range cats {
 		level := LevelInherit
 		if lvl, ok := categoryDefaults[cat.ID]; ok {
 			level = lvl
@@ -67,7 +67,7 @@ func Show(rt *runtime.Runtime) (view *View, err error) {
 	}
 
 	groupViews := []GroupView{}
-	for _, g := range *groups {
+	for _, g := range groups {
 		gv := GroupView{
 			ID:          g.ID,
 			Name:        g.Name,
@@ -75,7 +75,7 @@ func Show(rt *runtime.Runtime) (view *View, err error) {
 			AddableCats: []CategoryView{},
 		}
 		mapped := groupPerms[g.ID]
-		for _, cat := range *cats {
+		for _, cat := range cats {
 			if lvl, ok := mapped[cat.ID]; ok {
 				gv.Rows = append(gv.Rows, PermissionRow{
 					CategoryID:   cat.ID.String(),
@@ -97,6 +97,6 @@ func Show(rt *runtime.Runtime) (view *View, err error) {
 		DefaultLevel:  defaultLevel,
 		Categories:    categoryViews,
 		Groups:        groupViews,
-		HasCategories: len(*cats) > 0,
+		HasCategories: len(cats) > 0,
 	}, nil
 }

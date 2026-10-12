@@ -28,6 +28,6 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 	m := req.Views()
 
 	return req.Respond(fiber.Map{
-		"category": m.Category(shown.Category, m.Forums(*shown.Forums, req.Perms()), req.Perms()),
+		"category": m.Category(shown.Category, m.Forums(shown.Forums, req.Perms()), req.Perms()),
 	})
 }

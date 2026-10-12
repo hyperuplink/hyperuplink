@@ -83,7 +83,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	return req.Respond(fiber.Map{
-		"results":    req.Views().SearchResults(*results.Results, req.System.GetPostsPerPage()),
+		"results":    req.Views().SearchResults(results.Results, req.System.GetPostsPerPage()),
 		"pagination": view.NewPagination(page, perPage, results.Total),
 	})
 }

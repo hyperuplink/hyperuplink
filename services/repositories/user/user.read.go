@@ -12,18 +12,14 @@ import (
 
 func (repo *Repository) All(
 	qo common.QueryOptions,
-) (model *[]user.User, err error) {
-	var mod []user.User
-
-	mod, err = database.Rows[user.User](context.Background(), repo.db, qo.Query(
+) (model []user.User, err error) {
+	return database.Rows[user.User](context.Background(), repo.db, qo.Query(
 		`SELECT * FROM users`,
 		common.QueryCapabilities{
 			HasBanned:  true,
 			HasDeleted: true,
 		}),
 	)
-
-	return &mod, err
 }
 
 func (repo *Repository) GetByUUID(
@@ -87,10 +83,8 @@ func (repo *Repository) AllToNotifyForReply(
 	authorID uuid.UUID,
 	categoryID uuid.UUID,
 	qo common.QueryOptions,
-) (model *[]user.User, err error) {
-	var mod []user.User
-
-	mod, err = database.Rows[user.User](context.Background(), repo.db, qo.Query(
+) (model []user.User, err error) {
+	return database.Rows[user.User](context.Background(), repo.db, qo.Query(
 		`SELECT u.* FROM users u
 		JOIN (
 			SELECT author_id FROM topics WHERE id = $1
@@ -130,8 +124,6 @@ func (repo *Repository) AllToNotifyForReply(
 		setting.UserProfileNotifyOnReplyKey,
 		setting.NewUserProfile().NotifyOnReply,
 	)
-
-	return &mod, err
 }
 
 func (repo *Repository) CountAll(qo common.QueryOptions) (total int64, err error) {

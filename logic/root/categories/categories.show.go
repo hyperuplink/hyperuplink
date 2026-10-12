@@ -13,7 +13,7 @@ import (
 
 type View struct {
 	Category *category.Category `json:"category"`
-	Forums   *[]vforum.VForum   `json:"forums"`
+	Forums   []vforum.VForum    `json:"forums"`
 }
 
 func Resolve(
