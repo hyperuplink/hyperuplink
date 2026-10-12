@@ -41,7 +41,7 @@ func buildAuthProvider(ap gh.AuthProvider, baseURL string) goth.Provider {
 
 func RegisterAuthProviders(rt *runtime.Runtime, baseURL string) error {
 	var authProviders gh.AuthProviders
-	_, err := rt.Config().Unmarshal("AuthProvider", &authProviders)
+	err := rt.Config().Unmarshal("AuthProvider", &authProviders)
 	if err != nil {
 		return err
 	}

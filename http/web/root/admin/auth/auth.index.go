@@ -34,7 +34,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	req.SetData("setting_auth", &settingAuth.JSONValue)
 
 	var authProviders gh.AuthProviders
-	_, err = r.Runtime.Config().Unmarshal("AuthProvider", &authProviders)
+	err = r.Runtime.Config().Unmarshal("AuthProvider", &authProviders)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

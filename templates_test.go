@@ -159,15 +159,15 @@ func TestTemplatesMatchGolden(t *testing.T) {
 			}
 			assertGolden(t, goldenPath(c, "text"), sb.String())
 
-			if c.spec.HtmlExt == "" {
-				if item.HtmlTmpl != nil {
-					t.Error("HtmlTmpl is non-nil for a text-only spec")
+			if c.spec.HTMLExt == "" {
+				if item.HTMLTmpl != nil {
+					t.Error("HTMLTmpl is non-nil for a text-only spec")
 				}
 				return
 			}
 
 			sb.Reset()
-			if err := item.HtmlTmpl.Execute(&sb, data); err != nil {
+			if err := item.HTMLTmpl.Execute(&sb, data); err != nil {
 				t.Fatalf("render html: %v", err)
 			}
 			assertGolden(t, goldenPath(c, "html"), sb.String())
@@ -211,7 +211,7 @@ func TestEveryEmbeddedTemplateHasAGoldenCase(t *testing.T) {
 			}
 
 			ext := filepath.Ext(file)
-			if ext != spec.TextExt && ext != spec.HtmlExt {
+			if ext != spec.TextExt && ext != spec.HTMLExt {
 				t.Errorf("template %s has extension %q, which spec %q does not declare",
 					path, ext, dir)
 				return nil

@@ -12,20 +12,24 @@ import (
 )
 
 func New(cfg *config.Config) (storage fiber.Storage, err error) {
-	redisConfig := redis.Config{
-		MasterName: cfg.RedisMasterName(),
-		Username:   cfg.RedisUsername(),
-		Password:   cfg.RedisPassword(),
-		Database:   cfg.RedisDatabase(),
-		Reset:      cfg.RedisReset(),
+	rcfg, err := cfg.Redis()
+	if err != nil {
+		return nil, err
 	}
 
-	addrs := cfg.RedisAddresses()
-	switch len(addrs) {
+	redisConfig := redis.Config{
+		MasterName: rcfg.MasterName,
+		Username:   rcfg.Username,
+		Password:   rcfg.Password,
+		Database:   rcfg.Database,
+		Reset:      rcfg.Reset,
+	}
+
+	switch len(rcfg.Addrs) {
 	case 0:
 		return nil, errs.ErrRedisAddrsEmpty
 	case 1:
-		hostPort := strings.Split(addrs[0], ":")
+		hostPort := strings.Split(rcfg.Addrs[0], ":")
 		if len(hostPort) != 2 {
 			return nil, errs.ErrRedisAddrsMalformed
 		}
@@ -34,10 +38,10 @@ func New(cfg *config.Config) (storage fiber.Storage, err error) {
 			return nil, errs.ErrRedisAddrsMalformed
 		}
 	default:
-		redisConfig.Addrs = addrs
+		redisConfig.Addrs = rcfg.Addrs
 	}
 
-	poolSize := cfg.RedisPoolsize()
+	poolSize := rcfg.Poolsize
 	if poolSize <= 0 {
 		poolSize = 10 * runt.GOMAXPROCS(0)
 	}

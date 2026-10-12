@@ -39,6 +39,7 @@ import (
 
 type Web struct {
 	rt        *runtime.Runtime
+	cfg       gh.ServerConfig
 	app       *fiber.App
 	r         route.IRouteController
 	engine    *html.Engine
@@ -49,9 +50,11 @@ type Web struct {
 
 func New(
 	rt *runtime.Runtime,
+	cfg gh.ServerConfig,
 ) (srv *Web, err error) {
 	srv = new(Web)
 	srv.rt = rt
+	srv.cfg = cfg
 
 	if srv.engine, err = srv.getViewsEngine(); err != nil {
 		return nil, err
@@ -62,17 +65,17 @@ func New(
 	srv.app = fiber.New(fiber.Config{
 		StrictRouting:      false,
 		CaseSensitive:      false,
-		BodyLimit:          srv.rt.Config().WebBodyLimit(),
-		Concurrency:        srv.rt.Config().WebConcurrency(),
-		ProxyHeader:        srv.rt.Config().WebProxyHeader(),
-		EnableIPValidation: srv.rt.Config().WebEnableIPValidation(),
-		TrustProxy:         srv.rt.Config().WebTrustProxy(),
+		BodyLimit:          cfg.BodyLimit,
+		Concurrency:        cfg.Concurrency,
+		ProxyHeader:        cfg.ProxyHeader,
+		EnableIPValidation: cfg.EnableIPValidation,
+		TrustProxy:         cfg.TrustProxy,
 		TrustProxyConfig: fiber.TrustProxyConfig{
-			Loopback: srv.rt.Config().WebTrustLoopback(),
-			Proxies:  srv.rt.Config().WebTrustProxies(),
+			Loopback: cfg.TrustLoopback,
+			Proxies:  cfg.TrustProxies,
 		},
-		ReduceMemoryUsage: srv.rt.Config().WebReduceMemoryUsage(),
-		ServerHeader:      srv.rt.Config().WebServerHeader(),
+		ReduceMemoryUsage: cfg.ReduceMemoryUsage,
+		ServerHeader:      cfg.ServerHeader,
 		AppName:           "hyperuplink",
 		Views:             srv.engine,
 		StructValidator:   validation.NewStructValidator(srv.validator),
@@ -338,8 +341,8 @@ func (srv *Web) Startup() (err error) {
 func (srv *Web) Run() error {
 	listenAddr := fmt.Sprintf(
 		"%s:%d",
-		srv.rt.Config().WebBindIP(),
-		srv.rt.Config().WebPort(),
+		srv.cfg.BindIP,
+		srv.cfg.Port,
 	)
 	if err := srv.app.Listen(listenAddr, fiber.ListenConfig{
 		DisableStartupMessage: true,

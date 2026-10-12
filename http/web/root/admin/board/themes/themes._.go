@@ -34,15 +34,3 @@ func New(
 
 	return r, nil
 }
-
-func (r *Route) GetRuntime() *runtime.Runtime {
-	return r.Runtime
-}
-
-func (r *Route) GetPath() string {
-	return r.Path
-}
-
-func (r *Route) GetEnv() *route.Environment {
-	return r.Env
-}

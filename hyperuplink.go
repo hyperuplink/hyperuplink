@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"embed"
 	"encoding/json"
 	"flag"
@@ -10,6 +11,7 @@ import (
 	"syscall"
 	"time"
 	servicescron "xn--gckvb8fzb.com/glides/services/cron"
+	"xn--gckvb8fzb.com/glides/services/database"
 	glidesdispatch "xn--gckvb8fzb.com/glides/services/dispatch"
 	"xn--gckvb8fzb.com/glides/services/intnat"
 	"xn--gckvb8fzb.com/glides/services/markdown"
@@ -103,14 +105,14 @@ func main() {
 			fmt.Printf("%s\n", err)
 			os.Exit(1)
 		}
-		if err = rt.Reset(); err != nil {
+		if err = database.From(rt).Reset(); err != nil {
 			os.Exit(1)
 		}
 		os.Exit(0)
 	}
 
 	rt.AddEmbed("migrations", &embedMigrations)
-	rt.Database().SetMigrations(rt.GetEmbed("migrations"))
+	database.From(rt).SetMigrations(rt.GetEmbed("migrations"))
 
 	if flagCreateUser != "" {
 		if err = createUser(rt, flagCreateUser); err != nil {
@@ -128,85 +130,60 @@ func main() {
 
 	routes.Use()
 
-	// ---[ WEB ]-------------------------------------------------------------- //
-	if rt.Config().WebEnable() {
-		webiface, err := web.New(rt)
-		rt.NilOrDie(err)
-
-		websrv, err = glideshttp.New(rt, webiface)
-		rt.NilOrDie(err)
-
-		err = websrv.Startup()
-		rt.NilOrDie(err)
-
-		go websrv.Run()
-	}
-
-	// ---[ API ]-------------------------------------------------------------- //
+	webcfg, err := gh.WebConfigFrom(rt.Config())
+	rt.NilOrDie(err)
 	apicfg, err := gh.APIConfigFrom(rt.Config())
 	rt.NilOrDie(err)
+
+	wrk, err = worker.New(rt, targets.Register)
+	rt.NilOrDie(err)
+	processes := []runtime.IProcess{wrk}
+
+	if webcfg.Enable {
+		webiface, err := web.New(rt, webcfg)
+		rt.NilOrDie(err)
+		websrv, err = glideshttp.New(rt, webiface)
+		rt.NilOrDie(err)
+		processes = append(processes, websrv)
+	}
 
 	if apicfg.Enable {
 		apiiface, err := api.New(rt, apicfg)
 		rt.NilOrDie(err)
-
 		apisrv, err = glideshttp.New(rt, apiiface)
 		rt.NilOrDie(err)
-
-		err = apisrv.Startup()
-		rt.NilOrDie(err)
-
-		go apisrv.Run()
+		processes = append(processes, apisrv)
 	}
 
-	// ---[ WORKER ]----------------------------------------------------------- //
-	wrk, err = worker.New(rt, targets.Register)
-	rt.NilOrDie(err)
-
-	err = wrk.Startup()
-	rt.NilOrDie(err)
-
-	go wrk.Run()
-
-	// ---[ CRON ]------------------------------------------------------------- //
 	crn, err = cron.New(rt)
 	rt.NilOrDie(err)
-
-	err = crn.Startup()
-	rt.NilOrDie(err)
-
 	err = registerCronFunctions(rt)
 	rt.NilOrDie(err)
+	processes = append(processes, crn)
 
-	go crn.Run()
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
 
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
-	<-quit
-
-	crn.Shutdown()
-	if apisrv != nil {
-		apisrv.Shutdown()
+	if err = rt.Serve(ctx, processes...); err != nil {
+		rt.Exit(1)
 	}
-	if websrv != nil {
-		websrv.Shutdown()
-	}
-	wrk.Shutdown()
 
 	rt.Exit(0)
 }
 
 func newRuntime(cfgstr string) (rt *runtime.Runtime, err error) {
 	if rt, err = runtime.New(runtime.Opts{
-		Cfgstr:   cfgstr,
-		Version:  Version,
-		Commit:   Commit,
-		Date:     Date,
-		Database: true,
+		Cfgstr:  cfgstr,
+		Version: Version,
+		Commit:  Commit,
+		Date:    Date,
 	}); err != nil {
 		return nil, err
 	}
 
+	if _, err = database.Register(rt); err != nil {
+		return nil, err
+	}
 	if _, err = storage.Register(rt); err != nil {
 		return nil, err
 	}
@@ -223,8 +200,6 @@ func newRuntime(cfgstr string) (rt *runtime.Runtime, err error) {
 		return nil, err
 	}
 
-	rt.SetBuild(Version, Commit, Date)
-
 	return rt, nil
 }
 
@@ -240,7 +215,7 @@ func prepare(rt *runtime.Runtime) (err error) {
 
 	var srv any
 	rt.Debug("new", "repositories")
-	if srv, err = repositories.New(rt.Database(), rt.Config()); err != nil {
+	if srv, err = repositories.New(database.From(rt), rt.Config()); err != nil {
 		return err
 	}
 	rt.AddService("repositories", srv)
@@ -283,7 +258,7 @@ func registerCronFunctions(rt *runtime.Runtime) (err error) {
 	return servicescron.From(rt).Register(
 		logicactivity.CleanupAdminLogID,
 		logicactivity.CleanupAdminLogSpec,
-		func() error { return logicactivity.CleanupAdminLog(rt) },
+		func(ctx context.Context) error { return logicactivity.CleanupAdminLog(rt) },
 	)
 }
 
@@ -292,10 +267,10 @@ func createUser(rt *runtime.Runtime, jsonStr string) error {
 		return err
 	}
 
-	if err := rt.Database().Startup(); err != nil {
+	if err := database.From(rt).Startup(); err != nil {
 		return err
 	}
-	defer rt.Database().Shutdown()
+	defer database.From(rt).Shutdown()
 
 	if err := gh.Repositories(rt).Startup(); err != nil {
 		return err

@@ -29,7 +29,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	var authProviders gh.AuthProviders
-	_, err = r.Runtime.Config().Unmarshal("AuthProvider", &authProviders)
+	err = r.Runtime.Config().Unmarshal("AuthProvider", &authProviders)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

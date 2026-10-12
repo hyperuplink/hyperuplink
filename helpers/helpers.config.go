@@ -32,6 +32,21 @@ type APIConfig struct {
 	CORSOrigins        []string `koanf:"CORSOrigins"`
 }
 
+type ServerConfig struct {
+	Enable             bool     `koanf:"Enable"`
+	BindIP             string   `koanf:"BindIP"`
+	Port               int      `koanf:"Port"`
+	BodyLimit          int      `koanf:"BodyLimit"`
+	Concurrency        int      `koanf:"Concurrency"`
+	ProxyHeader        string   `koanf:"ProxyHeader"`
+	EnableIPValidation bool     `koanf:"EnableIPValidation"`
+	TrustProxy         bool     `koanf:"TrustProxy"`
+	TrustLoopback      bool     `koanf:"TrustLoopback"`
+	TrustProxies       []string `koanf:"TrustProxies"`
+	ReduceMemoryUsage  bool     `koanf:"ReduceMemoryUsage"`
+	ServerHeader       string   `koanf:"ServerHeader"`
+}
+
 func NewAPIConfig() APIConfig {
 	return APIConfig{
 		Port:           APIDefaultPort,
@@ -46,9 +61,14 @@ func NewAPIConfig() APIConfig {
 func APIConfigFrom(cfg *config.Config) (api APIConfig, err error) {
 	api = NewAPIConfig()
 
-	if _, err = cfg.Unmarshal("API", &api); err != nil {
+	if err = cfg.Unmarshal("API", &api); err != nil {
 		return NewAPIConfig(), err
 	}
 
 	return api, nil
+}
+
+func WebConfigFrom(cfg *config.Config) (web ServerConfig, err error) {
+	err = cfg.Unmarshal("Web", &web)
+	return web, err
 }

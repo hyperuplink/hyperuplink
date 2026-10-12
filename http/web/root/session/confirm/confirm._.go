@@ -43,18 +43,6 @@ func New(
 	return r, nil
 }
 
-func (r *Route) GetRuntime() *runtime.Runtime {
-	return r.Runtime
-}
-
-func (r *Route) GetPath() string {
-	return r.Path
-}
-
-func (r *Route) GetEnv() *route.Environment {
-	return r.Env
-}
-
 type ConfirmForm struct {
 	Username string `form:"username" validate:"required,min=2,max=32"`
 	Token    string `form:"token" validate:"required,min=8,max=8"`

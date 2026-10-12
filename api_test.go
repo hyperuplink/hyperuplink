@@ -18,6 +18,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/api"
@@ -131,7 +132,7 @@ func newAPIHarness(dsn string) (h *apiHarness, err error) {
 	}
 
 	h.rt.AddEmbed("migrations", &embedMigrations)
-	h.rt.Database().SetMigrations(h.rt.GetEmbed("migrations"))
+	database.From(h.rt).SetMigrations(h.rt.GetEmbed("migrations"))
 
 	if err = prepare(h.rt); err != nil {
 		return nil, err
@@ -158,7 +159,7 @@ func newAPIHarness(dsn string) (h *apiHarness, err error) {
 
 func (h *apiHarness) config(dsn string) string {
 	return fmt.Sprintf(`[General]
-Mode = "test"
+Mode = "production"
 
 [Logging]
 Level = "error"

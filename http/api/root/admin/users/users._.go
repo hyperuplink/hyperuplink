@@ -35,18 +35,6 @@ func New(
 	return r, nil
 }
 
-func (r *Route) GetRuntime() *runtime.Runtime {
-	return r.Runtime
-}
-
-func (r *Route) GetPath() string {
-	return r.Path
-}
-
-func (r *Route) GetEnv() *route.Environment {
-	return r.Env
-}
-
 func (r *Route) action(
 	c fiber.Ctx,
 	fn func(*runtime.Runtime, *logicusers.UserInput) error,
