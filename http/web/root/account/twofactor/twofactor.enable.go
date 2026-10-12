@@ -56,7 +56,7 @@ func (r *Route) Enable(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	err = logictwofactor.Enable(r.Runtime, usr, secret, frm.OTPCode)
+	err = logictwofactor.Enable(req.Context(), r.Runtime, usr, secret, frm.OTPCode)
 	if errors.Is(err, errs.ErrOTPCodeWrong) {
 		req.Flash.SetError(err)
 		return req.RedirectToRoute(myRoute)

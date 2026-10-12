@@ -33,7 +33,7 @@ func (r *Route) imageUpload(
 		}
 	}
 
-	if err = logicthemes.UploadImage(r.Runtime, kind, fh); err != nil {
+	if err = logicthemes.UploadImage(req.Context(), r.Runtime, kind, fh); err != nil {
 		req.Flash.SetError(err)
 	}
 
@@ -55,7 +55,7 @@ func (r *Route) imageRemove(
 		return rerr
 	}
 
-	if err = logicthemes.RemoveImage(r.Runtime, kind); err != nil {
+	if err = logicthemes.RemoveImage(req.Context(), r.Runtime, kind); err != nil {
 		req.Flash.SetError(err)
 	}
 

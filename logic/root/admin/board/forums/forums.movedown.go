@@ -1,6 +1,7 @@
 package forums
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -9,6 +10,7 @@ import (
 )
 
 func MoveDown(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *MoveInput,
 ) (err error) {
@@ -17,9 +19,9 @@ func MoveDown(
 		return err
 	}
 
-	if _, err = gh.Repositories(rt).Forum.GetByUUID(fum.ID, common.QueryOptions{Limit: 1}); err != nil {
+	if _, err = gh.Repositories(rt).Forum.GetByUUID(ctx, fum.ID, common.QueryOptions{Limit: 1}); err != nil {
 		return err
 	}
 
-	return gh.Repositories(rt).Forum.MoveDown(fum)
+	return gh.Repositories(rt).Forum.MoveDown(ctx, fum)
 }

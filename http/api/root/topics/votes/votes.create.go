@@ -32,7 +32,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	top, err := topicsfeed.Read(r.Runtime, c.Params("topic"), req.Perms())
+	top, err := topicsfeed.Read(req.Context(), r.Runtime, c.Params("topic"), req.Perms())
 	if ret, rerr := req.RespondOnReadError(err); ret {
 		return rerr
 	}
@@ -42,7 +42,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	voted, err := topicsfeed.Vote(r.Runtime, &topicsfeed.VoteInput{
+	voted, err := topicsfeed.Vote(req.Context(), r.Runtime, &topicsfeed.VoteInput{
 		Topic:     top,
 		AuthorID:  req.User().ID,
 		Selection: in.Selection,

@@ -6,8 +6,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
 )
 
-func (repo *Repository) MoveUp(model *category.Category) (err error) {
-	_, err = database.Exec(context.Background(), repo.db, `WITH moved_up AS (
+func (repo *Repository) MoveUp(ctx context.Context, model *category.Category) (err error) {
+	_, err = database.Exec(ctx, repo.db, `WITH moved_up AS (
 		SELECT id, position
 		FROM categories
 		WHERE id = $1
@@ -27,8 +27,8 @@ func (repo *Repository) MoveUp(model *category.Category) (err error) {
 	return err
 }
 
-func (repo *Repository) MoveDown(model *category.Category) (err error) {
-	_, err = database.Exec(context.Background(), repo.db, `WITH moved_down AS (
+func (repo *Repository) MoveDown(ctx context.Context, model *category.Category) (err error) {
+	_, err = database.Exec(ctx, repo.db, `WITH moved_down AS (
 		SELECT id, position
 		FROM categories
 		WHERE id = $1

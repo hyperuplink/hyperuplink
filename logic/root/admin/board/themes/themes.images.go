@@ -1,6 +1,7 @@
 package themes
 
 import (
+	"context"
 	"io"
 	"mime/multipart"
 	"path"
@@ -17,6 +18,7 @@ import (
 )
 
 func UploadImage(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	kind ImageKind,
 	fh *multipart.FileHeader,
@@ -25,7 +27,7 @@ func UploadImage(
 		return kind.errUploadFailed
 	}
 
-	settingTheme, err := settingRepo.GetByID[setting.Theme](
+	settingTheme, err := settingRepo.GetByID[setting.Theme](ctx,
 		gh.Repositories(rt).Setting,
 		"theme",
 	)
@@ -88,17 +90,18 @@ func UploadImage(
 
 	*kind.field(&settingTheme.JSONValue) = imageFilename
 
-	return settingRepo.Update[setting.Theme](
+	return settingRepo.Update[setting.Theme](ctx,
 		gh.Repositories(rt).Setting,
 		settingTheme,
 	)
 }
 
 func RemoveImage(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	kind ImageKind,
 ) (err error) {
-	settingTheme, err := settingRepo.GetByID[setting.Theme](
+	settingTheme, err := settingRepo.GetByID[setting.Theme](ctx,
 		gh.Repositories(rt).Setting,
 		"theme",
 	)
@@ -119,7 +122,7 @@ func RemoveImage(
 
 	*kind.field(&settingTheme.JSONValue) = ""
 
-	return settingRepo.Update[setting.Theme](
+	return settingRepo.Update[setting.Theme](ctx,
 		gh.Repositories(rt).Setting,
 		settingTheme,
 	)

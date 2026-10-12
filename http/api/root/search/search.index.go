@@ -77,7 +77,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	in.PerPage = perPage
 	in.Normalize()
 
-	results, err := logicsearch.Query(r.Runtime, req.Perms(), in)
+	results, err := logicsearch.Query(req.Context(), r.Runtime, req.Perms(), in)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

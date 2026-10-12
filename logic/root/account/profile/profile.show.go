@@ -1,6 +1,7 @@
 package profile
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/glides/runtime"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
@@ -9,10 +10,11 @@ import (
 )
 
 func Show(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	usr *user.User,
 ) (view *View, err error) {
-	settingProfiles, err := settingRepo.GetByID[setting.Profiles](
+	settingProfiles, err := settingRepo.GetByID[setting.Profiles](ctx,
 		gh.Repositories(rt).Setting,
 		"profiles",
 	)
@@ -20,7 +22,7 @@ func Show(
 		return nil, err
 	}
 
-	settingUserProfile, err := settingRepo.GetOrCreateUserProfile(
+	settingUserProfile, err := settingRepo.GetOrCreateUserProfile(ctx,
 		gh.Repositories(rt).Setting,
 		usr.ID,
 	)

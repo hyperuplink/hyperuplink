@@ -30,7 +30,7 @@ func (r *Route) Confirm(c fiber.Ctx) (err error) {
 
 	r.Runtime.Debug("form", in)
 
-	err = logicusers.Confirm(r.Runtime, in)
+	err = logicusers.Confirm(req.Context(), r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

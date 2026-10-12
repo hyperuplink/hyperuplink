@@ -1,6 +1,7 @@
 package activity
 
 import (
+	"context"
 	"time"
 
 	"github.com/google/uuid"
@@ -12,11 +13,12 @@ import (
 )
 
 func RecordTopicView(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	actorID uuid.UUID,
 	topicID uuid.UUID,
 ) {
-	if err := gh.Activity(rt).Record(
+	if err := gh.Activity(rt).Record(ctx,
 		activity.NewTopicView(actorID, topicID),
 	); err != nil {
 		rt.Error("error", err)
@@ -24,6 +26,7 @@ func RecordTopicView(
 }
 
 func UnreadTopics(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	actorID uuid.UUID,
 	topics []vtopic.VTopic,
@@ -40,7 +43,7 @@ func UnreadTopics(
 	}
 
 	var markers map[uuid.UUID]time.Time
-	markers, err = gh.Repositories(rt).Activity.MarkersForActor(
+	markers, err = gh.Repositories(rt).Activity.MarkersForActor(ctx,
 		activity.TopicView,
 		actorID,
 		subjectIDs,

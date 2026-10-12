@@ -23,7 +23,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	settingTopics, err := settingRepo.GetByID[setting.Topics](gh.Repositories(r.Runtime).Setting, "topics")
+	settingTopics, err := settingRepo.GetByID[setting.Topics](req.Context(), gh.Repositories(r.Runtime).Setting, "topics")
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

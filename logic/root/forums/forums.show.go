@@ -1,6 +1,7 @@
 package forums
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -28,22 +29,24 @@ type Topics struct {
 }
 
 func Resolve(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	idOrSlug string,
 ) (fum *vforum.VForum, err error) {
 	if id, perr := uuid.Parse(idOrSlug); perr == nil {
-		return gh.Repositories(rt).Forum.VGetByUUID(id, common.QueryOptions{Limit: 1})
+		return gh.Repositories(rt).Forum.VGetByUUID(ctx, id, common.QueryOptions{Limit: 1})
 	}
 
-	return gh.Repositories(rt).Forum.VGetBySlug(idOrSlug, common.QueryOptions{Limit: 1})
+	return gh.Repositories(rt).Forum.VGetBySlug(ctx, idOrSlug, common.QueryOptions{Limit: 1})
 }
 
 func Show(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	idOrSlug string,
 	perms *permission.Resolution,
 ) (fum *vforum.VForum, err error) {
-	if fum, err = Resolve(rt, idOrSlug); err != nil {
+	if fum, err = Resolve(ctx, rt, idOrSlug); err != nil {
 		return nil, err
 	}
 
@@ -55,12 +58,13 @@ func Show(
 }
 
 func ListTopics(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *TopicsInput,
 ) (page *Topics, err error) {
 	page = new(Topics)
 
-	if page.Topics, page.Total, err = gh.Repositories(rt).Topic.VAllForForumUUIDSorted(
+	if page.Topics, page.Total, err = gh.Repositories(rt).Topic.VAllForForumUUIDSorted(ctx,
 		in.Forum.ID,
 		in.Sort,
 		in.PerPage,
@@ -70,7 +74,7 @@ func ListTopics(
 	}
 
 	if in.ViewerID.Valid {
-		if page.Unread, err = logicactivity.UnreadTopics(rt, in.ViewerID.UUID, page.Topics); err != nil {
+		if page.Unread, err = logicactivity.UnreadTopics(ctx, rt, in.ViewerID.UUID, page.Topics); err != nil {
 			return nil, err
 		}
 	}

@@ -1,13 +1,14 @@
 package forums
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 )
 
-func View(rt *runtime.Runtime) (catsfums []CategoryWithForums, err error) {
-	cats, err := gh.Repositories(rt).Category.All(common.QueryOptions{
+func View(ctx context.Context, rt *runtime.Runtime) (catsfums []CategoryWithForums, err error) {
+	cats, err := gh.Repositories(rt).Category.All(ctx, common.QueryOptions{
 		OrderBy: "position",
 		Order:   common.Ascending,
 	})
@@ -15,7 +16,7 @@ func View(rt *runtime.Runtime) (catsfums []CategoryWithForums, err error) {
 		return nil, err
 	}
 
-	fums, err := gh.Repositories(rt).Forum.All(common.QueryOptions{
+	fums, err := gh.Repositories(rt).Forum.All(ctx, common.QueryOptions{
 		OrderBy: "position",
 		Order:   common.Ascending,
 	})

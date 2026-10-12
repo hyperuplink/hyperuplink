@@ -28,7 +28,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 
 	if usr := req.User(); usr != nil {
 		var acc *logicaccount.View
-		acc, err = logicaccount.Show(r.Runtime, usr)
+		acc, err = logicaccount.Show(req.Context(), r.Runtime, usr)
 		if ret, rerr := req.RespondOnError(err); ret {
 			return rerr
 		}

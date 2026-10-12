@@ -6,8 +6,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
 )
 
-func (repo *Repository) Update(model *category.Category) (err error) {
-	_, err = database.Exec(context.Background(), repo.db, `UPDATE categories SET
+func (repo *Repository) Update(ctx context.Context, model *category.Category) (err error) {
+	_, err = database.Exec(ctx, repo.db, `UPDATE categories SET
 		 name =                        $1
 		,slug =                        $2
 		,updated_at =                  NOW()

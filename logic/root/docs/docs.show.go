@@ -1,6 +1,7 @@
 package docs
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/markdown"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
@@ -10,10 +11,11 @@ import (
 )
 
 func Show(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	page string,
 ) (view *Page, err error) {
-	settingGeneral, err := settingRepo.GetByID[setting.General](
+	settingGeneral, err := settingRepo.GetByID[setting.General](ctx,
 		gh.Repositories(rt).Setting,
 		"general",
 	)

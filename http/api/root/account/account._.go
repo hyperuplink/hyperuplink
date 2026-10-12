@@ -60,12 +60,12 @@ func New(
 }
 
 func (r *Route) respondAccount(req *request.Request) error {
-	usr, err := gh.Repositories(r.Runtime).User.GetByUUID(req.User().ID, common.QueryOptions{Limit: 1})
+	usr, err := gh.Repositories(r.Runtime).User.GetByUUID(req.Context(), req.User().ID, common.QueryOptions{Limit: 1})
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}
 
-	acc, err := logicaccount.Show(r.Runtime, usr)
+	acc, err := logicaccount.Show(req.Context(), r.Runtime, usr)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

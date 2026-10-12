@@ -1,6 +1,7 @@
 package search
 
 import (
+	"context"
 	"strings"
 
 	"xn--gckvb8fzb.com/glides/runtime"
@@ -42,11 +43,12 @@ func (in *Input) Normalize() {
 }
 
 func Query(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	perms *permission.Resolution,
 	in *Input,
 ) (results *Results, err error) {
-	res, total, err := gh.Repositories(rt).Search.Query(
+	res, total, err := gh.Repositories(rt).Search.Query(ctx,
 		in.Query,
 		searchrepo.Options{
 			Title:                in.FTitle,

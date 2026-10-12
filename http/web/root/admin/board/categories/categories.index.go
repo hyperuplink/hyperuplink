@@ -23,7 +23,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	var cats []category.Category
-	cats, err = gh.Repositories(r.Runtime).Category.All(common.QueryOptions{
+	cats, err = gh.Repositories(r.Runtime).Category.All(req.Context(), common.QueryOptions{
 		OrderBy: "position",
 		Order:   common.Ascending,
 	})

@@ -6,8 +6,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/forum"
 )
 
-func (repo *Repository) MoveUp(model *forum.Forum) (err error) {
-	_, err = database.Exec(context.Background(), repo.db, `WITH moved_up AS (
+func (repo *Repository) MoveUp(ctx context.Context, model *forum.Forum) (err error) {
+	_, err = database.Exec(ctx, repo.db, `WITH moved_up AS (
 		SELECT id, position, category_id
 		FROM forums
 		WHERE id = $1
@@ -28,8 +28,8 @@ func (repo *Repository) MoveUp(model *forum.Forum) (err error) {
 	return err
 }
 
-func (repo *Repository) MoveDown(model *forum.Forum) (err error) {
-	_, err = database.Exec(context.Background(), repo.db, `WITH moved_down AS (
+func (repo *Repository) MoveDown(ctx context.Context, model *forum.Forum) (err error) {
+	_, err = database.Exec(ctx, repo.db, `WITH moved_down AS (
 		SELECT id, position, category_id
 		FROM forums
 		WHERE id = $1

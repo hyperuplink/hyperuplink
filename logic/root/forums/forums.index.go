@@ -1,6 +1,7 @@
 package forums
 
 import (
+	"context"
 	"slices"
 
 	"github.com/google/uuid"
@@ -12,10 +13,11 @@ import (
 )
 
 func Index(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	perms *permission.Resolution,
 ) (forums []vforum.VForum, err error) {
-	cats, err := gh.Repositories(rt).Category.All(common.QueryOptions{
+	cats, err := gh.Repositories(rt).Category.All(ctx, common.QueryOptions{
 		OrderBy: "position",
 		Order:   common.Ascending,
 	})
@@ -23,7 +25,7 @@ func Index(
 		return nil, err
 	}
 
-	fums, err := gh.Repositories(rt).Forum.VAll(common.QueryOptions{
+	fums, err := gh.Repositories(rt).Forum.VAll(ctx, common.QueryOptions{
 		OrderBy: "position",
 		Order:   common.Ascending,
 	})

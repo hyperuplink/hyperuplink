@@ -44,7 +44,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		return req.RedirectToRoot()
 	}
 
-	err = logicreport.Create(r.Runtime, authorID, &logicreport.CreateInput{
+	err = logicreport.Create(req.Context(), r.Runtime, authorID, &logicreport.CreateInput{
 		Target:     frm.Target,
 		ID:         frm.ID,
 		ReportType: frm.ReportType,

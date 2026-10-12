@@ -7,6 +7,7 @@ import (
 )
 
 func (repo *Repository) DeleteOlderThanDays(
+	ctx context.Context,
 	kinds []string,
 	days int,
 ) (deleted int64, err error) {
@@ -14,7 +15,7 @@ func (repo *Repository) DeleteOlderThanDays(
 		return 0, nil
 	}
 
-	tag, err := database.Exec(context.Background(), repo.db, `DELETE FROM activities
+	tag, err := database.Exec(ctx, repo.db, `DELETE FROM activities
 		WHERE kind = ANY($1)
 		AND created_at < NOW() - make_interval(days => $2)`,
 		kinds,

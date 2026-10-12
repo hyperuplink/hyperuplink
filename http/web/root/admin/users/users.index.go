@@ -22,7 +22,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	var users []user.User
-	users, err = gh.Repositories(r.Runtime).User.All(common.QueryOptions{
+	users, err = gh.Repositories(r.Runtime).User.All(req.Context(), common.QueryOptions{
 		WithBanned:  true,
 		WithDeleted: true,
 		OrderBy:     "created_at",

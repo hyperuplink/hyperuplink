@@ -1,6 +1,7 @@
 package categories
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
@@ -8,6 +9,7 @@ import (
 )
 
 func Create(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *CreateInput,
 ) (id uuid.UUID, err error) {
@@ -15,5 +17,5 @@ func Create(
 	cat.Name = in.Name
 	cat.Slug = in.Slug
 
-	return gh.Repositories(rt).Category.Create(cat)
+	return gh.Repositories(rt).Category.Create(ctx, cat)
 }

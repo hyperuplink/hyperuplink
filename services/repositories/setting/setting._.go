@@ -1,6 +1,7 @@
 package setting
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/glides/services/config"
 	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
@@ -20,31 +21,33 @@ func New(db *database.Database, cfg *config.Config) (*Repository, error) {
 }
 
 func (repo *Repository) Startup() (err error) {
+	ctx := context.Background()
+
 	var settingSystem *setting.Setting[setting.System]
 
-	if settingSystem, err = GetByID[setting.System](repo, "system"); err != nil {
+	if settingSystem, err = GetByID[setting.System](ctx, repo, "system"); err != nil {
 		settingSystem = new(setting.Setting[setting.System])
 		settingSystem.ID = "system"
 		settingSystem.JSONValue = setting.NewSystem()
-		if _, err = Create(repo, settingSystem); err != nil {
+		if _, err = Create(ctx, repo, settingSystem); err != nil {
 			return err
 		}
 	}
 
 	var settingGeneral *setting.Setting[setting.General]
 
-	if settingGeneral, err = GetByID[setting.General](repo, "general"); err != nil {
+	if settingGeneral, err = GetByID[setting.General](ctx, repo, "general"); err != nil {
 		settingGeneral = new(setting.Setting[setting.General])
 		settingGeneral.ID = "general"
 		settingGeneral.JSONValue = setting.General{}
-		if _, err = Create(repo, settingGeneral); err != nil {
+		if _, err = Create(ctx, repo, settingGeneral); err != nil {
 			return err
 		}
 	}
 
 	var settingTopics *setting.Setting[setting.Topics]
 
-	if settingTopics, err = GetByID[setting.Topics](repo, "topics"); err != nil {
+	if settingTopics, err = GetByID[setting.Topics](ctx, repo, "topics"); err != nil {
 		settingTopics = new(setting.Setting[setting.Topics])
 		settingTopics.ID = "topics"
 		settingTopics.JSONValue = setting.Topics{
@@ -52,14 +55,14 @@ func (repo *Repository) Startup() (err error) {
 			AllowKindPoll:     true,
 			AllowKindRSVP:     true,
 		}
-		if _, err = Create(repo, settingTopics); err != nil {
+		if _, err = Create(ctx, repo, settingTopics); err != nil {
 			return err
 		}
 	}
 
 	var settingProfiles *setting.Setting[setting.Profiles]
 
-	if settingProfiles, err = GetByID[setting.Profiles](repo, "profiles"); err != nil {
+	if settingProfiles, err = GetByID[setting.Profiles](ctx, repo, "profiles"); err != nil {
 		settingProfiles = new(setting.Setting[setting.Profiles])
 		settingProfiles.ID = "profiles"
 		settingProfiles.JSONValue = setting.Profiles{
@@ -70,7 +73,7 @@ func (repo *Repository) Startup() (err error) {
 			PictureStorageProviderID: "",
 			PictureStoragePath:       "profile-pictures",
 		}
-		if _, err = Create(repo, settingProfiles); err != nil {
+		if _, err = Create(ctx, repo, settingProfiles); err != nil {
 			return err
 		}
 	} else if settingProfiles.JSONValue.PictureStorageProviderID != "" {
@@ -90,7 +93,7 @@ func (repo *Repository) Startup() (err error) {
 		if !exists {
 			settingProfiles.JSONValue.EnablePicture = false
 			settingProfiles.JSONValue.PictureStorageProviderID = ""
-			if err = Update(repo, settingProfiles); err != nil {
+			if err = Update(ctx, repo, settingProfiles); err != nil {
 				return err
 			}
 		}
@@ -98,7 +101,7 @@ func (repo *Repository) Startup() (err error) {
 
 	var settingAttachments *setting.Setting[setting.Attachments]
 
-	if settingAttachments, err = GetByID[setting.Attachments](repo, "attachments"); err != nil {
+	if settingAttachments, err = GetByID[setting.Attachments](ctx, repo, "attachments"); err != nil {
 		settingAttachments = new(setting.Setting[setting.Attachments])
 		settingAttachments.ID = "attachments"
 		settingAttachments.JSONValue = setting.Attachments{
@@ -109,7 +112,7 @@ func (repo *Repository) Startup() (err error) {
 			StoragePath:       "attachments",
 			OnUploadHook:      "",
 		}
-		if _, err = Create(repo, settingAttachments); err != nil {
+		if _, err = Create(ctx, repo, settingAttachments); err != nil {
 			return err
 		}
 	} else if settingAttachments.JSONValue.StorageProviderID != "" {
@@ -129,7 +132,7 @@ func (repo *Repository) Startup() (err error) {
 		if !exists {
 			settingAttachments.JSONValue.EnableAttachments = false
 			settingAttachments.JSONValue.StorageProviderID = ""
-			if err = Update(repo, settingAttachments); err != nil {
+			if err = Update(ctx, repo, settingAttachments); err != nil {
 				return err
 			}
 		}
@@ -137,13 +140,13 @@ func (repo *Repository) Startup() (err error) {
 
 	var settingCommsEmail *setting.Setting[setting.CommsEmail]
 
-	if settingCommsEmail, err = GetByID[setting.CommsEmail](repo, "comms_email"); err != nil {
+	if settingCommsEmail, err = GetByID[setting.CommsEmail](ctx, repo, "comms_email"); err != nil {
 		settingCommsEmail = new(setting.Setting[setting.CommsEmail])
 		settingCommsEmail.ID = "comms_email"
 		settingCommsEmail.JSONValue = setting.CommsEmail{
 			TargetID: "",
 		}
-		if _, err = Create(repo, settingCommsEmail); err != nil {
+		if _, err = Create(ctx, repo, settingCommsEmail); err != nil {
 			return err
 		}
 	} else if settingCommsEmail.JSONValue.TargetID != "" {
@@ -163,7 +166,7 @@ func (repo *Repository) Startup() (err error) {
 
 		if !exists {
 			settingCommsEmail.JSONValue.TargetID = ""
-			if err = Update(repo, settingCommsEmail); err != nil {
+			if err = Update(ctx, repo, settingCommsEmail); err != nil {
 				return err
 			}
 		}
@@ -171,13 +174,13 @@ func (repo *Repository) Startup() (err error) {
 
 	var settingCommsXMPP *setting.Setting[setting.CommsXMPP]
 
-	if settingCommsXMPP, err = GetByID[setting.CommsXMPP](repo, "comms_xmpp"); err != nil {
+	if settingCommsXMPP, err = GetByID[setting.CommsXMPP](ctx, repo, "comms_xmpp"); err != nil {
 		settingCommsXMPP = new(setting.Setting[setting.CommsXMPP])
 		settingCommsXMPP.ID = "comms_xmpp"
 		settingCommsXMPP.JSONValue = setting.CommsXMPP{
 			TargetID: "",
 		}
-		if _, err = Create(repo, settingCommsXMPP); err != nil {
+		if _, err = Create(ctx, repo, settingCommsXMPP); err != nil {
 			return err
 		}
 	} else if settingCommsXMPP.JSONValue.TargetID != "" {
@@ -197,7 +200,7 @@ func (repo *Repository) Startup() (err error) {
 
 		if !exists {
 			settingCommsXMPP.JSONValue.TargetID = ""
-			if err = Update(repo, settingCommsXMPP); err != nil {
+			if err = Update(ctx, repo, settingCommsXMPP); err != nil {
 				return err
 			}
 		}
@@ -205,20 +208,20 @@ func (repo *Repository) Startup() (err error) {
 
 	var settingAuth *setting.Setting[setting.Auth]
 
-	if settingAuth, err = GetByID[setting.Auth](repo, "auth"); err != nil {
+	if settingAuth, err = GetByID[setting.Auth](ctx, repo, "auth"); err != nil {
 		settingAuth = new(setting.Setting[setting.Auth])
 		settingAuth.ID = "auth"
 		settingAuth.JSONValue = setting.Auth{
 			AddressType: setting.EmailOnly,
 		}
-		if _, err = Create(repo, settingAuth); err != nil {
+		if _, err = Create(ctx, repo, settingAuth); err != nil {
 			return err
 		}
 	}
 
 	var settingTheme *setting.Setting[setting.Theme]
 
-	if settingTheme, err = GetByID[setting.Theme](repo, "theme"); err != nil {
+	if settingTheme, err = GetByID[setting.Theme](ctx, repo, "theme"); err != nil {
 		settingTheme = new(setting.Setting[setting.Theme])
 		settingTheme.ID = "theme"
 		settingTheme.JSONValue = setting.Theme{
@@ -229,7 +232,7 @@ func (repo *Repository) Startup() (err error) {
 			CustomBanner:           "",
 			CustomFavicon:          "",
 		}
-		if _, err = Create(repo, settingTheme); err != nil {
+		if _, err = Create(ctx, repo, settingTheme); err != nil {
 			return err
 		}
 	} else if settingTheme.JSONValue.ThemeStorageProviderID != "" {
@@ -249,7 +252,7 @@ func (repo *Repository) Startup() (err error) {
 		if !exists {
 			settingTheme.JSONValue.ThemeStorageProviderID = ""
 			settingTheme.JSONValue.CustomBanner = ""
-			if err = Update(repo, settingTheme); err != nil {
+			if err = Update(ctx, repo, settingTheme); err != nil {
 				return err
 			}
 		}

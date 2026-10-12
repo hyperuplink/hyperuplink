@@ -29,7 +29,7 @@ func (r *Route) Destroy(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	err = logictwofactor.Disable(r.Runtime, req.User(), in.CurrentPassword)
+	err = logictwofactor.Disable(req.Context(), r.Runtime, req.User(), in.CurrentPassword)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

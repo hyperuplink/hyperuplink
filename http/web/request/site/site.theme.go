@@ -11,7 +11,7 @@ import (
 )
 
 func (s *Site) themeSetting() (theme *setting.Theme, ok bool) {
-	settingTheme, err := settingRepo.GetByID[setting.Theme](
+	settingTheme, err := settingRepo.GetByID[setting.Theme](s.c.Context(),
 		gh.Repositories(s.r.GetRuntime()).Setting,
 		"theme",
 	)

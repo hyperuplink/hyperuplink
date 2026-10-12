@@ -1,6 +1,7 @@
 package activity
 
 import (
+	"context"
 	"errors"
 	"log/slog"
 	"sync"
@@ -79,13 +80,13 @@ func (act *Activity) Shutdown() (err error) {
 	return nil
 }
 
-func (act *Activity) Record(rec activity.Record) (err error) {
+func (act *Activity) Record(ctx context.Context, rec activity.Record) (err error) {
 	if rec.Count < 1 {
 		rec.Count = 1
 	}
 
 	if rec.Kind.Policy() == activity.Immediate {
-		return act.repo.Append([]activity.Record{rec})
+		return act.repo.Append(ctx, []activity.Record{rec})
 	}
 
 	act.mu.Lock()
@@ -143,9 +144,11 @@ func (act *Activity) Flush() (err error) {
 		}
 	}
 
+	ctx := context.Background()
+
 	return errors.Join(
-		act.repo.Upsert(coalescing),
-		act.repo.Append(appending),
+		act.repo.Upsert(ctx, coalescing),
+		act.repo.Append(ctx, appending),
 	)
 }
 

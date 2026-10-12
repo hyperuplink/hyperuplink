@@ -1,6 +1,7 @@
 package topics
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
@@ -21,6 +22,7 @@ type Voted struct {
 }
 
 func Vote(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *VoteInput,
 	perms *permission.Resolution,
@@ -31,7 +33,7 @@ func Vote(
 		return nil, errs.ErrForbidden
 	}
 
-	if err = logictopics.PollVote(rt, &logictopics.PollVoteInput{
+	if err = logictopics.PollVote(ctx, rt, &logictopics.PollVoteInput{
 		Topic:     &top.Topic,
 		AuthorID:  in.AuthorID,
 		Selection: in.Selection,
@@ -39,7 +41,7 @@ func Vote(
 		return nil, err
 	}
 
-	poll, err := logictopics.PollView(rt, &logictopics.PollViewInput{
+	poll, err := logictopics.PollView(ctx, rt, &logictopics.PollViewInput{
 		Topic:    &top.Topic,
 		ViewerID: uuid.NullUUID{UUID: in.AuthorID, Valid: true},
 		CanWrite: true,

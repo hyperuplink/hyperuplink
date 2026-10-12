@@ -1,6 +1,7 @@
 package categories
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -9,6 +10,7 @@ import (
 )
 
 func Update(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *UpdateInput,
 ) (err error) {
@@ -19,9 +21,9 @@ func Update(
 	cat.Name = in.Name
 	cat.Slug = in.Slug
 
-	if _, err = gh.Repositories(rt).Category.GetByUUID(cat.ID, common.QueryOptions{Limit: 1}); err != nil {
+	if _, err = gh.Repositories(rt).Category.GetByUUID(ctx, cat.ID, common.QueryOptions{Limit: 1}); err != nil {
 		return err
 	}
 
-	return gh.Repositories(rt).Category.Update(cat)
+	return gh.Repositories(rt).Category.Update(ctx, cat)
 }

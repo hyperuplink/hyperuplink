@@ -1,6 +1,7 @@
 package root
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
@@ -21,10 +22,11 @@ type Board struct {
 }
 
 func BoardView(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	perms *permission.Resolution,
 ) (board *Board, err error) {
-	cats, err := gh.Repositories(rt).Category.All(common.QueryOptions{
+	cats, err := gh.Repositories(rt).Category.All(ctx, common.QueryOptions{
 		OrderBy: "position",
 		Order:   common.Ascending,
 	})
@@ -32,7 +34,7 @@ func BoardView(
 		return nil, err
 	}
 
-	fums, err := gh.Repositories(rt).Forum.VAll(common.QueryOptions{
+	fums, err := gh.Repositories(rt).Forum.VAll(ctx, common.QueryOptions{
 		OrderBy: "position",
 		Order:   common.Ascending,
 	})
@@ -56,7 +58,7 @@ func BoardView(
 		board.CategoriesForums = append(board.CategoriesForums, catfum)
 	}
 
-	tops, err := gh.Repositories(rt).Topic.VAll(
+	tops, err := gh.Repositories(rt).Topic.VAll(ctx,
 		common.QueryOptions{
 			OrderBy: "last_activity_at",
 			Order:   common.Descending,

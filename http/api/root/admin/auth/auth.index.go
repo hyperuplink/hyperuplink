@@ -23,7 +23,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	settingAuth, err := settingRepo.GetByID[setting.Auth](gh.Repositories(r.Runtime).Setting, "auth")
+	settingAuth, err := settingRepo.GetByID[setting.Auth](req.Context(), gh.Repositories(r.Runtime).Setting, "auth")
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

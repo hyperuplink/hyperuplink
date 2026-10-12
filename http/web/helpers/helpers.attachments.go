@@ -19,5 +19,5 @@ func ProcessAttachments(
 		return nil, nil
 	}
 
-	return logicattachments.StoreAll(rt, authorID, form.File[AttachmentsFormField])
+	return logicattachments.StoreAll(c.Context(), rt, authorID, form.File[AttachmentsFormField])
 }

@@ -57,7 +57,7 @@ func (r *Route) imageUpload(c fiber.Ctx, kind logicthemes.ImageKind) (err error)
 		return req.RespondProblem(problem.Validation(map[string][]string{imageField: {"required"}}))
 	}
 
-	err = logicthemes.UploadImage(r.Runtime, kind, files[0])
+	err = logicthemes.UploadImage(req.Context(), r.Runtime, kind, files[0])
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}
@@ -72,7 +72,7 @@ func (r *Route) imageRemove(c fiber.Ctx, kind logicthemes.ImageKind) (err error)
 		return rerr
 	}
 
-	err = logicthemes.RemoveImage(r.Runtime, kind)
+	err = logicthemes.RemoveImage(req.Context(), r.Runtime, kind)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

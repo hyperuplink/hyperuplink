@@ -7,10 +7,11 @@ import (
 )
 
 func Create[T any](
+	ctx context.Context,
 	repo *Repository,
 	model *setting.Setting[T],
 ) (rowID string, err error) {
-	return database.Value[string](context.Background(), repo.db, `INSERT INTO settings (
+	return database.Value[string](ctx, repo.db, `INSERT INTO settings (
   id
   ,string_value
   ,int_value

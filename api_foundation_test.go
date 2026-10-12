@@ -74,17 +74,17 @@ func TestAPIGuestSwitchClosesEverythingButTheDoor(t *testing.T) {
 	h := apiTest(t)
 
 	repo := gh.Repositories(h.rt).Setting
-	sys, err := settingRepo.GetByID[setting.System](repo, "system")
+	sys, err := settingRepo.GetByID[setting.System](h.ctx, repo, "system")
 	if err != nil {
 		t.Fatal(err)
 	}
 	sys.JSONValue.AllowAPIGuests = false
-	if err = settingRepo.Update(repo, sys); err != nil {
+	if err = settingRepo.Update(h.ctx, repo, sys); err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() {
 		sys.JSONValue.AllowAPIGuests = true
-		if err := settingRepo.Update(repo, sys); err != nil {
+		if err := settingRepo.Update(h.ctx, repo, sys); err != nil {
 			t.Error(err)
 		}
 	})
@@ -117,7 +117,7 @@ func TestAPIRateLimitAnswers429(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, secret, err := logicapi.Create(h.rt, h.users["vera"].ID, &logicapi.CreateInput{KeyName: "ratelimit"})
+	_, secret, err := logicapi.Create(h.ctx, h.rt, h.users["vera"].ID, &logicapi.CreateInput{KeyName: "ratelimit"})
 	if err != nil {
 		t.Fatal(err)
 	}

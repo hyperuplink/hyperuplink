@@ -30,7 +30,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 
 	r.Runtime.Debug("form", in)
 
-	_, err = logicforums.Create(r.Runtime, in)
+	_, err = logicforums.Create(req.Context(), r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

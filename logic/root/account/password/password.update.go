@@ -1,6 +1,7 @@
 package password
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
@@ -15,6 +16,7 @@ type UpdateInput struct {
 }
 
 func Update(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	usr *user.User,
 	in *UpdateInput,
@@ -37,5 +39,5 @@ func Update(
 		return err
 	}
 
-	return gh.Repositories(rt).User.Update(usr)
+	return gh.Repositories(rt).User.Update(ctx, usr)
 }

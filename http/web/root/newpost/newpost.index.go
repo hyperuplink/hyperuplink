@@ -30,7 +30,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	var view *logicnewpost.FormView
-	view, err = logicnewpost.View(r.Runtime, req.Perms(), &logicnewpost.FormViewInput{
+	view, err = logicnewpost.View(req.Context(), r.Runtime, req.Perms(), &logicnewpost.FormViewInput{
 		ForumSlug: forum_slug,
 		TopicSlug: c.Query("topic"),
 		ReplyID:   c.Query("reply"),

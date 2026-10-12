@@ -6,14 +6,14 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
 )
 
-func (repo *Repository) Delete(model *category.Category) (err error) {
-	tx, err := repo.db.Tx(context.Background())
+func (repo *Repository) Delete(ctx context.Context, model *category.Category) (err error) {
+	tx, err := repo.db.Tx(ctx)
 	if err != nil {
 		return database.ConvertError(err)
 	}
-	defer tx.End(context.Background())
+	defer tx.End(ctx)
 
-	_, err = database.Exec(context.Background(), tx, `
+	_, err = database.Exec(ctx, tx, `
 		UPDATE replies SET
 			updated_at = NOW(),
 			deleted_at = NOW()
@@ -30,7 +30,7 @@ func (repo *Repository) Delete(model *category.Category) (err error) {
 		return err
 	}
 
-	_, err = database.Exec(context.Background(), tx, `
+	_, err = database.Exec(ctx, tx, `
 		UPDATE topics SET
 			updated_at = NOW(),
 			deleted_at = NOW()
@@ -46,7 +46,7 @@ func (repo *Repository) Delete(model *category.Category) (err error) {
 		return err
 	}
 
-	_, err = database.Exec(context.Background(), tx, `
+	_, err = database.Exec(ctx, tx, `
 		UPDATE forums SET
 			updated_at = NOW(),
 			deleted_at = NOW()
@@ -59,7 +59,7 @@ func (repo *Repository) Delete(model *category.Category) (err error) {
 		return err
 	}
 
-	_, err = database.Exec(context.Background(), tx, `
+	_, err = database.Exec(ctx, tx, `
 		UPDATE categories SET
 			updated_at = NOW(),
 			deleted_at = NOW()
@@ -70,7 +70,7 @@ func (repo *Repository) Delete(model *category.Category) (err error) {
 	if err != nil {
 		return err
 	}
-	_, err = database.Exec(context.Background(), tx, `
+	_, err = database.Exec(ctx, tx, `
 		WITH ordered_categories AS (
 			SELECT id, ROW_NUMBER() OVER (ORDER BY position) - 1 AS new_position
 			FROM categories
@@ -86,5 +86,5 @@ func (repo *Repository) Delete(model *category.Category) (err error) {
 		return err
 	}
 
-	return database.ConvertError(tx.Commit(context.Background()))
+	return database.ConvertError(tx.Commit(ctx))
 }

@@ -9,6 +9,7 @@ import (
 )
 
 func (repo *Repository) VAllAdminCount(
+	ctx context.Context,
 	qo common.QueryOptions,
 ) (total int64, err error) {
 	qoc := qo
@@ -16,7 +17,7 @@ func (repo *Repository) VAllAdminCount(
 	qoc.Limit = 0
 	qoc.Page = 0
 
-	return database.Value[int64](context.Background(), repo.db, qoc.Query(
+	return database.Value[int64](ctx, repo.db, qoc.Query(
 		`SELECT COUNT(a.id) AS total FROM activities a WHERE a.kind = ANY($1)`,
 		common.QueryCapabilities{
 			Table:      "a",
@@ -27,15 +28,16 @@ func (repo *Repository) VAllAdminCount(
 }
 
 func (repo *Repository) VAllAdmin(
+	ctx context.Context,
 	qo common.QueryOptions,
 ) (model []vactivity.VActivity, total int64, err error) {
 	var mod []vactivity.VActivity
 
-	if total, err = repo.VAllAdminCount(qo); err != nil {
+	if total, err = repo.VAllAdminCount(ctx, qo); err != nil {
 		return nil, total, err
 	}
 
-	mod, err = database.Rows[vactivity.VActivity](context.Background(), repo.db, qo.Query(
+	mod, err = database.Rows[vactivity.VActivity](ctx, repo.db, qo.Query(
 		`SELECT
 			 a.*
 			,COALESCE(u.username, '') AS actor_username

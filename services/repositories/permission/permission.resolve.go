@@ -14,6 +14,7 @@ import (
 )
 
 func (repo *Repository) Resolve(
+	ctx context.Context,
 	role user.Role,
 	memberOf []string,
 	cats []category.Category,
@@ -25,7 +26,7 @@ func (repo *Repository) Resolve(
 		return res, nil
 	}
 
-	perms, err := database.Rows[permission.Permission](context.Background(), repo.db, `SELECT * FROM permissions
+	perms, err := database.Rows[permission.Permission](ctx, repo.db, `SELECT * FROM permissions
 		WHERE (group_id IS NULL OR group_id = ANY($1))
 		AND deleted_at IS NULL`,
 		memberOf,
@@ -69,12 +70,13 @@ func (repo *Repository) Resolve(
 }
 
 func (repo *Repository) EffectiveLevel(
+	ctx context.Context,
 	memberOf []string,
 	categoryID uuid.UUID,
 ) (level byte, err error) {
 	level = permission.None
 
-	def, err := repo.GetDefault()
+	def, err := repo.GetDefault(ctx)
 	if err != nil && !errors.Is(err, errs.ErrNoRows) {
 		return permission.None, err
 	}
@@ -82,7 +84,7 @@ func (repo *Repository) EffectiveLevel(
 		level = def.Level()
 	}
 
-	catDef, err := repo.GetFor(pgtype.Text{}, pgtype.UUID{Bytes: categoryID, Valid: true})
+	catDef, err := repo.GetFor(ctx, pgtype.Text{}, pgtype.UUID{Bytes: categoryID, Valid: true})
 	if err != nil && !errors.Is(err, errs.ErrNoRows) {
 		return permission.None, err
 	}
@@ -94,7 +96,7 @@ func (repo *Repository) EffectiveLevel(
 		return level, nil
 	}
 
-	perms, err := database.Rows[permission.Permission](context.Background(), repo.db, `SELECT * FROM permissions
+	perms, err := database.Rows[permission.Permission](ctx, repo.db, `SELECT * FROM permissions
 		WHERE group_id = ANY($1)
 		AND category_id = $2
 		AND deleted_at IS NULL`,

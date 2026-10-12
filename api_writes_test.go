@@ -60,13 +60,13 @@ func (h *apiHarness) enableAttachments(t *testing.T, enabled bool) {
 	t.Helper()
 
 	repo := gh.Repositories(h.rt).Setting
-	atts, err := settingRepo.GetByID[setting.Attachments](repo, "attachments")
+	atts, err := settingRepo.GetByID[setting.Attachments](h.ctx, repo, "attachments")
 	if err != nil {
 		t.Fatal(err)
 	}
 	atts.JSONValue.EnableAttachments = enabled
 	atts.JSONValue.StorageProviderID = "test-local"
-	if err = settingRepo.Update(repo, atts); err != nil {
+	if err = settingRepo.Update(h.ctx, repo, atts); err != nil {
 		t.Fatal(err)
 	}
 }

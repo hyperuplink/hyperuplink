@@ -36,7 +36,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	enabled, err := logicprofile.PicturesEnabled(r.Runtime)
+	enabled, err := logicprofile.PicturesEnabled(req.Context(), r.Runtime)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}
@@ -57,21 +57,21 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 	}
 
 	usr := req.User()
-	if err = logicprofile.StorePicture(r.Runtime, usr, fh); err != nil {
+	if err = logicprofile.StorePicture(req.Context(), r.Runtime, usr, fh); err != nil {
 		return req.RespondError(err)
 	}
 
-	err = gh.Repositories(r.Runtime).User.Update(usr)
+	err = gh.Repositories(r.Runtime).User.Update(req.Context(), usr)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}
 
-	fresh, err := gh.Repositories(r.Runtime).User.GetByUUID(usr.ID, common.QueryOptions{Limit: 1})
+	fresh, err := gh.Repositories(r.Runtime).User.GetByUUID(req.Context(), usr.ID, common.QueryOptions{Limit: 1})
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}
 
-	acc, err := logicaccount.Show(r.Runtime, fresh)
+	acc, err := logicaccount.Show(req.Context(), r.Runtime, fresh)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

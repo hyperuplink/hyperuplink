@@ -30,7 +30,7 @@ func (r *Route) Membership(c fiber.Ctx) (err error) {
 		return req.RedirectToRoute(myRoute.Fill(map[string]string{"user": username}))
 	}
 
-	err = logicuser.UpdateMembership(r.Runtime, username, in)
+	err = logicuser.UpdateMembership(req.Context(), r.Runtime, username, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

@@ -1,6 +1,7 @@
 package newpost
 
 import (
+	"context"
 	"time"
 	"xn--gckvb8fzb.com/glides/services/markdown"
 
@@ -25,6 +26,7 @@ type CreateInput struct {
 }
 
 func Create(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	authorID uuid.UUID,
 	perms *permission.Resolution,
@@ -40,7 +42,7 @@ func Create(
 		return nil, err
 	}
 
-	fum, err := gh.Repositories(rt).Forum.GetByUUID(
+	fum, err := gh.Repositories(rt).Forum.GetByUUID(ctx,
 		top.ForumID,
 		common.QueryOptions{Limit: 1},
 	)
@@ -63,7 +65,7 @@ func Create(
 	}
 
 	if topic.Kind(in.Kind) == topic.Poll {
-		if err = ApplyPoll(rt, top, &PollInput{
+		if err = ApplyPoll(ctx, rt, top, &PollInput{
 			Options:  in.PollOptions,
 			EndsAt:   in.PollEndsAt,
 			Location: location,
@@ -78,11 +80,11 @@ func Create(
 		}
 	}
 
-	if _, err = gh.Repositories(rt).Topic.Create(top); err != nil {
+	if _, err = gh.Repositories(rt).Topic.Create(ctx, top); err != nil {
 		return nil, err
 	}
 
-	return gh.Repositories(rt).Topic.VGetByForumUUIDSlug(
+	return gh.Repositories(rt).Topic.VGetByForumUUIDSlug(ctx,
 		top.ForumID,
 		top.Slug,
 		common.QueryOptions{

@@ -1,6 +1,7 @@
 package session
 
 import (
+	"context"
 	"errors"
 	"sync"
 
@@ -32,11 +33,12 @@ func decoy() string {
 }
 
 func CheckPassword(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	username string,
 	pw string,
 ) (usr *user.User, err error) {
-	usr, err = gh.Repositories(rt).User.GetByUsername(
+	usr, err = gh.Repositories(rt).User.GetByUsername(ctx,
 		username,
 		common.QueryOptions{
 			WithBanned:  false,
@@ -62,10 +64,11 @@ func CheckPassword(
 }
 
 func SignIn(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *SignInInput,
 ) (usr *user.User, err error) {
-	if usr, err = CheckPassword(rt, in.Username, in.Password); err != nil {
+	if usr, err = CheckPassword(ctx, rt, in.Username, in.Password); err != nil {
 		return nil, err
 	}
 

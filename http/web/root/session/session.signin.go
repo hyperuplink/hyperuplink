@@ -50,7 +50,7 @@ func (r *Route) SignInCreate(c fiber.Ctx) (err error) {
 	r.Runtime.Debug("form", frm)
 
 	var usr *user.User
-	usr, err = logicsession.CheckPassword(r.Runtime, frm.Username, frm.Password)
+	usr, err = logicsession.CheckPassword(req.Context(), r.Runtime, frm.Username, frm.Password)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

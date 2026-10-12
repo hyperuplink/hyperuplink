@@ -20,7 +20,7 @@ import (
 func (r *Route) Show(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	fum, err := logicforums.Show(r.Runtime, c.Params("forum"), req.Perms())
+	fum, err := logicforums.Show(req.Context(), r.Runtime, c.Params("forum"), req.Perms())
 	if ret, rerr := req.RespondOnReadError(err); ret {
 		return rerr
 	}

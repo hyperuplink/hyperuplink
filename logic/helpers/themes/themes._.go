@@ -1,6 +1,7 @@
 package themes
 
 import (
+	"context"
 	"io/fs"
 	"sort"
 
@@ -8,6 +9,7 @@ import (
 )
 
 func getPackages(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	dir string,
 	file string,
@@ -36,13 +38,15 @@ func getPackages(
 }
 
 func GetThemes(
+	ctx context.Context,
 	rt *runtime.Runtime,
 ) (names []string, err error) {
-	return getPackages(rt, "static/themes", "theme.css")
+	return getPackages(ctx, rt, "static/themes", "theme.css")
 }
 
 func GetColorschemes(
+	ctx context.Context,
 	rt *runtime.Runtime,
 ) (names []string, err error) {
-	return getPackages(rt, "static/colorschemes", "colorscheme.css")
+	return getPackages(ctx, rt, "static/colorschemes", "colorscheme.css")
 }

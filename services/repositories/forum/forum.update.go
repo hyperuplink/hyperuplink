@@ -6,8 +6,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/forum"
 )
 
-func (repo *Repository) Update(model *forum.Forum) (err error) {
-	_, err = database.Exec(context.Background(), repo.db, `UPDATE forums SET
+func (repo *Repository) Update(ctx context.Context, model *forum.Forum) (err error) {
+	_, err = database.Exec(ctx, repo.db, `UPDATE forums SET
 		 name =                        $1
 		,slug =                        $2
 		,position = CASE

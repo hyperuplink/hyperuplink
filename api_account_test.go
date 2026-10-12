@@ -18,7 +18,7 @@ import (
 func (h *apiHarness) signUp(t *testing.T, name string) string {
 	t.Helper()
 
-	usr, err := logicsession.SignUp(h.rt, &logicsession.SignUpInput{
+	usr, err := logicsession.SignUp(h.ctx, h.rt, &logicsession.SignUpInput{
 		Username:       name,
 		Email:          name + "@example.org",
 		Password:       testPassword,

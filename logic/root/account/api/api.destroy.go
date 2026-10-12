@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -13,6 +14,7 @@ type DestroyInput struct {
 }
 
 func Destroy(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	userID uuid.UUID,
 	in *DestroyInput,
@@ -22,7 +24,7 @@ func Destroy(
 		return err
 	}
 
-	key, err := gh.Repositories(rt).APIKey.GetByUUID(id, common.QueryOptions{Limit: 1})
+	key, err := gh.Repositories(rt).APIKey.GetByUUID(ctx, id, common.QueryOptions{Limit: 1})
 	if err != nil {
 		return err
 	}
@@ -31,5 +33,5 @@ func Destroy(
 		return errs.ErrNoRows
 	}
 
-	return gh.Repositories(rt).APIKey.Delete(key)
+	return gh.Repositories(rt).APIKey.Delete(ctx, key)
 }

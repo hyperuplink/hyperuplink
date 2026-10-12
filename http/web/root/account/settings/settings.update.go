@@ -37,7 +37,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	err = logicsettings.Update(r.Runtime, usr, in)
+	err = logicsettings.Update(req.Context(), r.Runtime, usr, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"context"
 	"errors"
 	"strconv"
 	"strings"
@@ -75,7 +76,7 @@ func (r *Route) ProviderCallbackShow(c fiber.Ctx) (err error) {
 	}
 
 	var usr *user.User
-	usr, err = gh.Repositories(r.Runtime).User.GetByEmail(
+	usr, err = gh.Repositories(r.Runtime).User.GetByEmail(req.Context(),
 		gothUser.Email,
 		common.QueryOptions{
 			WithBanned:  false,
@@ -116,7 +117,7 @@ func (r *Route) createOAuthUser(
 	gothUser goth.User,
 ) (*user.User, error) {
 	usr := new(user.User)
-	usr.Username = r.uniqueUsername(gothUser)
+	usr.Username = r.uniqueUsername(req.Context(), gothUser)
 	usr.Role = user.UserRole
 	usr.Email = gothUser.Email
 	usr.Language = req.In.Lang()
@@ -125,12 +126,12 @@ func (r *Route) createOAuthUser(
 		return nil, err
 	}
 
-	id, err := gh.Repositories(r.Runtime).User.Create(usr)
+	id, err := gh.Repositories(r.Runtime).User.Create(req.Context(), usr)
 	if err != nil {
 		return nil, err
 	}
 
-	usr, err = gh.Repositories(r.Runtime).User.GetByUUID(
+	usr, err = gh.Repositories(r.Runtime).User.GetByUUID(req.Context(),
 		id,
 		common.QueryOptions{Limit: 1},
 	)
@@ -141,14 +142,14 @@ func (r *Route) createOAuthUser(
 	now := time.Now()
 	usr.SetConfirmedAt(now)
 	usr.SetEmailConfirmedAt(now)
-	if err := gh.Repositories(r.Runtime).User.Update(usr); err != nil {
+	if err := gh.Repositories(r.Runtime).User.Update(req.Context(), usr); err != nil {
 		return nil, err
 	}
 
 	return usr, nil
 }
 
-func (r *Route) uniqueUsername(gothUser goth.User) string {
+func (r *Route) uniqueUsername(ctx context.Context, gothUser goth.User) string {
 	base := sanitizeUsername(gothUser.NickName)
 	if base == "" {
 		base = sanitizeUsername(gothUser.Name)
@@ -164,7 +165,7 @@ func (r *Route) uniqueUsername(gothUser goth.User) string {
 
 	candidate := base
 	for i := 1; i <= 9999; i++ {
-		if _, err := gh.Repositories(r.Runtime).User.GetByUsername(
+		if _, err := gh.Repositories(r.Runtime).User.GetByUsername(ctx,
 			candidate,
 			common.QueryOptions{Limit: 1},
 		); err != nil {

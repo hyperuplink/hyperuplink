@@ -1,6 +1,7 @@
 package general
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
@@ -34,11 +35,12 @@ type UpdateInput struct {
 }
 
 func Update(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	actorID uuid.NullUUID,
 	in *UpdateInput,
 ) (err error) {
-	settingSystem, err := settingRepo.GetByID[setting.System](
+	settingSystem, err := settingRepo.GetByID[setting.System](ctx,
 		gh.Repositories(rt).Setting,
 		"system",
 	)
@@ -55,14 +57,14 @@ func Update(
 	settingSystem.JSONValue.AdminLogRetentionDays = in.AdminLogRetentionDays
 	settingSystem.JSONValue.AllowAPIGuests = in.AllowAPIGuests
 
-	if err = settingRepo.Update[setting.System](
+	if err = settingRepo.Update[setting.System](ctx,
 		gh.Repositories(rt).Setting,
 		settingSystem,
 	); err != nil {
 		return err
 	}
 
-	settingGeneral, err := settingRepo.GetByID[setting.General](
+	settingGeneral, err := settingRepo.GetByID[setting.General](ctx,
 		gh.Repositories(rt).Setting,
 		"general",
 	)
@@ -83,7 +85,7 @@ func Update(
 	settingGeneral.JSONValue.EnableQuit = in.EnableQuit
 	settingGeneral.JSONValue.QuitURL = in.QuitURL
 
-	if err = settingRepo.Update[setting.General](
+	if err = settingRepo.Update[setting.General](ctx,
 		gh.Repositories(rt).Setting,
 		settingGeneral,
 	); err != nil {
@@ -91,9 +93,9 @@ func Update(
 	}
 
 	if actorID.Valid {
-		logicactivity.RecordAdminSettingsUpdate(rt, actorID.UUID,
+		logicactivity.RecordAdminSettingsUpdate(ctx, rt, actorID.UUID,
 			"system", beforeSystem, settingSystem.JSONValue)
-		logicactivity.RecordAdminSettingsUpdate(rt, actorID.UUID,
+		logicactivity.RecordAdminSettingsUpdate(ctx, rt, actorID.UUID,
 			"general", beforeGeneral, settingGeneral.JSONValue)
 	}
 

@@ -1,6 +1,7 @@
 package topics
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
@@ -16,11 +17,12 @@ type UpdateInput struct {
 }
 
 func Update(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	actorID uuid.NullUUID,
 	in *UpdateInput,
 ) (err error) {
-	settingTopics, err := settingRepo.GetByID[setting.Topics](
+	settingTopics, err := settingRepo.GetByID[setting.Topics](ctx,
 		gh.Repositories(rt).Setting,
 		"topics",
 	)
@@ -34,7 +36,7 @@ func Update(
 	settingTopics.JSONValue.AllowKindPoll = in.AllowKindPoll
 	settingTopics.JSONValue.AllowKindRSVP = in.AllowKindRSVP
 
-	if err = settingRepo.Update[setting.Topics](
+	if err = settingRepo.Update[setting.Topics](ctx,
 		gh.Repositories(rt).Setting,
 		settingTopics,
 	); err != nil {
@@ -42,7 +44,7 @@ func Update(
 	}
 
 	if actorID.Valid {
-		logicactivity.RecordAdminSettingsUpdate(rt, actorID.UUID,
+		logicactivity.RecordAdminSettingsUpdate(ctx, rt, actorID.UUID,
 			"topics", before, settingTopics.JSONValue)
 	}
 

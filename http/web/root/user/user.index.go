@@ -26,7 +26,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	req.UpdateTitle("~" + username)
 
 	var view *logicuser.View
-	view, err = logicuser.Show(r.Runtime, username, req.Perms())
+	view, err = logicuser.Show(req.Context(), r.Runtime, username, req.Perms())
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

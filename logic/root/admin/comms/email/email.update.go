@@ -1,6 +1,7 @@
 package email
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/config"
@@ -12,6 +13,7 @@ import (
 )
 
 func Update(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	actorID uuid.NullUUID,
 	in *UpdateInput,
@@ -35,7 +37,7 @@ func Update(
 		}
 	}
 
-	settingCommsEmail, err := settingRepo.GetByID[setting.CommsEmail](
+	settingCommsEmail, err := settingRepo.GetByID[setting.CommsEmail](ctx,
 		gh.Repositories(rt).Setting,
 		"comms_email",
 	)
@@ -47,7 +49,7 @@ func Update(
 
 	settingCommsEmail.JSONValue.TargetID = in.TargetID
 
-	if err = settingRepo.Update[setting.CommsEmail](
+	if err = settingRepo.Update[setting.CommsEmail](ctx,
 		gh.Repositories(rt).Setting,
 		settingCommsEmail,
 	); err != nil {
@@ -55,7 +57,7 @@ func Update(
 	}
 
 	if actorID.Valid {
-		logicactivity.RecordAdminSettingsUpdate(rt, actorID.UUID,
+		logicactivity.RecordAdminSettingsUpdate(ctx, rt, actorID.UUID,
 			"comms_email", before, settingCommsEmail.JSONValue)
 	}
 

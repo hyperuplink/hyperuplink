@@ -28,7 +28,7 @@ func (r *Route) Destroy(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	err = logicforums.Destroy(r.Runtime, &logicforums.DestroyInput{ID: id.String()})
+	err = logicforums.Destroy(req.Context(), r.Runtime, &logicforums.DestroyInput{ID: id.String()})
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

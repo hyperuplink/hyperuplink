@@ -1,6 +1,8 @@
 package notify
 
 import (
+	"context"
+
 	"xn--gckvb8fzb.com/glides/http/route"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -9,12 +11,13 @@ import (
 )
 
 func Reply(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	created *logictopics.CreatedReply,
 	byUsername string,
 	subject string,
 ) {
-	cat, err := gh.Repositories(rt).Category.GetByUUID(
+	cat, err := gh.Repositories(rt).Category.GetByUUID(ctx,
 		created.Forum.CategoryID,
 		common.QueryOptions{Limit: 1},
 	)
@@ -46,6 +49,7 @@ func Reply(
 	}
 
 	if err = logictopics.SendReplyNotifications(
+		ctx,
 		rt,
 		created.Reply,
 		byUsername,

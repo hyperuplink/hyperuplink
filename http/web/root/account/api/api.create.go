@@ -35,7 +35,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 	}
 
 	var secret string
-	_, secret, err = logicapi.Create(r.Runtime, userID, in)
+	_, secret, err = logicapi.Create(req.Context(), r.Runtime, userID, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

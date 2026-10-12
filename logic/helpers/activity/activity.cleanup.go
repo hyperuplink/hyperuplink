@@ -1,6 +1,7 @@
 package activity
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/glides/runtime"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/activity"
@@ -12,8 +13,8 @@ const CleanupAdminLogID string = "admin_log_cleanup"
 
 const CleanupAdminLogSpec string = "0 0 * * *"
 
-func AdminLogRetentionDays(rt *runtime.Runtime) int {
-	settingSystem, err := repoSetting.GetByID[setting.System](
+func AdminLogRetentionDays(ctx context.Context, rt *runtime.Runtime) int {
+	settingSystem, err := repoSetting.GetByID[setting.System](ctx,
 		gh.Repositories(rt).Setting,
 		"system",
 	)
@@ -25,10 +26,10 @@ func AdminLogRetentionDays(rt *runtime.Runtime) int {
 	return settingSystem.JSONValue.GetAdminLogRetentionDays()
 }
 
-func CleanupAdminLog(rt *runtime.Runtime) (err error) {
-	days := AdminLogRetentionDays(rt)
+func CleanupAdminLog(ctx context.Context, rt *runtime.Runtime) (err error) {
+	days := AdminLogRetentionDays(ctx, rt)
 
-	deleted, err := gh.Repositories(rt).Activity.DeleteOlderThanDays(
+	deleted, err := gh.Repositories(rt).Activity.DeleteOlderThanDays(ctx,
 		activity.AdminKinds(),
 		days,
 	)

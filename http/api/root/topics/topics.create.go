@@ -48,13 +48,14 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 	}
 
 	vtop, err := logicnewpost.Create(
+		req.Context(),
 		r.Runtime,
 		req.User().ID,
 		req.Perms(),
 		location,
 		&in.CreateInput,
 		func(authorID uuid.UUID) ([]uuid.UUID, error) {
-			return logicattachments.ResolveOwned(r.Runtime, authorID, in.AttachmentIDs)
+			return logicattachments.ResolveOwned(req.Context(), r.Runtime, authorID, in.AttachmentIDs)
 		},
 	)
 	if ret, rerr := req.RespondOnError(err); ret {
@@ -67,7 +68,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 	top := m.Topic(vtop)
 	if vtop.IsPoll() {
 		var poll *logictopics.Poll
-		poll, err = logictopics.PollView(r.Runtime, &logictopics.PollViewInput{
+		poll, err = logictopics.PollView(req.Context(), r.Runtime, &logictopics.PollViewInput{
 			Topic:    &vtop.Topic,
 			ViewerID: req.ViewerID(),
 			CanWrite: true,

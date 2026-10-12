@@ -35,13 +35,13 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 
 	usr := req.User()
 
-	acc, err := logicaccount.Show(r.Runtime, usr)
+	acc, err := logicaccount.Show(req.Context(), r.Runtime, usr)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}
 
 	if in.Timezone != nil {
-		err = logicsettings.Update(r.Runtime, usr, &logicsettings.UpdateInput{Timezone: *in.Timezone})
+		err = logicsettings.Update(req.Context(), r.Runtime, usr, &logicsettings.UpdateInput{Timezone: *in.Timezone})
 		if ret, rerr := req.RespondOnError(err); ret {
 			return rerr
 		}
@@ -59,7 +59,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 			profile.NotifyOnReply = *in.NotifyOnReply
 		}
 
-		err = logicprofile.Update(r.Runtime, usr, profile)
+		err = logicprofile.Update(req.Context(), r.Runtime, usr, profile)
 		if ret, rerr := req.RespondOnError(err); ret {
 			return rerr
 		}

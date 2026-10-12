@@ -1,6 +1,7 @@
 package users
 
 import (
+	"context"
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/glides/http/route"
 	"xn--gckvb8fzb.com/glides/runtime"
@@ -37,7 +38,7 @@ func New(
 
 func (r *Route) action(
 	c fiber.Ctx,
-	fn func(*runtime.Runtime, *logicusers.UserInput) error,
+	fn func(context.Context, *runtime.Runtime, *logicusers.UserInput) error,
 ) (err error) {
 	req := request.New(r, c)
 
@@ -50,7 +51,7 @@ func (r *Route) action(
 		return rerr
 	}
 
-	err = fn(r.Runtime, &logicusers.UserInput{ID: id.String()})
+	err = fn(req.Context(), r.Runtime, &logicusers.UserInput{ID: id.String()})
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

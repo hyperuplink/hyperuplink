@@ -20,7 +20,7 @@ func CurrentUserRoleAndGroups(
 		return user.GuestRole, nil
 	}
 
-	usr, err := gh.Repositories(rt).User.GetByID(userID, common.QueryOptions{
+	usr, err := gh.Repositories(rt).User.GetByID(c.Context(), userID, common.QueryOptions{
 		WithBanned:  false,
 		WithSpammed: false,
 		WithDeleted: false,

@@ -7,8 +7,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/postevent"
 )
 
-func (repo *Repository) Create(model *postevent.PostEvent) (rowID uuid.UUID, err error) {
-	return database.Value[uuid.UUID](context.Background(), repo.db, `INSERT INTO postevents (
+func (repo *Repository) Create(ctx context.Context, model *postevent.PostEvent) (rowID uuid.UUID, err error) {
+	return database.Value[uuid.UUID](ctx, repo.db, `INSERT INTO postevents (
 		 type
 		,author_id
 		,target

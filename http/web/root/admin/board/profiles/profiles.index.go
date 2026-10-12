@@ -23,7 +23,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	var settingProfiles *setting.Setting[setting.Profiles]
-	settingProfiles, err = settingRepo.GetByID[setting.Profiles](
+	settingProfiles, err = settingRepo.GetByID[setting.Profiles](req.Context(),
 		gh.Repositories(r.Runtime).Setting,
 		"profiles",
 	)

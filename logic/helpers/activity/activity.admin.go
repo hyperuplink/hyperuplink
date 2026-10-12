@@ -1,6 +1,7 @@
 package activity
 
 import (
+	"context"
 	"reflect"
 	"strings"
 
@@ -55,6 +56,7 @@ func fieldName(field reflect.StructField) string {
 }
 
 func RecordAdminVisit(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	actorID uuid.UUID,
 	path string,
@@ -65,12 +67,13 @@ func RecordAdminVisit(
 		return
 	}
 
-	if err = gh.Activity(rt).Record(rec); err != nil {
+	if err = gh.Activity(rt).Record(ctx, rec); err != nil {
 		rt.Error("error", err)
 	}
 }
 
 func RecordAdminSettingsUpdate(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	actorID uuid.UUID,
 	settingID string,
@@ -87,7 +90,7 @@ func RecordAdminSettingsUpdate(
 		return
 	}
 
-	if err = gh.Activity(rt).Record(rec); err != nil {
+	if err = gh.Activity(rt).Record(ctx, rec); err != nil {
 		rt.Error("error", err)
 	}
 }

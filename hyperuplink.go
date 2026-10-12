@@ -258,7 +258,7 @@ func registerCronFunctions(rt *runtime.Runtime) (err error) {
 	return servicescron.From(rt).Register(
 		logicactivity.CleanupAdminLogID,
 		logicactivity.CleanupAdminLogSpec,
-		func(ctx context.Context) error { return logicactivity.CleanupAdminLog(rt) },
+		func(ctx context.Context) error { return logicactivity.CleanupAdminLog(ctx, rt) },
 	)
 }
 
@@ -281,7 +281,7 @@ func createUser(rt *runtime.Runtime, jsonStr string) error {
 		return err
 	}
 
-	usr, err := logicsession.SignUp(rt, in, logicsession.SignUpOptions{Activate: true})
+	usr, err := logicsession.SignUp(context.Background(), rt, in, logicsession.SignUpOptions{Activate: true})
 	if err != nil {
 		return err
 	}

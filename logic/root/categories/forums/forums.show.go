@@ -1,6 +1,7 @@
 package forums
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -29,11 +30,12 @@ type View struct {
 }
 
 func Show(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *ShowInput,
 	perms *permission.Resolution,
 ) (view *View, err error) {
-	fum, err := gh.Repositories(rt).Forum.VGetBySlug(
+	fum, err := gh.Repositories(rt).Forum.VGetBySlug(ctx,
 		in.ForumSlug,
 		common.QueryOptions{
 			Limit: 1,
@@ -47,7 +49,7 @@ func Show(
 		return nil, errs.ErrForbidden
 	}
 
-	tops, total, err := gh.Repositories(rt).Topic.VAllForForumUUID(
+	tops, total, err := gh.Repositories(rt).Topic.VAllForForumUUID(ctx,
 		fum.ID,
 		common.QueryOptions{
 			OrderBy: "last_activity_at",
@@ -68,7 +70,7 @@ func Show(
 	}
 
 	if in.ViewerID.Valid {
-		view.Unread, err = logicactivity.UnreadTopics(rt, in.ViewerID.UUID, tops)
+		view.Unread, err = logicactivity.UnreadTopics(ctx, rt, in.ViewerID.UUID, tops)
 		if err != nil {
 			return nil, err
 		}

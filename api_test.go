@@ -43,6 +43,7 @@ const (
 )
 
 type apiHarness struct {
+	ctx        context.Context
 	rt         *runtime.Runtime
 	cfg        gh.APIConfig
 	app        *fiber.App
@@ -106,6 +107,7 @@ func apiTest(t *testing.T) *apiHarness {
 
 func newAPIHarness(dsn string) (h *apiHarness, err error) {
 	h = &apiHarness{
+		ctx:        context.Background(),
 		users:      map[string]*user.User{},
 		keys:       map[string]string{},
 		categories: map[string]uuid.UUID{},
@@ -225,7 +227,7 @@ func (h *apiHarness) newApp(cfg gh.APIConfig) (*fiber.App, error) {
 }
 
 func (h *apiHarness) perms(usr *user.User) *permission.Resolution {
-	return logicperms.Resolve(h.rt, usr.Role, usr.MemberOf)
+	return logicperms.Resolve(h.ctx, h.rt, usr.Role, usr.MemberOf)
 }
 
 func (h *apiHarness) seed() (err error) {
@@ -234,7 +236,7 @@ func (h *apiHarness) seed() (err error) {
 		{"vera", "vera@example.org"},
 		{"juno", "juno@example.org"},
 	} {
-		usr, serr := logicsession.SignUp(h.rt, &logicsession.SignUpInput{
+		usr, serr := logicsession.SignUp(h.ctx, h.rt, &logicsession.SignUpInput{
 			Username:       u.name,
 			Email:          u.email,
 			Password:       testPassword,
@@ -245,7 +247,7 @@ func (h *apiHarness) seed() (err error) {
 		}
 		h.users[u.name] = usr
 
-		_, secret, kerr := logicapi.Create(h.rt, usr.ID, &logicapi.CreateInput{KeyName: "test"})
+		_, secret, kerr := logicapi.Create(h.ctx, h.rt, usr.ID, &logicapi.CreateInput{KeyName: "test"})
 		if kerr != nil {
 			return kerr
 		}
@@ -256,7 +258,7 @@ func (h *apiHarness) seed() (err error) {
 		{"General", "general"},
 		{"Support", "support"},
 	} {
-		id, cerr := logiccategories.Create(h.rt, &logiccategories.CreateInput{Name: c.name, Slug: c.slug})
+		id, cerr := logiccategories.Create(h.ctx, h.rt, &logiccategories.CreateInput{Name: c.name, Slug: c.slug})
 		if cerr != nil {
 			return cerr
 		}
@@ -267,7 +269,7 @@ func (h *apiHarness) seed() (err error) {
 		{"Announcements", "announcements", "general"},
 		{"Help", "help", "support"},
 	} {
-		id, ferr := logicforums.Create(h.rt, &logicforums.CreateInput{
+		id, ferr := logicforums.Create(h.ctx, h.rt, &logicforums.CreateInput{
 			Name:       f.name,
 			Slug:       f.slug,
 			CategoryID: h.categories[f.category].String(),
@@ -278,20 +280,20 @@ func (h *apiHarness) seed() (err error) {
 		h.forums[f.slug] = id
 	}
 
-	if err = logicpermissions.GroupCreate(h.rt, &logicpermissions.GroupCreateInput{
+	if err = logicpermissions.GroupCreate(h.ctx, h.rt, &logicpermissions.GroupCreateInput{
 		ID:   "veterans",
 		Name: "Veterans",
 	}); err != nil {
 		return err
 	}
-	if err = logicpermissions.Apply(h.rt, &logicpermissions.ApplyInput{
+	if err = logicpermissions.Apply(h.ctx, h.rt, &logicpermissions.ApplyInput{
 		GroupID:    "veterans",
 		CategoryID: h.categories["support"].String(),
 		Level:      permission.LevelReadWrite,
 	}); err != nil {
 		return err
 	}
-	if err = logicuser.UpdateMembership(h.rt, "juno", &logicuser.MembershipInput{
+	if err = logicuser.UpdateMembership(h.ctx, h.rt, "juno", &logicuser.MembershipInput{
 		MemberOf: []string{"veterans"},
 	}); err != nil {
 		return err
@@ -303,7 +305,7 @@ func (h *apiHarness) seed() (err error) {
 	admin := h.users["admin"]
 	vera := h.users["vera"]
 
-	welcome, err := logicnewpost.Create(h.rt, admin.ID, h.perms(admin), time.UTC, &logicnewpost.CreateInput{
+	welcome, err := logicnewpost.Create(h.ctx, h.rt, admin.ID, h.perms(admin), time.UTC, &logicnewpost.CreateInput{
 		Name:    "Welcome to the board",
 		Text:    "Be excellent to each other.",
 		ForumID: h.forums["announcements"].String(),
@@ -314,7 +316,7 @@ func (h *apiHarness) seed() (err error) {
 	}
 	h.topics["welcome"] = welcome
 
-	help, err := logicnewpost.Create(h.rt, vera.ID, h.perms(vera), time.UTC, &logicnewpost.CreateInput{
+	help, err := logicnewpost.Create(h.ctx, h.rt, vera.ID, h.perms(vera), time.UTC, &logicnewpost.CreateInput{
 		Name:    "Need help with my modem",
 		Text:    "It only connects at 2400 baud.",
 		ForumID: h.forums["help"].String(),
@@ -325,7 +327,7 @@ func (h *apiHarness) seed() (err error) {
 	}
 	h.topics["help"] = help
 
-	first, err := logictopics.CreateReply(h.rt, vera.ID, h.perms(vera), &logictopics.CreateReplyInput{
+	first, err := logictopics.CreateReply(h.ctx, h.rt, vera.ID, h.perms(vera), &logictopics.CreateReplyInput{
 		Text:    "Thanks, happy to be here.",
 		TopicID: welcome.ID.String(),
 	}, nil)
@@ -334,7 +336,7 @@ func (h *apiHarness) seed() (err error) {
 	}
 	h.replies["first"] = first.Reply.ID
 
-	second, err := logictopics.CreateReply(h.rt, admin.ID, h.perms(admin), &logictopics.CreateReplyInput{
+	second, err := logictopics.CreateReply(h.ctx, h.rt, admin.ID, h.perms(admin), &logictopics.CreateReplyInput{
 		Text:    "Welcome, vera.",
 		TopicID: welcome.ID.String(),
 		ReplyID: first.Reply.ID.String(),
@@ -352,17 +354,17 @@ func queryOne() common.QueryOptions {
 }
 
 func (h *apiHarness) reloadUser(username string) (*user.User, error) {
-	return gh.Repositories(h.rt).User.GetByUsername(username, queryOne())
+	return gh.Repositories(h.rt).User.GetByUsername(h.ctx, username, queryOne())
 }
 
 func (h *apiHarness) setDefaultPermission(t *testing.T, level string) {
 	t.Helper()
 
-	if err := logicpermissions.Apply(h.rt, &logicpermissions.ApplyInput{Level: level}); err != nil {
+	if err := logicpermissions.Apply(h.ctx, h.rt, &logicpermissions.ApplyInput{Level: level}); err != nil {
 		t.Fatalf("default permission %s: %v", level, err)
 	}
 	t.Cleanup(func() {
-		if err := logicpermissions.Apply(h.rt, &logicpermissions.ApplyInput{Level: permission.LevelReadWrite}); err != nil {
+		if err := logicpermissions.Apply(h.ctx, h.rt, &logicpermissions.ApplyInput{Level: permission.LevelReadWrite}); err != nil {
 			t.Errorf("restore default permission: %v", err)
 		}
 	})

@@ -1,6 +1,7 @@
 package report
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -26,6 +27,7 @@ type CreateInput struct {
 }
 
 func ResolvePost(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	target string,
 	shortID string,
@@ -36,9 +38,9 @@ func ResolvePost(
 	case postevent.Topic:
 		var top *topic.Topic
 		if perr == nil {
-			top, err = gh.Repositories(rt).Topic.GetByUUID(id, common.QueryOptions{Limit: 1})
+			top, err = gh.Repositories(rt).Topic.GetByUUID(ctx, id, common.QueryOptions{Limit: 1})
 		} else {
-			top, err = gh.Repositories(rt).Topic.GetByShortID(shortID, common.QueryOptions{Limit: 1})
+			top, err = gh.Repositories(rt).Topic.GetByShortID(ctx, shortID, common.QueryOptions{Limit: 1})
 		}
 		if err != nil {
 			return nil, err
@@ -52,9 +54,9 @@ func ResolvePost(
 	case postevent.Reply:
 		var rep *reply.Reply
 		if perr == nil {
-			rep, err = gh.Repositories(rt).Reply.GetByUUID(id, common.QueryOptions{Limit: 1})
+			rep, err = gh.Repositories(rt).Reply.GetByUUID(ctx, id, common.QueryOptions{Limit: 1})
 		} else {
-			rep, err = gh.Repositories(rt).Reply.GetByShortID(shortID, common.QueryOptions{Limit: 1})
+			rep, err = gh.Repositories(rt).Reply.GetByShortID(ctx, shortID, common.QueryOptions{Limit: 1})
 		}
 		if err != nil {
 			return nil, err

@@ -30,7 +30,7 @@ func (r *Route) Delete(c fiber.Ctx) (err error) {
 
 	r.Runtime.Debug("form", in)
 
-	err = logicusers.Delete(r.Runtime, in)
+	err = logicusers.Delete(req.Context(), r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

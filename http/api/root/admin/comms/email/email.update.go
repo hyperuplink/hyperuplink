@@ -28,7 +28,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	err = logicemail.Update(r.Runtime, req.ViewerID(), in)
+	err = logicemail.Update(req.Context(), r.Runtime, req.ViewerID(), in)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

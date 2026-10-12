@@ -30,7 +30,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	err = logicpassword.Update(r.Runtime, req.User(), in)
+	err = logicpassword.Update(req.Context(), r.Runtime, req.User(), in)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

@@ -1,6 +1,7 @@
 package newpost
 
 import (
+	"context"
 	"strings"
 	"time"
 
@@ -30,10 +31,10 @@ type PollInput struct {
 	Location *time.Location
 }
 
-func PollAllowed(rt *runtime.Runtime) (allowed bool, err error) {
+func PollAllowed(ctx context.Context, rt *runtime.Runtime) (allowed bool, err error) {
 	var settingTopics *setting.Setting[setting.Topics]
 
-	if settingTopics, err = repoSetting.GetByID[setting.Topics](
+	if settingTopics, err = repoSetting.GetByID[setting.Topics](ctx,
 		gh.Repositories(rt).Setting,
 		"topics",
 	); err != nil {
@@ -44,12 +45,13 @@ func PollAllowed(rt *runtime.Runtime) (allowed bool, err error) {
 }
 
 func ApplyPoll(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	top *topic.Topic,
 	in *PollInput,
 ) (err error) {
 	var allowed bool
-	if allowed, err = PollAllowed(rt); err != nil {
+	if allowed, err = PollAllowed(ctx, rt); err != nil {
 		return err
 	}
 	if !allowed {

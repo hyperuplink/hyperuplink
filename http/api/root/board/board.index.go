@@ -19,7 +19,7 @@ import (
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	board, err := logicroot.BoardView(r.Runtime, req.Perms())
+	board, err := logicroot.BoardView(req.Context(), r.Runtime, req.Perms())
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

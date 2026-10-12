@@ -22,7 +22,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	reports, err := gh.Repositories(r.Runtime).PostEvent.VAllReports(common.QueryOptions{
+	reports, err := gh.Repositories(r.Runtime).PostEvent.VAllReports(req.Context(), common.QueryOptions{
 		OrderBy: "pe.created_at",
 		Order:   common.Descending,
 	})

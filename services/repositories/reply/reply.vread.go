@@ -9,6 +9,7 @@ import (
 )
 
 func (repo *Repository) VAllCountForTopicUUID(
+	ctx context.Context,
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (total int64, err error) {
@@ -17,7 +18,7 @@ func (repo *Repository) VAllCountForTopicUUID(
 	qoc.OrderBy = ""
 	qoc.Limit = 0
 	qoc.Page = 0
-	return database.Value[int64](context.Background(), repo.db, qoc.Query(
+	return database.Value[int64](ctx, repo.db, qoc.Query(
 		`SELECT COUNT(id) AS total FROM vreplies WHERE topic_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -28,16 +29,17 @@ func (repo *Repository) VAllCountForTopicUUID(
 }
 
 func (repo *Repository) VAllForTopicUUID(
+	ctx context.Context,
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model []vreply.VReply, total int64, err error) {
 	var mod []vreply.VReply
 
-	if total, err = repo.VAllCountForTopicUUID(id, qo); err != nil {
+	if total, err = repo.VAllCountForTopicUUID(ctx, id, qo); err != nil {
 		return nil, 0, err
 	}
 
-	mod, err = database.Rows[vreply.VReply](context.Background(), repo.db, qo.Query(
+	mod, err = database.Rows[vreply.VReply](ctx, repo.db, qo.Query(
 		`SELECT * FROM vreplies WHERE topic_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -50,6 +52,7 @@ func (repo *Repository) VAllForTopicUUID(
 }
 
 func (repo *Repository) VAllForTopicID(
+	ctx context.Context,
 	id string,
 	qo common.QueryOptions,
 ) (model []vreply.VReply, total int64, err error) {
@@ -59,14 +62,15 @@ func (repo *Repository) VAllForTopicID(
 		return nil, total, database.ConvertError(err)
 	}
 
-	return repo.VAllForTopicUUID(uuID, qo)
+	return repo.VAllForTopicUUID(ctx, uuID, qo)
 }
 
 func (repo *Repository) VAllWithTopicForAuthorUUID(
+	ctx context.Context,
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model []vreply.VReplyWithTopic, err error) {
-	return database.Rows[vreply.VReplyWithTopic](context.Background(), repo.db, qo.Query(
+	return database.Rows[vreply.VReplyWithTopic](ctx, repo.db, qo.Query(
 		`SELECT vr.*,
 			t.name AS topic_name,
 			t.slug AS topic_slug,

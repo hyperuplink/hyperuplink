@@ -28,7 +28,7 @@ func (r *Route) Remove(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	err = logicpermissions.Remove(r.Runtime, in)
+	err = logicpermissions.Remove(req.Context(), r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

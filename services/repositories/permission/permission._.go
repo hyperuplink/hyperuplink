@@ -1,6 +1,7 @@
 package permission
 
 import (
+	"context"
 	"errors"
 
 	"github.com/jackc/pgx/v5/pgtype"
@@ -21,9 +22,11 @@ func New(db *database.Database) (*Repository, error) {
 }
 
 func (repo *Repository) Startup() (err error) {
-	_, err = repo.GetDefault()
+	ctx := context.Background()
+
+	_, err = repo.GetDefault(ctx)
 	if errors.Is(err, errs.ErrNoRows) {
-		return repo.Apply(pgtype.Text{}, pgtype.UUID{}, permission.ReadWrite)
+		return repo.Apply(ctx, pgtype.Text{}, pgtype.UUID{}, permission.ReadWrite)
 	}
 
 	return err

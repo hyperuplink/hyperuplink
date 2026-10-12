@@ -1,6 +1,7 @@
 package request
 
 import (
+	"context"
 	"errors"
 	"reflect"
 	"slices"
@@ -60,7 +61,7 @@ func SystemFrom(c fiber.Ctx, rt *runtime.Runtime) *setting.System {
 		return sys
 	}
 
-	settingSystem, err := settingRepo.GetByID[setting.System](
+	settingSystem, err := settingRepo.GetByID[setting.System](c.Context(),
 		gh.Repositories(rt).Setting,
 		"system",
 	)
@@ -146,6 +147,7 @@ func (req *Request) Perms() *permission.Resolution {
 	}
 
 	req.perms = logicperms.Resolve(
+		req.Context(),
 		req.r.GetRuntime(),
 		req.Role(),
 		memberOf,
@@ -155,7 +157,7 @@ func (req *Request) Perms() *permission.Resolution {
 
 func (req *Request) Views() *view.Mapper {
 	if req.views == nil {
-		req.views = view.NewMapper(req.r.GetRuntime(), req.System)
+		req.views = view.NewMapper(req.Context(), req.r.GetRuntime(), req.System)
 	}
 	return req.views
 }
@@ -315,4 +317,8 @@ func (req *Request) RespondOnError(err error) (mustReturn bool, rerr error) {
 	}
 
 	return true, req.RespondError(err)
+}
+
+func (req *Request) Context() context.Context {
+	return req.c.Context()
 }

@@ -36,7 +36,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 	actorID := uuid.NullUUID{}
 	actorID.UUID, actorID.Valid = req.Session.GetUserUUID()
 
-	err = logicprofiles.Update(r.Runtime, actorID, in)
+	err = logicprofiles.Update(req.Context(), r.Runtime, actorID, in)
 	if errors.Is(err, errs.ErrInvalidStorageProvider) {
 		req.Flash.SetError(err)
 		return req.RedirectToRoute(myRoute)

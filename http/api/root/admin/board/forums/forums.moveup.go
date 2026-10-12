@@ -27,7 +27,7 @@ func (r *Route) MoveUp(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	err = logicforums.MoveUp(r.Runtime, &logicforums.MoveInput{ID: id.String()})
+	err = logicforums.MoveUp(req.Context(), r.Runtime, &logicforums.MoveInput{ID: id.String()})
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

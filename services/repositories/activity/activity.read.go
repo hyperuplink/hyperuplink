@@ -13,6 +13,7 @@ import (
 )
 
 func (repo *Repository) MarkersForActor(
+	ctx context.Context,
 	kind activity.Kind,
 	actorID uuid.UUID,
 	subjectIDs []uuid.UUID,
@@ -25,7 +26,7 @@ func (repo *Repository) MarkersForActor(
 	}
 
 	var rows pgx.Rows
-	rows, err = repo.db.Query(context.Background(), qo.Query(
+	rows, err = repo.db.Query(ctx, qo.Query(
 		`SELECT
 			 subject_id
 			,updated_at

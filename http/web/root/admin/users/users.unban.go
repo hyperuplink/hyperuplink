@@ -30,7 +30,7 @@ func (r *Route) Unban(c fiber.Ctx) (err error) {
 
 	r.Runtime.Debug("form", in)
 
-	err = logicusers.Unban(r.Runtime, in)
+	err = logicusers.Unban(req.Context(), r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

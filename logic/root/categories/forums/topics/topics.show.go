@@ -1,6 +1,7 @@
 package topics
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -30,11 +31,12 @@ type View struct {
 }
 
 func Show(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *ShowInput,
 	perms *permission.Resolution,
 ) (view *View, err error) {
-	top, err := gh.Repositories(rt).Topic.VGetBySlugs(
+	top, err := gh.Repositories(rt).Topic.VGetBySlugs(ctx,
 		in.ForumSlug,
 		in.TopicSlug,
 		common.QueryOptions{
@@ -45,10 +47,11 @@ func Show(
 		return nil, err
 	}
 
-	return viewForTopic(rt, top, in.Page, in.PerPage, in.ViewerID, perms)
+	return viewForTopic(ctx, rt, top, in.Page, in.PerPage, in.ViewerID, perms)
 }
 
 func viewForTopic(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	top *vtopic.VTopic,
 	page int,
@@ -61,10 +64,10 @@ func viewForTopic(
 	}
 
 	if viewerID.Valid {
-		logicactivity.RecordTopicView(rt, viewerID.UUID, top.ID)
+		logicactivity.RecordTopicView(ctx, rt, viewerID.UUID, top.ID)
 	}
 
-	poll, err := PollView(rt, &PollViewInput{
+	poll, err := PollView(ctx, rt, &PollViewInput{
 		Topic:    &top.Topic,
 		ViewerID: viewerID,
 		CanWrite: perms.CanWriteSlug(top.CategorySlug),
@@ -83,7 +86,7 @@ func viewForTopic(
 		limit -= 1
 		offAdjust = 0
 	}
-	reps, total, err := gh.Repositories(rt).Reply.VAllForTopicUUID(
+	reps, total, err := gh.Repositories(rt).Reply.VAllForTopicUUID(ctx,
 		top.ID,
 		common.QueryOptions{
 			OrderBy:   "created_at",

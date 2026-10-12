@@ -22,7 +22,7 @@ import (
 func (r *Route) Show(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	shown, err := logicuser.Show(r.Runtime, c.Params("user"), req.Perms())
+	shown, err := logicuser.Show(req.Context(), r.Runtime, c.Params("user"), req.Perms())
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

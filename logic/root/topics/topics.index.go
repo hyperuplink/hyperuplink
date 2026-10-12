@@ -1,6 +1,7 @@
 package topics
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
@@ -24,13 +25,14 @@ type Feed struct {
 }
 
 func Index(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *Input,
 	perms *permission.Resolution,
 ) (feed *Feed, err error) {
 	feed = new(Feed)
 
-	if feed.Topics, feed.Total, err = gh.Repositories(rt).Topic.VAllForReadableSlugsSorted(
+	if feed.Topics, feed.Total, err = gh.Repositories(rt).Topic.VAllForReadableSlugsSorted(ctx,
 		perms.AllowedReadSlugs(),
 		in.Sort,
 		in.PerPage,
@@ -40,7 +42,7 @@ func Index(
 	}
 
 	if in.ViewerID.Valid {
-		if feed.Unread, err = logicactivity.UnreadTopics(rt, in.ViewerID.UUID, feed.Topics); err != nil {
+		if feed.Unread, err = logicactivity.UnreadTopics(ctx, rt, in.ViewerID.UUID, feed.Topics); err != nil {
 			return nil, err
 		}
 	}

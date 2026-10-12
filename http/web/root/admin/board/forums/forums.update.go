@@ -30,7 +30,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 
 	r.Runtime.Debug("form", in)
 
-	err = logicforums.Update(r.Runtime, in)
+	err = logicforums.Update(req.Context(), r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

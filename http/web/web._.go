@@ -1,6 +1,7 @@
 package web
 
 import (
+	"context"
 	"fmt"
 	"html/template"
 	"io/fs"
@@ -31,6 +32,7 @@ import (
 	"xn--gckvb8fzb.com/glides/http/validation"
 	"xn--gckvb8fzb.com/glides/runtime"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
+	"xn--gckvb8fzb.com/hyperuplink/http/helpers/deadline"
 	"xn--gckvb8fzb.com/hyperuplink/http/helpers/redisstorage"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/root"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
@@ -98,6 +100,7 @@ func (srv *Web) loadMiddlewares() error {
 	}))
 	srv.app.Use(recover.New())
 	srv.app.Use(requestid.New())
+	srv.app.Use(deadline.New(time.Duration(srv.cfg.RequestTimeout) * time.Second))
 	srv.app.Use(cors.New())
 
 	srv.app.Get(fmt.Sprintf("/_internal/health%s", healthcheck.LivenessEndpoint),
@@ -286,7 +289,7 @@ func (srv *Web) loadStorageRoutes() (err error) {
 			},
 		)
 		srv.app.Get(storageCfg.Local.PublicURI+"*", func(c fiber.Ctx) error {
-			if srv.isGatedAttachmentPath(providerID, c.Params("*")) {
+			if srv.isGatedAttachmentPath(c.Context(), providerID, c.Params("*")) {
 				return c.SendStatus(fiber.StatusNotFound)
 			}
 			return staticHandler(c)
@@ -300,8 +303,8 @@ func (srv *Web) loadStorageRoutes() (err error) {
 // attachment file. Attachment files are only served through the permission
 // checked /attachment/:id route, so direct access to their storage path must be
 // blocked to prevent bypassing the read permission check by guessing URLs.
-func (srv *Web) isGatedAttachmentPath(providerID, rel string) bool {
-	settingAttachments, err := settingRepo.GetByID[setting.Attachments](
+func (srv *Web) isGatedAttachmentPath(ctx context.Context, providerID, rel string) bool {
+	settingAttachments, err := settingRepo.GetByID[setting.Attachments](ctx,
 		gh.Repositories(srv.rt).Setting,
 		"attachments",
 	)

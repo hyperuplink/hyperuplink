@@ -1,6 +1,7 @@
 package newpost
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
@@ -33,11 +34,12 @@ type FormView struct {
 }
 
 func View(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	perms *permission.Resolution,
 	in *FormViewInput,
 ) (view *FormView, err error) {
-	cats, err := gh.Repositories(rt).Category.All(common.QueryOptions{
+	cats, err := gh.Repositories(rt).Category.All(ctx, common.QueryOptions{
 		OrderBy: "position",
 		Order:   common.Ascending,
 	})
@@ -45,7 +47,7 @@ func View(
 		return nil, err
 	}
 
-	fums, err := gh.Repositories(rt).Forum.All(common.QueryOptions{
+	fums, err := gh.Repositories(rt).Forum.All(ctx, common.QueryOptions{
 		OrderBy: "position",
 		Order:   common.Ascending,
 	})
@@ -69,14 +71,14 @@ func View(
 		view.CategoriesForums = append(view.CategoriesForums, catfum)
 	}
 
-	if view.AllowPoll, err = PollAllowed(rt); err != nil {
+	if view.AllowPoll, err = PollAllowed(ctx, rt); err != nil {
 		return nil, err
 	}
 	view.PollOptionsMax = PollOptionsMax
 
 	var writableTopic *vtopic.VTopic
 	if in.ForumSlug != "" {
-		fum, ferr := gh.Repositories(rt).Forum.VGetBySlug(
+		fum, ferr := gh.Repositories(rt).Forum.VGetBySlug(ctx,
 			in.ForumSlug,
 			common.QueryOptions{
 				Limit: 1,
@@ -90,7 +92,7 @@ func View(
 			view.Forum = fum
 
 			if in.TopicSlug != "" {
-				top, terr := gh.Repositories(rt).Topic.VGetByForumUUIDSlug(
+				top, terr := gh.Repositories(rt).Topic.VGetByForumUUIDSlug(ctx,
 					fum.ID,
 					in.TopicSlug,
 					common.QueryOptions{
@@ -108,7 +110,7 @@ func View(
 	}
 
 	if in.ReplyID != "" && writableTopic != nil {
-		rep, rerr := gh.Repositories(rt).Reply.GetByID(
+		rep, rerr := gh.Repositories(rt).Reply.GetByID(ctx,
 			in.ReplyID,
 			common.QueryOptions{
 				Limit: 1,

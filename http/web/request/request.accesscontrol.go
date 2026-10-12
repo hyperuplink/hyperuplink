@@ -25,6 +25,7 @@ func (req *Request) GetUser() (usr *user.User, err error) {
 	}
 
 	usr, err = gh.Repositories(req.r.GetRuntime()).User.GetByID(
+		req.c.Context(),
 		userID,
 		common.QueryOptions{
 			WithBanned:  false,

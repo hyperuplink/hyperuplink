@@ -1,6 +1,7 @@
 package attachments
 
 import (
+	"context"
 	"slices"
 
 	"github.com/google/uuid"
@@ -13,6 +14,7 @@ import (
 )
 
 func Update(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	actorID uuid.NullUUID,
 	in *UpdateInput,
@@ -39,7 +41,7 @@ func Update(
 		return errs.ErrInvalidStorageProvider
 	}
 
-	settingAttachments, err := settingRepo.GetByID[setting.Attachments](
+	settingAttachments, err := settingRepo.GetByID[setting.Attachments](ctx,
 		gh.Repositories(rt).Setting,
 		"attachments",
 	)
@@ -57,7 +59,7 @@ func Update(
 	settingAttachments.JSONValue.OnUploadHook = in.OnUploadHook
 	settingAttachments.JSONValue.InlineImageDisplay = in.InlineImageDisplay
 
-	if err = settingRepo.Update[setting.Attachments](
+	if err = settingRepo.Update[setting.Attachments](ctx,
 		gh.Repositories(rt).Setting,
 		settingAttachments,
 	); err != nil {
@@ -65,7 +67,7 @@ func Update(
 	}
 
 	if actorID.Valid {
-		logicactivity.RecordAdminSettingsUpdate(rt, actorID.UUID,
+		logicactivity.RecordAdminSettingsUpdate(ctx, rt, actorID.UUID,
 			"attachments", before, settingAttachments.JSONValue)
 	}
 

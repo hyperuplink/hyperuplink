@@ -32,6 +32,7 @@ func (r *Route) View(c fiber.Ctx) (err error) {
 	}
 
 	if _, err = logicsettings.ToggleView(
+		req.Context(),
 		r.Runtime,
 		usr,
 		c.Params("view"),

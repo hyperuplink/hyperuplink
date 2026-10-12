@@ -1,6 +1,7 @@
 package attachment
 
 import (
+	"context"
 	"io"
 	"path"
 	"strings"
@@ -31,16 +32,17 @@ var inlineImageTypes = map[string]bool{
 }
 
 func Open(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	id uuid.UUID,
 	perms *permission.Resolution,
 ) (file *File, err error) {
-	att, err := gh.Repositories(rt).Attachment.GetByUUID(id, common.QueryOptions{})
+	att, err := gh.Repositories(rt).Attachment.GetByUUID(ctx, id, common.QueryOptions{})
 	if err != nil {
 		return nil, errs.ErrNoRows
 	}
 
-	categoryID, found, err := gh.Repositories(rt).Attachment.GetCategoryForAttachment(id)
+	categoryID, found, err := gh.Repositories(rt).Attachment.GetCategoryForAttachment(ctx, id)
 	if err != nil || !found {
 		return nil, errs.ErrNoRows
 	}
@@ -49,7 +51,7 @@ func Open(
 		return nil, errs.ErrNoRows
 	}
 
-	settingAttachments, err := settingRepo.GetByID[setting.Attachments](
+	settingAttachments, err := settingRepo.GetByID[setting.Attachments](ctx,
 		gh.Repositories(rt).Setting,
 		"attachments",
 	)

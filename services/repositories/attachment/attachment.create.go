@@ -7,8 +7,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/attachment"
 )
 
-func (repo *Repository) Create(model *attachment.Attachment) (rowID uuid.UUID, err error) {
-	return database.Value[uuid.UUID](context.Background(), repo.db, `INSERT INTO attachments (
+func (repo *Repository) Create(ctx context.Context, model *attachment.Attachment) (rowID uuid.UUID, err error) {
+	return database.Value[uuid.UUID](ctx, repo.db, `INSERT INTO attachments (
 		author_id
 		,filename
 		,mime_type

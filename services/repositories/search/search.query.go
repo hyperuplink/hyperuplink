@@ -116,7 +116,7 @@ func branchWheres(opts Options, authorPh string, catPh string) (topicWhere strin
 	return topicWhere, hasTopic, replyWhere, hasReply
 }
 
-func (repo *Repository) Count(term string, opts Options) (total int64, err error) {
+func (repo *Repository) Count(ctx context.Context, term string, opts Options) (total int64, err error) {
 	args, authorPh, catPh := buildArgs(term, opts)
 	topicWhere, hasTopic, replyWhere, hasReply := branchWheres(opts, authorPh, catPh)
 	if !hasTopic && !hasReply {
@@ -132,7 +132,7 @@ func (repo *Repository) Count(term string, opts Options) (total int64, err error
 	}
 
 	return database.Value[int64](
-		context.Background(),
+		ctx,
 		repo.db,
 		"SELECT COUNT(*) AS total FROM ("+strings.Join(parts, " UNION ALL ")+") results",
 		args...,
@@ -140,12 +140,13 @@ func (repo *Repository) Count(term string, opts Options) (total int64, err error
 }
 
 func (repo *Repository) Query(
+	ctx context.Context,
 	term string,
 	opts Options,
 	limit int,
 	page int,
 ) (model []vsearchresult.VSearchResult, total int64, err error) {
-	total, err = repo.Count(term, opts)
+	total, err = repo.Count(ctx, term, opts)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -173,7 +174,7 @@ func (repo *Repository) Query(
 	args = append(args, limit, offset)
 
 	mod, err := database.Rows[vsearchresult.VSearchResult](
-		context.Background(),
+		ctx,
 		repo.db,
 		`SELECT kind, category_slug, forum_slug, topic_slug, topic_name,
 		        author_username, created_at, reply_short_id, reply_position

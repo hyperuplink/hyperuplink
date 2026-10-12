@@ -1,6 +1,7 @@
 package themes
 
 import (
+	"context"
 	"slices"
 
 	"github.com/google/uuid"
@@ -14,11 +15,12 @@ import (
 )
 
 func Update(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	actorID uuid.NullUUID,
 	in *UpdateInput,
 ) (err error) {
-	themes, err := logicthemes.GetThemes(rt)
+	themes, err := logicthemes.GetThemes(ctx, rt)
 	if err != nil {
 		return err
 	}
@@ -26,7 +28,7 @@ func Update(
 		return errs.ErrInvalidTheme
 	}
 
-	colorschemes, err := logicthemes.GetColorschemes(rt)
+	colorschemes, err := logicthemes.GetColorschemes(ctx, rt)
 	if err != nil {
 		return err
 	}
@@ -50,7 +52,7 @@ func Update(
 		return errs.ErrInvalidStorageProvider
 	}
 
-	settingTheme, err := settingRepo.GetByID[setting.Theme](
+	settingTheme, err := settingRepo.GetByID[setting.Theme](ctx,
 		gh.Repositories(rt).Setting,
 		"theme",
 	)
@@ -65,7 +67,7 @@ func Update(
 	settingTheme.JSONValue.ThemeStorageProviderID = in.ThemeStorageProviderID
 	settingTheme.JSONValue.ThemeStoragePath = in.ThemeStoragePath
 
-	if err = settingRepo.Update[setting.Theme](
+	if err = settingRepo.Update[setting.Theme](ctx,
 		gh.Repositories(rt).Setting,
 		settingTheme,
 	); err != nil {
@@ -73,7 +75,7 @@ func Update(
 	}
 
 	if actorID.Valid {
-		logicactivity.RecordAdminSettingsUpdate(rt, actorID.UUID,
+		logicactivity.RecordAdminSettingsUpdate(ctx, rt, actorID.UUID,
 			"theme", before, settingTheme.JSONValue)
 	}
 

@@ -134,7 +134,7 @@ func (s *Site) ProfilePicture(id string) (dlurl string) {
 	}
 
 	var settingProfiles *setting.Setting[setting.Profiles]
-	settingProfiles, err = settingRepo.GetByID[setting.Profiles](
+	settingProfiles, err = settingRepo.GetByID[setting.Profiles](s.c.Context(),
 		gh.Repositories(s.r.GetRuntime()).Setting,
 		"profiles",
 	)

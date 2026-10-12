@@ -6,8 +6,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/group"
 )
 
-func (repo *Repository) Create(model *group.Group) (rowID string, err error) {
-	return database.Value[string](context.Background(), repo.db, `INSERT INTO groups (
+func (repo *Repository) Create(ctx context.Context, model *group.Group) (rowID string, err error) {
+	return database.Value[string](ctx, repo.db, `INSERT INTO groups (
 		 id
 		,name
 		,created_at

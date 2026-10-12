@@ -10,13 +10,14 @@ import (
 )
 
 func (repo *Repository) VAllForTopicUUIDOrdered(
+	ctx context.Context,
 	id uuid.UUID,
 	limit int,
 	page int,
 ) (model []vreply.VReply, total int64, err error) {
 	var mod []vreply.VReply
 
-	if total, err = repo.VAllCountForTopicUUID(id, common.QueryOptions{}); err != nil {
+	if total, err = repo.VAllCountForTopicUUID(ctx, id, common.QueryOptions{}); err != nil {
 		return nil, 0, err
 	}
 
@@ -24,7 +25,7 @@ func (repo *Repository) VAllForTopicUUIDOrdered(
 		page = 1
 	}
 
-	mod, err = database.Rows[vreply.VReply](context.Background(), repo.db,
+	mod, err = database.Rows[vreply.VReply](ctx, repo.db,
 		`SELECT * FROM vreplies
 		WHERE topic_id = $1
 		AND spammed_at IS NULL
@@ -40,10 +41,11 @@ func (repo *Repository) VAllForTopicUUIDOrdered(
 }
 
 func (repo *Repository) VGetByUUID(
+	ctx context.Context,
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *vreply.VReply, err error) {
-	return database.Row[vreply.VReply](context.Background(), repo.db, qo.Query(
+	return database.Row[vreply.VReply](ctx, repo.db, qo.Query(
 		`SELECT * FROM vreplies WHERE id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -54,10 +56,11 @@ func (repo *Repository) VGetByUUID(
 }
 
 func (repo *Repository) VGetByShortID(
+	ctx context.Context,
 	shortID string,
 	qo common.QueryOptions,
 ) (model *vreply.VReply, err error) {
-	return database.Row[vreply.VReply](context.Background(), repo.db, qo.Query(
+	return database.Row[vreply.VReply](ctx, repo.db, qo.Query(
 		`SELECT * FROM vreplies WHERE short_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -67,8 +70,8 @@ func (repo *Repository) VGetByShortID(
 	)
 }
 
-func (repo *Repository) PositionForUUID(id uuid.UUID) (position int64, err error) {
-	err = repo.db.QueryRow(context.Background(),
+func (repo *Repository) PositionForUUID(ctx context.Context, id uuid.UUID) (position int64, err error) {
+	err = repo.db.QueryRow(ctx,
 		`SELECT COUNT(*) FROM replies r2, replies r
 		WHERE r.id = $1
 		AND r2.topic_id = r.topic_id

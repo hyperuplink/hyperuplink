@@ -21,7 +21,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	var view *logicpermissions.View
-	view, err = logicpermissions.Show(r.Runtime)
+	view, err = logicpermissions.Show(req.Context(), r.Runtime)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

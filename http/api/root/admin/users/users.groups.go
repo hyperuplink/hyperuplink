@@ -37,7 +37,7 @@ func (r *Route) Groups(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	err = logicuser.UpdateMembership(r.Runtime, id.String(), in)
+	err = logicuser.UpdateMembership(req.Context(), r.Runtime, id.String(), in)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

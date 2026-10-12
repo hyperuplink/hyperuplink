@@ -7,8 +7,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
-func (repo *Repository) Create(model *user.User) (rowID uuid.UUID, err error) {
-	return database.Value[uuid.UUID](context.Background(), repo.db, `INSERT INTO users (
+func (repo *Repository) Create(ctx context.Context, model *user.User) (rowID uuid.UUID, err error) {
+	return database.Value[uuid.UUID](ctx, repo.db, `INSERT INTO users (
 		 username
 		,role
 		,member_of

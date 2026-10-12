@@ -15,6 +15,7 @@ Enable             = true
 BindIP             = "0.0.0.0"
 Port               = 3000
 BodyLimit          = 67108864
+RequestTimeout     = 30
 Concurrency        = 262144
 ProxyHeader        = "" # "X-Forwarded-For"
 EnableIPValidation = false
@@ -36,6 +37,7 @@ Port               = 3001
 # that clients reach the API at https://board.example/api/v1 and its
 # documentation at https://board.example/api/v1/docs/.
 BodyLimit          = 67108864
+RequestTimeout     = 30
 Concurrency        = 262144
 ProxyHeader        = "" # "X-Forwarded-For"
 EnableIPValidation = false

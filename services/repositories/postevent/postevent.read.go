@@ -14,10 +14,11 @@ import (
 )
 
 func (repo *Repository) GetByUUID(
+	ctx context.Context,
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *postevent.PostEvent, err error) {
-	return database.Row[postevent.PostEvent](context.Background(), repo.db, qo.Query(
+	return database.Row[postevent.PostEvent](ctx, repo.db, qo.Query(
 		`SELECT * FROM postevents WHERE id = $1`,
 		common.QueryCapabilities{
 			HasDeleted: true,
@@ -27,6 +28,7 @@ func (repo *Repository) GetByUUID(
 }
 
 func (repo *Repository) GetByID(
+	ctx context.Context,
 	id string,
 	qo common.QueryOptions,
 ) (model *postevent.PostEvent, err error) {
@@ -36,10 +38,11 @@ func (repo *Repository) GetByID(
 		return nil, database.ConvertError(err)
 	}
 
-	return repo.GetByUUID(uuID, qo)
+	return repo.GetByUUID(ctx, uuID, qo)
 }
 
 func (repo *Repository) TallyForTopicUUID(
+	ctx context.Context,
 	evType postevent.PostEventType,
 	id uuid.UUID,
 	qo common.QueryOptions,
@@ -53,7 +56,7 @@ func (repo *Repository) TallyForTopicUUID(
 	qoc.Limit = 0
 	qoc.Page = 0
 
-	rows, err = repo.db.Query(context.Background(), fmt.Sprintf(
+	rows, err = repo.db.Query(ctx, fmt.Sprintf(
 		`SELECT selection, COUNT(*) AS votes FROM (%s) selections GROUP BY selection`,
 		qoc.Query(
 			`SELECT selection FROM postevents
@@ -86,12 +89,13 @@ func (repo *Repository) TallyForTopicUUID(
 }
 
 func (repo *Repository) SelectionForTopicUUID(
+	ctx context.Context,
 	evType postevent.PostEventType,
 	id uuid.UUID,
 	authorID uuid.UUID,
 	qo common.QueryOptions,
 ) (selection int, ok bool, err error) {
-	err = repo.db.QueryRow(context.Background(), qo.Query(
+	err = repo.db.QueryRow(ctx, qo.Query(
 		`SELECT selection FROM postevents
 		WHERE type = $1 AND target = $2 AND topic_id = $3 AND author_id = $4`,
 		common.QueryCapabilities{

@@ -27,7 +27,7 @@ func (r *Route) SignUpShow(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	settingAuth, err := repoSetting.GetByID[setting.Auth](gh.Repositories(r.Runtime).Setting, "auth")
+	settingAuth, err := repoSetting.GetByID[setting.Auth](req.Context(), gh.Repositories(r.Runtime).Setting, "auth")
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
@@ -48,7 +48,7 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	settingAuth, err := repoSetting.GetByID[setting.Auth](gh.Repositories(r.Runtime).Setting, "auth")
+	settingAuth, err := repoSetting.GetByID[setting.Auth](req.Context(), gh.Repositories(r.Runtime).Setting, "auth")
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
@@ -72,7 +72,7 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 
 	r.Runtime.Debug("form", in)
 
-	usr, err := logicsession.SignUp(r.Runtime, in, logicsession.SignUpOptions{Activate: false})
+	usr, err := logicsession.SignUp(req.Context(), r.Runtime, in, logicsession.SignUpOptions{Activate: false})
 	if err != nil {
 		var fe *logicsession.FieldError
 		if errors.As(err, &fe) {
@@ -86,6 +86,7 @@ func (r *Route) SignUpCreate(c fiber.Ctx) (err error) {
 	}
 
 	err = logicsession.SendSignupConfirmation(
+		req.Context(),
 		r.Runtime,
 		usr,
 		req.In.Ts("signup_confirmation_subject"),

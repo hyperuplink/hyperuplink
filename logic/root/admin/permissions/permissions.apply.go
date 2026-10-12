@@ -1,6 +1,7 @@
 package permissions
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 	"xn--gckvb8fzb.com/glides/runtime"
@@ -10,6 +11,7 @@ import (
 )
 
 func Apply(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *ApplyInput,
 ) (err error) {
@@ -29,7 +31,7 @@ func Apply(
 		if !isCategoryDefault {
 			return errs.ErrValidation
 		}
-		return Remove(rt, &RemoveInput{CategoryID: in.CategoryID})
+		return Remove(ctx, rt, &RemoveInput{CategoryID: in.CategoryID})
 	}
 
 	level, ok := permission.LevelFromString(in.Level)
@@ -51,5 +53,5 @@ func Apply(
 		categoryID = pgtype.UUID{Bytes: [16]byte(uid), Valid: true}
 	}
 
-	return gh.Repositories(rt).Permission.Apply(groupID, categoryID, level)
+	return gh.Repositories(rt).Permission.Apply(ctx, groupID, categoryID, level)
 }

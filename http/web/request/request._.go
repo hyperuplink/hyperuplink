@@ -1,6 +1,7 @@
 package request
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 	"reflect"
@@ -55,6 +56,7 @@ func (req *Request) Perms() *permission.Resolution {
 	}
 
 	req.perms = logicperms.Resolve(
+		req.Context(),
 		req.r.GetRuntime(),
 		req.Session.GetCurrentUserRole(),
 		req.Session.GetCurrentUserMemberOf(),
@@ -88,7 +90,7 @@ func New(
 	req.Form = form.New(req.Flash, req.In)
 	req.Data = data.New(req.c)
 
-	settingSystem, err := settingRepo.GetByID[setting.System](
+	settingSystem, err := settingRepo.GetByID[setting.System](c.Context(),
 		gh.Repositories(req.r.GetRuntime()).Setting,
 		"system",
 	)
@@ -98,7 +100,7 @@ func New(
 	}
 	req.System = &settingSystem.JSONValue
 
-	settingTheme, err := settingRepo.GetByID[setting.Theme](
+	settingTheme, err := settingRepo.GetByID[setting.Theme](c.Context(),
 		gh.Repositories(req.r.GetRuntime()).Setting,
 		"theme",
 	)
@@ -108,7 +110,7 @@ func New(
 	}
 	req.Theme = &settingTheme.JSONValue
 
-	settingGeneral, err := settingRepo.GetByID[setting.General](
+	settingGeneral, err := settingRepo.GetByID[setting.General](c.Context(),
 		gh.Repositories(req.r.GetRuntime()).Setting,
 		"general",
 	)
@@ -124,6 +126,7 @@ func New(
 
 	if userID, ok := req.Session.GetUserID(); ok {
 		usr, err := gh.Repositories(req.r.GetRuntime()).User.GetByID(
+			c.Context(),
 			userID,
 			common.QueryOptions{
 				WithBanned:  false,
@@ -143,7 +146,7 @@ func New(
 		} else {
 			req.Session.SetCurrentUser(usr)
 
-			settingUserProfile, err := settingRepo.GetOrCreateUserProfile(
+			settingUserProfile, err := settingRepo.GetOrCreateUserProfile(c.Context(),
 				gh.Repositories(req.r.GetRuntime()).Setting,
 				usr.ID,
 			)
@@ -426,4 +429,8 @@ func (req *Request) RedirectToRoot() error {
 
 func (req *Request) RedirectToRootOnError(err error) (bool, error) {
 	return req.RedirectToOnError(err, "")
+}
+
+func (req *Request) Context() context.Context {
+	return req.c.Context()
 }

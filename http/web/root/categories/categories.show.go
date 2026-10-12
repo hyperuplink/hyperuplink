@@ -26,7 +26,7 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 	}
 
 	var view *logiccategories.View
-	view, err = logiccategories.Show(r.Runtime, c.Params("categories"), req.Perms())
+	view, err = logiccategories.Show(req.Context(), r.Runtime, c.Params("categories"), req.Perms())
 	if errors.Is(err, errs.ErrNoRows) {
 		return c.SendStatus(fiber.StatusNotFound)
 	}

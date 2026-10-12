@@ -86,7 +86,7 @@ func (r *Route) RecordVisit(c fiber.Ctx) (err error) {
 		return c.Next()
 	}
 
-	logicactivity.RecordAdminVisit(r.Runtime, principal.User.ID, c.Path())
+	logicactivity.RecordAdminVisit(c.Context(), r.Runtime, principal.User.ID, c.Path())
 
 	return c.Next()
 }

@@ -1,6 +1,7 @@
 package user
 
 import (
+	"context"
 	"slices"
 
 	"github.com/google/uuid"
@@ -16,21 +17,22 @@ type MembershipInput struct {
 }
 
 func UpdateMembership(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	username string,
 	in *MembershipInput,
 ) (err error) {
 	var usr *user.User
 	if id, perr := uuid.Parse(username); perr == nil {
-		usr, err = gh.Repositories(rt).User.GetByUUID(id, common.QueryOptions{Limit: 1})
+		usr, err = gh.Repositories(rt).User.GetByUUID(ctx, id, common.QueryOptions{Limit: 1})
 	} else {
-		usr, err = gh.Repositories(rt).User.GetByUsername(username, common.QueryOptions{Limit: 1})
+		usr, err = gh.Repositories(rt).User.GetByUsername(ctx, username, common.QueryOptions{Limit: 1})
 	}
 	if err != nil {
 		return err
 	}
 
-	groups, err := gh.Repositories(rt).Group.All(common.QueryOptions{})
+	groups, err := gh.Repositories(rt).Group.All(ctx, common.QueryOptions{})
 	if err != nil {
 		return err
 	}
@@ -43,5 +45,5 @@ func UpdateMembership(
 	}
 	usr.MemberOf = memberOf
 
-	return gh.Repositories(rt).User.Update(usr)
+	return gh.Repositories(rt).User.Update(ctx, usr)
 }

@@ -36,7 +36,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 	}
 	in.ID = id.String()
 
-	err = logicforums.Update(r.Runtime, in)
+	err = logicforums.Update(req.Context(), r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

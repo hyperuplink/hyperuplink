@@ -39,7 +39,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	top, err := topicsfeed.Read(r.Runtime, c.Params("topic"), req.Perms())
+	top, err := topicsfeed.Read(req.Context(), r.Runtime, c.Params("topic"), req.Perms())
 	if ret, rerr := req.RespondOnReadError(err); ret {
 		return rerr
 	}
@@ -50,6 +50,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 	}
 
 	created, err := logictopics.CreateReply(
+		req.Context(),
 		r.Runtime,
 		req.User().ID,
 		req.Perms(),
@@ -59,7 +60,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 			ReplyID: in.ParentID,
 		},
 		func(authorID uuid.UUID) ([]uuid.UUID, error) {
-			return logicattachments.ResolveOwned(r.Runtime, authorID, in.AttachmentIDs)
+			return logicattachments.ResolveOwned(req.Context(), r.Runtime, authorID, in.AttachmentIDs)
 		},
 	)
 	if ret, rerr := req.RespondOnError(err); ret {
@@ -67,13 +68,14 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 	}
 
 	notify.Reply(
+		req.Context(),
 		r.Runtime,
 		created,
 		req.User().Username,
 		req.Ts("reply_notification_subject"),
 	)
 
-	vrep, err := gh.Repositories(r.Runtime).Reply.VGetByUUID(created.Reply.ID, common.QueryOptions{Limit: 1})
+	vrep, err := gh.Repositories(r.Runtime).Reply.VGetByUUID(req.Context(), created.Reply.ID, common.QueryOptions{Limit: 1})
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

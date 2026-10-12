@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
@@ -12,6 +13,7 @@ type CreateInput struct {
 }
 
 func Create(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	userID uuid.UUID,
 	in *CreateInput,
@@ -20,7 +22,7 @@ func Create(
 		return nil, "", err
 	}
 
-	if key.ID, err = gh.Repositories(rt).APIKey.Create(key); err != nil {
+	if key.ID, err = gh.Repositories(rt).APIKey.Create(ctx, key); err != nil {
 		return nil, "", err
 	}
 

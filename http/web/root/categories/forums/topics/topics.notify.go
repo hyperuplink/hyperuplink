@@ -19,7 +19,7 @@ func (r *Route) notifyReply(
 	top *topic.Topic,
 	fum *forum.Forum,
 ) {
-	cat, err := gh.Repositories(r.Runtime).Category.GetBySlug(
+	cat, err := gh.Repositories(r.Runtime).Category.GetBySlug(req.Context(),
 		c.Params("categories"),
 		common.QueryOptions{Limit: 1},
 	)
@@ -52,6 +52,7 @@ func (r *Route) notifyReply(
 	}
 
 	if err = logictopics.SendReplyNotifications(
+		req.Context(),
 		r.Runtime,
 		rep,
 		req.Session.GetCurrentUserUsername(),

@@ -1,6 +1,7 @@
 package categories
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -17,22 +18,24 @@ type View struct {
 }
 
 func Resolve(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	idOrSlug string,
 ) (cat *category.Category, err error) {
 	if id, perr := uuid.Parse(idOrSlug); perr == nil {
-		return gh.Repositories(rt).Category.GetByUUID(id, common.QueryOptions{Limit: 1})
+		return gh.Repositories(rt).Category.GetByUUID(ctx, id, common.QueryOptions{Limit: 1})
 	}
 
-	return gh.Repositories(rt).Category.GetBySlug(idOrSlug, common.QueryOptions{Limit: 1})
+	return gh.Repositories(rt).Category.GetBySlug(ctx, idOrSlug, common.QueryOptions{Limit: 1})
 }
 
 func Show(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	idOrSlug string,
 	perms *permission.Resolution,
 ) (view *View, err error) {
-	cat, err := Resolve(rt, idOrSlug)
+	cat, err := Resolve(ctx, rt, idOrSlug)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +44,7 @@ func Show(
 		return nil, errs.ErrForbidden
 	}
 
-	fums, err := gh.Repositories(rt).Forum.VAllForCategoryUUID(
+	fums, err := gh.Repositories(rt).Forum.VAllForCategoryUUID(ctx,
 		cat.ID,
 		common.QueryOptions{
 			OrderBy: "position",

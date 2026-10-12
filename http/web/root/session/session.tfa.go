@@ -56,7 +56,7 @@ func (r *Route) TfaCreate(c fiber.Ctx) (err error) {
 	}
 
 	var usr *user.User
-	usr, err = gh.Repositories(r.Runtime).User.GetByID(
+	usr, err = gh.Repositories(r.Runtime).User.GetByID(req.Context(),
 		userID,
 		common.QueryOptions{
 			WithBanned:  false,

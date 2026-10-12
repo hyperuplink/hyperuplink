@@ -26,7 +26,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	var view *logicdocs.Page
-	view, err = logicdocs.Show(r.Runtime, logicdocs.PageAbout)
+	view, err = logicdocs.Show(req.Context(), r.Runtime, logicdocs.PageAbout)
 	if errors.Is(err, errs.ErrNoRows) {
 		return c.SendStatus(fiber.StatusNotFound)
 	}

@@ -52,7 +52,7 @@ func (r *Route) PollVote(c fiber.Ctx) (err error) {
 		return req.RedirectToRoot()
 	}
 
-	err = logictopics.PollVoteBySlugs(r.Runtime, req.Perms(), &logictopics.PollVoteBySlugsInput{
+	err = logictopics.PollVoteBySlugs(req.Context(), r.Runtime, req.Perms(), &logictopics.PollVoteBySlugsInput{
 		ForumSlug: c.Params("forums"),
 		TopicSlug: c.Params("topics"),
 		AuthorID:  authorID,

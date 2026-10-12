@@ -1,6 +1,7 @@
 package permissions
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 	"xn--gckvb8fzb.com/glides/runtime"
@@ -8,6 +9,7 @@ import (
 )
 
 func Remove(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *RemoveInput,
 ) (err error) {
@@ -22,5 +24,5 @@ func Remove(
 	}
 	categoryID := pgtype.UUID{Bytes: [16]byte(uid), Valid: true}
 
-	return gh.Repositories(rt).Permission.Remove(groupID, categoryID)
+	return gh.Repositories(rt).Permission.Remove(ctx, groupID, categoryID)
 }

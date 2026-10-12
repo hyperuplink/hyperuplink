@@ -1,6 +1,7 @@
 package topics
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -24,22 +25,24 @@ type Shown struct {
 }
 
 func Resolve(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	idOrShortID string,
 ) (top *vtopic.VTopic, err error) {
 	if id, perr := uuid.Parse(idOrShortID); perr == nil {
-		return gh.Repositories(rt).Topic.VGetByUUID(id, common.QueryOptions{Limit: 1})
+		return gh.Repositories(rt).Topic.VGetByUUID(ctx, id, common.QueryOptions{Limit: 1})
 	}
 
-	return gh.Repositories(rt).Topic.VGetByShortID(idOrShortID, common.QueryOptions{Limit: 1})
+	return gh.Repositories(rt).Topic.VGetByShortID(ctx, idOrShortID, common.QueryOptions{Limit: 1})
 }
 
 func Read(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	idOrShortID string,
 	perms *permission.Resolution,
 ) (top *vtopic.VTopic, err error) {
-	if top, err = Resolve(rt, idOrShortID); err != nil {
+	if top, err = Resolve(ctx, rt, idOrShortID); err != nil {
 		return nil, err
 	}
 
@@ -51,11 +54,12 @@ func Read(
 }
 
 func Show(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *ShowInput,
 	perms *permission.Resolution,
 ) (shown *Shown, err error) {
-	top, err := Read(rt, in.ID, perms)
+	top, err := Read(ctx, rt, in.ID, perms)
 	if err != nil {
 		return nil, err
 	}
@@ -64,15 +68,15 @@ func Show(
 
 	if in.ViewerID.Valid {
 		var unread map[string]bool
-		if unread, err = logicactivity.UnreadTopics(rt, in.ViewerID.UUID, []vtopic.VTopic{*top}); err != nil {
+		if unread, err = logicactivity.UnreadTopics(ctx, rt, in.ViewerID.UUID, []vtopic.VTopic{*top}); err != nil {
 			return nil, err
 		}
 		shown.Unread = unread[top.ID.String()]
 
-		logicactivity.RecordTopicView(rt, in.ViewerID.UUID, top.ID)
+		logicactivity.RecordTopicView(ctx, rt, in.ViewerID.UUID, top.ID)
 	}
 
-	if shown.Poll, err = logictopics.PollView(rt, &logictopics.PollViewInput{
+	if shown.Poll, err = logictopics.PollView(ctx, rt, &logictopics.PollViewInput{
 		Topic:    &top.Topic,
 		ViewerID: in.ViewerID,
 		CanWrite: perms.CanWriteSlug(top.CategorySlug),

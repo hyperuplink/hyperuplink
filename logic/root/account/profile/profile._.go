@@ -1,6 +1,7 @@
 package profile
 
 import (
+	"context"
 	"io"
 	"mime/multipart"
 	"os"
@@ -27,8 +28,8 @@ type View struct {
 	UserProfile *setting.UserProfile `json:"user_profile"`
 }
 
-func PicturesEnabled(rt *runtime.Runtime) (enabled bool, err error) {
-	settingProfiles, err := settingRepo.GetByID[setting.Profiles](
+func PicturesEnabled(ctx context.Context, rt *runtime.Runtime) (enabled bool, err error) {
+	settingProfiles, err := settingRepo.GetByID[setting.Profiles](ctx,
 		gh.Repositories(rt).Setting,
 		"profiles",
 	)
@@ -40,11 +41,12 @@ func PicturesEnabled(rt *runtime.Runtime) (enabled bool, err error) {
 }
 
 func StorePicture(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	usr *user.User,
 	fh *multipart.FileHeader,
 ) (err error) {
-	settingProfiles, err := settingRepo.GetByID[setting.Profiles](
+	settingProfiles, err := settingRepo.GetByID[setting.Profiles](ctx,
 		gh.Repositories(rt).Setting,
 		"profiles",
 	)

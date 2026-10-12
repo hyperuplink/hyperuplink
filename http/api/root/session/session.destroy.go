@@ -21,7 +21,7 @@ func (r *Route) Destroy(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	err = logicapi.Destroy(r.Runtime, req.User().ID, &logicapi.DestroyInput{
+	err = logicapi.Destroy(req.Context(), r.Runtime, req.User().ID, &logicapi.DestroyInput{
 		ID: req.Principal.Key.ID.String(),
 	})
 	if ret, rerr := req.RespondOnError(err); ret {

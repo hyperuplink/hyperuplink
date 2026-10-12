@@ -7,14 +7,14 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/forum"
 )
 
-func (repo *Repository) Create(model *forum.Forum) (rowID uuid.UUID, err error) {
-	tx, err := repo.db.Tx(context.Background())
+func (repo *Repository) Create(ctx context.Context, model *forum.Forum) (rowID uuid.UUID, err error) {
+	tx, err := repo.db.Tx(ctx)
 	if err != nil {
 		return rowID, database.ConvertError(err)
 	}
-	defer tx.End(context.Background())
+	defer tx.End(ctx)
 
-	err = tx.QueryRow(context.Background(), `INSERT INTO forums (
+	err = tx.QueryRow(ctx, `INSERT INTO forums (
 		 name
 		,slug
 		,position
@@ -40,5 +40,5 @@ func (repo *Repository) Create(model *forum.Forum) (rowID uuid.UUID, err error) 
 		return rowID, database.ConvertError(err)
 	}
 
-	return rowID, database.ConvertError(tx.Commit(context.Background()))
+	return rowID, database.ConvertError(tx.Commit(ctx))
 }

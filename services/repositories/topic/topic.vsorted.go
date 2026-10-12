@@ -30,6 +30,7 @@ func offsetFor(limit int, page int) int {
 }
 
 func (repo *Repository) VAllForForumUUIDSorted(
+	ctx context.Context,
 	id uuid.UUID,
 	sort topic.Sort,
 	limit int,
@@ -37,11 +38,11 @@ func (repo *Repository) VAllForForumUUIDSorted(
 ) (model []vtopic.VTopic, total int64, err error) {
 	var mod []vtopic.VTopic
 
-	if total, err = repo.VAllCountForForumUUID(id, common.QueryOptions{}); err != nil {
+	if total, err = repo.VAllCountForForumUUID(ctx, id, common.QueryOptions{}); err != nil {
 		return nil, 0, err
 	}
 
-	mod, err = database.Rows[vtopic.VTopic](context.Background(), repo.db,
+	mod, err = database.Rows[vtopic.VTopic](ctx, repo.db,
 		`SELECT * FROM vtopics
 		WHERE forum_id = $1
 		AND spammed_at IS NULL
@@ -57,6 +58,7 @@ func (repo *Repository) VAllForForumUUIDSorted(
 }
 
 func (repo *Repository) VAllForReadableSlugsSorted(
+	ctx context.Context,
 	slugs []string,
 	sort topic.Sort,
 	limit int,
@@ -64,7 +66,7 @@ func (repo *Repository) VAllForReadableSlugsSorted(
 ) (model []vtopic.VTopic, total int64, err error) {
 	var mod []vtopic.VTopic
 
-	if total, err = repo.VAllCountForReadableSlugs(slugs, common.QueryOptions{}); err != nil {
+	if total, err = repo.VAllCountForReadableSlugs(ctx, slugs, common.QueryOptions{}); err != nil {
 		return nil, 0, err
 	}
 
@@ -78,7 +80,7 @@ func (repo *Repository) VAllForReadableSlugsSorted(
 	}
 	query += ` ORDER BY ` + orderFor(sort) + ` LIMIT $1 OFFSET $2`
 
-	mod, err = database.Rows[vtopic.VTopic](context.Background(), repo.db, query, args...)
+	mod, err = database.Rows[vtopic.VTopic](ctx, repo.db, query, args...)
 
 	return mod, total, err
 }

@@ -11,6 +11,8 @@ const (
 	APIDefaultRateLimitGuest int = 120
 	APIDefaultRateLimitUser  int = 600
 	APIDefaultRateLimitAuth  int = 10
+	APIDefaultRequestTimeout int = 30
+	WebDefaultRequestTimeout int = 30
 )
 
 type APIConfig struct {
@@ -30,6 +32,7 @@ type APIConfig struct {
 	RateLimitUser      int      `koanf:"RateLimitUser"`
 	RateLimitAuth      int      `koanf:"RateLimitAuth"`
 	CORSOrigins        []string `koanf:"CORSOrigins"`
+	RequestTimeout     int      `koanf:"RequestTimeout"`
 }
 
 type ServerConfig struct {
@@ -45,6 +48,7 @@ type ServerConfig struct {
 	TrustProxies       []string `koanf:"TrustProxies"`
 	ReduceMemoryUsage  bool     `koanf:"ReduceMemoryUsage"`
 	ServerHeader       string   `koanf:"ServerHeader"`
+	RequestTimeout     int      `koanf:"RequestTimeout"`
 }
 
 func NewAPIConfig() APIConfig {
@@ -55,6 +59,7 @@ func NewAPIConfig() APIConfig {
 		RateLimitGuest: APIDefaultRateLimitGuest,
 		RateLimitUser:  APIDefaultRateLimitUser,
 		RateLimitAuth:  APIDefaultRateLimitAuth,
+		RequestTimeout: APIDefaultRequestTimeout,
 	}
 }
 
@@ -69,6 +74,11 @@ func APIConfigFrom(cfg *config.Config) (api APIConfig, err error) {
 }
 
 func WebConfigFrom(cfg *config.Config) (web ServerConfig, err error) {
-	err = cfg.Unmarshal("Web", &web)
-	return web, err
+	web = ServerConfig{RequestTimeout: WebDefaultRequestTimeout}
+
+	if err = cfg.Unmarshal("Web", &web); err != nil {
+		return ServerConfig{RequestTimeout: WebDefaultRequestTimeout}, err
+	}
+
+	return web, nil
 }

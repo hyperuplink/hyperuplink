@@ -39,7 +39,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	err = logicprofile.Update(r.Runtime, usr, in)
+	err = logicprofile.Update(req.Context(), r.Runtime, usr, in)
 	if errors.Is(err, errs.ErrPictureTooLarge) ||
 		errors.Is(err, errs.ErrPictureFormatNotAllowed) {
 		req.Flash.SetError(err)

@@ -1,6 +1,7 @@
 package themes
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/glides/runtime"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	logicthemes "xn--gckvb8fzb.com/hyperuplink/logic/helpers/themes"
@@ -8,8 +9,8 @@ import (
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
-func Show(rt *runtime.Runtime) (view *View, err error) {
-	settingTheme, err := settingRepo.GetByID[setting.Theme](
+func Show(ctx context.Context, rt *runtime.Runtime) (view *View, err error) {
+	settingTheme, err := settingRepo.GetByID[setting.Theme](ctx,
 		gh.Repositories(rt).Setting,
 		"theme",
 	)
@@ -20,11 +21,11 @@ func Show(rt *runtime.Runtime) (view *View, err error) {
 	view = new(View)
 	view.Theme = &settingTheme.JSONValue
 
-	if view.Themes, err = logicthemes.GetThemes(rt); err != nil {
+	if view.Themes, err = logicthemes.GetThemes(ctx, rt); err != nil {
 		return nil, err
 	}
 
-	if view.Colorschemes, err = logicthemes.GetColorschemes(rt); err != nil {
+	if view.Colorschemes, err = logicthemes.GetColorschemes(ctx, rt); err != nil {
 		return nil, err
 	}
 

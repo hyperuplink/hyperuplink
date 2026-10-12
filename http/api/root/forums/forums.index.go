@@ -19,7 +19,7 @@ import (
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	fums, err := logicforums.Index(r.Runtime, req.Perms())
+	fums, err := logicforums.Index(req.Context(), r.Runtime, req.Perms())
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

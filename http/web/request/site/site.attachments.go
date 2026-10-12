@@ -25,7 +25,7 @@ func (s *Site) Attachments(ids []uuid.UUID) (views []AttachmentView) {
 	}
 
 	var settingAttachments *setting.Setting[setting.Attachments]
-	settingAttachments, err := settingRepo.GetByID[setting.Attachments](
+	settingAttachments, err := settingRepo.GetByID[setting.Attachments](s.c.Context(),
 		gh.Repositories(s.r.GetRuntime()).Setting,
 		"attachments",
 	)
@@ -37,6 +37,7 @@ func (s *Site) Attachments(ids []uuid.UUID) (views []AttachmentView) {
 	views = make([]AttachmentView, 0, len(ids))
 	for _, id := range ids {
 		model, merr := gh.Repositories(s.r.GetRuntime()).Attachment.GetByUUID(
+			s.c.Context(),
 			id,
 			common.QueryOptions{},
 		)

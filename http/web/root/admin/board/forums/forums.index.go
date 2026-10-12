@@ -20,7 +20,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	catsfums, err := logicforums.View(r.Runtime)
+	catsfums, err := logicforums.View(req.Context(), r.Runtime)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

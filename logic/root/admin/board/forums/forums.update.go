@@ -1,6 +1,7 @@
 package forums
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -9,6 +10,7 @@ import (
 )
 
 func Update(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *UpdateInput,
 ) (err error) {
@@ -23,9 +25,9 @@ func Update(
 	}
 	fum.Description = in.Description
 
-	if _, err = gh.Repositories(rt).Forum.GetByUUID(fum.ID, common.QueryOptions{Limit: 1}); err != nil {
+	if _, err = gh.Repositories(rt).Forum.GetByUUID(ctx, fum.ID, common.QueryOptions{Limit: 1}); err != nil {
 		return err
 	}
 
-	return gh.Repositories(rt).Forum.Update(fum)
+	return gh.Repositories(rt).Forum.Update(ctx, fum)
 }

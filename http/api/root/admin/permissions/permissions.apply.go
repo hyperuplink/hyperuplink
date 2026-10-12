@@ -32,7 +32,7 @@ func (r *Route) Apply(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	err = logicpermissions.Apply(r.Runtime, in)
+	err = logicpermissions.Apply(req.Context(), r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

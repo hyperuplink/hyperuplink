@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"errors"
 	"strings"
 	"time"
@@ -31,7 +32,7 @@ func (srv *API) principal(c fiber.Ctx) error {
 		return problem.Respond(c, problem.From(errs.ErrAPIKeyInvalid))
 	}
 
-	key, err := gh.Repositories(srv.rt).APIKey.GetBySecretHash(
+	key, err := gh.Repositories(srv.rt).APIKey.GetBySecretHash(c.Context(),
 		apikey.HashSecret(token),
 		common.QueryOptions{Limit: 1},
 	)
@@ -39,7 +40,7 @@ func (srv *API) principal(c fiber.Ctx) error {
 		return srv.rejectKey(c, err)
 	}
 
-	usr, err := gh.Repositories(srv.rt).User.GetByID(
+	usr, err := gh.Repositories(srv.rt).User.GetByID(c.Context(),
 		key.UserID.String(),
 		common.QueryOptions{Limit: 1},
 	)
@@ -47,7 +48,7 @@ func (srv *API) principal(c fiber.Ctx) error {
 		return srv.rejectKey(c, err)
 	}
 
-	srv.touchLastUsed(key)
+	srv.touchLastUsed(c.Context(), key)
 
 	c.Locals(request.PrincipalLocal, request.Principal{User: usr, Key: key})
 
@@ -64,12 +65,12 @@ func (srv *API) rejectKey(c fiber.Ctx, err error) error {
 	return problem.Respond(c, problem.From(err))
 }
 
-func (srv *API) touchLastUsed(key *apikey.APIKey) {
+func (srv *API) touchLastUsed(ctx context.Context, key *apikey.APIKey) {
 	if key.LastUsedAt.Valid && time.Since(key.LastUsedAt.Time) < lastUsedInterval {
 		return
 	}
 
-	if err := gh.Repositories(srv.rt).APIKey.TouchLastUsed(key.ID); err != nil {
+	if err := gh.Repositories(srv.rt).APIKey.TouchLastUsed(ctx, key.ID); err != nil {
 		srv.rt.Warn("error", err)
 	}
 }

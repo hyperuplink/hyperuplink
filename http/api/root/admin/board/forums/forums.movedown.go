@@ -27,7 +27,7 @@ func (r *Route) MoveDown(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	err = logicforums.MoveDown(r.Runtime, &logicforums.MoveInput{ID: id.String()})
+	err = logicforums.MoveDown(req.Context(), r.Runtime, &logicforums.MoveInput{ID: id.String()})
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

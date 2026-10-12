@@ -21,7 +21,7 @@ import (
 func (r *Route) Show(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	shown, err := logicdocs.Show(r.Runtime, c.Params("page"))
+	shown, err := logicdocs.Show(req.Context(), r.Runtime, c.Params("page"))
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

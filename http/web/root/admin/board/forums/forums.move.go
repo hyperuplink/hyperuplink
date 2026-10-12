@@ -30,7 +30,7 @@ func (r *Route) MoveUp(c fiber.Ctx) (err error) {
 
 	r.Runtime.Debug("form", in)
 
-	err = logicforums.MoveUp(r.Runtime, in)
+	err = logicforums.MoveUp(req.Context(), r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}
@@ -58,7 +58,7 @@ func (r *Route) MoveDown(c fiber.Ctx) (err error) {
 
 	r.Runtime.Debug("form", in)
 
-	err = logicforums.MoveDown(r.Runtime, in)
+	err = logicforums.MoveDown(req.Context(), r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

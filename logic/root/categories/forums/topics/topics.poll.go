@@ -1,6 +1,7 @@
 package topics
 
 import (
+	"context"
 	"math"
 
 	"github.com/google/uuid"
@@ -42,6 +43,7 @@ type PollVoteInput struct {
 }
 
 func PollView(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *PollViewInput,
 ) (poll *Poll, err error) {
@@ -50,7 +52,7 @@ func PollView(
 	}
 
 	var tally map[int]int
-	tally, err = gh.Repositories(rt).PostEvent.TallyForTopicUUID(
+	tally, err = gh.Repositories(rt).PostEvent.TallyForTopicUUID(ctx,
 		postevent.PollVote,
 		in.Topic.ID,
 		common.QueryOptions{},
@@ -67,7 +69,7 @@ func PollView(
 		var selection int
 		var voted bool
 
-		selection, voted, err = gh.Repositories(rt).PostEvent.SelectionForTopicUUID(
+		selection, voted, err = gh.Repositories(rt).PostEvent.SelectionForTopicUUID(ctx,
 			postevent.PollVote,
 			in.Topic.ID,
 			in.ViewerID.UUID,
@@ -107,6 +109,7 @@ func PollView(
 }
 
 func PollVote(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *PollVoteInput,
 ) (err error) {
@@ -129,7 +132,7 @@ func PollVote(
 	event.TopicID = uuid.NullUUID{UUID: in.Topic.ID, Valid: true}
 	event.Selection = in.Selection
 
-	_, err = gh.Repositories(rt).PostEvent.Create(event)
+	_, err = gh.Repositories(rt).PostEvent.Create(ctx, event)
 
 	return err
 }

@@ -1,6 +1,7 @@
 package replies
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -18,27 +19,29 @@ type Shown struct {
 }
 
 func Resolve(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	idOrShortID string,
 ) (rep *vreply.VReply, err error) {
 	if id, perr := uuid.Parse(idOrShortID); perr == nil {
-		return gh.Repositories(rt).Reply.VGetByUUID(id, common.QueryOptions{Limit: 1})
+		return gh.Repositories(rt).Reply.VGetByUUID(ctx, id, common.QueryOptions{Limit: 1})
 	}
 
-	return gh.Repositories(rt).Reply.VGetByShortID(idOrShortID, common.QueryOptions{Limit: 1})
+	return gh.Repositories(rt).Reply.VGetByShortID(ctx, idOrShortID, common.QueryOptions{Limit: 1})
 }
 
 func Show(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	idOrShortID string,
 	perms *permission.Resolution,
 ) (shown *Shown, err error) {
-	rep, err := Resolve(rt, idOrShortID)
+	rep, err := Resolve(ctx, rt, idOrShortID)
 	if err != nil {
 		return nil, err
 	}
 
-	top, err := gh.Repositories(rt).Topic.VGetByUUID(rep.TopicID, common.QueryOptions{Limit: 1})
+	top, err := gh.Repositories(rt).Topic.VGetByUUID(ctx, rep.TopicID, common.QueryOptions{Limit: 1})
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +50,7 @@ func Show(
 		return nil, errs.ErrForbidden
 	}
 
-	position, err := gh.Repositories(rt).Reply.PositionForUUID(rep.ID)
+	position, err := gh.Repositories(rt).Reply.PositionForUUID(ctx, rep.ID)
 	if err != nil {
 		return nil, err
 	}

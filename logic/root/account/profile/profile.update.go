@@ -1,6 +1,7 @@
 package profile
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/markdown"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
@@ -10,12 +11,13 @@ import (
 )
 
 func Update(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	usr *user.User,
 	in *UpdateInput,
 ) (err error) {
 	if in.ProfilePicture != nil && in.ProfilePicture.Filename != "" {
-		if err = StorePicture(rt, usr, in.ProfilePicture); err != nil {
+		if err = StorePicture(ctx, rt, usr, in.ProfilePicture); err != nil {
 			return err
 		}
 	}
@@ -29,11 +31,11 @@ func Update(
 		}
 	}
 
-	if err = gh.Repositories(rt).User.Update(usr); err != nil {
+	if err = gh.Repositories(rt).User.Update(ctx, usr); err != nil {
 		return err
 	}
 
-	settingUserProfile, err := settingRepo.GetOrCreateUserProfile(
+	settingUserProfile, err := settingRepo.GetOrCreateUserProfile(ctx,
 		gh.Repositories(rt).Setting,
 		usr.ID,
 	)
@@ -43,7 +45,7 @@ func Update(
 
 	settingUserProfile.JSONValue.NotifyOnReply = in.NotifyOnReply
 
-	return settingRepo.Update[setting.UserProfile](
+	return settingRepo.Update[setting.UserProfile](ctx,
 		gh.Repositories(rt).Setting,
 		settingUserProfile,
 	)

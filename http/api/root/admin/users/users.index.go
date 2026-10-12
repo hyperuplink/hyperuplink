@@ -34,7 +34,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 
 	all := common.QueryOptions{WithBanned: true, WithDeleted: true}
 
-	total, err := gh.Repositories(r.Runtime).User.CountAll(all)
+	total, err := gh.Repositories(r.Runtime).User.CountAll(req.Context(), all)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}
@@ -44,7 +44,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	all.Limit = perPage
 	all.Page = page
 
-	users, err := gh.Repositories(r.Runtime).User.All(all)
+	users, err := gh.Repositories(r.Runtime).User.All(req.Context(), all)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

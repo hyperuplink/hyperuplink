@@ -25,7 +25,7 @@ import (
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	top, err := topicsfeed.Read(r.Runtime, c.Params("topic"), req.Perms())
+	top, err := topicsfeed.Read(req.Context(), r.Runtime, c.Params("topic"), req.Perms())
 	if ret, rerr := req.RespondOnReadError(err); ret {
 		return rerr
 	}
@@ -35,7 +35,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	listed, err := logicreplies.Index(r.Runtime, &logicreplies.IndexInput{
+	listed, err := logicreplies.Index(req.Context(), r.Runtime, &logicreplies.IndexInput{
 		Topic:   top,
 		Page:    page,
 		PerPage: perPage,

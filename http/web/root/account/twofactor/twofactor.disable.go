@@ -44,7 +44,7 @@ func (r *Route) Disable(c fiber.Ctx) (err error) {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	err = logictwofactor.Disable(r.Runtime, usr, frm.CurrentPassword)
+	err = logictwofactor.Disable(req.Context(), r.Runtime, usr, frm.CurrentPassword)
 	if errors.Is(err, errs.ErrPasswordWrong) {
 		req.Flash.SetError(err)
 		return req.RedirectToRoute(myRoute)

@@ -12,9 +12,10 @@ import (
 )
 
 func (repo *Repository) GetCategoryForAttachment(
+	ctx context.Context,
 	id uuid.UUID,
 ) (categoryID uuid.UUID, found bool, err error) {
-	categoryID, err = database.Value[uuid.UUID](context.Background(), repo.db, `
+	categoryID, err = database.Value[uuid.UUID](ctx, repo.db, `
 		SELECT f.category_id FROM topics t
 		JOIN forums f ON f.id = t.forum_id
 		WHERE $1 = ANY(t.attachment_ids) AND t.deleted_at IS NULL
@@ -38,10 +39,11 @@ func (repo *Repository) GetCategoryForAttachment(
 }
 
 func (repo *Repository) GetByUUID(
+	ctx context.Context,
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *attachment.Attachment, err error) {
-	return database.Row[attachment.Attachment](context.Background(), repo.db, qo.Query(
+	return database.Row[attachment.Attachment](ctx, repo.db, qo.Query(
 		`SELECT * FROM attachments WHERE id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -52,6 +54,7 @@ func (repo *Repository) GetByUUID(
 }
 
 func (repo *Repository) GetByID(
+	ctx context.Context,
 	id string,
 	qo common.QueryOptions,
 ) (model *attachment.Attachment, err error) {
@@ -61,14 +64,15 @@ func (repo *Repository) GetByID(
 		return nil, database.ConvertError(err)
 	}
 
-	return repo.GetByUUID(uuID, qo)
+	return repo.GetByUUID(ctx, uuID, qo)
 }
 
 func (repo *Repository) AllByUUIDs(
+	ctx context.Context,
 	ids []uuid.UUID,
 	qo common.QueryOptions,
 ) (model []attachment.Attachment, err error) {
-	return database.Rows[attachment.Attachment](context.Background(), repo.db, qo.Query(
+	return database.Rows[attachment.Attachment](ctx, repo.db, qo.Query(
 		`SELECT * FROM attachments WHERE id = ANY($1)`,
 		common.QueryCapabilities{
 			HasSpammed: true,

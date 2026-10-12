@@ -37,7 +37,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		return req.RespondProblem(problem.Validation(map[string][]string{"otp_url": {"url"}}))
 	}
 
-	err = logictwofactor.Enable(r.Runtime, req.User(), secret, in.OTPCode)
+	err = logictwofactor.Enable(req.Context(), r.Runtime, req.User(), secret, in.OTPCode)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

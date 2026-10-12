@@ -36,7 +36,7 @@ func (r *Route) Destroy(c fiber.Ctx) (err error) {
 		return req.RedirectToRoot()
 	}
 
-	err = logicapi.Destroy(r.Runtime, userID, in)
+	err = logicapi.Destroy(req.Context(), r.Runtime, userID, in)
 	if errors.Is(err, errs.ErrNoRows) {
 		return req.RedirectToRoute(myRoute)
 	}

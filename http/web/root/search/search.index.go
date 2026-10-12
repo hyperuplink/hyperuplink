@@ -61,7 +61,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	var results *logicsearch.Results
-	results, err = logicsearch.Query(r.Runtime, req.Perms(), in)
+	results, err = logicsearch.Query(req.Context(), r.Runtime, req.Perms(), in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

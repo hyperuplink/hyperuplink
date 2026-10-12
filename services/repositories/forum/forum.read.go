@@ -8,8 +8,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/forum"
 )
 
-func (repo *Repository) All(qo common.QueryOptions) (model []forum.Forum, err error) {
-	return database.Rows[forum.Forum](context.Background(), repo.db, qo.Query(
+func (repo *Repository) All(ctx context.Context, qo common.QueryOptions) (model []forum.Forum, err error) {
+	return database.Rows[forum.Forum](ctx, repo.db, qo.Query(
 		`SELECT * FROM forums`,
 		common.QueryCapabilities{
 			HasDeleted: true,
@@ -18,11 +18,12 @@ func (repo *Repository) All(qo common.QueryOptions) (model []forum.Forum, err er
 }
 
 func (repo *Repository) AllForCategoryUUID(
+	ctx context.Context,
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model []forum.Forum, err error) {
 	return database.Rows[forum.Forum](
-		context.Background(),
+		ctx,
 		repo.db,
 		qo.Query(`SELECT * FROM forums
 		WHERE category_id = $1`,
@@ -35,6 +36,7 @@ func (repo *Repository) AllForCategoryUUID(
 }
 
 func (repo *Repository) AllForCategoryID(
+	ctx context.Context,
 	id string,
 	qo common.QueryOptions,
 ) (model []forum.Forum, err error) {
@@ -44,15 +46,16 @@ func (repo *Repository) AllForCategoryID(
 		return nil, database.ConvertError(err)
 	}
 
-	return repo.AllForCategoryUUID(uuID, qo)
+	return repo.AllForCategoryUUID(ctx, uuID, qo)
 }
 
 func (repo *Repository) GetBySlug(
+	ctx context.Context,
 	slug string,
 	qo common.QueryOptions,
 ) (model *forum.Forum, err error) {
 	return database.Row[forum.Forum](
-		context.Background(),
+		ctx,
 		repo.db,
 		qo.Query(
 			`SELECT * FROM forums
@@ -66,11 +69,12 @@ func (repo *Repository) GetBySlug(
 }
 
 func (repo *Repository) GetByUUID(
+	ctx context.Context,
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *forum.Forum, err error) {
 	return database.Row[forum.Forum](
-		context.Background(),
+		ctx,
 		repo.db,
 		qo.Query(
 			`SELECT * FROM forums
@@ -84,6 +88,7 @@ func (repo *Repository) GetByUUID(
 }
 
 func (repo *Repository) GetByID(
+	ctx context.Context,
 	id string,
 	qo common.QueryOptions,
 ) (model *forum.Forum, err error) {
@@ -93,5 +98,5 @@ func (repo *Repository) GetByID(
 		return nil, database.ConvertError(err)
 	}
 
-	return repo.GetByUUID(uuID, qo)
+	return repo.GetByUUID(ctx, uuID, qo)
 }

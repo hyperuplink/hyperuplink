@@ -1,6 +1,7 @@
 package topics
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"github.com/lithammer/shortuuid/v4"
 	"xn--gckvb8fzb.com/glides/runtime"
@@ -28,6 +29,7 @@ type CreatedReply struct {
 }
 
 func CreateReply(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	authorID uuid.UUID,
 	perms *permission.Resolution,
@@ -40,14 +42,14 @@ func CreateReply(
 		return nil, err
 	}
 
-	top, err := gh.Repositories(rt).Topic.GetByUUID(
+	top, err := gh.Repositories(rt).Topic.GetByUUID(ctx,
 		rep.TopicID,
 		common.QueryOptions{Limit: 1},
 	)
 	if err != nil {
 		return nil, err
 	}
-	fum, err := gh.Repositories(rt).Forum.GetByUUID(
+	fum, err := gh.Repositories(rt).Forum.GetByUUID(ctx,
 		top.ForumID,
 		common.QueryOptions{Limit: 1},
 	)
@@ -66,7 +68,7 @@ func CreateReply(
 		if replyUUID, err = uuid.Parse(in.ReplyID); err != nil {
 			return nil, errs.ErrReplyParentInvalid
 		}
-		parent, perr := gh.Repositories(rt).Reply.GetByUUID(
+		parent, perr := gh.Repositories(rt).Reply.GetByUUID(ctx,
 			replyUUID,
 			common.QueryOptions{Limit: 1},
 		)
@@ -95,7 +97,7 @@ func CreateReply(
 		}
 	}
 
-	if rep.ID, err = gh.Repositories(rt).Reply.Create(rep); err != nil {
+	if rep.ID, err = gh.Repositories(rt).Reply.Create(ctx, rep); err != nil {
 		return nil, err
 	}
 
@@ -107,11 +109,12 @@ func CreateReply(
 }
 
 func ReplyPages(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	topicID uuid.UUID,
 	perPage int,
 ) (pages int, err error) {
-	total, err := gh.Repositories(rt).Reply.VAllCountForTopicUUID(
+	total, err := gh.Repositories(rt).Reply.VAllCountForTopicUUID(ctx,
 		topicID,
 		common.QueryOptions{},
 	)

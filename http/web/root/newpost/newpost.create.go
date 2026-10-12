@@ -40,6 +40,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 
 	var vtop *vtopic.VTopic
 	vtop, err = logicnewpost.Create(
+		req.Context(),
 		r.Runtime,
 		authorID,
 		req.Perms(),

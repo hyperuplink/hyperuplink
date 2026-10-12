@@ -1,6 +1,7 @@
 package session
 
 import (
+	"context"
 	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/glides/http/route"
 	"xn--gckvb8fzb.com/glides/runtime"
@@ -27,7 +28,7 @@ func New(
 	r.Env = route.NewEnv()
 
 	baseURL := ""
-	if settingSystem, serr := repoSetting.GetByID[setting.System](
+	if settingSystem, serr := repoSetting.GetByID[setting.System](context.Background(),
 		gh.Repositories(rt).Setting,
 		"system",
 	); serr == nil {

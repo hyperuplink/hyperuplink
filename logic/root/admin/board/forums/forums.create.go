@@ -1,6 +1,7 @@
 package forums
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
@@ -8,6 +9,7 @@ import (
 )
 
 func Create(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *CreateInput,
 ) (id uuid.UUID, err error) {
@@ -18,5 +20,5 @@ func Create(
 		return uuid.Nil, err
 	}
 
-	return gh.Repositories(rt).Forum.Create(fum)
+	return gh.Repositories(rt).Forum.Create(ctx, fum)
 }

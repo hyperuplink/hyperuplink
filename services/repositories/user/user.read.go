@@ -11,9 +11,10 @@ import (
 )
 
 func (repo *Repository) All(
+	ctx context.Context,
 	qo common.QueryOptions,
 ) (model []user.User, err error) {
-	return database.Rows[user.User](context.Background(), repo.db, qo.Query(
+	return database.Rows[user.User](ctx, repo.db, qo.Query(
 		`SELECT * FROM users`,
 		common.QueryCapabilities{
 			HasBanned:  true,
@@ -23,10 +24,11 @@ func (repo *Repository) All(
 }
 
 func (repo *Repository) GetByUUID(
+	ctx context.Context,
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *user.User, err error) {
-	return database.Row[user.User](context.Background(), repo.db, qo.Query(
+	return database.Row[user.User](ctx, repo.db, qo.Query(
 		`SELECT * FROM users WHERE id = $1`,
 		common.QueryCapabilities{
 			HasBanned:  true,
@@ -37,6 +39,7 @@ func (repo *Repository) GetByUUID(
 }
 
 func (repo *Repository) GetByID(
+	ctx context.Context,
 	id string,
 	qo common.QueryOptions,
 ) (model *user.User, err error) {
@@ -46,14 +49,15 @@ func (repo *Repository) GetByID(
 		return nil, database.ConvertError(err)
 	}
 
-	return repo.GetByUUID(uuID, qo)
+	return repo.GetByUUID(ctx, uuID, qo)
 }
 
 func (repo *Repository) GetByUsername(
+	ctx context.Context,
 	username string,
 	qo common.QueryOptions,
 ) (model *user.User, err error) {
-	return database.Row[user.User](context.Background(), repo.db, qo.Query(
+	return database.Row[user.User](ctx, repo.db, qo.Query(
 		`SELECT * FROM users WHERE username = $1`,
 		common.QueryCapabilities{
 			HasBanned:  true,
@@ -64,10 +68,11 @@ func (repo *Repository) GetByUsername(
 }
 
 func (repo *Repository) GetByEmail(
+	ctx context.Context,
 	email string,
 	qo common.QueryOptions,
 ) (model *user.User, err error) {
-	return database.Row[user.User](context.Background(), repo.db, qo.Query(
+	return database.Row[user.User](ctx, repo.db, qo.Query(
 		`SELECT * FROM users WHERE email = $1`,
 		common.QueryCapabilities{
 			HasBanned:  true,
@@ -78,13 +83,14 @@ func (repo *Repository) GetByEmail(
 }
 
 func (repo *Repository) AllToNotifyForReply(
+	ctx context.Context,
 	topicID uuid.UUID,
 	replyID uuid.UUID,
 	authorID uuid.UUID,
 	categoryID uuid.UUID,
 	qo common.QueryOptions,
 ) (model []user.User, err error) {
-	return database.Rows[user.User](context.Background(), repo.db, qo.Query(
+	return database.Rows[user.User](ctx, repo.db, qo.Query(
 		`SELECT u.* FROM users u
 		JOIN (
 			SELECT author_id FROM topics WHERE id = $1
@@ -126,13 +132,13 @@ func (repo *Repository) AllToNotifyForReply(
 	)
 }
 
-func (repo *Repository) CountAll(qo common.QueryOptions) (total int64, err error) {
+func (repo *Repository) CountAll(ctx context.Context, qo common.QueryOptions) (total int64, err error) {
 
 	qoc := qo
 	qoc.OrderBy = ""
 	qoc.Limit = 0
 	qoc.Page = 0
-	return database.Value[int64](context.Background(), repo.db, qoc.Query(
+	return database.Value[int64](ctx, repo.db, qoc.Query(
 		`SELECT COUNT(id) AS total FROM users`,
 		common.QueryCapabilities{
 			HasBanned:  true,

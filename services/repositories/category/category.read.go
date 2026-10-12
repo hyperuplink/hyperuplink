@@ -9,9 +9,10 @@ import (
 )
 
 func (repo *Repository) All(
+	ctx context.Context,
 	qo common.QueryOptions,
 ) (model []category.Category, err error) {
-	return database.Rows[category.Category](context.Background(), repo.db, qo.Query(
+	return database.Rows[category.Category](ctx, repo.db, qo.Query(
 		`SELECT * FROM categories`,
 		common.QueryCapabilities{
 			HasDeleted: true,
@@ -20,11 +21,12 @@ func (repo *Repository) All(
 }
 
 func (repo *Repository) GetBySlug(
+	ctx context.Context,
 	slug string,
 	qo common.QueryOptions,
 ) (model *category.Category, err error) {
 	return database.Row[category.Category](
-		context.Background(),
+		ctx,
 		repo.db,
 		qo.Query(
 			`SELECT * FROM categories
@@ -38,11 +40,12 @@ func (repo *Repository) GetBySlug(
 }
 
 func (repo *Repository) GetByUUID(
+	ctx context.Context,
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *category.Category, err error) {
 	return database.Row[category.Category](
-		context.Background(),
+		ctx,
 		repo.db,
 		qo.Query(
 			`SELECT * FROM categories

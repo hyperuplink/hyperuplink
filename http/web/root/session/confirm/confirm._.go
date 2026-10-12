@@ -88,7 +88,7 @@ func (r *Route) ConfirmCreate(c fiber.Ctx) (err error) {
 	r.Runtime.Debug("form", frm)
 
 	var usr *user.User
-	usr, err = gh.Repositories(r.Runtime).User.GetByUsername(
+	usr, err = gh.Repositories(r.Runtime).User.GetByUsername(req.Context(),
 		frm.Username,
 		common.QueryOptions{
 			WithBanned:  false,
@@ -125,7 +125,7 @@ func (r *Route) ConfirmCreate(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	err = gh.Repositories(r.Runtime).User.Update(usr)
+	err = gh.Repositories(r.Runtime).User.Update(req.Context(), usr)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

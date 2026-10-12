@@ -1,6 +1,7 @@
 package account
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
@@ -16,6 +17,7 @@ type View struct {
 }
 
 func Show(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	usr *user.User,
 ) (view *View, err error) {
@@ -23,7 +25,7 @@ func Show(
 
 	if len(usr.MemberOf) > 0 {
 		var groups []group.Group
-		if groups, err = gh.Repositories(rt).Group.AllByIDs(usr.MemberOf, common.QueryOptions{
+		if groups, err = gh.Repositories(rt).Group.AllByIDs(ctx, usr.MemberOf, common.QueryOptions{
 			OrderBy: "name",
 			Order:   common.Ascending,
 		}); err != nil {
@@ -32,7 +34,7 @@ func Show(
 		view.Groups = groups
 	}
 
-	profile, err := settingRepo.GetOrCreateUserProfile(gh.Repositories(rt).Setting, usr.ID)
+	profile, err := settingRepo.GetOrCreateUserProfile(ctx, gh.Repositories(rt).Setting, usr.ID)
 	if err != nil {
 		return nil, err
 	}

@@ -30,7 +30,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	settings, err := logicattachments.Settings(r.Runtime)
+	settings, err := logicattachments.Settings(req.Context(), r.Runtime)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}
@@ -50,7 +50,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		}))
 	}
 
-	ids, err := logicattachments.StoreAll(r.Runtime, req.User().ID, files)
+	ids, err := logicattachments.StoreAll(req.Context(), r.Runtime, req.User().ID, files)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

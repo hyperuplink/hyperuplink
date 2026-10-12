@@ -89,7 +89,7 @@ func TestAPISignInRejectsBadCredentialsAlike(t *testing.T) {
 func TestAPISignInAsksForTheSecondFactor(t *testing.T) {
 	h := apiTest(t)
 
-	otto, err := logicsession.SignUp(h.rt, &logicsession.SignUpInput{
+	otto, err := logicsession.SignUp(h.ctx, h.rt, &logicsession.SignUpInput{
 		Username:       "otto",
 		Email:          "otto@example.org",
 		Password:       testPassword,
@@ -107,7 +107,7 @@ func TestAPISignInAsksForTheSecondFactor(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err = logictwofactor.Enable(h.rt, otto, enrollment.Secret, code); err != nil {
+	if err = logictwofactor.Enable(h.ctx, h.rt, otto, enrollment.Secret, code); err != nil {
 		t.Fatal(err)
 	}
 
@@ -133,17 +133,17 @@ func TestAPISignInStaysOpenWhenGuestsAreClosed(t *testing.T) {
 	h := apiTest(t)
 
 	repo := gh.Repositories(h.rt).Setting
-	sys, err := settingRepo.GetByID[setting.System](repo, "system")
+	sys, err := settingRepo.GetByID[setting.System](h.ctx, repo, "system")
 	if err != nil {
 		t.Fatal(err)
 	}
 	sys.JSONValue.AllowAPIGuests = false
-	if err = settingRepo.Update(repo, sys); err != nil {
+	if err = settingRepo.Update(h.ctx, repo, sys); err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() {
 		sys.JSONValue.AllowAPIGuests = true
-		if err := settingRepo.Update(repo, sys); err != nil {
+		if err := settingRepo.Update(h.ctx, repo, sys); err != nil {
 			t.Error(err)
 		}
 	})

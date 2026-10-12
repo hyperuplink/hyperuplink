@@ -9,10 +9,11 @@ import (
 )
 
 func (repo *Repository) AllForTopicUUID(
+	ctx context.Context,
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model []reply.Reply, err error) {
-	return database.Rows[reply.Reply](context.Background(), repo.db, qo.Query(
+	return database.Rows[reply.Reply](ctx, repo.db, qo.Query(
 		`SELECT * FROM replies WHERE topic_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -23,6 +24,7 @@ func (repo *Repository) AllForTopicUUID(
 }
 
 func (repo *Repository) AllForTopicID(
+	ctx context.Context,
 	id string,
 	qo common.QueryOptions,
 ) (model []reply.Reply, err error) {
@@ -32,14 +34,15 @@ func (repo *Repository) AllForTopicID(
 		return nil, database.ConvertError(err)
 	}
 
-	return repo.AllForTopicUUID(uuID, qo)
+	return repo.AllForTopicUUID(ctx, uuID, qo)
 }
 
 func (repo *Repository) GetByUUID(
+	ctx context.Context,
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *reply.Reply, err error) {
-	return database.Row[reply.Reply](context.Background(), repo.db, qo.Query(
+	return database.Row[reply.Reply](ctx, repo.db, qo.Query(
 		`SELECT * FROM replies WHERE id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -50,6 +53,7 @@ func (repo *Repository) GetByUUID(
 }
 
 func (repo *Repository) GetByID(
+	ctx context.Context,
 	id string,
 	qo common.QueryOptions,
 ) (model *reply.Reply, err error) {
@@ -59,14 +63,15 @@ func (repo *Repository) GetByID(
 		return nil, database.ConvertError(err)
 	}
 
-	return repo.GetByUUID(uuID, qo)
+	return repo.GetByUUID(ctx, uuID, qo)
 }
 
 func (repo *Repository) GetByShortID(
+	ctx context.Context,
 	shortID string,
 	qo common.QueryOptions,
 ) (model *reply.Reply, err error) {
-	return database.Row[reply.Reply](context.Background(), repo.db, qo.Query(
+	return database.Row[reply.Reply](ctx, repo.db, qo.Query(
 		`SELECT * FROM replies WHERE short_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,

@@ -1,6 +1,7 @@
 package topics
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
@@ -17,11 +18,12 @@ type PollVoteBySlugsInput struct {
 }
 
 func PollVoteBySlugs(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	perms *permission.Resolution,
 	in *PollVoteBySlugsInput,
 ) (err error) {
-	vtop, err := gh.Repositories(rt).Topic.VGetBySlugs(
+	vtop, err := gh.Repositories(rt).Topic.VGetBySlugs(ctx,
 		in.ForumSlug,
 		in.TopicSlug,
 		common.QueryOptions{Limit: 1},
@@ -34,7 +36,7 @@ func PollVoteBySlugs(
 		return errs.ErrForbidden
 	}
 
-	top, err := gh.Repositories(rt).Topic.GetByUUID(
+	top, err := gh.Repositories(rt).Topic.GetByUUID(ctx,
 		vtop.ID,
 		common.QueryOptions{Limit: 1},
 	)
@@ -42,7 +44,7 @@ func PollVoteBySlugs(
 		return err
 	}
 
-	return PollVote(rt, &PollVoteInput{
+	return PollVote(ctx, rt, &PollVoteInput{
 		Topic:     top,
 		AuthorID:  in.AuthorID,
 		Selection: in.Selection,

@@ -30,7 +30,7 @@ func (r *Route) Apply(c fiber.Ctx) (err error) {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	err = logicpermissions.Apply(r.Runtime, in)
+	err = logicpermissions.Apply(req.Context(), r.Runtime, in)
 	if errors.Is(err, errs.ErrValidation) {
 		req.Flash.SetError(err)
 		return req.RedirectToRoute(myRoute)

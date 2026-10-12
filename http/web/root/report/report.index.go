@@ -25,7 +25,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	id := c.Query("id")
 	returnTo := c.Query("return")
 
-	post, err := logicreport.ResolvePost(r.Runtime, target, id)
+	post, err := logicreport.ResolvePost(req.Context(), r.Runtime, target, id)
 	if ret, rerr := req.RedirectToRootOnError(err); ret == true {
 		return rerr
 	}

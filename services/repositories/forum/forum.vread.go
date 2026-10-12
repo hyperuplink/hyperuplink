@@ -8,8 +8,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/vforum"
 )
 
-func (repo *Repository) VAll(qo common.QueryOptions) (model []vforum.VForum, err error) {
-	return database.Rows[vforum.VForum](context.Background(), repo.db, qo.Query(
+func (repo *Repository) VAll(ctx context.Context, qo common.QueryOptions) (model []vforum.VForum, err error) {
+	return database.Rows[vforum.VForum](ctx, repo.db, qo.Query(
 		`SELECT * FROM vforums`,
 		common.QueryCapabilities{
 			HasDeleted: true,
@@ -18,11 +18,12 @@ func (repo *Repository) VAll(qo common.QueryOptions) (model []vforum.VForum, err
 }
 
 func (repo *Repository) VAllForCategoryUUID(
+	ctx context.Context,
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model []vforum.VForum, err error) {
 	return database.Rows[vforum.VForum](
-		context.Background(),
+		ctx,
 		repo.db,
 		qo.Query(`SELECT * FROM vforums
 		WHERE category_id = $1`,
@@ -35,6 +36,7 @@ func (repo *Repository) VAllForCategoryUUID(
 }
 
 func (repo *Repository) VAllForCategoryID(
+	ctx context.Context,
 	id string,
 	qo common.QueryOptions,
 ) (model []vforum.VForum, err error) {
@@ -44,15 +46,16 @@ func (repo *Repository) VAllForCategoryID(
 		return nil, database.ConvertError(err)
 	}
 
-	return repo.VAllForCategoryUUID(uuID, qo)
+	return repo.VAllForCategoryUUID(ctx, uuID, qo)
 }
 
 func (repo *Repository) VGetBySlug(
+	ctx context.Context,
 	slug string,
 	qo common.QueryOptions,
 ) (model *vforum.VForum, err error) {
 	return database.Row[vforum.VForum](
-		context.Background(),
+		ctx,
 		repo.db,
 		qo.Query(
 			`SELECT * FROM vforums
@@ -66,11 +69,12 @@ func (repo *Repository) VGetBySlug(
 }
 
 func (repo *Repository) VGetByUUID(
+	ctx context.Context,
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *vforum.VForum, err error) {
 	return database.Row[vforum.VForum](
-		context.Background(),
+		ctx,
 		repo.db,
 		qo.Query(
 			`SELECT * FROM vforums

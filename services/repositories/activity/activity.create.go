@@ -55,11 +55,11 @@ func (repo *Repository) values(recs []activity.Record) (vals string, args []any)
 	return strings.Join(groups, ","), args
 }
 
-func (repo *Repository) Upsert(recs []activity.Record) (err error) {
+func (repo *Repository) Upsert(ctx context.Context, recs []activity.Record) (err error) {
 	for chunk := range slices.Chunk(recs, maxRecordsPerStatement) {
 		vals, args := repo.values(chunk)
 
-		if _, err = database.Exec(context.Background(), repo.db, fmt.Sprintf(`INSERT INTO activities (
+		if _, err = database.Exec(ctx, repo.db, fmt.Sprintf(`INSERT INTO activities (
 			 kind
 			,actor_id
 			,subject
@@ -82,11 +82,11 @@ func (repo *Repository) Upsert(recs []activity.Record) (err error) {
 	return nil
 }
 
-func (repo *Repository) Append(recs []activity.Record) (err error) {
+func (repo *Repository) Append(ctx context.Context, recs []activity.Record) (err error) {
 	for chunk := range slices.Chunk(recs, maxRecordsPerStatement) {
 		vals, args := repo.values(chunk)
 
-		if _, err = database.Exec(context.Background(), repo.db, fmt.Sprintf(`INSERT INTO activities (
+		if _, err = database.Exec(ctx, repo.db, fmt.Sprintf(`INSERT INTO activities (
 			 kind
 			,actor_id
 			,subject

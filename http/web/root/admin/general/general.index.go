@@ -23,7 +23,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	var settingGeneral *setting.Setting[setting.General]
-	settingGeneral, err = settingRepo.GetByID[setting.General](
+	settingGeneral, err = settingRepo.GetByID[setting.General](req.Context(),
 		gh.Repositories(r.Runtime).Setting,
 		"general",
 	)

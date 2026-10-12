@@ -34,7 +34,7 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 	actorID := uuid.NullUUID{}
 	actorID.UUID, actorID.Valid = req.Session.GetUserUUID()
 
-	err = logicgeneral.Update(r.Runtime, actorID, in)
+	err = logicgeneral.Update(req.Context(), r.Runtime, actorID, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

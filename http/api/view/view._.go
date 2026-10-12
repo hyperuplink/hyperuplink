@@ -1,6 +1,7 @@
 package view
 
 import (
+	"context"
 	"encoding/json"
 	"strings"
 	"time"
@@ -87,14 +88,16 @@ type Discovery struct {
 }
 
 type Mapper struct {
+	ctx         context.Context
 	rt          *runtime.Runtime
 	system      *setting.System
 	profiles    *setting.Profiles
 	attachments map[uuid.UUID]*attachment.Attachment
 }
 
-func NewMapper(rt *runtime.Runtime, system *setting.System) *Mapper {
+func NewMapper(ctx context.Context, rt *runtime.Runtime, system *setting.System) *Mapper {
 	return &Mapper{
+		ctx:         ctx,
 		rt:          rt,
 		system:      system,
 		attachments: map[uuid.UUID]*attachment.Attachment{},
@@ -124,7 +127,7 @@ func (m *Mapper) PrefetchAttachments(idLists ...[]uuid.UUID) {
 		return
 	}
 
-	atts, err := gh.Repositories(m.rt).Attachment.AllByUUIDs(missing, common.QueryOptions{})
+	atts, err := gh.Repositories(m.rt).Attachment.AllByUUIDs(m.ctx, missing, common.QueryOptions{})
 	if err != nil {
 		m.rt.Error("error", err)
 		return
@@ -142,7 +145,7 @@ func (m *Mapper) profilePictureURL(id string) string {
 	}
 
 	if m.profiles == nil {
-		settingProfiles, err := settingRepo.GetByID[setting.Profiles](
+		settingProfiles, err := settingRepo.GetByID[setting.Profiles](m.ctx,
 			gh.Repositories(m.rt).Setting,
 			"profiles",
 		)

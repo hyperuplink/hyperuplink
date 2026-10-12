@@ -1,6 +1,7 @@
 package profiles
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/hyperuplink/errs"
@@ -20,6 +21,7 @@ type UpdateInput struct {
 }
 
 func Update(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	actorID uuid.NullUUID,
 	in *UpdateInput,
@@ -40,7 +42,7 @@ func Update(
 		return errs.ErrInvalidStorageProvider
 	}
 
-	settingProfiles, err := settingRepo.GetByID[setting.Profiles](
+	settingProfiles, err := settingRepo.GetByID[setting.Profiles](ctx,
 		gh.Repositories(rt).Setting,
 		"profiles",
 	)
@@ -57,7 +59,7 @@ func Update(
 	settingProfiles.JSONValue.PictureStorageProviderID = in.PictureStorageProviderID
 	settingProfiles.JSONValue.PictureStoragePath = in.PictureStoragePath
 
-	if err = settingRepo.Update[setting.Profiles](
+	if err = settingRepo.Update[setting.Profiles](ctx,
 		gh.Repositories(rt).Setting,
 		settingProfiles,
 	); err != nil {
@@ -65,7 +67,7 @@ func Update(
 	}
 
 	if actorID.Valid {
-		logicactivity.RecordAdminSettingsUpdate(rt, actorID.UUID,
+		logicactivity.RecordAdminSettingsUpdate(ctx, rt, actorID.UUID,
 			"profiles", before, settingProfiles.JSONValue)
 	}
 

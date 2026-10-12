@@ -7,10 +7,11 @@ import (
 )
 
 func Update[T any](
+	ctx context.Context,
 	repo *Repository,
 	model *setting.Setting[T],
 ) (err error) {
-	_, err = database.Exec(context.Background(), repo.db, `UPDATE settings SET
+	_, err = database.Exec(ctx, repo.db, `UPDATE settings SET
 		 string_value = $2
 		,int_value =    $3
 		,json_value =   $4

@@ -6,8 +6,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
 
-func (repo *Repository) Update(model *user.User) (err error) {
-	_, err = database.Exec(context.Background(), repo.db, `UPDATE users SET
+func (repo *Repository) Update(ctx context.Context, model *user.User) (err error) {
+	_, err = database.Exec(ctx, repo.db, `UPDATE users SET
 		 username =                    $1
 		,role =                        $2
 		,member_of =                   $3

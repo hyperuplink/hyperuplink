@@ -7,8 +7,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/topic"
 )
 
-func (repo *Repository) Create(model *topic.Topic) (rowID uuid.UUID, err error) {
-	return database.Value[uuid.UUID](context.Background(), repo.db, `INSERT INTO topics (
+func (repo *Repository) Create(ctx context.Context, model *topic.Topic) (rowID uuid.UUID, err error) {
+	return database.Value[uuid.UUID](ctx, repo.db, `INSERT INTO topics (
 		short_id
 		,name
 		,slug

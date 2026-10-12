@@ -1,6 +1,7 @@
 package perms
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
@@ -9,6 +10,7 @@ import (
 )
 
 func Resolve(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	role user.Role,
 	memberOf []string,
@@ -17,13 +19,13 @@ func Resolve(
 		return &permission.Resolution{IsAdmin: true}
 	}
 
-	cats, err := gh.Repositories(rt).Category.All(common.QueryOptions{})
+	cats, err := gh.Repositories(rt).Category.All(ctx, common.QueryOptions{})
 	if err != nil {
 		rt.Error("perms", err)
 		return permission.NewResolution()
 	}
 
-	res, err := gh.Repositories(rt).Permission.Resolve(role, memberOf, cats)
+	res, err := gh.Repositories(rt).Permission.Resolve(ctx, role, memberOf, cats)
 	if err != nil {
 		rt.Error("perms", err)
 		return permission.NewResolution()

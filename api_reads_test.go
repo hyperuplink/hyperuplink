@@ -520,18 +520,18 @@ func TestAPIPagesFollowTheGeneralSettings(t *testing.T) {
 	expectProblem(t, h.get(t, "/api/v1/pages/nope", ""), 404, "no_rows")
 
 	repo := gh.Repositories(h.rt).Setting
-	general, err := settingRepo.GetByID[setting.General](repo, "general")
+	general, err := settingRepo.GetByID[setting.General](h.ctx, repo, "general")
 	if err != nil {
 		t.Fatal(err)
 	}
 	general.JSONValue.EnableAbout = true
 	general.JSONValue.About = "This board runs *Hyperuplink*."
-	if err = settingRepo.Update(repo, general); err != nil {
+	if err = settingRepo.Update(h.ctx, repo, general); err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() {
 		general.JSONValue.EnableAbout = false
-		if err := settingRepo.Update(repo, general); err != nil {
+		if err := settingRepo.Update(h.ctx, repo, general); err != nil {
 			t.Error(err)
 		}
 	})

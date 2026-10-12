@@ -32,7 +32,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	id, err := logicforums.Create(r.Runtime, in)
+	id, err := logicforums.Create(req.Context(), r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

@@ -8,9 +8,10 @@ import (
 )
 
 func (repo *Repository) VAllReports(
+	ctx context.Context,
 	qo common.QueryOptions,
 ) (model []vpostevent.VPostEvent, err error) {
-	return database.Rows[vpostevent.VPostEvent](context.Background(), repo.db, qo.Query(
+	return database.Rows[vpostevent.VPostEvent](ctx, repo.db, qo.Query(
 		`SELECT
 			 pe.*
 			,COALESCE(t.text, r.text, '') AS target_text

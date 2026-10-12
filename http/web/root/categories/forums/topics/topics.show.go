@@ -40,7 +40,7 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 	var perPage int = req.System.GetPostsPerPage()
 
 	var view *logictopics.View
-	view, err = logictopics.Show(r.Runtime, &logictopics.ShowInput{
+	view, err = logictopics.Show(req.Context(), r.Runtime, &logictopics.ShowInput{
 		ForumSlug: c.Params("forums"),
 		TopicSlug: c.Params("topics"),
 		Page:      activePage,

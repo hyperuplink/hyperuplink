@@ -1,6 +1,7 @@
 package report
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
@@ -8,11 +9,12 @@ import (
 )
 
 func Create(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	authorID uuid.UUID,
 	in *CreateInput,
 ) (err error) {
-	post, err := ResolvePost(rt, in.Target, in.ID)
+	post, err := ResolvePost(ctx, rt, in.Target, in.ID)
 	if err != nil {
 		return err
 	}
@@ -25,7 +27,7 @@ func Create(
 	event.ReplyID = post.ReplyID
 	event.Selection = in.ReportType
 
-	_, err = gh.Repositories(rt).PostEvent.Create(event)
+	_, err = gh.Repositories(rt).PostEvent.Create(ctx, event)
 
 	return err
 }

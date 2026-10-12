@@ -27,7 +27,7 @@ import (
 func (r *Route) Index(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	fum, err := logicforums.Show(r.Runtime, c.Params("forum"), req.Perms())
+	fum, err := logicforums.Show(req.Context(), r.Runtime, c.Params("forum"), req.Perms())
 	if ret, rerr := req.RespondOnReadError(err); ret {
 		return rerr
 	}
@@ -41,7 +41,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	listed, err := logicforums.ListTopics(r.Runtime, &logicforums.TopicsInput{
+	listed, err := logicforums.ListTopics(req.Context(), r.Runtime, &logicforums.TopicsInput{
 		Forum:    fum,
 		Sort:     topic.Sort(sort),
 		Page:     page,

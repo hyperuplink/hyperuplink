@@ -8,19 +8,20 @@ import (
 )
 
 func (repo *Repository) Apply(
+	ctx context.Context,
 	groupID pgtype.Text,
 	categoryID pgtype.UUID,
 	level byte,
 ) (err error) {
 	bits := permission.LevelToBitString(level)
 
-	tx, err := repo.db.Tx(context.Background())
+	tx, err := repo.db.Tx(ctx)
 	if err != nil {
 		return database.ConvertError(err)
 	}
-	defer tx.End(context.Background())
+	defer tx.End(ctx)
 
-	tag, err := database.Exec(context.Background(), tx, `UPDATE permissions SET
+	tag, err := database.Exec(ctx, tx, `UPDATE permissions SET
 		 bits =       $3::BIT(3)
 		,updated_at = NOW()
 		WHERE group_id IS NOT DISTINCT FROM $1
@@ -35,7 +36,7 @@ func (repo *Repository) Apply(
 	}
 
 	if tag.RowsAffected() == 0 {
-		_, err = database.Exec(context.Background(), tx, `INSERT INTO permissions (
+		_, err = database.Exec(ctx, tx, `INSERT INTO permissions (
 			 group_id
 			,category_id
 			,bits
@@ -53,5 +54,5 @@ func (repo *Repository) Apply(
 		}
 	}
 
-	return database.ConvertError(tx.Commit(context.Background()))
+	return database.ConvertError(tx.Commit(ctx))
 }

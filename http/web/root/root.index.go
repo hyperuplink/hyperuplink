@@ -23,7 +23,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	var board *logicroot.Board
-	board, err = logicroot.BoardView(r.Runtime, req.Perms())
+	board, err = logicroot.BoardView(req.Context(), r.Runtime, req.Perms())
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

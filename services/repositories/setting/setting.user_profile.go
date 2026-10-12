@@ -1,6 +1,7 @@
 package setting
 
 import (
+	"context"
 	"errors"
 
 	"github.com/google/uuid"
@@ -9,12 +10,13 @@ import (
 )
 
 func GetOrCreateUserProfile(
+	ctx context.Context,
 	repo *Repository,
 	userID uuid.UUID,
 ) (model *setting.Setting[setting.UserProfile], err error) {
 	id := setting.UserProfileID(userID)
 
-	model, err = GetByID[setting.UserProfile](repo, id)
+	model, err = GetByID[setting.UserProfile](ctx, repo, id)
 	if err == nil {
 		return model, nil
 	}
@@ -26,7 +28,7 @@ func GetOrCreateUserProfile(
 	model.ID = id
 	model.JSONValue = setting.NewUserProfile()
 
-	if _, err = Create(repo, model); err != nil {
+	if _, err = Create(ctx, repo, model); err != nil {
 		return nil, err
 	}
 

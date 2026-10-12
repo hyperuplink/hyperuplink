@@ -1,6 +1,7 @@
 package xmpp
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/config"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
@@ -8,8 +9,8 @@ import (
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
-func Show(rt *runtime.Runtime) (view *View, err error) {
-	settingCommsXMPP, err := settingRepo.GetByID[setting.CommsXMPP](
+func Show(ctx context.Context, rt *runtime.Runtime) (view *View, err error) {
+	settingCommsXMPP, err := settingRepo.GetByID[setting.CommsXMPP](ctx,
 		gh.Repositories(rt).Setting,
 		"comms_xmpp",
 	)

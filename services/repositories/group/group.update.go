@@ -6,8 +6,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/group"
 )
 
-func (repo *Repository) Update(model *group.Group) (err error) {
-	_, err = database.Exec(context.Background(), repo.db, `UPDATE groups SET
+func (repo *Repository) Update(ctx context.Context, model *group.Group) (err error) {
+	_, err = database.Exec(ctx, repo.db, `UPDATE groups SET
 		 name =                        $1
 		,updated_at =                  NOW()
 		WHERE id =                     $2`,

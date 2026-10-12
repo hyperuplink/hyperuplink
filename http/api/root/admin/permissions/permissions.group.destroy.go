@@ -22,7 +22,7 @@ func (r *Route) GroupDestroy(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	err = logicpermissions.GroupDestroy(r.Runtime, &logicpermissions.GroupDestroyInput{
+	err = logicpermissions.GroupDestroy(req.Context(), r.Runtime, &logicpermissions.GroupDestroyInput{
 		ID: c.Params("group"),
 	})
 	if ret, rerr := req.RespondOnError(err); ret {

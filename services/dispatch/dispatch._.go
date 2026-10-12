@@ -1,6 +1,8 @@
 package dispatch
 
 import (
+	"context"
+
 	glidesdispatch "xn--gckvb8fzb.com/glides/services/dispatch"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
 	repoSetting "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
@@ -34,13 +36,13 @@ func New(
 
 func (disp *Dispatch) Routing() (r glidesdispatch.Routing, err error) {
 	settingCommsEmail, err := repoSetting.GetByID[setting.CommsEmail](
-		disp.repo, "comms_email")
+		context.Background(), disp.repo, "comms_email")
 	if err != nil {
 		return r, err
 	}
 
 	settingCommsXMPP, err := repoSetting.GetByID[setting.CommsXMPP](
-		disp.repo, "comms_xmpp")
+		context.Background(), disp.repo, "comms_xmpp")
 	if err != nil {
 		return r, err
 	}
@@ -53,7 +55,7 @@ func (disp *Dispatch) Routing() (r glidesdispatch.Routing, err error) {
 
 func (disp *Dispatch) system() (sys *setting.System, err error) {
 	settingSystem, err := repoSetting.GetByID[setting.System](
-		disp.repo, "system")
+		context.Background(), disp.repo, "system")
 	if err != nil {
 		return nil, err
 	}

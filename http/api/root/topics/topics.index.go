@@ -35,7 +35,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	feed, err := topicsfeed.Index(r.Runtime, &topicsfeed.Input{
+	feed, err := topicsfeed.Index(req.Context(), r.Runtime, &topicsfeed.Input{
 		Sort:     topic.Sort(sort),
 		Page:     page,
 		PerPage:  perPage,

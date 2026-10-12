@@ -19,6 +19,7 @@ import (
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/problem"
 	"xn--gckvb8fzb.com/hyperuplink/http/api/root"
+	"xn--gckvb8fzb.com/hyperuplink/http/helpers/deadline"
 	"xn--gckvb8fzb.com/hyperuplink/http/helpers/redisstorage"
 )
 
@@ -123,6 +124,7 @@ func (srv *API) loadMiddlewares() (err error) {
 	}))
 	srv.app.Use(recover.New())
 	srv.app.Use(requestid.New())
+	srv.app.Use(deadline.New(time.Duration(srv.cfg.RequestTimeout) * time.Second))
 
 	if len(srv.cfg.CORSOrigins) > 0 {
 		srv.app.Use(cors.New(cors.Config{

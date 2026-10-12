@@ -1,6 +1,7 @@
 package replies
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/glides/runtime"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/vreply"
@@ -19,12 +20,13 @@ type Page struct {
 }
 
 func Index(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *IndexInput,
 ) (page *Page, err error) {
 	page = new(Page)
 
-	if page.Replies, page.Total, err = gh.Repositories(rt).Reply.VAllForTopicUUIDOrdered(
+	if page.Replies, page.Total, err = gh.Repositories(rt).Reply.VAllForTopicUUIDOrdered(ctx,
 		in.Topic.ID,
 		in.PerPage,
 		in.Page,

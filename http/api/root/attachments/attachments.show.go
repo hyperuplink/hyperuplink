@@ -30,7 +30,7 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 		return req.RespondError(errs.ErrNoRows)
 	}
 
-	file, err := logicattachment.Open(r.Runtime, id, req.Perms())
+	file, err := logicattachment.Open(req.Context(), r.Runtime, id, req.Perms())
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

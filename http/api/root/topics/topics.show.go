@@ -23,7 +23,7 @@ import (
 func (r *Route) Show(c fiber.Ctx) (err error) {
 	req := request.New(r, c)
 
-	shown, err := topicsfeed.Show(r.Runtime, &topicsfeed.ShowInput{
+	shown, err := topicsfeed.Show(req.Context(), r.Runtime, &topicsfeed.ShowInput{
 		ID:       c.Params("topic"),
 		ViewerID: req.ViewerID(),
 	}, req.Perms())

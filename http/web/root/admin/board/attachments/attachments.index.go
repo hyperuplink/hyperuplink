@@ -21,7 +21,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	var view *logicattachments.View
-	view, err = logicattachments.Show(r.Runtime)
+	view, err = logicattachments.Show(req.Context(), r.Runtime)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

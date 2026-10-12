@@ -17,9 +17,9 @@ func (r *Route) Show(c fiber.Ctx) error {
 	}
 
 	role, memberOf := helpers.CurrentUserRoleAndGroups(r.Runtime, c)
-	perms := logicperms.Resolve(r.Runtime, role, memberOf)
+	perms := logicperms.Resolve(c.Context(), r.Runtime, role, memberOf)
 
-	file, err := logicattachment.Open(r.Runtime, id, perms)
+	file, err := logicattachment.Open(c.Context(), r.Runtime, id, perms)
 	if err != nil {
 		return c.SendStatus(fiber.StatusNotFound)
 	}

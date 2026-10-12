@@ -1,6 +1,7 @@
 package session
 
 import (
+	"context"
 	"fmt"
 	"slices"
 	"strings"
@@ -59,6 +60,7 @@ func isValidJID(jid string) bool {
 }
 
 func SignUp(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	in *SignUpInput,
 	opts SignUpOptions,
@@ -67,7 +69,7 @@ func SignUp(
 		return nil, err
 	}
 
-	settingAuth, err := repoSetting.GetByID[setting.Auth](gh.Repositories(rt).Setting, "auth")
+	settingAuth, err := repoSetting.GetByID[setting.Auth](ctx, gh.Repositories(rt).Setting, "auth")
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +122,7 @@ func SignUp(
 		return nil, err
 	}
 
-	usr.ID, err = gh.Repositories(rt).User.Create(usr)
+	usr.ID, err = gh.Repositories(rt).User.Create(ctx, usr)
 	if err != nil {
 		return nil, err
 	}
@@ -129,14 +131,14 @@ func SignUp(
 		return usr, nil
 	}
 
-	activated, err := gh.Repositories(rt).User.GetByUUID(usr.ID, common.QueryOptions{Limit: 1})
+	activated, err := gh.Repositories(rt).User.GetByUUID(ctx, usr.ID, common.QueryOptions{Limit: 1})
 	if err != nil {
 		return nil, err
 	}
 	if err = activated.ConfirmEmail(activated.EmailConfirmationToken); err != nil {
 		return nil, err
 	}
-	if err = gh.Repositories(rt).User.Update(activated); err != nil {
+	if err = gh.Repositories(rt).User.Update(ctx, activated); err != nil {
 		return nil, err
 	}
 
@@ -144,6 +146,7 @@ func SignUp(
 }
 
 func SendSignupConfirmation(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	usr *user.User,
 	subject string,

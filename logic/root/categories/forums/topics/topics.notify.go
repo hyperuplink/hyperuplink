@@ -1,6 +1,7 @@
 package topics
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -29,13 +30,14 @@ func (loc ReplyLocation) replyPath(rep *reply.Reply) string {
 }
 
 func SendReplyNotifications(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	rep *reply.Reply,
 	byUsername string,
 	subject string,
 	loc ReplyLocation,
 ) error {
-	recipients, err := gh.Repositories(rt).User.AllToNotifyForReply(
+	recipients, err := gh.Repositories(rt).User.AllToNotifyForReply(ctx,
 		loc.TopicID,
 		rep.ID,
 		rep.AuthorID,

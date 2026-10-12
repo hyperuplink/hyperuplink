@@ -9,10 +9,11 @@ import (
 )
 
 func (repo *Repository) GetBySecretHash(
+	ctx context.Context,
 	secretHash string,
 	qo common.QueryOptions,
 ) (model *apikey.APIKey, err error) {
-	return database.Row[apikey.APIKey](context.Background(), repo.db, qo.Query(
+	return database.Row[apikey.APIKey](ctx, repo.db, qo.Query(
 		`SELECT * FROM apikeys WHERE secret_hash = $1`,
 		common.QueryCapabilities{
 			HasDeleted: true,
@@ -22,10 +23,11 @@ func (repo *Repository) GetBySecretHash(
 }
 
 func (repo *Repository) GetByUUID(
+	ctx context.Context,
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *apikey.APIKey, err error) {
-	return database.Row[apikey.APIKey](context.Background(), repo.db, qo.Query(
+	return database.Row[apikey.APIKey](ctx, repo.db, qo.Query(
 		`SELECT * FROM apikeys WHERE id = $1`,
 		common.QueryCapabilities{
 			HasDeleted: true,
@@ -35,10 +37,11 @@ func (repo *Repository) GetByUUID(
 }
 
 func (repo *Repository) AllForUserUUID(
+	ctx context.Context,
 	userID uuid.UUID,
 	qo common.QueryOptions,
 ) (model []apikey.APIKey, err error) {
-	return database.Rows[apikey.APIKey](context.Background(), repo.db, qo.Query(
+	return database.Rows[apikey.APIKey](ctx, repo.db, qo.Query(
 		`SELECT * FROM apikeys WHERE user_id = $1`,
 		common.QueryCapabilities{
 			HasDeleted: true,

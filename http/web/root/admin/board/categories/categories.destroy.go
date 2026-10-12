@@ -30,7 +30,7 @@ func (r *Route) Destroy(c fiber.Ctx) (err error) {
 
 	r.Runtime.Debug("form", in)
 
-	err = logiccategories.Destroy(r.Runtime, in)
+	err = logiccategories.Destroy(req.Context(), r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

@@ -9,9 +9,10 @@ import (
 )
 
 func (repo *Repository) All(
+	ctx context.Context,
 	qo common.QueryOptions,
 ) (model []topic.Topic, err error) {
-	return database.Rows[topic.Topic](context.Background(), repo.db, qo.Query(
+	return database.Rows[topic.Topic](ctx, repo.db, qo.Query(
 		`SELECT * FROM topics`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -21,10 +22,11 @@ func (repo *Repository) All(
 }
 
 func (repo *Repository) AllForForumUUID(
+	ctx context.Context,
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model []topic.Topic, err error) {
-	return database.Rows[topic.Topic](context.Background(), repo.db, qo.Query(
+	return database.Rows[topic.Topic](ctx, repo.db, qo.Query(
 		`SELECT * FROM topics WHERE forum_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -35,6 +37,7 @@ func (repo *Repository) AllForForumUUID(
 }
 
 func (repo *Repository) AllForForumID(
+	ctx context.Context,
 	id string,
 	qo common.QueryOptions,
 ) (model []topic.Topic, err error) {
@@ -44,14 +47,15 @@ func (repo *Repository) AllForForumID(
 		return nil, database.ConvertError(err)
 	}
 
-	return repo.AllForForumUUID(uuID, qo)
+	return repo.AllForForumUUID(ctx, uuID, qo)
 }
 
 func (repo *Repository) GetByUUID(
+	ctx context.Context,
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model *topic.Topic, err error) {
-	return database.Row[topic.Topic](context.Background(), repo.db, qo.Query(
+	return database.Row[topic.Topic](ctx, repo.db, qo.Query(
 		`SELECT * FROM topics WHERE id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
@@ -62,6 +66,7 @@ func (repo *Repository) GetByUUID(
 }
 
 func (repo *Repository) GetByID(
+	ctx context.Context,
 	id string,
 	qo common.QueryOptions,
 ) (model *topic.Topic, err error) {
@@ -71,14 +76,15 @@ func (repo *Repository) GetByID(
 		return nil, database.ConvertError(err)
 	}
 
-	return repo.GetByUUID(uuID, qo)
+	return repo.GetByUUID(ctx, uuID, qo)
 }
 
 func (repo *Repository) GetByShortID(
+	ctx context.Context,
 	shortID string,
 	qo common.QueryOptions,
 ) (model *topic.Topic, err error) {
-	return database.Row[topic.Topic](context.Background(), repo.db, qo.Query(
+	return database.Row[topic.Topic](ctx, repo.db, qo.Query(
 		`SELECT * FROM topics WHERE short_id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,

@@ -7,8 +7,8 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/models/apikey"
 )
 
-func (repo *Repository) Create(model *apikey.APIKey) (rowID uuid.UUID, err error) {
-	return database.Value[uuid.UUID](context.Background(), repo.db, `INSERT INTO apikeys (
+func (repo *Repository) Create(ctx context.Context, model *apikey.APIKey) (rowID uuid.UUID, err error) {
+	return database.Value[uuid.UUID](ctx, repo.db, `INSERT INTO apikeys (
 		 user_id
 		,name
 		,secret_hash

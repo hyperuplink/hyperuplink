@@ -23,7 +23,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	issues, err := logichealth.Issues(r.Runtime)
+	issues, err := logichealth.Issues(req.Context(), r.Runtime)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

@@ -48,6 +48,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 
 	var created *logictopics.CreatedReply
 	created, err = logictopics.CreateReply(
+		req.Context(),
 		r.Runtime,
 		authorID,
 		req.Perms(),
@@ -75,6 +76,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 
 	var pages int
 	pages, err = logictopics.ReplyPages(
+		req.Context(),
 		r.Runtime,
 		created.Reply.TopicID,
 		req.System.GetPostsPerPage(),

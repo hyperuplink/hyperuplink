@@ -1,6 +1,7 @@
 package health
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/config"
 )
@@ -12,13 +13,13 @@ type Issue struct {
 	FixRouteID string `json:"fix_route_id"`
 }
 
-func Issues(rt *runtime.Runtime) (issues []Issue, err error) {
+func Issues(ctx context.Context, rt *runtime.Runtime) (issues []Issue, err error) {
 	targets, err := rt.Config().Targets()
 	if err != nil {
 		return nil, err
 	}
 
-	if issue, found := checkXMPPInsecureSkipVerify(rt, targets); found {
+	if issue, found := checkXMPPInsecureSkipVerify(ctx, rt, targets); found {
 		issues = append(issues, issue)
 	}
 
@@ -26,6 +27,7 @@ func Issues(rt *runtime.Runtime) (issues []Issue, err error) {
 }
 
 func checkXMPPInsecureSkipVerify(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	targets config.Targets,
 ) (issue Issue, found bool) {

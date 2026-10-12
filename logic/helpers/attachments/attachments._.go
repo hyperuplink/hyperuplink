@@ -1,6 +1,7 @@
 package attachments
 
 import (
+	"context"
 	"crypto/sha512"
 	"encoding/hex"
 	"io"
@@ -24,8 +25,8 @@ import (
 
 const FormField = "attachments"
 
-func Settings(rt *runtime.Runtime) (*setting.Attachments, error) {
-	settingAttachments, err := settingRepo.GetByID[setting.Attachments](
+func Settings(ctx context.Context, rt *runtime.Runtime) (*setting.Attachments, error) {
+	settingAttachments, err := settingRepo.GetByID[setting.Attachments](ctx,
 		gh.Repositories(rt).Setting,
 		"attachments",
 	)
@@ -37,11 +38,12 @@ func Settings(rt *runtime.Runtime) (*setting.Attachments, error) {
 }
 
 func StoreAll(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	authorID uuid.UUID,
 	files []*multipart.FileHeader,
 ) (ids []uuid.UUID, err error) {
-	attachments, err := Settings(rt)
+	attachments, err := Settings(ctx, rt)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +59,7 @@ func StoreAll(
 	ids = make([]uuid.UUID, 0, len(files))
 	for _, fh := range files {
 		var id uuid.UUID
-		if id, err = Store(rt, attachments, authorID, fh); err != nil {
+		if id, err = Store(ctx, rt, attachments, authorID, fh); err != nil {
 			return nil, err
 		}
 		ids = append(ids, id)
@@ -67,6 +69,7 @@ func StoreAll(
 }
 
 func Store(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	attachments *setting.Attachments,
 	authorID uuid.UUID,
@@ -130,7 +133,7 @@ func Store(
 		Checksum:           checksum,
 		OnUploadHookOutput: output,
 	}
-	if id, err = gh.Repositories(rt).Attachment.Create(att); err != nil {
+	if id, err = gh.Repositories(rt).Attachment.Create(ctx, att); err != nil {
 		if strings.HasPrefix(err.Error(), "unique_violation") {
 			return uuid.Nil, errs.ErrAttachmentDuplicate
 		}
@@ -155,6 +158,7 @@ func Store(
 }
 
 func ResolveOwned(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	authorID uuid.UUID,
 	ids []string,
@@ -166,7 +170,7 @@ func ResolveOwned(
 			return nil, errs.ErrAttachmentNotFound
 		}
 
-		att, aerr := gh.Repositories(rt).Attachment.GetByUUID(id, common.QueryOptions{})
+		att, aerr := gh.Repositories(rt).Attachment.GetByUUID(ctx, id, common.QueryOptions{})
 		if aerr != nil {
 			return nil, errs.ErrAttachmentNotFound
 		}

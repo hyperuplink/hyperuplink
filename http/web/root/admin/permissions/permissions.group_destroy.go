@@ -28,7 +28,7 @@ func (r *Route) GroupDestroy(c fiber.Ctx) (err error) {
 		return req.RedirectToRoute(myRoute)
 	}
 
-	err = logicpermissions.GroupDestroy(r.Runtime, in)
+	err = logicpermissions.GroupDestroy(req.Context(), r.Runtime, in)
 	if ret, rerr := req.RespondOnError(err); ret == true {
 		return rerr
 	}

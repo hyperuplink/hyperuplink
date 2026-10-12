@@ -23,7 +23,7 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	keys, err := logicapi.List(r.Runtime, req.User().ID)
+	keys, err := logicapi.List(req.Context(), r.Runtime, req.User().ID)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

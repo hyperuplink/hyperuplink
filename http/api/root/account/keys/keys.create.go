@@ -31,7 +31,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	key, secret, err := logicapi.Create(r.Runtime, req.User().ID, in)
+	key, secret, err := logicapi.Create(req.Context(), r.Runtime, req.User().ID, in)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

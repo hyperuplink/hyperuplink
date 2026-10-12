@@ -42,7 +42,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	usr, err := logicsession.SignIn(r.Runtime, &in.SignInInput)
+	usr, err := logicsession.SignIn(req.Context(), r.Runtime, &in.SignInInput)
 	if errors.Is(err, errs.ErrOTPCodeWrong) {
 		return req.RespondProblem(problem.WithStatus(fiber.StatusUnauthorized, err))
 	}
@@ -55,12 +55,12 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		name = "API " + time.Now().UTC().Format(keyNameLayout)
 	}
 
-	key, secret, err := logicapi.Create(r.Runtime, usr.ID, &logicapi.CreateInput{KeyName: name})
+	key, secret, err := logicapi.Create(req.Context(), r.Runtime, usr.ID, &logicapi.CreateInput{KeyName: name})
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}
 
-	acc, err := logicaccount.Show(r.Runtime, usr)
+	acc, err := logicaccount.Show(req.Context(), r.Runtime, usr)
 	if ret, rerr := req.RespondOnError(err); ret {
 		return rerr
 	}

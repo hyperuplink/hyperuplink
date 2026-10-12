@@ -1,6 +1,7 @@
 package attachments
 
 import (
+	"context"
 	"strings"
 
 	"xn--gckvb8fzb.com/glides/runtime"
@@ -9,8 +10,8 @@ import (
 	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
-func Show(rt *runtime.Runtime) (view *View, err error) {
-	settingAttachments, err := settingRepo.GetByID[setting.Attachments](
+func Show(ctx context.Context, rt *runtime.Runtime) (view *View, err error) {
+	settingAttachments, err := settingRepo.GetByID[setting.Attachments](ctx,
 		gh.Repositories(rt).Setting,
 		"attachments",
 	)

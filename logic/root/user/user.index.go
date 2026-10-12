@@ -1,6 +1,7 @@
 package user
 
 import (
+	"context"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
@@ -20,11 +21,12 @@ type View struct {
 }
 
 func Show(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	username string,
 	perms *permission.Resolution,
 ) (view *View, err error) {
-	usr, err := gh.Repositories(rt).User.GetByUsername(
+	usr, err := gh.Repositories(rt).User.GetByUsername(ctx,
 		username,
 		common.QueryOptions{
 			WithBanned:  false,
@@ -37,7 +39,7 @@ func Show(
 		return nil, err
 	}
 
-	groups, err := gh.Repositories(rt).Group.All(common.QueryOptions{
+	groups, err := gh.Repositories(rt).Group.All(ctx, common.QueryOptions{
 		OrderBy: "name",
 		Order:   common.Ascending,
 	})
@@ -48,7 +50,7 @@ func Show(
 	membership := []group.Group{}
 	if len(usr.MemberOf) > 0 {
 		var own []group.Group
-		if own, err = gh.Repositories(rt).Group.AllByIDs(usr.MemberOf, common.QueryOptions{
+		if own, err = gh.Repositories(rt).Group.AllByIDs(ctx, usr.MemberOf, common.QueryOptions{
 			OrderBy: "name",
 			Order:   common.Ascending,
 		}); err != nil {
@@ -57,7 +59,7 @@ func Show(
 		membership = own
 	}
 
-	topics, err := gh.Repositories(rt).Topic.VAllForAuthorUUID(
+	topics, err := gh.Repositories(rt).Topic.VAllForAuthorUUID(ctx,
 		usr.ID,
 		common.QueryOptions{
 			OrderBy: "created_at",
@@ -76,7 +78,7 @@ func Show(
 		}
 	}
 
-	replies, err := gh.Repositories(rt).Reply.VAllWithTopicForAuthorUUID(
+	replies, err := gh.Repositories(rt).Reply.VAllWithTopicForAuthorUUID(ctx,
 		usr.ID,
 		common.QueryOptions{
 			OrderBy: "created_at",

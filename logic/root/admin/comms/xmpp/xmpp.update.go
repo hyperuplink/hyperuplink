@@ -1,6 +1,7 @@
 package xmpp
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/runtime"
 	"xn--gckvb8fzb.com/glides/services/config"
@@ -12,6 +13,7 @@ import (
 )
 
 func Update(
+	ctx context.Context,
 	rt *runtime.Runtime,
 	actorID uuid.NullUUID,
 	in *UpdateInput,
@@ -35,7 +37,7 @@ func Update(
 		}
 	}
 
-	settingCommsXMPP, err := settingRepo.GetByID[setting.CommsXMPP](
+	settingCommsXMPP, err := settingRepo.GetByID[setting.CommsXMPP](ctx,
 		gh.Repositories(rt).Setting,
 		"comms_xmpp",
 	)
@@ -47,7 +49,7 @@ func Update(
 
 	settingCommsXMPP.JSONValue.TargetID = in.TargetID
 
-	if err = settingRepo.Update[setting.CommsXMPP](
+	if err = settingRepo.Update[setting.CommsXMPP](ctx,
 		gh.Repositories(rt).Setting,
 		settingCommsXMPP,
 	); err != nil {
@@ -55,7 +57,7 @@ func Update(
 	}
 
 	if actorID.Valid {
-		logicactivity.RecordAdminSettingsUpdate(rt, actorID.UUID,
+		logicactivity.RecordAdminSettingsUpdate(ctx, rt, actorID.UUID,
 			"comms_xmpp", before, settingCommsXMPP.JSONValue)
 	}
 
