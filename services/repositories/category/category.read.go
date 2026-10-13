@@ -2,22 +2,34 @@ package category
 
 import (
 	"context"
+	"slices"
+
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	"xn--gckvb8fzb.com/hyperuplink/models/category"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/memo"
 )
 
 func (repo *Repository) All(
 	ctx context.Context,
 	qo common.QueryOptions,
 ) (model []category.Category, err error) {
-	return database.Rows[category.Category](ctx, repo.db, qo.Query(
+	query := qo.Query(
 		`SELECT * FROM categories`,
 		common.QueryCapabilities{
 			HasDeleted: true,
 		},
-	))
+	)
+
+	cached, err := memo.Get(repo.memo, "categories:"+query, func() ([]category.Category, error) {
+		return database.Rows[category.Category](ctx, repo.db, query)
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return slices.Clone(cached), nil
 }
 
 func (repo *Repository) GetBySlug(

@@ -13,6 +13,8 @@ func (repo *Repository) Apply(
 	categoryID pgtype.UUID,
 	level byte,
 ) (err error) {
+	defer repo.memo.Reset()
+
 	bits := permission.LevelToBitString(level)
 
 	tx, err := repo.db.Tx(ctx)

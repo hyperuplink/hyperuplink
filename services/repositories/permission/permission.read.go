@@ -2,14 +2,28 @@ package permission
 
 import (
 	"context"
+	"slices"
+
 	"github.com/jackc/pgx/v5/pgtype"
 	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/memo"
 )
 
+func (repo *Repository) all(ctx context.Context) ([]permission.Permission, error) {
+	return memo.Get(repo.memo, "permissions", func() ([]permission.Permission, error) {
+		return database.Rows[permission.Permission](ctx, repo.db, `SELECT * FROM permissions
+			WHERE deleted_at IS NULL`)
+	})
+}
+
 func (repo *Repository) All(ctx context.Context) (model []permission.Permission, err error) {
-	return database.Rows[permission.Permission](ctx, repo.db, `SELECT * FROM permissions
-		WHERE deleted_at IS NULL`)
+	cached, err := repo.all(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return slices.Clone(cached), nil
 }
 
 func (repo *Repository) AllForGroup(

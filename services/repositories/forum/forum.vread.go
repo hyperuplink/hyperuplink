@@ -68,6 +68,27 @@ func (repo *Repository) VGetBySlug(
 	)
 }
 
+func (repo *Repository) VGetBySlugs(
+	ctx context.Context,
+	categorySlug string,
+	slug string,
+	qo common.QueryOptions,
+) (model *vforum.VForum, err error) {
+	return database.Row[vforum.VForum](
+		ctx,
+		repo.db,
+		qo.Query(
+			`SELECT * FROM vforums
+			WHERE category_slug = $1 AND slug = $2`,
+			common.QueryCapabilities{
+				HasDeleted: true,
+			},
+		),
+		categorySlug,
+		slug,
+	)
+}
+
 func (repo *Repository) VGetByUUID(
 	ctx context.Context,
 	id uuid.UUID,

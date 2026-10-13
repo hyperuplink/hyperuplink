@@ -11,9 +11,7 @@ import (
 )
 
 type UpdateInput struct {
-	AllowKindQuestion bool `json:"allow_kind_question" form:"allow_kind_question"`
-	AllowKindPoll     bool `json:"allow_kind_poll" form:"allow_kind_poll"`
-	AllowKindRSVP     bool `json:"allow_kind_rsvp" form:"allow_kind_rsvp"`
+	AllowKindPoll bool `json:"allow_kind_poll" form:"allow_kind_poll"`
 }
 
 func Update(
@@ -32,9 +30,7 @@ func Update(
 
 	before := settingTopics.JSONValue
 
-	settingTopics.JSONValue.AllowKindQuestion = in.AllowKindQuestion
 	settingTopics.JSONValue.AllowKindPoll = in.AllowKindPoll
-	settingTopics.JSONValue.AllowKindRSVP = in.AllowKindRSVP
 
 	if err = settingRepo.Update[setting.Topics](ctx,
 		gh.Repositories(rt).Setting,

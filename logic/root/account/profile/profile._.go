@@ -111,9 +111,18 @@ func StorePicture(
 		os.Remove(convertedName)
 	}
 
-	// oldProfilePicutreID := usr.ProfilePicture
+	previous := usr.ProfilePicture
 	usr.ProfilePicture = pictureID
-	// TODO: Delete oldProfilePicutreID
+
+	if previous != "" && previous != pictureID {
+		if derr := storage.From(rt).DeleteFile(
+			profiles.PictureStorageProviderID,
+			profiles.PictureStoragePath+"/"+previous+"."+profiles.PictureFormat,
+		); derr != nil {
+			rt.Warn("profile picture: previous file not deleted",
+				"user", usr.ID, "picture", previous, "error", derr)
+		}
+	}
 
 	return nil
 }

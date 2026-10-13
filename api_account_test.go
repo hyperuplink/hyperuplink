@@ -2,17 +2,28 @@ package main
 
 import (
 	"bytes"
+	"errors"
+	"image"
+	"image/color"
+	"image/png"
 	"io"
+	"io/fs"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"os/exec"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/pquerna/otp/totp"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	logicsession "xn--gckvb8fzb.com/hyperuplink/logic/root/session"
+	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	settingRepo "xn--gckvb8fzb.com/hyperuplink/services/repositories/setting"
 )
 
 func (h *apiHarness) signUp(t *testing.T, name string) string {
@@ -67,6 +78,7 @@ func TestAPIAccountIsShownAndPatched(t *testing.T) {
 	}
 	t.Cleanup(func() {
 		h.do(t, http.MethodPatch, "/api/v1/account", h.keys["juno"], map[string]any{
+			"language":        "en",
 			"timezone":        "UTC",
 			"signature_text":  "",
 			"notify_on_reply": true,
@@ -78,6 +90,17 @@ func TestAPIAccountIsShownAndPatched(t *testing.T) {
 	usr = object(t, res.JSON(t), "user")
 	if usr["timezone"] != "Europe/Berlin" || usr["notify_on_reply"] != true {
 		t.Errorf("a partial patch changed more than it was given: %v", usr)
+	}
+
+	res = h.do(t, http.MethodPatch, "/api/v1/account", h.keys["juno"], map[string]any{"language": "de"})
+	expectStatus(t, res, 200)
+	usr = object(t, res.JSON(t), "user")
+	if usr["language"] != "de" || usr["timezone"] != "Europe/Berlin" {
+		t.Errorf("language patch = %v", usr)
+	}
+	langBody := expectProblem(t, h.do(t, http.MethodPatch, "/api/v1/account", h.keys["juno"], map[string]any{"language": "xx"}), 422, "validation")
+	if errs := object(t, langBody, "errors"); errs["language"] == nil {
+		t.Errorf("errors = %v", errs)
 	}
 
 	body := expectProblem(t, h.do(t, http.MethodPatch, "/api/v1/account", h.keys["juno"], map[string]any{"timezone": "Nowhere/Land"}), 422, "validation")
@@ -170,6 +193,118 @@ func TestAPITwoFactorIsEnrolledEnabledAndDisabled(t *testing.T) {
 	expectStatus(t, res, 200)
 	if res.JSON(t)["enabled"] != false {
 		t.Errorf("after disabling = %s", res.Body)
+	}
+}
+
+func (h *apiHarness) enablePictures(t *testing.T, enabled bool) {
+	t.Helper()
+
+	repo := gh.Repositories(h.rt).Setting
+	profiles, err := settingRepo.GetByID[setting.Profiles](h.ctx, repo, "profiles")
+	if err != nil {
+		t.Fatal(err)
+	}
+	profiles.JSONValue.EnablePicture = enabled
+	profiles.JSONValue.PictureFormat = "png"
+	profiles.JSONValue.PictureStorageProviderID = "test-local"
+	if err = settingRepo.Update(h.ctx, repo, profiles); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func (h *apiHarness) uploadPicture(t *testing.T, token string) apiResponse {
+	t.Helper()
+
+	var encoded bytes.Buffer
+	img := image.NewRGBA(image.Rect(0, 0, 4, 4))
+	for x := range 4 {
+		for y := range 4 {
+			img.Set(x, y, color.RGBA{R: uint8(60 * x), G: uint8(60 * y), B: 128, A: 255})
+		}
+	}
+	if err := png.Encode(&encoded, img); err != nil {
+		t.Fatal(err)
+	}
+
+	var buf bytes.Buffer
+	w := multipart.NewWriter(&buf)
+	part, err := w.CreateFormFile("picture", "me.png")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = part.Write(encoded.Bytes()); err != nil {
+		t.Fatal(err)
+	}
+	if err = w.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	req := httptest.NewRequest(http.MethodPost, "/api/v1/account/picture", &buf)
+	req.Header.Set(fiber.HeaderContentType, w.FormDataContentType())
+	req.Header.Set(fiber.HeaderAuthorization, "Bearer "+token)
+
+	res, err := h.app.Test(req, fiber.TestConfig{Timeout: testTimeout, FailOnTimeout: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer res.Body.Close()
+	raw, _ := io.ReadAll(res.Body)
+
+	return apiResponse{Status: res.StatusCode, Header: res.Header, Body: raw}
+}
+
+func TestAPIPictureUploadReplacesThePreviousOne(t *testing.T) {
+	h := apiTest(t)
+
+	if _, err := exec.LookPath("convert"); err != nil {
+		t.Skip("ImageMagick's convert is not installed")
+	}
+
+	h.enablePictures(t, true)
+	t.Cleanup(func() {
+		h.enablePictures(t, false)
+		vera, err := h.reloadUser("vera")
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		vera.ProfilePicture = ""
+		if err = gh.Repositories(h.rt).User.Update(h.ctx, vera); err != nil {
+			t.Error(err)
+		}
+		os.RemoveAll(filepath.Join(h.dir, "media", "profile-pictures"))
+	})
+
+	pictureFile := func(id string) string {
+		return filepath.Join(h.dir, "media", "profile-pictures", id+".png")
+	}
+
+	expectStatus(t, h.uploadPicture(t, h.keys["vera"]), 200)
+	vera, err := h.reloadUser("vera")
+	if err != nil {
+		t.Fatal(err)
+	}
+	first := vera.ProfilePicture
+	if first == "" {
+		t.Fatal("the first upload stored no picture id")
+	}
+	if _, err = os.Stat(pictureFile(first)); err != nil {
+		t.Fatalf("the first picture isn't in the storage: %v", err)
+	}
+
+	expectStatus(t, h.uploadPicture(t, h.keys["vera"]), 200)
+	if vera, err = h.reloadUser("vera"); err != nil {
+		t.Fatal(err)
+	}
+	second := vera.ProfilePicture
+	if second == "" || second == first {
+		t.Fatalf("the second upload stored %q after %q", second, first)
+	}
+	if _, err = os.Stat(pictureFile(second)); err != nil {
+		t.Errorf("the second picture isn't in the storage: %v", err)
+	}
+	if _, err = os.Stat(pictureFile(first)); !errors.Is(err, fs.ErrNotExist) {
+		t.Errorf("the first picture is still in the storage: %v", err)
 	}
 }
 

@@ -33,36 +33,79 @@ func (repo *Repository) VAllForTopicUUID(
 	id uuid.UUID,
 	qo common.QueryOptions,
 ) (model []vreply.VReply, total int64, err error) {
-	var mod []vreply.VReply
-
 	if total, err = repo.VAllCountForTopicUUID(ctx, id, qo); err != nil {
 		return nil, 0, err
 	}
 
-	mod, err = database.Rows[vreply.VReply](ctx, repo.db, qo.Query(
+	qoc := qo
+	qoc.OrderBy = ""
+	qoc.Limit = 0
+	qoc.Page = 0
+	query := qoc.Query(
 		`SELECT * FROM vreplies WHERE topic_id = $1`,
+		common.QueryCapabilities{
+			HasSpammed: true,
+			HasDeleted: true,
+		},
+	) + ` ORDER BY created_at ASC, id ASC`
+
+	if qo.Limit > 0 {
+		model, err = database.Rows[vreply.VReply](ctx, repo.db,
+			query+` LIMIT $2 OFFSET $3`,
+			id,
+			qo.Limit,
+			qo.Offset(),
+		)
+	} else {
+		model, err = database.Rows[vreply.VReply](ctx, repo.db, query, id)
+	}
+
+	return model, total, err
+}
+
+func (repo *Repository) VGetByUUID(
+	ctx context.Context,
+	id uuid.UUID,
+	qo common.QueryOptions,
+) (model *vreply.VReply, err error) {
+	return database.Row[vreply.VReply](ctx, repo.db, qo.Query(
+		`SELECT * FROM vreplies WHERE id = $1`,
 		common.QueryCapabilities{
 			HasSpammed: true,
 			HasDeleted: true,
 		}),
 		id,
 	)
-
-	return mod, total, err
 }
 
-func (repo *Repository) VAllForTopicID(
+func (repo *Repository) VGetByShortID(
 	ctx context.Context,
-	id string,
+	shortID string,
 	qo common.QueryOptions,
-) (model []vreply.VReply, total int64, err error) {
-	var uuID uuid.UUID
+) (model *vreply.VReply, err error) {
+	return database.Row[vreply.VReply](ctx, repo.db, qo.Query(
+		`SELECT * FROM vreplies WHERE short_id = $1`,
+		common.QueryCapabilities{
+			HasSpammed: true,
+			HasDeleted: true,
+		}),
+		shortID,
+	)
+}
 
-	if uuID, err = uuid.Parse(id); err != nil {
-		return nil, total, database.ConvertError(err)
-	}
+func (repo *Repository) PositionForUUID(ctx context.Context, id uuid.UUID) (position int64, err error) {
+	err = repo.db.QueryRow(ctx,
+		`SELECT COUNT(*) FROM replies r2, replies r
+		WHERE r.id = $1
+		AND r2.topic_id = r.topic_id
+		AND r2.deleted_at IS NULL
+		AND r2.spammed_at IS NULL
+		AND (r2.created_at < r.created_at
+			OR (r2.created_at = r.created_at AND r2.id <= r.id))`,
+		id,
+	).Scan(&position)
 
-	return repo.VAllForTopicUUID(ctx, uuID, qo)
+	return position, database.ConvertError(err)
 }
 
 func (repo *Repository) VAllWithTopicForAuthorUUID(

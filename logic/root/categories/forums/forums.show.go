@@ -10,15 +10,17 @@ import (
 	logicactivity "xn--gckvb8fzb.com/hyperuplink/logic/helpers/activity"
 	"xn--gckvb8fzb.com/hyperuplink/logic/helpers/paging"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
+	"xn--gckvb8fzb.com/hyperuplink/models/topic"
 	"xn--gckvb8fzb.com/hyperuplink/models/vforum"
 	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
 )
 
 type ShowInput struct {
-	ForumSlug string
-	Page      int
-	PerPage   int
-	ViewerID  uuid.NullUUID
+	CategorySlug string
+	ForumSlug    string
+	Page         int
+	PerPage      int
+	ViewerID     uuid.NullUUID
 }
 
 type View struct {
@@ -35,7 +37,8 @@ func Show(
 	in *ShowInput,
 	perms *permission.Resolution,
 ) (view *View, err error) {
-	fum, err := gh.Repositories(rt).Forum.VGetBySlug(ctx,
+	fum, err := gh.Repositories(rt).Forum.VGetBySlugs(ctx,
+		in.CategorySlug,
 		in.ForumSlug,
 		common.QueryOptions{
 			Limit: 1,
@@ -49,14 +52,11 @@ func Show(
 		return nil, errs.ErrForbidden
 	}
 
-	tops, total, err := gh.Repositories(rt).Topic.VAllForForumUUID(ctx,
+	tops, total, err := gh.Repositories(rt).Topic.VAllForForumUUIDSorted(ctx,
 		fum.ID,
-		common.QueryOptions{
-			OrderBy: "last_activity_at",
-			Order:   common.Descending,
-			Limit:   in.PerPage,
-			Page:    in.Page,
-		},
+		topic.SortActive,
+		in.PerPage,
+		in.Page,
 	)
 	if err != nil {
 		return nil, err

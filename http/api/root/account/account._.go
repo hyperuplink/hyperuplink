@@ -19,6 +19,7 @@ type Route struct {
 }
 
 type PatchBody struct {
+	Language      *string `json:"language" validate:"omitempty,oneof=de en es fr it ro"`
 	Timezone      *string `json:"timezone" validate:"omitempty,timezone"`
 	SignatureText *string `json:"signature_text" validate:"omitempty,max=256"`
 	NotifyOnReply *bool   `json:"notify_on_reply"`

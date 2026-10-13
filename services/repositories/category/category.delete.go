@@ -7,6 +7,8 @@ import (
 )
 
 func (repo *Repository) Delete(ctx context.Context, model *category.Category) (err error) {
+	defer repo.memo.Reset()
+
 	tx, err := repo.db.Tx(ctx)
 	if err != nil {
 		return database.ConvertError(err)

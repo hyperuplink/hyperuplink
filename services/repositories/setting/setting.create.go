@@ -11,6 +11,8 @@ func Create[T any](
 	repo *Repository,
 	model *setting.Setting[T],
 ) (rowID string, err error) {
+	defer repo.memo.Reset()
+
 	return database.Value[string](ctx, repo.db, `INSERT INTO settings (
   id
   ,string_value

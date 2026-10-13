@@ -5,17 +5,20 @@ import (
 	"xn--gckvb8fzb.com/glides/services/config"
 	"xn--gckvb8fzb.com/glides/services/database"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/memo"
 )
 
 type Repository struct {
-	db  *database.Database
-	cfg *config.Config
+	db   *database.Database
+	cfg  *config.Config
+	memo *memo.Memo
 }
 
-func New(db *database.Database, cfg *config.Config) (*Repository, error) {
+func New(db *database.Database, cfg *config.Config, board *memo.Memo) (*Repository, error) {
 	repo := new(Repository)
 	repo.db = db
 	repo.cfg = cfg
+	repo.memo = board
 
 	return repo, nil
 }
@@ -51,9 +54,7 @@ func (repo *Repository) Startup() (err error) {
 		settingTopics = new(setting.Setting[setting.Topics])
 		settingTopics.ID = "topics"
 		settingTopics.JSONValue = setting.Topics{
-			AllowKindQuestion: true,
-			AllowKindPoll:     true,
-			AllowKindRSVP:     true,
+			AllowKindPoll: true,
 		}
 		if _, err = Create(ctx, repo, settingTopics); err != nil {
 			return err

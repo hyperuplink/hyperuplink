@@ -97,9 +97,10 @@ func New(
 	req.Principal = PrincipalFrom(c)
 	req.System = SystemFrom(c, r.GetRuntime())
 
-	al := c.Get("Accept-Language", "en")
-	als := strings.Split(al, "-")
-	req.lang = strings.ToLower(als[0])
+	req.lang = gh.Locale(r.GetRuntime(), c.Get(fiber.HeaderAcceptLanguage))
+	if req.Principal.User != nil && req.Principal.User.Language != "" {
+		req.lang = gh.Locale(r.GetRuntime(), req.Principal.User.Language)
+	}
 
 	return req
 }

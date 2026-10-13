@@ -15,7 +15,6 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/extractors"
-	"github.com/gofiber/fiber/v3/middleware/cache"
 	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/gofiber/fiber/v3/middleware/csrf"
 	"github.com/gofiber/fiber/v3/middleware/healthcheck"
@@ -86,6 +85,10 @@ func New(
 	return srv, nil
 }
 
+func (srv *Web) App() *fiber.App {
+	return srv.app
+}
+
 func (srv *Web) loadMiddlewares() error {
 	srv.app.Use(slogfiber.NewWithConfig(srv.rt.Logger(), slogfiber.Config{
 		DefaultLevel:       srv.rt.GetLogLevel(),
@@ -111,11 +114,6 @@ func (srv *Web) loadMiddlewares() error {
 		healthcheck.New())
 
 	// ---------------------------------------------------------------------------
-
-	if srv.rt.IsDevelopmentMode() == false {
-		// TODO: Adjust config
-		srv.app.Use(cache.New(cache.ConfigDefault))
-	}
 
 	storage, err := redisstorage.New(srv.rt.Config())
 	if err != nil {

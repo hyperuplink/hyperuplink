@@ -10,5 +10,7 @@ func (repo *Repository) Delete(ctx context.Context, model *group.Group) (err err
 	_, err = database.Exec(ctx, repo.db, `DELETE FROM groups WHERE id = $1`,
 		model.ID,
 	)
+	repo.memo.Reset()
+
 	return err
 }

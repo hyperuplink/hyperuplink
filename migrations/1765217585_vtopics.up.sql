@@ -3,17 +3,20 @@ SELECT
     t.*,
     COALESCE((SELECT COUNT(*)
       FROM replies r
-      WHERE r.topic_id = t.id), 0) AS replies,
+      WHERE r.topic_id = t.id
+        AND r.deleted_at IS NULL AND r.spammed_at IS NULL), 0) AS replies,
 
     (SELECT MAX(r.created_at)
      FROM replies r
-     WHERE r.topic_id = t.id) AS "last_reply_at",
+     WHERE r.topic_id = t.id
+       AND r.deleted_at IS NULL AND r.spammed_at IS NULL) AS "last_reply_at",
 
     GREATEST(
       t.created_at,
       (SELECT MAX(r.created_at)
        FROM replies r
-       WHERE r.topic_id = t.id)
+       WHERE r.topic_id = t.id
+         AND r.deleted_at IS NULL AND r.spammed_at IS NULL)
     ) AS "last_activity_at",
 
     COALESCE((SELECT COUNT(*)

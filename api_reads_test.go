@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
+	"xn--gckvb8fzb.com/glides/services/database"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/permission"
 	"xn--gckvb8fzb.com/hyperuplink/models/setting"
@@ -308,6 +309,57 @@ func TestAPIForumTopicsSortAndPaginate(t *testing.T) {
 	expectStatus(t, res, 200)
 	if top := items(t, res.JSON(t), "topics")[0]; top["viewer"] == nil {
 		t.Errorf("a signed-in viewer should get the read marker: %v", top)
+	}
+}
+
+func TestAPICountsIgnoreDeletedReplies(t *testing.T) {
+	h := apiTest(t)
+	welcome := h.topics["welcome"]
+
+	counts := func() (topicReplies float64, forumReplies float64, lastActivity string) {
+		t.Helper()
+		res := h.get(t, "/api/v1/topics/"+welcome.ID.String(), "")
+		expectStatus(t, res, 200)
+		top := object(t, res.JSON(t), "topic")
+		res = h.get(t, "/api/v1/forums/announcements", "")
+		expectStatus(t, res, 200)
+		fum := object(t, res.JSON(t), "forum")
+		return top["replies"].(float64), fum["replies"].(float64), top["last_activity_at"].(string)
+	}
+
+	topicBefore, forumBefore, activityBefore := counts()
+	if topicBefore != 2 {
+		t.Fatalf("welcome has %v replies before the deletion, want 2", topicBefore)
+	}
+
+	if _, err := database.From(h.rt).Exec(h.ctx,
+		`UPDATE replies SET deleted_at = NOW() WHERE id = $1`, h.replies["second"],
+	); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		if _, err := database.From(h.rt).Exec(h.ctx,
+			`UPDATE replies SET deleted_at = NULL WHERE id = $1`, h.replies["second"],
+		); err != nil {
+			t.Errorf("restore the reply: %v", err)
+		}
+	})
+
+	topicAfter, forumAfter, activityAfter := counts()
+	if topicAfter != topicBefore-1 {
+		t.Errorf("topic replies = %v after deleting one of %v", topicAfter, topicBefore)
+	}
+	if forumAfter != forumBefore-1 {
+		t.Errorf("forum replies = %v after deleting one of %v", forumAfter, forumBefore)
+	}
+	if activityAfter >= activityBefore {
+		t.Errorf("last_activity_at = %s after deleting the newest reply, was %s", activityAfter, activityBefore)
+	}
+
+	res := h.get(t, "/api/v1/topics/"+welcome.ShortID+"/replies", "")
+	expectStatus(t, res, 200)
+	if listed := items(t, res.JSON(t), "replies"); float64(len(listed)) != topicAfter {
+		t.Errorf("the collection lists %d replies, the topic counts %v", len(listed), topicAfter)
 	}
 }
 

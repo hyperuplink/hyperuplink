@@ -11,10 +11,11 @@ import (
 )
 
 type PollVoteBySlugsInput struct {
-	ForumSlug string
-	TopicSlug string
-	AuthorID  uuid.UUID
-	Selection int
+	CategorySlug string
+	ForumSlug    string
+	TopicSlug    string
+	AuthorID     uuid.UUID
+	Selection    int
 }
 
 func PollVoteBySlugs(
@@ -24,6 +25,7 @@ func PollVoteBySlugs(
 	in *PollVoteBySlugsInput,
 ) (err error) {
 	vtop, err := gh.Repositories(rt).Topic.VGetBySlugs(ctx,
+		in.CategorySlug,
 		in.ForumSlug,
 		in.TopicSlug,
 		common.QueryOptions{Limit: 1},

@@ -2,19 +2,19 @@ package in
 
 import (
 	"html/template"
-	"strings"
-	"xn--gckvb8fzb.com/glides/services/intnat"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/kaptinlin/go-i18n"
 	"xn--gckvb8fzb.com/glides/http/route"
+	"xn--gckvb8fzb.com/glides/services/intnat"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 )
 
 type Internationalization struct {
-	r          route.IRouteController
-	c          fiber.Ctx
-	acceptLang string
-	I18n       *i18n.Localizer
+	r    route.IRouteController
+	c    fiber.Ctx
+	lang string
+	I18n *i18n.Localizer
 }
 
 func New(r route.IRouteController, c fiber.Ctx) *Internationalization {
@@ -22,12 +22,7 @@ func New(r route.IRouteController, c fiber.Ctx) *Internationalization {
 	i.r = r
 	i.c = c
 
-	// TODO: If the user is logged in, query the lang from profile settings
-	al := c.Get("Accept-Language", "en")
-	als := strings.Split(al, "-")
-	al = strings.ToLower(als[0])
-
-	i.SetLang(al)
+	i.SetLang(c.Get(fiber.HeaderAcceptLanguage))
 
 	return i
 }
@@ -41,10 +36,10 @@ func (i *Internationalization) T(msg string) template.HTML {
 }
 
 func (i *Internationalization) SetLang(lang string) {
-	i.acceptLang = lang
-	i.I18n = intnat.From(i.r.GetRuntime()).NewLocalizer(i.acceptLang)
+	i.lang = gh.Locale(i.r.GetRuntime(), lang)
+	i.I18n = intnat.From(i.r.GetRuntime()).NewLocalizer(i.lang)
 }
 
 func (i *Internationalization) Lang() string {
-	return i.acceptLang
+	return i.lang
 }

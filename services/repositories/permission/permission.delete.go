@@ -17,5 +17,7 @@ func (repo *Repository) Remove(
 		groupID,
 		categoryID,
 	)
+	repo.memo.Reset()
+
 	return err
 }

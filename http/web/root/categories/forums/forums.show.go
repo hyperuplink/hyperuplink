@@ -41,10 +41,11 @@ func (r *Route) Show(c fiber.Ctx) (err error) {
 
 	var view *logicforums.View
 	view, err = logicforums.Show(req.Context(), r.Runtime, &logicforums.ShowInput{
-		ForumSlug: c.Params("forums"),
-		Page:      activePage,
-		PerPage:   perPage,
-		ViewerID:  viewerID,
+		CategorySlug: c.Params("categories"),
+		ForumSlug:    c.Params("forums"),
+		Page:         activePage,
+		PerPage:      perPage,
+		ViewerID:     viewerID,
 	}, req.Perms())
 	if errors.Is(err, errs.ErrNoRows) {
 		return c.SendStatus(fiber.StatusNotFound)

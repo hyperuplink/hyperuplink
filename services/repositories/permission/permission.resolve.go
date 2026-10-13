@@ -3,6 +3,7 @@ package permission
 import (
 	"context"
 	"errors"
+	"slices"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -26,11 +27,7 @@ func (repo *Repository) Resolve(
 		return res, nil
 	}
 
-	perms, err := database.Rows[permission.Permission](ctx, repo.db, `SELECT * FROM permissions
-		WHERE (group_id IS NULL OR group_id = ANY($1))
-		AND deleted_at IS NULL`,
-		memberOf,
-	)
+	perms, err := repo.all(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -39,6 +36,9 @@ func (repo *Repository) Resolve(
 	groupMax := map[uuid.UUID]byte{}
 	for i := range perms {
 		p := &perms[i]
+		if p.GroupID.Valid && !slices.Contains(memberOf, p.GroupID.String) {
+			continue
+		}
 		lvl := p.Level()
 		switch {
 		case !p.GroupID.Valid && !p.CategoryID.Valid:

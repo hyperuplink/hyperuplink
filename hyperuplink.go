@@ -210,8 +210,7 @@ func prepare(rt *runtime.Runtime) (err error) {
 	rt.AddEmbed("templates", &embedTemplates)
 	rt.AddEmbed("docs", &embedDocs)
 
-	intnat.From(rt).SetLocales(rt.GetEmbed("locales"), "en",
-		"de", "en", "es", "fr", "it", "ro")
+	intnat.From(rt).SetLocales(rt.GetEmbed("locales"), gh.DefaultLocale, gh.Locales...)
 
 	var srv any
 	rt.Debug("new", "repositories")

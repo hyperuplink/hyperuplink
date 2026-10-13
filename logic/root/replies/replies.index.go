@@ -3,6 +3,7 @@ package replies
 import (
 	"context"
 	"xn--gckvb8fzb.com/glides/runtime"
+	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/vreply"
 	"xn--gckvb8fzb.com/hyperuplink/models/vtopic"
@@ -26,10 +27,12 @@ func Index(
 ) (page *Page, err error) {
 	page = new(Page)
 
-	if page.Replies, page.Total, err = gh.Repositories(rt).Reply.VAllForTopicUUIDOrdered(ctx,
+	if page.Replies, page.Total, err = gh.Repositories(rt).Reply.VAllForTopicUUID(ctx,
 		in.Topic.ID,
-		in.PerPage,
-		in.Page,
+		common.QueryOptions{
+			Limit: in.PerPage,
+			Page:  in.Page,
+		},
 	); err != nil {
 		return nil, err
 	}

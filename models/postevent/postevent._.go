@@ -8,10 +8,8 @@ import (
 type PostEventType string
 
 const (
-	Report       PostEventType = "report"
-	PollVote     PostEventType = "pollvote"
-	AnswerVote   PostEventType = "answervote"
-	RSVPResponse PostEventType = "rsvpresponse"
+	Report   PostEventType = "report"
+	PollVote PostEventType = "pollvote"
 )
 
 type PostEventTarget string
@@ -27,14 +25,6 @@ const (
 	Spam       ReportType = 0
 	Misconduct ReportType = 1
 	Illegal    ReportType = 2
-)
-
-type RSVPResponseType int
-
-const (
-	Yes   RSVPResponseType = 0
-	No    RSVPResponseType = 1
-	Maybe RSVPResponseType = 2
 )
 
 type PostEvent struct {

@@ -72,7 +72,7 @@ func (r *Route) Create(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	r.notifyReply(c, req, created.Reply, created.Topic, created.Forum)
+	r.notifyReply(req, created.Reply, created.Topic, created.Forum)
 
 	var pages int
 	pages, err = logictopics.ReplyPages(

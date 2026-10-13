@@ -284,10 +284,11 @@ func TestAPIAdminSettingsRoundTrip(t *testing.T) {
 	res = h.get(t, "/api/v1/admin/board/topics", admin)
 	expectStatus(t, res, 200)
 	topics := object(t, res.JSON(t), "topics")
+	if _, ok := topics["allow_kind_poll"]; !ok || len(topics) != 1 {
+		t.Errorf("topic settings = %v, want allow_kind_poll alone", topics)
+	}
 	expectStatus(t, h.do(t, http.MethodPut, "/api/v1/admin/board/topics", admin, map[string]any{
-		"allow_kind_question": topics["allow_kind_question"],
-		"allow_kind_poll":     topics["allow_kind_poll"],
-		"allow_kind_rsvp":     topics["allow_kind_rsvp"],
+		"allow_kind_poll": topics["allow_kind_poll"],
 	}), 204)
 
 	for _, path := range []string{

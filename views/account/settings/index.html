@@ -5,12 +5,29 @@
   <div class="window-body {{$.Site.GetRoute.AsID}}">
     {{ $user := .Data.Get "user"}}
     {{ $timezones := .Data.Get "timezones"}}
+    {{ $locales := .Data.Get "locales"}}
+    {{ $localeNames := .Data.Get "locale_names"}}
     <form method="post"
           action="{{$.Site.GetFormAction "update"}}"
           enctype="multipart/form-data"
           class="">
       <input type="hidden" name="_csrf" value="{{$.Site.GetCSRFToken}}">
       <div class="flex-row gap margin">
+        <div class="flex-column grow">
+          <label for="language">{{$._.T "language_noun"}}</label>
+          <div class="dropdown">
+            <select name="language" size="1">
+              {{ range $locale := $locales }}
+              <option value="{{$locale}}"
+                      {{ if eq $user.Language $locale }}
+                      selected
+                      {{ end }}>{{ index $localeNames $locale }}
+              </option>
+              {{ end }}
+            </select>
+            <div class="dropdown-button"></div>
+          </div>
+        </div>
         <div class="flex-column grow">
           <label for="timezone">{{$._.T "timezone_noun"}}</label>
           <div class="dropdown">

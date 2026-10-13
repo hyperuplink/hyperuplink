@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/zlasd/tzloc"
 	"xn--gckvb8fzb.com/glides/http/route"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/http/web/request"
 	"xn--gckvb8fzb.com/hyperuplink/models/user"
 )
@@ -30,6 +31,8 @@ func (r *Route) Index(c fiber.Ctx) (err error) {
 	}
 
 	req.SetData("user", usr)
+	req.SetData("locales", gh.Locales)
+	req.SetData("locale_names", gh.LocaleNames)
 
 	timezones := tzloc.GetLocationList()
 	slices.Sort(timezones)

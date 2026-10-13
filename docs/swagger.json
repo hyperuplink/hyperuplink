@@ -77,7 +77,7 @@
                 ]
             },
             "patch": {
-                "description": "Changes the fields that are present: the timezone, the signature,\nwhich is Markdown, and whether replies to the user's topics are\nannounced by message. Fields that are left out stay as they are.",
+                "description": "Changes the fields that are present: the language, one of de, en,\nes, fr, it and ro, the timezone, the signature, which is Markdown,\nand whether replies to the user's topics are announced by message.\nFields that are left out stay as they are.",
                 "consumes": [
                     "application/json"
                 ],
@@ -4031,6 +4031,17 @@
         "account.PatchBody": {
             "type": "object",
             "properties": {
+                "language": {
+                    "type": "string",
+                    "enum": [
+                        "de",
+                        "en",
+                        "es",
+                        "fr",
+                        "it",
+                        "ro"
+                    ]
+                },
                 "notify_on_reply": {
                     "type": "boolean"
                 },
@@ -4710,12 +4721,6 @@
             "type": "object",
             "properties": {
                 "allow_kind_poll": {
-                    "type": "boolean"
-                },
-                "allow_kind_question": {
-                    "type": "boolean"
-                },
-                "allow_kind_rsvp": {
                     "type": "boolean"
                 }
             }

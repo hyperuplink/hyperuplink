@@ -9,6 +9,7 @@ import (
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/category"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/forum"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/group"
+	"xn--gckvb8fzb.com/hyperuplink/services/repositories/memo"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/permission"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/postevent"
 	"xn--gckvb8fzb.com/hyperuplink/services/repositories/reply"
@@ -42,14 +43,16 @@ func New(
 	repos = new(Repositories)
 	repos.db = db
 
+	board := memo.New(memo.DEFAULT_TTL)
+
 	var settingRepo *setting.Repository
-	if settingRepo, err = setting.New(repos.db, cfg); err != nil {
+	if settingRepo, err = setting.New(repos.db, cfg, board); err != nil {
 		return nil, err
 	}
 	repos.Setting = settingRepo
 
 	var groupRepo *group.Repository
-	if groupRepo, err = group.New(repos.db); err != nil {
+	if groupRepo, err = group.New(repos.db, board); err != nil {
 		return nil, err
 	}
 	repos.Group = groupRepo
@@ -61,7 +64,7 @@ func New(
 	repos.User = userRepo
 
 	var categoryRepo *category.Repository
-	if categoryRepo, err = category.New(repos.db); err != nil {
+	if categoryRepo, err = category.New(repos.db, board); err != nil {
 		return nil, err
 	}
 	repos.Category = categoryRepo
@@ -97,7 +100,7 @@ func New(
 	repos.APIKey = apikeyRepo
 
 	var permissionRepo *permission.Repository
-	if permissionRepo, err = permission.New(repos.db); err != nil {
+	if permissionRepo, err = permission.New(repos.db, board); err != nil {
 		return nil, err
 	}
 	repos.Permission = permissionRepo

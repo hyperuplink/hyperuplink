@@ -145,6 +145,9 @@ func New(
 			}
 		} else {
 			req.Session.SetCurrentUser(usr)
+			if usr.Language != "" {
+				req.In.SetLang(usr.Language)
+			}
 
 			settingUserProfile, err := settingRepo.GetOrCreateUserProfile(c.Context(),
 				gh.Repositories(req.r.GetRuntime()).Setting,

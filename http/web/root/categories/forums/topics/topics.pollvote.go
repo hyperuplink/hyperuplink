@@ -53,10 +53,11 @@ func (r *Route) PollVote(c fiber.Ctx) (err error) {
 	}
 
 	err = logictopics.PollVoteBySlugs(req.Context(), r.Runtime, req.Perms(), &logictopics.PollVoteBySlugsInput{
-		ForumSlug: c.Params("forums"),
-		TopicSlug: c.Params("topics"),
-		AuthorID:  authorID,
-		Selection: selection,
+		CategorySlug: c.Params("categories"),
+		ForumSlug:    c.Params("forums"),
+		TopicSlug:    c.Params("topics"),
+		AuthorID:     authorID,
+		Selection:    selection,
 	})
 	if errors.Is(err, errs.ErrForbidden) {
 		return req.RedirectToRoot()

@@ -3,21 +3,27 @@ SELECT
   f.*,
   COALESCE((SELECT COUNT(*)
     FROM topics t
-    WHERE t.forum_id = f.id), 0) AS topics,
+    WHERE t.forum_id = f.id
+      AND t.deleted_at IS NULL AND t.spammed_at IS NULL), 0) AS topics,
 
   COALESCE((SELECT COUNT(*)
     FROM replies r
     JOIN topics t ON r.topic_id = t.id
-    WHERE t.forum_id = f.id), 0) AS replies,
+    WHERE t.forum_id = f.id
+      AND t.deleted_at IS NULL AND t.spammed_at IS NULL
+      AND r.deleted_at IS NULL AND r.spammed_at IS NULL), 0) AS replies,
 
   GREATEST(
     (SELECT MAX(r.created_at)
      FROM replies r
      JOIN topics t ON r.topic_id = t.id
-     WHERE t.forum_id = f.id),
+     WHERE t.forum_id = f.id
+       AND t.deleted_at IS NULL AND t.spammed_at IS NULL
+       AND r.deleted_at IS NULL AND r.spammed_at IS NULL),
     (SELECT MAX(t.created_at)
      FROM topics t
-     WHERE t.forum_id = f.id)
+     WHERE t.forum_id = f.id
+       AND t.deleted_at IS NULL AND t.spammed_at IS NULL)
   ) AS "last_reply_at",
 
   c.name AS category_name,

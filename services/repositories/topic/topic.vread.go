@@ -99,43 +99,6 @@ func (repo *Repository) VAll(
 	)
 }
 
-func (repo *Repository) VAllForForumUUID(
-	ctx context.Context,
-	id uuid.UUID,
-	qo common.QueryOptions,
-) (model []vtopic.VTopic, total int64, err error) {
-	var mod []vtopic.VTopic
-
-	if total, err = repo.VAllCountForForumUUID(ctx, id, qo); err != nil {
-		return nil, 0, err
-	}
-
-	mod, err = database.Rows[vtopic.VTopic](ctx, repo.db, qo.Query(
-		`SELECT * FROM vtopics WHERE forum_id = $1`,
-		common.QueryCapabilities{
-			HasSpammed: true,
-			HasDeleted: true,
-		}),
-		id,
-	)
-
-	return mod, total, err
-}
-
-func (repo *Repository) VAllForForumID(
-	ctx context.Context,
-	id string,
-	qo common.QueryOptions,
-) (model []vtopic.VTopic, total int64, err error) {
-	var uuID uuid.UUID
-
-	if uuID, err = uuid.Parse(id); err != nil {
-		return nil, 0, database.ConvertError(err)
-	}
-
-	return repo.VAllForForumUUID(ctx, uuID, qo)
-}
-
 func (repo *Repository) VGetByUUID(
 	ctx context.Context,
 	id uuid.UUID,
@@ -205,6 +168,7 @@ func (repo *Repository) VGetByForumIDSlug(
 
 func (repo *Repository) VGetBySlugs(
 	ctx context.Context,
+	categorySlug string,
 	forumSlug string,
 	slug string,
 	qo common.QueryOptions,
@@ -214,12 +178,13 @@ func (repo *Repository) VGetBySlugs(
 		repo.db,
 		qo.Query(
 			`SELECT * FROM vtopics
-			WHERE forum_slug = $1 AND slug = $2`,
+			WHERE category_slug = $1 AND forum_slug = $2 AND slug = $3`,
 			common.QueryCapabilities{
 				HasSpammed: true,
 				HasDeleted: true,
 			},
 		),
+		categorySlug,
 		forumSlug,
 		slug,
 	)

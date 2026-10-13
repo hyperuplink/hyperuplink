@@ -1,7 +1,6 @@
 package topics
 
 import (
-	"github.com/gofiber/fiber/v3"
 	"xn--gckvb8fzb.com/glides/http/route"
 	"xn--gckvb8fzb.com/glides/services/repositories/common"
 	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
@@ -13,14 +12,13 @@ import (
 )
 
 func (r *Route) notifyReply(
-	c fiber.Ctx,
 	req *request.Request,
 	rep *reply.Reply,
 	top *topic.Topic,
 	fum *forum.Forum,
 ) {
-	cat, err := gh.Repositories(r.Runtime).Category.GetBySlug(req.Context(),
-		c.Params("categories"),
+	cat, err := gh.Repositories(r.Runtime).Category.GetByUUID(req.Context(),
+		fum.CategoryID,
 		common.QueryOptions{Limit: 1},
 	)
 	if err != nil {

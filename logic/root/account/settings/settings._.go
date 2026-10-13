@@ -11,6 +11,7 @@ import (
 )
 
 type UpdateInput struct {
+	Language string `json:"language" form:"language" validate:"required,oneof=de en es fr it ro"`
 	Timezone string `json:"timezone" form:"timezone" validate:"required,timezone"`
 }
 
@@ -20,6 +21,7 @@ func Update(
 	usr *user.User,
 	in *UpdateInput,
 ) (err error) {
+	usr.Language = in.Language
 	usr.Timezone = in.Timezone
 
 	return gh.Repositories(rt).User.Update(ctx, usr)

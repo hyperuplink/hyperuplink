@@ -24,6 +24,8 @@ func (repo *Repository) MoveUp(ctx context.Context, model *category.Category) (e
 		AND categories.deleted_at IS NULL`,
 		model.ID,
 	)
+	repo.memo.Reset()
+
 	return err
 }
 
@@ -45,5 +47,7 @@ func (repo *Repository) MoveDown(ctx context.Context, model *category.Category) 
 		AND categories.deleted_at IS NULL`,
 		model.ID,
 	)
+	repo.memo.Reset()
+
 	return err
 }

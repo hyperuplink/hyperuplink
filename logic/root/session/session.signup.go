@@ -108,10 +108,7 @@ func SignUp(
 	if isJID {
 		usr.SetEmailIsJID()
 	}
-	usr.Language = in.Language
-	if usr.Language == "" {
-		usr.Language = "en"
-	}
+	usr.Language = gh.Locale(rt, in.Language)
 
 	promoteAdmin := rt.Config().Strings("Users.PromoteAdmin")
 	if slices.Index(promoteAdmin, strings.ToLower(usr.Email)) > -1 {

@@ -9,9 +9,10 @@ import (
 )
 
 // @Summary		Update the account
-// @Description	Changes the fields that are present: the timezone, the signature,
-// @Description	which is Markdown, and whether replies to the user's topics are
-// @Description	announced by message. Fields that are left out stay as they are.
+// @Description	Changes the fields that are present: the language, one of de, en,
+// @Description	es, fr, it and ro, the timezone, the signature, which is Markdown,
+// @Description	and whether replies to the user's topics are announced by message.
+// @Description	Fields that are left out stay as they are.
 // @Tags			account
 // @Accept			json
 // @Produce		json
@@ -40,8 +41,18 @@ func (r *Route) Update(c fiber.Ctx) (err error) {
 		return rerr
 	}
 
-	if in.Timezone != nil {
-		err = logicsettings.Update(req.Context(), r.Runtime, usr, &logicsettings.UpdateInput{Timezone: *in.Timezone})
+	if in.Language != nil || in.Timezone != nil {
+		settings := &logicsettings.UpdateInput{
+			Language: usr.Language,
+			Timezone: usr.Timezone,
+		}
+		if in.Language != nil {
+			settings.Language = *in.Language
+		}
+		if in.Timezone != nil {
+			settings.Timezone = *in.Timezone
+		}
+		err = logicsettings.Update(req.Context(), r.Runtime, usr, settings)
 		if ret, rerr := req.RespondOnError(err); ret {
 			return rerr
 		}

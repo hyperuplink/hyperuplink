@@ -8,6 +8,8 @@ import (
 )
 
 func (repo *Repository) Create(ctx context.Context, model *category.Category) (rowID uuid.UUID, err error) {
+	defer repo.memo.Reset()
+
 	return database.Value[uuid.UUID](ctx, repo.db, `INSERT INTO categories (
 		 name
 		,slug

@@ -23,5 +23,7 @@ func Update[T any](
 		model.JSONValue,
 		model.TimeValue,
 	)
+	repo.memo.Reset()
+
 	return err
 }

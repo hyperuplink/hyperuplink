@@ -15,11 +15,12 @@ import (
 )
 
 type ShowInput struct {
-	ForumSlug string
-	TopicSlug string
-	Page      int
-	PerPage   int
-	ViewerID  uuid.NullUUID
+	CategorySlug string
+	ForumSlug    string
+	TopicSlug    string
+	Page         int
+	PerPage      int
+	ViewerID     uuid.NullUUID
 }
 
 type View struct {
@@ -37,6 +38,7 @@ func Show(
 	perms *permission.Resolution,
 ) (view *View, err error) {
 	top, err := gh.Repositories(rt).Topic.VGetBySlugs(ctx,
+		in.CategorySlug,
 		in.ForumSlug,
 		in.TopicSlug,
 		common.QueryOptions{
@@ -78,10 +80,6 @@ func viewForTopic(
 
 	limit := perPage
 	offAdjust := 1
-
-	// If we are on the first page, we subtract 1 from limit due to the Topic,
-	// and we set offadjust to 0 because we only need to adjust the offset for
-	// all pages past the first one.
 	if page == 1 {
 		limit -= 1
 		offAdjust = 0
@@ -89,8 +87,6 @@ func viewForTopic(
 	reps, total, err := gh.Repositories(rt).Reply.VAllForTopicUUID(ctx,
 		top.ID,
 		common.QueryOptions{
-			OrderBy:   "created_at",
-			Order:     common.Ascending,
 			Limit:     limit,
 			Page:      page,
 			OffAdjust: offAdjust,
@@ -99,7 +95,6 @@ func viewForTopic(
 	if err != nil {
 		return nil, err
 	}
-	// We add the Topic to the total
 	total += 1
 
 	return &View{
