@@ -1,7 +1,10 @@
 package flash
 
 import (
+	"errors"
+
 	"github.com/gofiber/fiber/v3"
+	"xn--gckvb8fzb.com/hyperuplink/errs"
 )
 
 type FlashType string
@@ -16,11 +19,13 @@ const (
 type Flash struct {
 	c       fiber.Ctx
 	flashes map[string]string
+	hidden  func(error)
 }
 
-func New(c fiber.Ctx) (f *Flash) {
+func New(c fiber.Ctx, hidden func(error)) (f *Flash) {
 	f = new(Flash)
 	f.c = c
+	f.hidden = hidden
 	f.flashes = make(map[string]string)
 
 	messages := c.Redirect().Messages()
@@ -41,7 +46,16 @@ func (f *Flash) HasErrors() bool {
 }
 
 func (f *Flash) SetError(err error) {
-	f.flashes[string(ErrorFlash)] = err.Error()
+	f.flashes[string(ErrorFlash)] = f.message(err)
+}
+
+func (f *Flash) message(err error) string {
+	public := errs.Public(err)
+	if public == errs.ErrInternal && !errors.Is(err, errs.ErrInternal) && f.hidden != nil {
+		f.hidden(err)
+	}
+
+	return public.Error()
 }
 
 func (f *Flash) SetWarn(warn string) {
@@ -117,7 +131,7 @@ func (f *Flash) Warn() (s string) {
 
 func (f *Flash) SetErrorsMap(errsmap map[string]error) {
 	for field, err := range errsmap {
-		f.flashes[field] = err.Error()
+		f.flashes[field] = f.message(err)
 	}
 }
 

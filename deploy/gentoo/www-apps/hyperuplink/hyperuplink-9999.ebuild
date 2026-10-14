@@ -50,11 +50,11 @@ fi
 LICENSE="SEGV-1.1"
 SLOT="0"
 
-# go.mod requires this Go version, and GOTOOLCHAIN=local
-# (set by go-module.eclass) forbids downloading a newer toolchain, so the
-# system Go must be new enough. Appended, because a plain assignment would drop
-# the eclass's own BDEPEND.
-BDEPEND+=" >=dev-lang/go-1.26.4:="
+# go.mod asks for Go 1.27.2 only in its toolchain line, which GOTOOLCHAIN=local
+# (set by go-module.eclass) ignores, so the minimum is set here: 1.27.2 fixes
+# standard library vulnerabilities the board reaches on 1.27.1. Appended,
+# because a plain assignment would drop the eclass's own BDEPEND.
+BDEPEND+=" >=dev-lang/go-1.27.2:="
 
 DEPEND="
 	acct-group/hyperuplink

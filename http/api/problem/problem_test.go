@@ -78,3 +78,11 @@ func TestChallengeNamesInvalidTokensOnly(t *testing.T) {
 		t.Errorf("missing key challenge = %q", got)
 	}
 }
+
+func TestEveryMappedErrorIsVisibleOnTheWeb(t *testing.T) {
+	for _, m := range mappings {
+		if got := errs.Public(m.err); !errors.Is(got, m.err) {
+			t.Errorf("%q has an API status but errs.Public turns it into %q", m.err, got)
+		}
+	}
+}

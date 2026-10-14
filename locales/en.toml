@@ -46,6 +46,7 @@ attachment_format_not_allowed = 'One or more attachments have a file type that i
 attachment_hook_failed = 'An attachment was rejected by the upload scanner.'
 attachment_duplicate = 'You have already uploaded one of these files.'
 attachment_upload_failed = 'Uploading one or more attachments failed.'
+attachment_not_found = 'The attachment was not found.'
 enable_attachments = 'Enable attachments'
 attachment_upload_formats = 'Allowed upload formats'
 attachment_max_size = 'Max attachment size (bytes)'

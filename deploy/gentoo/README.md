@@ -31,7 +31,10 @@ deploy/gentoo/
 
 ## Requirements
 
-- `>=dev-lang/go-1.26.4` (`GOTOOLCHAIN=local` forbids fetching a newer one).
+- `>=dev-lang/go-1.27.2`, the release that fixes the standard library
+  vulnerabilities the board reaches on 1.27.1. `GOTOOLCHAIN=local` forbids
+  fetching it, and on 2026-10-14 Gentoo keyworded it for testing only, so a
+  stable system unmasks it in step 2.
 - ImageMagick (`media-gfx/imagemagick`, for `convert`) is pulled in as a runtime
   dependency.
 - A reachable PostgreSQL server, a Redis/Valkey server, and optionally an
@@ -60,6 +63,9 @@ echo 'www-apps/hyperuplink SEGV-1.1' >> /etc/portage/package.license
 
 # Either the released version:
 echo 'www-apps/hyperuplink ~amd64' >> /etc/portage/package.accept_keywords
+
+# On a stable system, also the Go it needs, until Gentoo marks it stable:
+echo '=dev-lang/go-1.27.2 ~amd64' >> /etc/portage/package.accept_keywords
 
 # ... or the live ebuild instead:
 echo 'www-apps/hyperuplink **' >> /etc/portage/package.accept_keywords

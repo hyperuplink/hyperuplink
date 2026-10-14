@@ -71,7 +71,7 @@ jobs:
         run: |
           version="${GITHUB_REF_NAME#v}"
           tarball="hyperuplink-${version}-deps.tar.xz"
-          GOMODCACHE="${RUNNER_TEMP}/go-mod" go mod download -modcacherw
+          GOTOOLCHAIN=local GOMODCACHE="${RUNNER_TEMP}/go-mod" go mod download -modcacherw
           tar --create --auto-compress \
               --file "${RUNNER_TEMP}/${tarball}" -C "${RUNNER_TEMP}" go-mod
           echo "tarball=${RUNNER_TEMP}/${tarball}" >> "$GITHUB_OUTPUT"

@@ -2,6 +2,8 @@ module xn--gckvb8fzb.com/hyperuplink
 
 go 1.27.0
 
+toolchain go1.27.2
+
 require (
 	github.com/Masterminds/sprig/v3 v3.3.1-0.20250718132921-989da45d7c08
 	github.com/fsnotify/fsnotify v1.10.1

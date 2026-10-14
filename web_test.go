@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"slices"
 	"strings"
 	"sync"
@@ -394,5 +395,55 @@ func TestWebForumPagesOrderTopicsLikeTheAPI(t *testing.T) {
 	slices.SortFunc(sorted, func(a, b uuid.UUID) int { return bytes.Compare(b[:], a[:]) })
 	if !slices.Equal(ties, sorted) {
 		t.Errorf("topics with one timestamp = %v, want id descending %v", ties, sorted)
+	}
+}
+
+func TestWebShowsNoRawErrorText(t *testing.T) {
+	h, app := webTest(t)
+
+	if _, err := database.From(h.rt).Exec(h.ctx,
+		`ALTER TABLE users ADD CONSTRAINT f38_probe CHECK (username <> 'rawerror')`,
+	); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		if _, err := database.From(h.rt).Exec(h.ctx,
+			`ALTER TABLE users DROP CONSTRAINT f38_probe`,
+		); err != nil {
+			t.Errorf("drop the probe constraint: %v", err)
+		}
+	})
+
+	wc := newWebClient(t, app, "en-US,en;q=0.9")
+	_, page := wc.get("/session/signup")
+	token := csrfField.FindStringSubmatch(page)
+	if token == nil {
+		t.Fatal("the signup page has no CSRF token")
+	}
+
+	res := wc.do(http.MethodPost, "/session/signup", url.Values{
+		"username":        {"rawerror"},
+		"email":           {"rawerror@example.org"},
+		"password":        {testPassword},
+		"password_repeat": {testPassword},
+		"_csrf":           {token[1]},
+	})
+	defer res.Body.Close()
+	raw, err := io.ReadAll(res.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	body := string(raw)
+
+	for _, leak := range []string{"SQLSTATE", "f38_probe", "violates check constraint"} {
+		if strings.Contains(body, leak) {
+			t.Errorf("the signup page shows %q", leak)
+		}
+	}
+	if !strings.Contains(body, "Something went wrong. Please try again.") {
+		t.Error("the signup page doesn't show the err_internal message")
+	}
+	if _, err = gh.Repositories(h.rt).User.GetByUsername(h.ctx, "rawerror", queryOne()); !errors.Is(err, errs.ErrNoRows) {
+		t.Errorf("the failed signup created a user: %v", err)
 	}
 }

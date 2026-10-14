@@ -12,11 +12,12 @@ because seemingly that is the only place Nix looks for one.
 - Nix 2.4 or newer. Flakes are convenient but optional, see
   [Without flakes](#without-flakes).
 - Go, ImageMagick and everything else the build needs come from nixpkgs, so
-  nothing has to be installed by hand. The nixpkgs in use does have to carry Go
-  1.26.4 or newer, because `go.mod` asks for it and the Go builder pins
-  `GOTOOLCHAIN=local`, which forbids fetching another one. The flake pins a
-  nixpkgs that does, so this only bites when the overlay is pointed at an older
-  channel.
+  nothing has to be installed by hand. The package builds with
+  `buildGo127Module`, because `go.mod` asks for Go 1.27.0, the Go builder pins
+  `GOTOOLCHAIN=local`, which forbids fetching another one, and the default Go of
+  nixpkgs was still 1.26 on 2026-10-11. The nixpkgs in use therefore has to
+  provide `buildGo127Module`. The flake pins one that does, so this only bites
+  when the overlay is pointed at an older channel.
 - A reachable PostgreSQL server and a Redis/Valkey server. On NixOS the module
   can provision both, and on other systems they are configured in the TOML
   config like everywhere else.

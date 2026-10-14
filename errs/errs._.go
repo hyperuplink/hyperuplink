@@ -29,10 +29,10 @@ var (
 )
 
 var (
-	ErrUserIDNotFound error = errors.New(
+	ErrUserIDNotFound error = newPublic(
 		"err_user_id_not_found",
 	)
-	ErrPasswordWrong error = errors.New(
+	ErrPasswordWrong error = newPublic(
 		"err_password_wrong",
 	)
 	ErrIfaceTypeUnsupported error = errors.New(
@@ -44,157 +44,157 @@ var (
 	ErrRedisAddrsMalformed error = errors.New(
 		"err_redis_addrs_malformed",
 	)
-	ErrFormInvalid error = errors.New(
+	ErrFormInvalid error = newPublic(
 		"err_form_invalid",
 	)
-	ErrUsernamePasswordWrong error = errors.New(
+	ErrUsernamePasswordWrong error = newPublic(
 		"username_password_wrong",
 	)
-	ErrEmailConfirmationTokenWrong error = errors.New(
+	ErrEmailConfirmationTokenWrong error = newPublic(
 		"email_confirmation_token_wrong",
 	)
-	ErrPictureTooLarge error = errors.New(
+	ErrPictureTooLarge error = newPublic(
 		"picture_too_large",
 	)
-	ErrPictureFormatNotAllowed error = errors.New(
+	ErrPictureFormatNotAllowed error = newPublic(
 		"picture_format_not_allowed",
 	)
-	ErrInvalidUploadFormat error = errors.New(
+	ErrInvalidUploadFormat error = newPublic(
 		"invalid_upload_format",
 	)
-	ErrInvalidStorageProvider error = errors.New(
+	ErrInvalidStorageProvider error = newPublic(
 		"invalid_storage_provider",
 	)
-	ErrThemeStorageNotConfigured error = errors.New(
+	ErrThemeStorageNotConfigured error = newPublic(
 		"theme_storage_not_configured",
 	)
-	ErrInvalidTheme error = errors.New(
+	ErrInvalidTheme error = newPublic(
 		"invalid_theme",
 	)
-	ErrInvalidColorscheme error = errors.New(
+	ErrInvalidColorscheme error = newPublic(
 		"invalid_colorscheme",
 	)
-	ErrBannerUploadFailed error = errors.New(
+	ErrBannerUploadFailed error = newPublic(
 		"banner_upload_failed",
 	)
-	ErrBannerAlreadySet error = errors.New(
+	ErrBannerAlreadySet error = newPublic(
 		"banner_already_set",
 	)
-	ErrBannerFormatNotAllowed error = errors.New(
+	ErrBannerFormatNotAllowed error = newPublic(
 		"banner_format_not_allowed",
 	)
-	ErrFaviconUploadFailed error = errors.New(
+	ErrFaviconUploadFailed error = newPublic(
 		"favicon_upload_failed",
 	)
-	ErrFaviconAlreadySet error = errors.New(
+	ErrFaviconAlreadySet error = newPublic(
 		"favicon_already_set",
 	)
-	ErrFaviconFormatNotAllowed error = errors.New(
+	ErrFaviconFormatNotAllowed error = newPublic(
 		"favicon_format_not_allowed",
 	)
-	ErrBackgroundUploadFailed error = errors.New(
+	ErrBackgroundUploadFailed error = newPublic(
 		"background_upload_failed",
 	)
-	ErrBackgroundAlreadySet error = errors.New(
+	ErrBackgroundAlreadySet error = newPublic(
 		"background_already_set",
 	)
-	ErrBackgroundFormatNotAllowed error = errors.New(
+	ErrBackgroundFormatNotAllowed error = newPublic(
 		"background_format_not_allowed",
 	)
-	ErrAttachmentTooLarge error = errors.New(
+	ErrAttachmentTooLarge error = newPublic(
 		"attachment_too_large",
 	)
-	ErrAttachmentUploadFailed error = errors.New(
+	ErrAttachmentUploadFailed error = newPublic(
 		"attachment_upload_failed",
 	)
-	ErrAttachmentFormatNotAllowed error = errors.New(
+	ErrAttachmentFormatNotAllowed error = newPublic(
 		"attachment_format_not_allowed",
 	)
-	ErrAttachmentHookFailed error = errors.New(
+	ErrAttachmentHookFailed error = newPublic(
 		"attachment_hook_failed",
 	)
-	ErrAttachmentDuplicate error = errors.New(
+	ErrAttachmentDuplicate error = newPublic(
 		"attachment_duplicate",
 	)
-	ErrAttachmentNotFound error = errors.New(
+	ErrAttachmentNotFound error = newPublic(
 		"attachment_not_found",
 	)
-	ErrAPIKeyInvalid error = errors.New(
+	ErrAPIKeyInvalid error = newPublic(
 		"err_apikey_invalid",
 	)
-	ErrForbidden error = errors.New(
+	ErrForbidden error = newPublic(
 		"err_forbidden",
 	)
-	ErrUnauthorized error = errors.New(
+	ErrUnauthorized error = newPublic(
 		"err_unauthorized",
 	)
 	ErrValidation error = errors.New(
 		"validation",
 	)
-	ErrOTPCodeWrong error = errors.New(
+	ErrOTPCodeWrong error = newPublic(
 		"err_otp_code_wrong",
 	)
-	ErrOTPSetupExpired error = errors.New(
+	ErrOTPSetupExpired error = newPublic(
 		"err_otp_setup_expired",
 	)
-	ErrOTPTooManyAttempts error = errors.New(
+	ErrOTPTooManyAttempts error = newPublic(
 		"err_otp_too_many_attempts",
 	)
-	ErrOAuthFailed error = errors.New(
+	ErrOAuthFailed error = newPublic(
 		"err_oauth_failed",
 	)
-	ErrOAuthNoEmail error = errors.New(
+	ErrOAuthNoEmail error = newPublic(
 		"err_oauth_no_email",
 	)
-	ErrOAuthEmailUnverified error = errors.New(
+	ErrOAuthEmailUnverified error = newPublic(
 		"err_oauth_email_unverified",
 	)
-	ErrPollKindInvalid error = errors.New(
+	ErrPollKindInvalid error = newPublic(
 		"err_poll_kind_invalid",
 	)
-	ErrPollEnded error = errors.New(
+	ErrPollEnded error = newPublic(
 		"err_poll_ended",
 	)
-	ErrPollSelectionInvalid error = errors.New(
+	ErrPollSelectionInvalid error = newPublic(
 		"err_poll_selection_invalid",
 	)
-	ErrPollNotAllowed error = errors.New(
+	ErrPollNotAllowed error = newPublic(
 		"err_poll_not_allowed",
 	)
-	ErrPollOptionsTooFew error = errors.New(
+	ErrPollOptionsTooFew error = newPublic(
 		"err_poll_options_too_few",
 	)
-	ErrPollOptionsTooMany error = errors.New(
+	ErrPollOptionsTooMany error = newPublic(
 		"err_poll_options_too_many",
 	)
-	ErrPollOptionTooLong error = errors.New(
+	ErrPollOptionTooLong error = newPublic(
 		"err_poll_option_too_long",
 	)
-	ErrPollEndsAtInvalid error = errors.New(
+	ErrPollEndsAtInvalid error = newPublic(
 		"err_poll_ends_at_invalid",
 	)
-	ErrPollEndsAtPast error = errors.New(
+	ErrPollEndsAtPast error = newPublic(
 		"err_poll_ends_at_past",
 	)
-	ErrAuthenticationRequired error = errors.New(
+	ErrAuthenticationRequired error = newPublic(
 		"err_authentication_required",
 	)
-	ErrOTPRequired error = errors.New(
+	ErrOTPRequired error = newPublic(
 		"err_otp_required",
 	)
-	ErrRateLimited error = errors.New(
+	ErrRateLimited error = newPublic(
 		"err_rate_limited",
 	)
-	ErrInternal error = errors.New(
+	ErrInternal error = newPublic(
 		"err_internal",
 	)
-	ErrAttachmentsDisabled error = errors.New(
+	ErrAttachmentsDisabled error = newPublic(
 		"err_attachments_disabled",
 	)
-	ErrReplyParentInvalid error = errors.New(
+	ErrReplyParentInvalid error = newPublic(
 		"err_reply_parent_invalid",
 	)
-	ErrPicturesDisabled error = errors.New(
+	ErrPicturesDisabled error = newPublic(
 		"err_pictures_disabled",
 	)
 )

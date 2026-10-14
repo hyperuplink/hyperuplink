@@ -14,7 +14,7 @@
 #
 {
   lib,
-  buildGoModule,
+  buildGo127Module,
   makeBinaryWrapper,
   imagemagick,
   versionCheckHook,
@@ -51,15 +51,15 @@ let
     ];
   };
 in
-buildGoModule (finalAttrs: {
+buildGo127Module (finalAttrs: {
   pname = "hyperuplink";
   inherit version;
   src = source;
 
-  vendorHash = "sha256-+0Xvodkh22umkMYXPIh2Rh5nFtUBi7PbUYWsdLnIK50=";
+  vendorHash = "sha256-fPsBRA1vFOin5bMrmKfeqkcEYgQhA/zuZkAAxIpvyPo=";
 
-  # go.mod requires Go 1.26.4 and the nixpkgs Go builder pins GOTOOLCHAIN=local,
-  # so nixpkgs' Go has to be new enough.
+  # go.mod requires Go 1.27.0 and the nixpkgs Go builder pins GOTOOLCHAIN=local,
+  # while nixpkgs' default Go is still 1.26, hence buildGo127Module.
   env.CGO_ENABLED = 0;
 
   subPackages = [ "." ];

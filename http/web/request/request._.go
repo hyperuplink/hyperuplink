@@ -85,7 +85,9 @@ func New(
 	req.BCN = bcn.New()
 	req.Site = site.New(req.r, req.c)
 	req.Session = session.New(req.c)
-	req.Flash = flash.New(req.c)
+	req.Flash = flash.New(req.c, func(err error) {
+		req.r.GetRuntime().Error("error", err, "path", req.c.Path())
+	})
 	req.In = in.New(req.r, req.c)
 	req.Form = form.New(req.Flash, req.In)
 	req.Data = data.New(req.c)

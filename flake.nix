@@ -97,7 +97,7 @@
         {
           default = pkgs.mkShell {
             packages = [
-              pkgs.go
+              pkgs.go_1_27
               pkgs.imagemagick
               pkgs.postgresql
               pkgs.valkey
