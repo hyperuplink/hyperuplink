@@ -266,6 +266,10 @@ func createUser(rt *runtime.Runtime, jsonStr string) error {
 		return err
 	}
 
+	if err := intnat.From(rt).Startup(); err != nil {
+		return err
+	}
+
 	if err := database.From(rt).Startup(); err != nil {
 		return err
 	}
