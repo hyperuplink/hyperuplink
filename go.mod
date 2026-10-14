@@ -21,7 +21,7 @@ require (
 	github.com/shareed2k/goth_fiber/v2 v2.1.0
 	github.com/swaggo/swag v1.16.6
 	github.com/zlasd/tzloc v1.16.16
-	xn--gckvb8fzb.com/glides v0.2.0
+	xn--gckvb8fzb.com/glides v0.2.1
 )
 
 require (

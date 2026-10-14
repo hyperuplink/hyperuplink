@@ -19,7 +19,7 @@
             <select name="language" size="1">
               {{ range $locale := $locales }}
               <option value="{{$locale}}"
-                      {{ if eq $user.Language $locale }}
+                      {{ if eq $._.Lang $locale }}
                       selected
                       {{ end }}>{{ index $localeNames $locale }}
               </option>

@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/gofiber/fiber/v3"
+	"xn--gckvb8fzb.com/glides/services/database"
 	logicsettings "xn--gckvb8fzb.com/hyperuplink/logic/root/account/settings"
 	logicsession "xn--gckvb8fzb.com/hyperuplink/logic/root/session"
 )
@@ -167,6 +168,65 @@ func TestSignUpStoresASupportedLanguage(t *testing.T) {
 		}
 		if usr.Language != tc.want {
 			t.Errorf("language given %q stored as %q, want %q", tc.given, usr.Language, tc.want)
+		}
+	}
+}
+
+var (
+	languageSelect = regexp.MustCompile(`(?s)<select name="language"[^>]*>(.*?)</select>`)
+	languageOption = regexp.MustCompile(`<option value="([^"]*)"\s*(selected)?`)
+)
+
+func selectedLanguages(t *testing.T, body string) []string {
+	t.Helper()
+
+	block := languageSelect.FindStringSubmatch(body)
+	if block == nil {
+		t.Fatal("the settings page has no language select")
+	}
+
+	var selected []string
+	for _, option := range languageOption.FindAllStringSubmatch(block[1], -1) {
+		if option[2] != "" {
+			selected = append(selected, option[1])
+		}
+	}
+
+	return selected
+}
+
+func TestWebSettingsPreselectTheLanguageOfThePage(t *testing.T) {
+	h, app := webTest(t)
+
+	setStored := func(language string) {
+		t.Helper()
+		if _, err := database.From(h.rt).Exec(h.ctx,
+			`UPDATE users SET language = $1 WHERE username = 'juno'`, language,
+		); err != nil {
+			t.Fatal(err)
+		}
+	}
+	t.Cleanup(func() { setStored("en") })
+
+	for _, tc := range []struct {
+		stored, header, want string
+	}{
+		{"pt", "de-DE,de;q=0.9", "en"},
+		{"", "fr-FR,fr;q=0.9", "fr"},
+		{"it", "en-US,en;q=0.9", "it"},
+	} {
+		setStored(tc.stored)
+
+		wc := newWebClient(t, app, tc.header)
+		wc.signIn("juno", testPassword)
+
+		status, body := wc.get("/account/settings")
+		if status != 200 {
+			t.Fatalf("stored %q: settings page = %d", tc.stored, status)
+		}
+		if got := selectedLanguages(t, body); len(got) != 1 || got[0] != tc.want {
+			t.Errorf("stored %q with Accept-Language %q: selected %v, want [%s]",
+				tc.stored, tc.header, got, tc.want)
 		}
 	}
 }

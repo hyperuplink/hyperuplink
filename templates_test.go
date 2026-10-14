@@ -10,6 +10,7 @@ import (
 
 	"github.com/google/uuid"
 	"xn--gckvb8fzb.com/glides/worker/targets/tmpl"
+	gh "xn--gckvb8fzb.com/hyperuplink/helpers"
 	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob"
 	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob/confirmation/signupconfirmation"
 	"xn--gckvb8fzb.com/hyperuplink/models/asyncjob/notification/replynotification"
@@ -172,6 +173,36 @@ func TestTemplatesMatchGolden(t *testing.T) {
 			}
 			assertGolden(t, goldenPath(c, "html"), sb.String())
 		})
+	}
+}
+
+func TestTemplatesFallBackToEnglish(t *testing.T) {
+	for _, c := range goldenCases() {
+		for _, lang := range gh.Locales {
+			if lang == c.lang {
+				continue
+			}
+			t.Run(c.key()+"/"+lang, func(t *testing.T) {
+				cache := tmpl.NewCache(&embedTemplates, c.spec)
+
+				item, err := cache.TemplatesFor(c.jobType, c.subType, lang)
+				if err != nil {
+					t.Fatalf("load templates for %s: %v", lang, err)
+				}
+
+				var sb strings.Builder
+				if err := item.TextTmpl.Execute(&sb, c.data(t)); err != nil {
+					t.Fatalf("render text: %v", err)
+				}
+				want, err := os.ReadFile(goldenPath(c, "text"))
+				if err != nil {
+					t.Fatal(err)
+				}
+				if sb.String() != string(want) {
+					t.Errorf("%s rendered differently from the %s template", lang, c.lang)
+				}
+			})
+		}
 	}
 }
 
