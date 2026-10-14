@@ -447,3 +447,15 @@ func TestWebShowsNoRawErrorText(t *testing.T) {
 		t.Errorf("the failed signup created a user: %v", err)
 	}
 }
+
+func TestWebFooterLinksToTheProjectSite(t *testing.T) {
+	h, app := webTest(t)
+
+	status, body := h.webGet(t, app, "/")
+	if status != 200 {
+		t.Fatalf("GET / = %d", status)
+	}
+	if !strings.Contains(body, `Powered by <a href="https://hyperup.link"`) {
+		t.Error("the footer's Powered by doesn't link to https://hyperup.link")
+	}
+}
