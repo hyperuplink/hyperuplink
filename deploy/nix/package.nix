@@ -99,7 +99,7 @@ buildGo127Module (finalAttrs: {
       Redis/Valkey for background jobs.
     '';
     homepage = "https://hyperup.link";
-    downloadPage = "https://codeberg.org/hyperuplink/hyperuplink";
+    downloadPage = "https://tty.fail/hyperuplink/hyperuplink";
     # SEGV is a custom, non-OSI license. Section 2.1 grants copying and
     # distribution, but section 3 conditions the grant on ethical standards,
     # so is not free in the sense nixpkgs means it.

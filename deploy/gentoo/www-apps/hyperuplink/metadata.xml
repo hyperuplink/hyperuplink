@@ -13,8 +13,7 @@
 		background jobs.
 	</longdescription>
 	<upstream>
-		<bugs-to>https://codeberg.org/hyperuplink/hyperuplink/issues</bugs-to>
+		<bugs-to>https://tty.fail/hyperuplink/hyperuplink/issues</bugs-to>
 		<remote-id type="github">hyperuplink/hyperuplink</remote-id>
-		<remote-id type="codeberg">hyperuplink/hyperuplink</remote-id>
 	</upstream>
 </pkgmetadata>

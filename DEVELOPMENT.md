@@ -17,7 +17,7 @@ in the executable and there are no loose files to manage:
   `$PATH`, which is used to convert profile pictures
 
 ```sh
-git clone https://codeberg.org/hyperuplink/hyperuplink.git
+git clone https://tty.fail/hyperuplink/hyperuplink.git
 cd hyperuplink
 make build
 ```

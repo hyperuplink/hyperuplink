@@ -10,7 +10,7 @@ appVersion: "latest"
 kubeVersion: ">=1.23.0-0"
 home: https://hyperup.link
 sources:
-  - https://codeberg.org/hyperuplink/hyperuplink
+  - https://tty.fail/hyperuplink/hyperuplink
 keywords:
   - forum
   - bbs

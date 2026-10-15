@@ -8,7 +8,7 @@ inherit go-module systemd
 DESCRIPTION="A super high speed internet bulletin board"
 HOMEPAGE="
 	https://hyperup.link
-	https://codeberg.org/hyperuplink/hyperuplink
+	https://tty.fail/hyperuplink/hyperuplink
 	https://github.com/hyperuplink/hyperuplink
 "
 
