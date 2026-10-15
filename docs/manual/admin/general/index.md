@@ -21,6 +21,13 @@ General holds the handful of settings that describe the board as a whole.
 - _Show File → Quit menu_: adds a _Quit_ entry to the _File_ menu pointing at
   the _Link_ underneath it, which is there for boards that live inside something
   else and want a way back out. The link is required once the checkbox is on.
+- _Serve the API to guests_: whether the JSON API answers requests that carry
+  no [API key]({{ manual "account/api" }}). A guest over the API gets what a
+  guest gets in the browser, meaning what the default permission on the
+  [permissions]({{ manual "admin/permissions" }}) page grants, capped at
+  reading. Turning this off closes the API to anyone without a key while the
+  web side stays as it is; signing in through the API and its description page
+  stay reachable so that clients can still obtain a key.
 
 ## Documentation pages
 

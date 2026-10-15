@@ -10,7 +10,8 @@ is where you set it.
 The picture field only appears where the administrator enabled profile pictures
 in [Profiles]({{ manual "admin/board/profiles" }}), and what you may upload, how
 large it may be and what it gets converted to are all set there. Until you
-upload one you get the board's default avatar.
+upload one you get the board's default avatar, and a new upload replaces the
+old picture, which is deleted from the storage.
 
 ## Signature
 

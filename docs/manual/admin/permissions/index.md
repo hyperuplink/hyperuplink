@@ -1,9 +1,9 @@
 # Permissions
 
 Permissions decide who may read, write and moderate in which
-[category]({{ manual "admin/board/categories" }}), and the whole thing is built
-out of two ideas: a default that applies to everyone, and groups that raise that
-default for their members.
+[category]({{ manual "admin/board/categories" }}), and it's built out of three
+ideas: a default for the whole board, a default per category that replaces it
+where one is set, and groups that raise either for their members.
 
 ![The permissions page](permissions.webp)
 
@@ -29,6 +29,16 @@ the setting that decides what kind of board you're running:
 - _None_: a board that shows nothing to anyone until a group says otherwise,
   which is where you start when the board is meant to be private.
 
+Underneath, every category has a selector of its own, set to _Inherit_ until
+you change it. A level chosen there replaces the board default for that
+category and for everyone, lower or higher, and groups raise above it the same
+way they raise above the board default. Setting it back to _Inherit_ removes
+the override. This is how a private board gets a public announcements
+category: the board default at _None_, the announcements category at _Read_,
+and the members group granted _Read, Write_ in the categories where members
+post. The reverse works too, a public board with one category at _None_ that
+only a group can see.
+
 ## Groups
 
 The windows underneath are the groups, each with the categories it grants
@@ -44,15 +54,13 @@ the page shows a message once every category is mapped.
 
 ## Resolution
 
-A user's level in a category is the **highest** of the default and of every
-group they're in, which has one consequence worth being clear about: a group can
-only ever raise access and **not** lower it. A group set to _Read_ in a category
-whose default is _Read, Write_ changes nothing at all for its members, since
-they already had more than it grants.
-
-Hence a private category is built by setting the default to _None_ and granting
-the group what it needs, rather than by leaving the default open and trying to
-exclude one group. There is no deny rule.
+A user's level in a category is the **highest** of the category's own default,
+or the board default where the category has none, and of every group they're
+in. Hence a group can only ever raise access and **not** lower it. A group set
+to _Read_ in a category whose default is _Read, Write_ changes nothing for its
+members, since they already had more than it grants, and lowering access is
+done through the defaults instead: a private category has its own default at
+_None_ and grants the group what it needs.
 
 Administrators aren't resolved through any of this and are never denied access.
 An admin account reads and writes everywhere, whatever the table is set to.

@@ -178,19 +178,18 @@ make run
 ./build/hyperuplink -c "file://$PWD/hyperuplink.toml"
 ```
 
-The board then answers on <http://localhost:3000>, the [JSON API](#json-api) on
-<http://localhost:3001>, and since both `SIGINT` and `SIGTERM` are trapped,
-either `Ctrl-C` or a plain `kill <pid>`/`killall hyperuplink` will shut it down
-cleanly.
+The board then listens on <http://localhost:3000>, the [JSON API](#json-api) on
+<http://localhost:3001/api/v1>, and since both `SIGINT` and `SIGTERM` are
+trapped, either `Ctrl-C` or a plain `kill <pid>`/`killall hyperuplink` will shut
+it down cleanly.
 
 > **Note:** `-c` takes a URL rather than a path, hence the `file://`, and it
 > defaults to `/etc/hyperuplink.toml`.
 
-> **Note:** if something is already bound to `:3000`, the instance will still
-> start, but its web server will simply fail to bind without saying much about
-> it, at which point your requests continue to land on whatever is listening on
-> the port. Check with `ss -ltn | grep :3000` before concluding that anything
-> else is wrong.
+> **Note:** if something is already bound to `:3000`, the instance doesn't stay
+> up: the web server fails to bind, the log ends with an `ERROR` line from
+> `HTTP.Run` that names the address, the other processes are stopped, and the
+> process exits with status 1. `ss -ltn | grep :3000` shows what holds the port.
 
 TODO: development mode watches `views/` and reloads the templates as you save
 them, however `getWatcher` passes the directory straight to
@@ -252,159 +251,179 @@ promotes those addresses on its own.
 
 ## JSON API
 
-Beside the web server _Hyperuplink_ starts a second _fiber_ app that speaks JSON
-on <http://localhost:3001>, configured through an `[API]` section in
-`hyperuplink.toml` whose keys mirror those of `[Web]`, though the API only comes
-up when that section has `Enable = true`, and because `Enable` defaults to
-`false` a missing `[API]` section leaves the JSON API switched off entirely,
-while its port still falls back to `3001` whenever it is enabled without an
-explicit `Port`.
+Beside the web server Hyperuplink starts a second fiber app that speaks JSON on
+<http://localhost:3001>, under the path prefix `/api/v1`. It's configured
+through the `[API]` section of `hyperuplink.toml`, whose keys mirror those of
+`[Web]` plus the three rate limits and `CORSOrigins`, and it only comes up when
+that section has `Enable = true`. The server is `http/api/`, its controllers
+under `http/api/root/` take their paths from the `APIV1*` entries of the route
+table in `http/routes/routes.go`, and the use-cases underneath are the same
+`logic/root/` packages the web controllers call, hence an action behaves the
+same whichever server received it.
 
-### Authentication
+`GET /api/v1` describes the board to anyone: its name, the API version, the
+build, whether guests are served and the paths of the main collections. The
+OpenAPI document is at `/api/v1/openapi.json` and a Swagger UI at
+`/api/v1/docs/`, both without a key.
 
-Every request includes an API key, either as `Authorization: Bearer <key>` or as
-`X-API-Key: <key>`, and there are no cookies, no server side sessions and no
-CSRF anywhere on this port. A key is a `hup_`-prefixed random secret whose
-SHA-256 is stored in the `apikeys` table, which keeps nothing besides that hash,
-so a lost key is replaced rather than recovered. There is no route that signs
-up, signs in or signs out, and a request without a valid key answers `401`
-across the board, guest reads included.
+### Guests and keys
 
-Keys are issued at `/account/api` on the web server, which lists a user's keys,
-issues new ones and soft-deletes old ones, and which shows the secret exactly
-once, in the flash message right after issuance, since only the hash survives.
-When you would rather not click through the UI, for example on a freshly seeded
-board you are about to script against, mint one by hand:
+A request without an `Authorization` header is a guest. It reads what the
+board's default permission grants, capped at reading, as long as the
+administrator leaves _Serve the API to guests_ on the _General_ settings page
+switched on. With the switch off, a guest request gets
+`401
+err_authentication_required` everywhere except the description and the
+sign-in below, and the description reports the switch as `guests`.
 
-```sh
-SECRET="hup_$(head -c 32 /dev/urandom | basenc --base64url | tr -d '=')"
-HASH=$(printf '%s' "$SECRET" | sha256sum | cut -d' ' -f1)
-psql -h localhost -p 5432 -U postgres -d hyperuplink_dev \
-  -c "INSERT INTO apikeys (user_id, name, secret_hash)
-      SELECT id, 'dev', '$HASH' FROM users WHERE username = 'sysop';"
-echo "$SECRET"   # the part the client keeps; the database never sees it
-```
+A request with `Authorization: Bearer hup_...` acts as the user the key belongs
+to. Keys are `hup_` plus 32 random bytes in base64url, the database keeps their
+SHA-256 only, and a client obtains one by exchanging a password:
 
 ```sh
-curl -s -H "Authorization: Bearer $SECRET" http://localhost:3001/session
+TOKEN=$(curl -s -X POST http://localhost:3001/api/v1/session \
+  -H 'Content-Type: application/json' \
+  -d '{"username": "sysop", "password": "hyperhyper!", "name": "curl"}' \
+  | jq -r .token)
+curl -s -H "Authorization: Bearer $TOKEN" http://localhost:3001/api/v1/session
 ```
 
-The key resolves to its user on every request, so the caller's role and
-permissions are the same ones the web session would have produced, and a banned
-or deleted user takes their keys down with them.
+The `201` holds the secret in `token`, exactly once, next to the key and the
+account. An account with two-factor authentication sends the current code as
+`otp_code` in the same body, and without it the exchange is
+`401
+err_otp_required`. Keys are also issued on the web under _Account ➔ API_
+and through `POST /api/v1/account/keys`; `GET /api/v1/account/keys` lists them,
+`DELETE /api/v1/account/keys/{key}` revokes one and `DELETE /api/v1/session`
+revokes the key of the request itself. A banned or deleted user takes their keys
+down with them, and `last_used_at` is updated at most once a minute.
+
+`GET /api/v1/session` is the call to make first. It returns `authenticated`,
+`role`, the account and the key for a key holder, and for everyone the
+`permissions` of the request as the default level and a map from category id to
+level.
 
 ### Routes
 
-`http/api/root/` mirrors `http/web/root/`, and both are built on the same
-`logic/root/` underneath, so an action behaves identically no matter which
-server carried it in. Reads are `GET`, the forms that `POST` to `/update` on the
-web side are `PUT` here, creation is `POST` and destruction is `DELETE`, with
-the record's id moving into the path where the web form carried it as a hidden
-field. The paths themselves come out of the very same `http/routes` table the
-web server reads, which every controller consults through
-`route.For("<id>").Pathname()` rather than spelling its segment out as a
-literal, so the API inherits the sigils the web URLs use, a category reading
-`/_general` and a profile `/~sysop`, and a segment that no web page has yet, of
-which the flat topics feed is so far the only one, gets its own entry in
-`http/routes/routes.go` rather than a string in the controller:
+Resources are addressed by UUID or by their alias, namely a slug for categories
+and forums, a short id for topics and replies and a username for users. Reads
+are `GET`, creation is `POST`, a whole settings struct is `PUT`, a partial
+change is `PATCH` and removal is `DELETE`; a successful `DELETE` and the admin
+actions return `204`. Collections take `page` and `per_page` (100 at most) and
+return a `pagination` object with `page`, `per_page`, `total` and `pages` beside
+the named array.
 
-| Area         | Routes                                                                                      |
-| ------------ | ------------------------------------------------------------------------------------------- |
-| board        | `GET /`, `GET /_:cat`, `GET /_:cat/:forum[/:topic]` (`?page=`)                              |
-| posting      | `GET`/`POST /new`, `POST /_:cat/:forum/:topic` (reply), `POST .../poll` (vote)              |
-| topics feed  | `GET /topics` (`?forum_id=&page=`), `GET /topics/:id`, `POST /topics/:id/replies`           |
-| session      | `GET /session`, which answers with the key's user                                           |
-| account      | `GET /account`, `PUT /account/{password,profile,settings}`, `POST /account/profile/picture` |
-| two-factor   | `GET /account/twofactor`, `POST /account/twofactor/{enable,disable}`                        |
-| attachments  | `POST /attachments` (multipart), `GET /attachments/:id`                                     |
-| search, docs | `GET /search?q=`, `GET /docs/{about,contact,privacy,terms}`                                 |
-| report       | `GET /report?target=&id=`, `POST /report`                                                   |
-| users        | `GET /~:username`, `POST /~:username/membership`                                            |
-| admin        | `GET`/`PUT` per section under `/admin/...`, users and board records through path ids        |
+| Area        | Routes                                                                                                                                                         |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| discovery   | `GET /api/v1`, `GET /api/v1/openapi.json`, `GET /api/v1/docs/`                                                                                                 |
+| session     | `GET`, `POST`, `DELETE /api/v1/session`                                                                                                                        |
+| board       | `GET /api/v1/board`, `GET /api/v1/categories[/{category}]`, `GET /api/v1/forums[/{forum}]`                                                                     |
+| topics      | `GET /api/v1/topics?sort=active\|new\|replies`, `GET /api/v1/forums/{forum}/topics`, `POST /api/v1/topics`, `GET /api/v1/topics/{topic}`                       |
+| replies     | `GET`, `POST /api/v1/topics/{topic}/replies`, `GET /api/v1/replies/{reply}`, `POST /api/v1/topics/{topic}/votes`                                               |
+| others      | `GET /api/v1/search?q=`, `GET /api/v1/users/{user}`, `GET /api/v1/pages/{page}`, `POST /api/v1/reports`                                                        |
+| attachments | `POST /api/v1/attachments` (multipart `attachments=@file`), `GET /api/v1/attachments/{attachment}`                                                             |
+| account     | `GET`, `PATCH /api/v1/account`, `PUT .../password`, `POST .../picture`, `GET`, `POST`, `DELETE .../twofactor`, `GET`, `POST .../keys`, `DELETE .../keys/{key}` |
+| admin       | `GET`, `PUT` for every settings page under `/api/v1/admin/...`; categories, forums, users and groups through path ids; `POST .../permissions/{apply,remove}`   |
 
-Everything the web offers is here, except signup, signup confirmation, signin,
-signout and the embedded manual. The request bodies take the same fields the web
-forms take, however as JSON, and they run through the same struct validation,
-which the shared input structs under `logic/root/` declare as `form`, `json` and
-`validate` tags side by side.
+Everything the web offers is here except signup, its confirmation, the OAuth
+sign-in, the _View_ toggles and the manual. Request bodies take the fields of
+the web forms as JSON and run through the same struct validation, and an
+`errors` map keyed by the JSON field names reports what failed.
 
-Three flows differ from their web counterparts, in each case because there is no
-session:
-
-- Attachments are not part of the create request. Upload them first as multipart
-  `attachments=@file` to `POST /attachments`, then pass the returned ids as
-  `attachment_ids` when creating the topic or reply, whereupon the server
-  verifies that each id belongs to the caller.
-- Two-factor enrollment cannot store the pending secret in a session, so
-  `GET /account/twofactor` returns a fresh enrollment whose `URL` the client
-  holds on to and sends back as `otp_url`, together with the `otp_code`, to
-  `POST /account/twofactor/enable`.
-- The profile picture is sent as multipart to `/account/profile/picture` rather
-  than inside the JSON `PUT`.
+Three flows differ from their web counterparts because there is no session.
+Attachments are uploaded first, as multipart `attachments=@file` to
+`POST /api/v1/attachments`, and the returned ids are passed as `attachment_ids`
+when creating the topic or reply, whereupon the server checks that each id
+belongs to the caller. Two-factor enrollment can't park the pending secret in a
+session, so `GET /api/v1/account/twofactor` returns a fresh enrollment whose
+`url` the client sends back as `otp_url`, together with the `otp_code`, to
+`POST /api/v1/account/twofactor`. The profile picture is sent as multipart
+`picture=@file` to `POST /api/v1/account/picture`.
 
 ### Errors
 
-Errors come back as `{"error": "<key>"}`, where the key is the same `errs`
-string the web shows through its flash messages, and validation failures
-additionally name their fields:
+Errors are RFC 9457 problem details with the media type
+`application/problem+json`, and every one of them has a stable machine code in
+`code`:
 
 ```json
-{ "error": "validation", "fields": { "text": "validation_text_required" } }
+{
+  "type": "about:blank",
+  "title": "Unprocessable Entity",
+  "status": 422,
+  "instance": "/api/v1/topics",
+  "code": "validation",
+  "errors": { "forum_id": ["uuid"], "name": ["required"] }
+}
 ```
 
-The API returns `401` for a missing or unknown key, `403` for a role the route
-does not accept, `404` for anything that does not exist or that the caller may
-not see, `409` for unique violations such as voting twice, and `422` for
-validation and other rejected input.
+The codes are the `errs` sentinel strings, the same keys the web shows through
+its flash messages. `401` is a missing or invalid key, with `WWW-Authenticate`
+naming the bearer scheme, `403` a role or permission the caller lacks on a
+write, `404` anything that doesn't exist or that the caller may not read, `409`
+a unique violation such as a second poll vote, `422` validation and other
+rejected input, `429` a rate limit and `503` a database or Redis that is down,
+with `Retry-After`. The limits are 120 requests a minute per address for guests,
+600 per key, and 10 sign-ins a minute per address and username. Fiber's own
+errors, a `404` for an unknown path or a `413` for a body over the limit, use
+the same shape with codes such as `err_not_found`.
+
+### Behind a proxy
+
+The API is its own listener so that the web server's session middleware and CSRF
+never touch it. In production both are behind the same reverse proxy, which
+forwards `/api/` of the board's host to port 3001 and everything else to port
+3000, and clients then reach the API at `https://board.example/api/v1` without
+knowing about the second port. The example configurations under `deploy/`
+publish both ports and the deploy READMEs describe the rule for each platform.
 
 ### OpenAPI specification
 
-The API describes itself through a _Swagger_ UI at
-<http://localhost:3001/_internal/swagger/>, which reads the specification from
-`/_internal/swagger/doc.json` beside it, and since both live under the
-`/_internal/` prefix that `srv.authenticate` waves through, they are reachable
-without a key, though every operation the UI lists still needs one the moment
-you press _Try it out_.
-
 The specification is generated from annotations by
-[swaggo/swag](https://github.com/swaggo/swag), which the _Makefile_ pins as a Go
-tool so that nothing has to be installed by hand, and which writes
-`docs/swagger.json` under the `swagger` target that `make`, `make build` and
-`make run` all depend on:
+[swaggo/swag](https://github.com/swaggo/swag), which the Makefile pins as a Go
+tool, and which writes `docs/swagger.json` under the `swagger` target that
+`make`, `make build` and `make run` depend on:
 
 ```sh
 make swagger       # -> docs/swagger.json
 go tool swag fmt -d http/api -g api._.go   # realign the annotation comments
 ```
 
-The general information, meaning the title, the description, the license and the
-two API key schemes, is declared above `New` in `http/api/api._.go`, while each
-routed action has its own `@Summary`, `@Param`, `@Success` and `@Router` block,
-and the `@Router` paths are written exactly as the route table produces them,
-sigils and all, so a category reads `/_{categories}` and a user reads
-`/~{user}`. Types are named the way the file that references them imports them,
-which is why the annotations say `logictopics.View` rather than `topics.View`,
-however _swag_ also resolves a bare package name against everything it has
-parsed, so `setting.Profiles` works from a file that never imports it.
+The general information, meaning the title, the description, the license, the
+tags and the bearer scheme, is declared above `New` in `http/api/api._.go`,
+while each routed action has its own `@Summary`, `@Param`, `@Success`,
+`@Failure` and `@Router` block. The `@Router` paths are relative to the
+`@basePath /api/v1`. Response types are the structs of `http/api/view`, which
+gives the definitions short names such as `view.Topic`, and the `.swaggo` file
+in the repository root replaces `view.Time` with a string in the document, since
+the type marshals to an RFC 3339 timestamp.
 
-`docs/` is embedded whole, which is how `loadSwagger` finds the specification
-without a generated `docs.go` to import, and it means the file has to exist
-before the binary is compiled. `make build` takes care of that here, however the
-_Dockerfile_, the ebuild and the RPM spec all call `go build` straight, so
+`docs/` is embedded whole, which is how `loadOpenAPI` finds the specification
+without a generated `docs.go`, and it means the file has to exist before the
+binary is compiled. `make build` takes care of that here, however the
+Dockerfile, the ebuild and the RPM spec all call `go build` straight, so
 `docs/swagger.json` belongs in the repository rather than in `.gitignore`, and a
-build that is missing it logs a warning and leaves the endpoint unregistered
-instead of failing. The version is the one exception to the file being served
-verbatim: it is written as the `{{.Version}}` placeholder that `swag.Spec` fills
-in at startup from the same build version the `-ldflags` set, so the UI shows
-`v0.1.2-15-g81df9f4` rather than whatever was true when the specification was
-last regenerated.
+build that is missing it logs a warning and leaves the two routes unregistered
+instead of failing. The version is written as the `{{.Version}}` placeholder
+that `swag.Spec` fills in at startup from the build version the `-ldflags` set.
 
 Editing the annotations has two traps. Anything following a
 `@securityDefinitions` block in the general information is swallowed by it, so
-the `@tag` declarations have to come before the two schemes rather than after
-them, and _swag_ hard-skips every directory named `docs` while it walks the
-tree, which is why the four `/docs/*` static pages are the only routes the
-specification does not describe.
+the `@tag` declarations have to come before the scheme rather than after it, and
+swag skips every directory named `docs` while it walks the tree, so no
+controller package may be called that.
+
+### Testing the API
+
+`make test:db` runs the whole suite including the API tests, which build the
+real app against a PostgreSQL database they wipe and migrate on every run,
+`hyperuplink_test` on the development server unless `TEST_DATABASE` names
+another, and the Redis of the development stack on database index 15. Without
+`HUP_TEST_DATABASE` in the environment those tests skip, which is what a plain
+`go test ./...` does. The harness is `api_test.go` in `package main`, next to
+`templates_test.go`, because the migrations embed is declared there, and the
+cases are the `api_*_test.go` files beside it: foundation, reads,
+authentication, writes, account and administration.
 
 ## Configuration
 
@@ -418,6 +437,9 @@ specification does not describe.
   default to `false`, and since a missing section reads as `false` just the
   same, dropping either `[Web]` or `[API]` from the config leaves the
   corresponding server switched off rather than running on its defaults.
+- `[API]` adds `RateLimitGuest`, `RateLimitUser` and `RateLimitAuth`, requests
+  per minute where 0 disables a limit, and `CORSOrigins`, the browser origins
+  that may call the API; without origins no CORS headers are sent.
 - `[Database] Connection` is the `postgres://` DSN.
 - `[Redis] Addresses` takes one address for a single node or several for a
   cluster, and `MasterName` for sentinel.
@@ -687,6 +709,7 @@ The users it signs in as are the seeded ones, which are listed under
 
 ```sh
 make test              # go test -v ./...
+make test:db           # plus the API tests against PostgreSQL and Redis
 go test ./...          # manually, without being verbose
 go test -race ./...    # the one that matters for the worker and its caches
 go vet ./...
@@ -758,9 +781,8 @@ Notes:
 Any other value than `development` for the `Mode` configuration selects the
 production behaviour. There, the session and CSRF cookies gain the `Secure`
 flag, views and static assets are served out of the copies embedded in the
-binary rather than from the working directory, the static cache-buster becomes
-the build hash rather than a timestamp, and a global response cache is placed in
-front of the routes.
+binary rather than from the working directory, and the static cache-buster
+becomes the build hash rather than a timestamp.
 
 Anything that happens only outside development, such as the `InsecureSkipVerify`
 check on `/admin/health`, therefore has to be driven against a config whose
@@ -770,11 +792,7 @@ recipe above keeps working unchanged:
 
 However, views and static assets are read from the binary in this mode, so a
 change to a template needs a `make build` before it appears at all, while in
-development they are read from the working directory. The response cache,
-meanwhile, is keyed on the request path alone and expires on a timer, so when
-you restart against an altered config in order to compare one behaviour against
-another, an entry cached during the previous run is able to answer the request
-and show you the state you were trying to change away from.
+development they are read from the working directory.
 
 ### Verifying notification delivery
 
@@ -959,16 +977,21 @@ The lower half of that stack consists of
 [_glides_](https://tty.fail/mrus/glides), which is a framework that came out of
 _Hyperuplink_ and serves as a foundation for it, as well as for other software.
 
-`main` builds a `*glides/runtime.Runtime` with the framework services it asks
-for in `runtime.Services` and then registers the board's own (e.g.
-`repositories`, `activity`, `magick` and `dispatch`) through `rt.AddService`,
-which the typed getters in `helpers` resolve back. `http/route` holds the
-routing table and binds the generic controller types to the framework runtime.
+`main` builds a `*glides/runtime.Runtime`, registers the framework services it
+uses through their `Register` functions, the database first, then `storage`,
+`intnat`, `markdown`, `dispatch` and `cron`, and then registers the board's own
+(e.g. `repositories`, `activity`, `magick` and `dispatch`) through
+`rt.AddService`, which the typed getters in `helpers` resolve back. The web
+server, the API server, the worker and the cron are `runtime.IProcess` values
+that `rt.Serve` starts, runs and stops together. `http/route` holds the routing
+table and binds the generic controller types to the framework runtime.
 
 Board-specific configuration has no getter of its own, because the framework
 only declares the keys it reads itself. `Users.PromoteAdmin` is read with
-`rt.Config().Strings()` and the `AuthProvider` blocks with
-`rt.Config().Unmarshal()`, into the `AuthProviders` type that is in `helpers`.
+`rt.Config().Strings()`; the `[Web]` and `[API]` listeners are read into
+`helpers.ServerConfig` and `helpers.APIConfig`, and the `AuthProvider` blocks
+into the `AuthProviders` type that is in `helpers`, with
+`rt.Config().Unmarshal()`.
 
 ### `logic/root/` mirrors `http/web/root/`
 
