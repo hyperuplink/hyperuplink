@@ -90,7 +90,7 @@ snapshot:
 changelog:
   disable: false
   use: github
-  format: "{{.SHA}}: {{.Message}} (@{{.AuthorUsername}})"
+  format: "{{.Message}} (@{{.AuthorUsername}})"
   sort: asc
   abbrev: -1
 
